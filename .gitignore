@@ -36,3 +36,8 @@ next-env.d.ts
 # prisma
 /prisma/*.db
 /prisma/*.db-journal
+
+# Large data files
+public/data/games.json
+public/data/games-meta.json
+public/data/games-index.json

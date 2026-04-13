@@ -1,0 +1,77 @@
+// Prisma Schema for Game Analysis Database
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id            String   @id @default(cuid())
+  name          String
+  steamAppId    String?  @unique
+  description   String?
+  developers    String   @default("[]")
+  publishers    String   @default("[]")
+  genres        String   @default("[]")
+  tags          String   @default("[]")
+  releaseDate   String?
+  price         Int      @default(0)
+  metacriticScore Int?
+  headerImage   String?
+  capsuleImage  String?
+  screenshots   String   @default("[]")
+  
+  analysis      Analysis?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Analysis {
+  id            String   @id @default(cuid())
+  gameId        String   @unique
+  game          Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  
+  // Battle Mechanics
+  turnSystem    String   @default("Traditional")
+  actionSystem  String   @default("Menu")
+  targetSystem  String   @default("Multi")
+  damageFormula String?
+  critSystem    String   @default("Rate")
+  elements      String   @default("{}")
+  statusEffects String   @default("[]")
+  ultimateSkills Boolean @default(false)
+  comboSystem   Boolean  @default(false)
+  breakGauge    String?
+  
+  // Character System
+  classSystem   String   @default("Selectable")
+  skillTree     String   @default("{}")
+  progression   String   @default("{}")
+  partySize     String   @default("{}")
+  partyRoles    String   @default("[]")
+  equipmentSlots Int     @default(6)
+  
+  // Strategic Depth
+  positioning   String   @default("{}")
+  synergies     String   @default("{}")
+  counterStrategies String @default("[]")
+  difficultyScaling String @default("{}")
+  replayability Int      @default(50)
+  
+  // Numerical Balance
+  numericalBalance String @default("{}")
+  
+  // Innovation
+  innovations   String   @default("[]")
+  
+  // Overall
+  overallScore  Int      @default(70)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

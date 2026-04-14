@@ -419,20 +419,6 @@ function GameCard({ game }: { game: GameRecord }) {
             </div>
           )}
 
-          {/* 特色标签展示（差异化卖点） */}
-          {game.differentiationLabels && game.differentiationLabels.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1">
-              {game.differentiationLabels.slice(0, 3).map((label, index) => (
-                <span
-                  key={index}
-                  className="px-2 py-0.5 text-[10px] font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 rounded"
-                >
-                  +{label}
-                </span>
-              ))}
-            </div>
-          )}
-
           {/* C池差评方向提示 */}
           {game.pool === "C" && (
             <div className="mt-3 p-2 bg-rose-50 dark:bg-rose-950/30 rounded-lg border border-rose-200 dark:border-rose-800">

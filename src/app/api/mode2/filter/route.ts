@@ -181,6 +181,53 @@ const DIFFERENTIATION_LABELS: Record<string, string> = {
   "Survival Game": "生存建造",
 };
 
+// 标签中文名称映射
+const TAG_CHINESE_NAMES: Record<string, string> = {
+  // 核心标签
+  "Creature Collector": "生物收集",
+  "Monster Catching": "怪物捕捉",
+  "Monster Tamer": "怪物养成",
+  "Collectathon": "收集冒险",
+  "生物收集": "生物收集",
+  "怪物捕捉": "怪物捕捉",
+  "怪物养成": "怪物养成",
+  // 次级标签
+  "JRPG": "JRPG",
+  "Party-Based RPG": "队伍RPG",
+  "Tactical RPG": "战术RPG",
+  "Turn-Based Tactics": "回合制战术",
+  "Turn-Based Strategy": "回合制策略",
+  "回合制策略": "回合制策略",
+  "角色扮演": "角色扮演",
+  "RPG": "RPG",
+  // 现代融合标签
+  "Survival": "生存建造",
+  "Survival Game": "生存建造",
+  "Crafting": "合成系统",
+  "Roguelite": "肉鸽融合",
+  "Roguelike": "类肉鸽",
+  "Deckbuilding": "牌组构建",
+  "Open World": "开放世界",
+  "开放世界": "开放世界",
+  "Metroidvania": "银河恶魔城",
+  "银河恶魔城": "银河恶魔城",
+  "卡牌构建": "牌组构建",
+  "牌组构建": "牌组构建",
+  "形态融合": "形态融合",
+  // 其他常见标签
+  "2D": "2D",
+  "3D": "3D",
+  "Pixel Graphics": "像素风格",
+  "Anime": "动漫风格",
+  "Fantasy": "奇幻",
+  "Magic": "魔法",
+  "Adventure": "冒险",
+  "Story Rich": "剧情丰富",
+  "Multiple Endings": "多结局",
+  "Singleplayer": "单人",
+  "Indie": "独立游戏",
+};
+
 // 计算标签权重
 interface TagWeight {
   coreTagCount: number;
@@ -246,14 +293,19 @@ function calculateTagWeight(tags: string[]): TagWeight {
   // 计算权重分：核心*3 + 次级*2 + 现代*1
   const tagWeight = matchedCoreTags.length * 3 + matchedSecondaryTags.length * 2 + matchedModernTags.length * 1;
 
+  // 转换为中文标签名
+  const toChinese = (tags: string[]): string[] => {
+    return tags.map((t) => TAG_CHINESE_NAMES[t] || t);
+  };
+
   return {
     coreTagCount: matchedCoreTags.length,
     secondaryTagCount: matchedSecondaryTags.length,
     modernTagCount: matchedModernTags.length,
     tagWeight,
-    matchedCoreTags,
-    matchedSecondaryTags,
-    matchedModernTags,
+    matchedCoreTags: toChinese(matchedCoreTags),
+    matchedSecondaryTags: toChinese(matchedSecondaryTags),
+    matchedModernTags: toChinese(matchedModernTags),
     uniqueFeatureTags,
     differentiationLabels,
   };

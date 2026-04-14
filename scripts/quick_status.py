@@ -14,6 +14,6 @@ total_needed = 20461
 
 print(f'P0已抓取: {p0_fetched:,} / {total_needed:,} ({p0_fetched/total_needed*100:.1f}%)')
 print(f'其中有评价: {got_reviews_count:,}')
-print(f'其中仍零评价: {p0_fetched - got_reviews_count:,}')
+print(f'成功率: {got_reviews_count/p0_fetched*100:.1f}%' if p0_fetched > 0 else '成功率: N/A')
 print(f'有评价总计: {has_reviews:,}')
 print(f'剩余: {total_needed - p0_fetched:,}')

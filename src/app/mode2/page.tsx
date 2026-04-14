@@ -64,6 +64,16 @@ interface GameRecord {
   // 测试版相关字段
   isTestVersion: boolean;
   testVersionType: "name" | "tag" | "data" | "none";
+  // 标签权重系统
+  coreTagCount: number;
+  secondaryTagCount: number;
+  modernTagCount: number;
+  tagWeight: number;
+  matchedCoreTags: string[];
+  matchedSecondaryTags: string[];
+  matchedModernTags: string[];
+  uniqueFeatureTags: string[];
+  differentiationLabels: string[];
 }
 
 interface PoolStats {
@@ -254,6 +264,17 @@ function GameCard({ game }: { game: GameRecord }) {
                   {game.pokemonLikeTags[0]}
                 </span>
               )}
+              {/* 标签权重徽章 */}
+              {game.coreTagCount > 0 && (
+                <span className="px-1.5 py-0.5 text-[10px] font-bold bg-amber-500/90 text-white rounded shadow-sm">
+                  核心
+                </span>
+              )}
+              {game.modernTagCount > 0 && (
+                <span className="px-1.5 py-0.5 text-[10px] font-bold bg-purple-500/90 text-white rounded shadow-sm">
+                  创新
+                </span>
+              )}
             </div>
           )}
 
@@ -269,6 +290,16 @@ function GameCard({ game }: { game: GameRecord }) {
               </div>
             )}
           </div>
+
+          {/* C池避坑提示徽章 */}
+          {game.pool === "C" && (
+            <div className="absolute bottom-2 left-2 right-2 z-10">
+              <div className="px-2 py-1 text-[10px] font-medium bg-rose-500/95 text-white rounded shadow-lg flex items-center gap-1.5">
+                <AlertTriangle className="w-3 h-3" />
+                <span>避坑指南 · 点击读差评获取灵感</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 游戏信息 */}
@@ -326,6 +357,20 @@ function GameCard({ game }: { game: GameRecord }) {
               </div>
             )}
           </div>
+
+          {/* 特色标签展示（差异化卖点） */}
+          {game.differentiationLabels && game.differentiationLabels.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1">
+              {game.differentiationLabels.slice(0, 3).map((label, index) => (
+                <span
+                  key={index}
+                  className="px-2 py-0.5 text-[10px] font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 rounded"
+                >
+                  +{label}
+                </span>
+              ))}
+            </div>
+          )}
 
           <div className="mt-4 flex items-center text-sm text-primary font-medium">
             <span>查看分析</span>
@@ -674,7 +719,7 @@ export default function Mode2Page() {
   const [activePools, setActivePools] = useState<("A" | "B" | "C")[]>(["A", "B", "C"]);
 
   // 各池子的筛选条件
-  const [poolAConditions, setPoolAConditions] = useState<PoolConditions>({ minRating: 75, minReviews: 50 });
+  const [poolAConditions, setPoolAConditions] = useState<PoolConditions>({ minRating: 75, minReviews: 200 });
   const [poolBConditions, setPoolBConditions] = useState<PoolConditions>({ minRating: 75, minReviews: 50 });
   const [poolCConditions, setPoolCConditions] = useState<PoolConditions>({ minRating: 40, maxRating: 74, minReviews: 50 });
 
@@ -750,7 +795,7 @@ export default function Mode2Page() {
 
   // 重置条件
   const resetConditions = () => {
-    setPoolAConditions({ minRating: 75, minReviews: 50 });
+    setPoolAConditions({ minRating: 75, minReviews: 200 });
     setPoolBConditions({ minRating: 75, minReviews: 50 });
     setPoolCConditions({ minRating: 40, maxRating: 74, minReviews: 50 });
     setActivePools(["A", "B", "C"]);

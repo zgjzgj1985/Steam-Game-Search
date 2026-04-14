@@ -76,6 +76,16 @@ interface GameRecord {
   isTestVersion: boolean;
   // 测试版标识类型（用于前端显示）
   testVersionType: "name" | "tag" | "data" | "none";
+  // 标签权重系统
+  coreTagCount: number;
+  secondaryTagCount: number;
+  modernTagCount: number;
+  tagWeight: number;
+  matchedCoreTags: string[];
+  matchedSecondaryTags: string[];
+  matchedModernTags: string[];
+  uniqueFeatureTags: string[];
+  differentiationLabels: string[];
 }
 
 interface PoolStats {
@@ -84,6 +94,143 @@ interface PoolStats {
   poolA: number;
   poolB: number;
   poolC: number;
+}
+
+// ============ 标签权重系统 ============
+
+// 核心标签（最高权重）- 生物收集/怪物养成类游戏必须有
+const CORE_TAGS = [
+  "Creature Collector",
+  "Monster Catching",
+  "Monster Taming",
+  "Creature Collection",
+  "养宠",
+  "养成",
+  "宠物养成",
+  "怪物养成",
+];
+
+// 次级标签（高相关度）- 回合制RPG相关
+const SECONDARY_TAGS = [
+  "JRPG",
+  "Party-Based RPG",
+  "Tactical RPG",
+  "角色扮演",
+  "RPG",
+];
+
+// 现代融合标签（创新点）- 差异化卖点
+const MODERN_TAGS = [
+  "Roguelite",
+  "Roguelike",
+  "Deckbuilding",
+  "开放世界",
+  "Open World",
+  "Metroidvania",
+  "银河恶魔城",
+  "Survival",
+  "Crafting",
+  "生存",
+  "建造",
+  "牌组构建",
+  "卡牌构建",
+  "形态融合",
+  "类肉鸽",
+];
+
+// 特色标签映射（用于展示差异化卖点）
+const DIFFERENTIATION_LABELS: Record<string, string> = {
+  "Survival": "生存建造",
+  "Crafting": "合成系统",
+  "Metroidvania": "银河恶魔城",
+  "开放世界": "开放世界",
+  "Open World": "开放世界",
+  "Roguelite": "肉鸽融合",
+  "Roguelike": "肉鸽融合",
+  "Deckbuilding": "牌组构建",
+  "牌组构建": "牌组构建",
+  "卡牌构建": "牌组构建",
+  "形态融合": "形态融合",
+  "银河恶魔城": "银河恶魔城",
+  "Survival Game": "生存建造",
+};
+
+// 计算标签权重
+interface TagWeight {
+  coreTagCount: number;
+  secondaryTagCount: number;
+  modernTagCount: number;
+  tagWeight: number;
+  matchedCoreTags: string[];
+  matchedSecondaryTags: string[];
+  matchedModernTags: string[];
+  uniqueFeatureTags: string[];
+  differentiationLabels: string[];
+}
+
+function calculateTagWeight(tags: string[]): TagWeight {
+  const normalizedTags = tags.map((t) => t.toLowerCase());
+  const matchedCoreTags: string[] = [];
+  const matchedSecondaryTags: string[] = [];
+  const matchedModernTags: string[] = [];
+  const uniqueFeatureTags: string[] = [];
+  const differentiationLabels: string[] = [];
+
+  // 匹配核心标签
+  for (const tag of CORE_TAGS) {
+    if (normalizedTags.some((t) => t.includes(tag.toLowerCase()))) {
+      matchedCoreTags.push(tag);
+    }
+  }
+
+  // 匹配次级标签（不在核心中的才计入）
+  const coreSet = new Set(matchedCoreTags.map((t) => t.toLowerCase()));
+  for (const tag of SECONDARY_TAGS) {
+    if (normalizedTags.some((t) => t.includes(tag.toLowerCase())) && !coreSet.has(tag.toLowerCase())) {
+      matchedSecondaryTags.push(tag);
+    }
+  }
+
+  // 匹配现代融合标签（独立计算）
+  for (const tag of MODERN_TAGS) {
+    if (normalizedTags.some((t) => t.includes(tag.toLowerCase()))) {
+      matchedModernTags.push(tag);
+      // 添加到特色标签
+      const normalized = tag.toLowerCase();
+      if (!uniqueFeatureTags.includes(tag)) {
+        uniqueFeatureTags.push(tag);
+        // 添加展示用标签
+        const label = DIFFERENTIATION_LABELS[tag] || DIFFERENTIATION_LABELS[tag.charAt(0).toUpperCase() + tag.slice(1)] || tag;
+        if (!differentiationLabels.includes(label)) {
+          differentiationLabels.push(label);
+        }
+      }
+    }
+  }
+
+  // 提取差异化的特色标签（非基础回合制标签）
+  const basicTags = [...TURN_BASED_TAGS, ...POKEMON_LIKE_TAGS].map((t) => t.toLowerCase());
+  for (const tag of uniqueFeatureTags) {
+    const normalized = tag.toLowerCase();
+    if (!basicTags.some((b) => normalized.includes(b.toLowerCase()))) {
+      // 已在上方添加
+    }
+  }
+
+  // 计算权重分：核心*3 + 次级*2 + 现代*1
+  const tagWeight = matchedCoreTags.length * 3 + matchedSecondaryTags.length * 2 + matchedModernTags.length * 1;
+
+  return {
+    coreTagCount: matchedCoreTags.length,
+    secondaryTagCount: matchedSecondaryTags.length,
+    modernTagCount: matchedModernTags.length,
+    tagWeight,
+    matchedCoreTags,
+    matchedSecondaryTags,
+    matchedModernTags,
+    uniqueFeatureTags,
+    differentiationLabels,
+  };
 }
 
 // ============ 筛选配置 ============
@@ -292,6 +439,9 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     ? raw.metacritic_score
     : null;
 
+  // 计算标签权重
+  const tagWeight = calculateTagWeight(tags);
+
   return {
     id: appId,
     steamAppId: appId,
@@ -326,6 +476,16 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     isTurnBased: turnBased,
     isTestVersion: isTest,
     testVersionType,
+    // 标签权重系统
+    coreTagCount: tagWeight.coreTagCount,
+    secondaryTagCount: tagWeight.secondaryTagCount,
+    modernTagCount: tagWeight.modernTagCount,
+    tagWeight: tagWeight.tagWeight,
+    matchedCoreTags: tagWeight.matchedCoreTags,
+    matchedSecondaryTags: tagWeight.matchedSecondaryTags,
+    matchedModernTags: tagWeight.matchedModernTags,
+    uniqueFeatureTags: tagWeight.uniqueFeatureTags,
+    differentiationLabels: tagWeight.differentiationLabels,
   };
 }
 
@@ -685,7 +845,7 @@ export async function GET(request: NextRequest) {
 
   // A池配置
   const poolA_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolA_minRating") || "75", 10) || 75));
-  const poolA_minReviews = Math.max(0, parseInt(searchParams.get("poolA_minReviews") || "50", 10) || 50);
+  const poolA_minReviews = Math.max(0, parseInt(searchParams.get("poolA_minReviews") || "200", 10) || 200);
 
   // B池配置
   const poolB_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolB_minRating") || "75", 10) || 75));

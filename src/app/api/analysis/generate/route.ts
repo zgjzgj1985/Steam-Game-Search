@@ -60,6 +60,7 @@ interface RawGameData {
   discount: number;
   peak_ccu: number;
   tags: Record<string, number> | string[];
+  _is_test_version?: boolean;
 }
 
 // ============ 数据库加载（模块级缓存）============
@@ -78,11 +79,54 @@ const dbCache: DbCache = {
 
 const DB_FILE = path.join(process.cwd(), "public", "data", "games-index.json");
 
-function parseEstimatedOwners(raw: string): { value: number } {
+// ============ 测试版检测 ============
+
+const TEST_VERSION_KEYWORDS = [
+  "beta", "α", "alpha", "β", "betta",
+  "demo", "trial", "demo version",
+  "early access", "pre-release", "pre release",
+  "prototype", "tech demo",
+  "test build", "testing", "test version",
+  " (beta)", " [beta]", " (demo)", " [demo]",
+  " (alpha)", " [alpha]", " (test)", " [test]",
+  " (prototype)", " (early access)",
+  " - beta", " - demo", " - test",
+  " 测试版", " 试玩版", " 体验版", " 抢先体验",
+];
+
+function detectTestVersionByName(name: string): boolean {
+  if (!name) return false;
+  const lowerName = name.toLowerCase();
+  for (const keyword of TEST_VERSION_KEYWORDS) {
+    if (lowerName.includes(keyword)) return true;
+  }
+  const testPatterns = [
+    /\s*[\(\[\-]\s*(beta|alpha|demo|test|prototype|early\s*access)\s*[\)\]\-]/i,
+    /\s*[\(\[\-]\s*[\d.]+\s*(beta|alpha|b)\s*[\)\]\-]/i,
+    /beta\s*v?\d/i,
+  ];
+  for (const pattern of testPatterns) {
+    if (pattern.test(lowerName)) return true;
+  }
+  return false;
+}
+
+function detectTestVersionByTag(tags: string[]): boolean {
+  return tags.some((t) => t.toLowerCase().includes("early access"));
+}
+
+function detectTestVersion(raw: RawGameData, normalizedTags: string[]): boolean {
+  if (raw._is_test_version === true) return true;
+  if (detectTestVersionByName(raw.name || "")) return true;
+  if (detectTestVersionByTag(normalizedTags)) return true;
+  return false;
+}
+
+function parseEstimatedOwners(raw: string): { value: number; min?: number; max?: number } {
   const cleaned = raw.replace(/,/g, "").trim();
   const parts = cleaned.split("-").map((s) => parseInt(s.trim(), 10));
   if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-    return { value: Math.round((parts[0] + parts[1]) / 2) };
+    return { value: Math.round((parts[0] + parts[1]) / 2), min: parts[0], max: parts[1] };
   }
   const single = parseInt(cleaned, 10);
   if (!isNaN(single)) return { value: single };
@@ -99,6 +143,7 @@ function transformToGame(appId: string, raw: RawGameData): Game {
   const owners = parseEstimatedOwners(raw.estimated_owners);
   const totalReviews = raw.positive + raw.negative;
   const reviewScore = totalReviews > 0 ? Math.round((raw.positive / totalReviews) * 100) : 0;
+  const normalizedTags = normalizeTags(raw.tags);
 
   return {
     id: appId,
@@ -110,12 +155,14 @@ function transformToGame(appId: string, raw: RawGameData): Game {
     publishers: raw.publishers || [],
     genres: raw.genres || [],
     categories: raw.categories || [],
-    tags: normalizeTags(raw.tags),
+    tags: normalizedTags,
     releaseDate: raw.release_date || null,
     isFree: raw.price === 0,
     price: raw.price,
     metacriticScore: raw.metacritic_score > 0 ? raw.metacritic_score : null,
     estimatedOwners: owners.value,
+    estimatedOwnersMin: owners.min,
+    estimatedOwnersMax: owners.max,
     peakCCU: raw.peak_ccu,
     steamReviews: totalReviews > 0 ? {
       totalPositive: raw.positive,
@@ -127,6 +174,7 @@ function transformToGame(appId: string, raw: RawGameData): Game {
     headerImage: raw.header_image || null,
     screenshots: raw.screenshots || [],
     steamUrl: `https://store.steampowered.com/app/${appId}`,
+    isTestVersion: detectTestVersion(raw, normalizedTags),
   };
 }
 
@@ -182,26 +230,55 @@ function loadGameById(id: string, db: Map<string, RawGameData>): Game | null {
 
 function loadGameByName(name: string, db: Map<string, RawGameData>): Game | null {
   const target = name.toLowerCase().trim();
+
+  // 第一轮：完全匹配，选拥有者最多的版本（处理同名不同游戏的情况）
+  let bestMatch: { appId: string; data: RawGameData } | null = null;
+  let bestOwners = -1;
+
   for (const [appId, data] of db.entries()) {
     if (data.name.toLowerCase() === target) {
-      return transformToGame(appId, data);
+      const owners = parseEstimatedOwners(data.estimated_owners);
+      if (owners.value > bestOwners) {
+        bestOwners = owners.value;
+        bestMatch = { appId, data };
+      }
     }
   }
+
+  if (bestMatch) {
+    return transformToGame(bestMatch.appId, bestMatch.data);
+  }
+
+  // 第二轮：模糊匹配（用分隔符前后词匹配，避免 "Portal" 匹配到 "Portal 2"）
+  // 将游戏名称按空格和特殊符号分割，检查目标词是否与任意一个词完全匹配
+  const targetParts = target.split(/[\s\-_:,.·'"]+/).filter(Boolean);
+  bestMatch = null;
+  bestOwners = -1;
+
   for (const [appId, data] of db.entries()) {
-    if (data.name.toLowerCase().includes(target)) {
-      return transformToGame(appId, data);
+    const nameParts = data.name.toLowerCase().split(/[\s\-_:,.·'"]+/).filter(Boolean);
+    if (targetParts.some((tp) => nameParts.includes(tp))) {
+      const owners = parseEstimatedOwners(data.estimated_owners);
+      if (owners.value > bestOwners) {
+        bestOwners = owners.value;
+        bestMatch = { appId, data };
+      }
     }
   }
+
+  if (bestMatch) {
+    return transformToGame(bestMatch.appId, bestMatch.data);
+  }
+
   return null;
 }
 
 export const runtime = "nodejs";
-export const maxDuration = 90;
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const gameId = searchParams.get("gameId");
-  const gameName = searchParams.get("gameName");
+  const gameName = searchParams.get("gameName")?.trim().slice(0, 200);
 
   if (!gameId && !gameName) {
     return NextResponse.json(
@@ -236,7 +313,10 @@ export async function GET(request: NextRequest) {
     // 3. 生成分析
     if (game) {
       const analysis = await generateAnalysis(game);
-      return NextResponse.json({ game, analysis, source });
+      return NextResponse.json(
+        { game, analysis, source },
+        { headers: { "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" } }
+      );
     }
 
     // 本地库无数据，返回空结果

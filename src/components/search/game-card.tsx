@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Star, Users, Gamepad2, ChevronRight, Trophy, ExternalLink, Info } from "lucide-react";
+import { Star, Users, Gamepad2, ChevronRight, Trophy, ExternalLink, Info, AlertTriangle } from "lucide-react";
 import * as Popover from "@radix-ui/react-popover";
 import { Game } from "@/types/game";
 import { cn } from "@/lib/utils";
@@ -162,6 +162,12 @@ export function GameCard({ game, className }: GameCardProps) {
                   {genre}
                 </span>
               ))}
+              {game.isTestVersion && (
+                <span className="px-2 py-0.5 text-xs font-medium bg-purple-500/90 text-white rounded flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  测试版
+                </span>
+              )}
             </div>
           )}
 
@@ -250,7 +256,7 @@ export function GameCard({ game, className }: GameCardProps) {
       <div className="absolute top-2 right-2 z-20 flex items-center gap-1.5">
         {game.price > 0 ? (
           <div className="px-2 py-0.5 text-xs font-medium bg-background/90 backdrop-blur-sm rounded text-muted-foreground shadow-sm">
-            ${typeof game.price === "number" ? game.price.toFixed(2) : game.price}
+            ${Number(game.price).toFixed(2)}
           </div>
         ) : (
           <div className="px-2 py-0.5 text-xs font-medium bg-green-600/90 text-white rounded shadow-sm">

@@ -31,6 +31,61 @@ export class SteamService {
   private cache: Map<string, { data: unknown; expiry: number }> = new Map();
   private cacheTimeout = 1000 * 60 * 15; // 15分钟缓存
 
+  // 速率限制：每个 Steam API 域名每秒最多 10 个请求
+  private rateLimiters: Map<string, { tokens: number; lastRefill: number }> = new Map();
+  private readonly RATE_LIMIT = 10; // 每秒请求数
+  private readonly RATE_WINDOW = 1000; // 窗口大小（毫秒）
+
+  private async throttle(domain: string): Promise<void> {
+    const now = Date.now();
+    const state = this.rateLimiters.get(domain) ?? { tokens: this.RATE_LIMIT, lastRefill: now };
+
+    // 时间流逝后补充 token
+    const elapsed = now - state.lastRefill;
+    if (elapsed >= this.RATE_WINDOW) {
+      state.tokens = this.RATE_LIMIT;
+      state.lastRefill = now;
+    }
+
+    if (state.tokens <= 0) {
+      // 等待下一个时间窗口
+      const waitMs = this.RATE_WINDOW - elapsed;
+      await new Promise((r) => setTimeout(r, waitMs));
+      state.tokens = this.RATE_LIMIT;
+      state.lastRefill = Date.now();
+    }
+
+    state.tokens--;
+    this.rateLimiters.set(domain, state);
+  }
+
+  /**
+   * 受限制的 fetch：速率限制 + 429 自动重试
+   */
+  private async fetchWithThrottle(
+    url: string,
+    options: RequestInit & { signal?: AbortSignal }
+  ): Promise<Response> {
+    const urlObj = new URL(url);
+    const domain = urlObj.hostname;
+    await this.throttle(domain);
+
+    let lastError: Error | null = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const response = await fetch(url, options);
+      if (response.status === 429) {
+        // Steam API 限速，等待后重试
+        const retryAfter = response.headers.get("Retry-After");
+        const waitMs = retryAfter ? parseInt(retryAfter, 10) * 1000 : (attempt + 1) * 1000;
+        await new Promise((r) => setTimeout(r, waitMs));
+        lastError = new Error(`Steam API rate limited (429), retry ${attempt + 1}/3`);
+        continue;
+      }
+      return response;
+    }
+    throw lastError ?? new Error(`Failed to fetch ${url} after 3 attempts`);
+  }
+
   /**
    * SteamDB 有按类别分页的大型 AppList，比商店搜索更全。
    * 格式: GET https://steamdb.info/api/GetAppList/?branch=Public&origin=STEAMDATAVIEWER_SA
@@ -46,7 +101,7 @@ export class SteamService {
     }
 
     try {
-      const response = await fetch(
+      const response = await this.fetchWithThrottle(
         "https://steamdb.info/api/GetAppList/?branch=Public&origin=STEAMDATAVIEWER_SA",
         {
           headers: {
@@ -98,7 +153,7 @@ export class SteamService {
     for (let page = 1; page <= pages; page++) {
       try {
         const url = `https://steamcharts.com/top/p.${page}`;
-        const resp = await fetch(url, {
+        const resp = await this.fetchWithThrottle(url, {
           headers: {
             "User-Agent": "Mozilla/5.0",
           },
@@ -129,7 +184,7 @@ export class SteamService {
   async collectBySteamDbTag(tagName: string): Promise<number[]> {
     try {
       const url = `https://steamdb.com/api/Tag/?tag=${encodeURIComponent(tagName)}`;
-      const resp = await fetch(url, {
+      const resp = await this.fetchWithThrottle(url, {
         headers: { "User-Agent": "Mozilla/5.0" },
         signal: AbortSignal.timeout(20000),
       });
@@ -366,7 +421,7 @@ export class SteamService {
       return cached.data as T;
     }
 
-    const response = await fetch(url);
+    const response = await this.fetchWithThrottle(url, {});
     if (!response.ok) {
       throw new Error(`Steam API error: ${response.status}`);
     }
@@ -386,7 +441,7 @@ export class SteamService {
   ): Promise<SteamGame | null> {
     try {
       const url = `${STEAM_STORE_API}/appdetails?appids=${appId}&cc=${cc}&l=${l}`;
-      const response = await fetch(url);
+      const response = await this.fetchWithThrottle(url, {});
       const data = await response.json();
 
       if (!data[appId]?.success) {
@@ -470,7 +525,7 @@ export class SteamService {
 
     try {
       const url = `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(t)}&cc=${cc}&l=${lang}`;
-      const response = await fetch(url, {
+      const response = await this.fetchWithThrottle(url, {
         headers: {
           "User-Agent":
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -554,7 +609,7 @@ export class SteamService {
       if (out.length >= maxTotal) break;
       try {
         const url = `https://steamspy.com/api.php?request=top100in2&genre=${encodeURIComponent(genre)}`;
-        const response = await fetch(url, {
+        const response = await this.fetchWithThrottle(url, {
           headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" },
         });
         if (!response.ok) continue;
@@ -820,7 +875,7 @@ export class SteamService {
   async getTopTurnBasedGames(limit = 50): Promise<SteamGame[]> {
     try {
       const url = `https://steamspy.com/api.php?request=top100in2&genre=turn-based`;
-      const response = await fetch(url, {
+      const response = await this.fetchWithThrottle(url, {
         headers: { "User-Agent": "Mozilla/5.0" },
       });
       if (!response.ok) throw new Error("SteamSpy unavailable");

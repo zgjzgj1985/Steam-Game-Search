@@ -16,6 +16,9 @@ export async function GET(request: NextRequest) {
     "minReviews",
     "sortBy",
     "sortOrder",
+    "minReleaseDate",
+    "maxReleaseDate",
+    "excludeTestVersions",
   ]) {
     const v = searchParams.get(key);
     if (v) forward.set(key, v);

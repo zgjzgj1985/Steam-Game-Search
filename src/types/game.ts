@@ -26,6 +26,9 @@ export interface Game {
 
   // 搜索/筛选相关
   searchMatchHints?: string[];
+
+  // 测试版标记
+  isTestVersion?: boolean;
 }
 
 export interface SteamReviews {
@@ -184,6 +187,7 @@ export interface SearchFilters {
   sortOrder?: "asc" | "desc";
   minReleaseDate?: string;
   maxReleaseDate?: string;
+  excludeTestVersions?: boolean;
 }
 
 export interface ComparisonData {

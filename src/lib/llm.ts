@@ -1,6 +1,14 @@
 const LLM_PROVIDER = (process.env.LLM_PROVIDER || "qianwen") as Provider;
 const LLM_API_KEY = process.env.DASHSCOPE_API_KEY || process.env.LLM_API_KEY || "";
 
+// 启动时验证 API Key，避免运行时才报模糊错误
+if (!LLM_API_KEY) {
+  console.warn(
+    "[llm] 警告: 未配置 LLM API Key（DASHSCOPE_API_KEY 或 LLM_API_KEY）。" +
+    "分析生成功能将不可用。请参考 .env.example 配置。"
+  );
+}
+
 function getBaseUrl(): string {
   switch (LLM_PROVIDER) {
     case "qianwen":

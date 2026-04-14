@@ -11,6 +11,49 @@ import { NextRequest, NextResponse } from "next/server";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
+// ============ 测试版检测 ============
+
+const TEST_VERSION_KEYWORDS = [
+  "beta", "α", "alpha", "β", "betta",
+  "demo", "trial", "demo version",
+  "early access", "pre-release", "pre release",
+  "prototype", "tech demo",
+  "test build", "testing", "test version",
+  " (beta)", " [beta]", " (demo)", " [demo]",
+  " (alpha)", " [alpha]", " (test)", " [test]",
+  " (prototype)", " (early access)",
+  " - beta", " - demo", " - test",
+  " 测试版", " 试玩版", " 体验版", " 抢先体验",
+];
+
+function isTestVersionByName(name: string): boolean {
+  if (!name) return false;
+  const lowerName = name.toLowerCase();
+  for (const keyword of TEST_VERSION_KEYWORDS) {
+    if (lowerName.includes(keyword)) return true;
+  }
+  const testPatterns = [
+    /\s*[\(\[\-]\s*(beta|alpha|demo|test|prototype|early\s*access)\s*[\)\]\-]/i,
+    /\s*[\(\[\-]\s*[\d.]+\s*(beta|alpha|b)\s*[\)\]\-]/i,
+    /beta\s*v?\d/i,
+  ];
+  for (const pattern of testPatterns) {
+    if (pattern.test(lowerName)) return true;
+  }
+  return false;
+}
+
+function isTestVersionByTag(tags: string[]): boolean {
+  return tags.some((t) => t.toLowerCase().includes("early access"));
+}
+
+function isTestVersion(raw: IndexGameData, normalizedTags: string[]): boolean {
+  if (raw._is_test_version === true) return true;
+  if (isTestVersionByName(raw.name || "")) return true;
+  if (isTestVersionByTag(normalizedTags)) return true;
+  return false;
+}
+
 // ============ 索引文件数据类型 ============
 
 interface IndexGameData {
@@ -30,6 +73,7 @@ interface IndexGameData {
   estimated_owners: string;
   peak_ccu: number;
   tags: Record<string, number> | string[];
+  _is_test_version?: boolean;
 }
 
 // ============ Meta 文件数据类型 ============
@@ -164,6 +208,7 @@ interface GameInfo {
   headerImage: string | null;
   screenshots: string[];
   steamUrl: string;
+  isTestVersion: boolean;
 }
 
 function findGameById(id: string): GameInfo | null {
@@ -200,6 +245,7 @@ function transformGame(appId: string, raw: IndexGameData): GameInfo {
   const owners = parseEstimatedOwners(raw.estimated_owners);
   const totalReviews = raw.positive + raw.negative;
   const reviewScore = totalReviews > 0 ? Math.round((raw.positive / totalReviews) * 100) : 0;
+  const normalizedTags = normalizeTags(raw.tags);
 
   return {
     id: appId,
@@ -211,7 +257,7 @@ function transformGame(appId: string, raw: IndexGameData): GameInfo {
     publishers: raw.publishers || [],
     genres: raw.genres || [],
     categories: raw.categories || [],
-    tags: normalizeTags(raw.tags),
+    tags: normalizedTags,
     releaseDate: raw.release_date || null,
     isFree: raw.price === 0,
     price: raw.price,
@@ -229,7 +275,8 @@ function transformGame(appId: string, raw: IndexGameData): GameInfo {
     } : null,
     headerImage: raw.header_image || null,
     screenshots: raw.screenshots || [],
-    steamUrl: `https://store.steampowered.com/app/${appId}`
+    steamUrl: `https://store.steampowered.com/app/${appId}`,
+    isTestVersion: isTestVersion(raw, normalizedTags),
   };
 }
 

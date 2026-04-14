@@ -86,9 +86,8 @@ steam-game-analyzer/
 │   └── types/
 │       └── game.ts            # 类型定义
 ├── public/data/
-│   ├── games.json            # 原始数据 (备份)
-│   ├── games-index.json      # 搜索索引 (254 MB)
-│   └── games-meta.json       # 详情补充 (298 MB)
+│   ├── games-index.json    # 搜索索引 (326 MB, 122,611 条)
+│   └── games-meta.json     # 详情补充 (342 MB)
 ├── prisma/
 │   └── schema.prisma          # 数据库模型
 └── package.json
@@ -99,6 +98,7 @@ steam-game-analyzer/
 游戏数据主要来自 [FronkonGames/steam-games-dataset](https://huggingface.co/datasets/FronkonGames/steam-games-dataset)：
 - 122,611 条 Steam 游戏
 - 93% 条目有完整 description（平均 1,320 字符）
+- 数据通过 Steam Store API 持续补充更新
 
 ## 环境变量
 

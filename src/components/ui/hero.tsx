@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, Sword, BarChart3, Layers, Sparkles } from "lucide-react";
+import { Search, Sword, BarChart3, Layers, Sparkles, Target } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface HeroProps {
@@ -31,6 +32,12 @@ export function Hero({ className }: HeroProps) {
           </p>
           
           <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <Link
+              href="/mode2"
+              className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 transition-colors group"
+            >
+              <span className="font-semibold text-emerald-500">新功能</span> 宝可梦Like筛选器
+            </Link>
             <div className="px-4 py-2 bg-background rounded-lg border shadow-sm">
               <span className="font-semibold text-primary">50+</span> 经典游戏
             </div>

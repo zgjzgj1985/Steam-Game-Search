@@ -11,6 +11,53 @@ import { NextRequest, NextResponse } from "next/server";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
+// ============ 测试版/预发布版游戏关键词（名称匹配）============
+// 这些游戏会降低搜索质量，默认应该被过滤
+const TEST_VERSION_KEYWORDS = [
+  "beta", "α", "alpha", "β", "betta",
+  "demo", "trial", "demo version",
+  "early access", "pre-release", "pre release",
+  "prototype", "tech demo",
+  "test build", "testing", "test version",
+  " (beta)", " [beta]", " (demo)", " [demo]",
+  " (alpha)", " [alpha]", " (test)", " [test]",
+  " (prototype)", " (early access)",
+  " - beta", " - demo", " - test",
+  " 测试版", " 试玩版", " 体验版", " 抢先体验",
+];
+
+// 检查是否是测试版/预发布版游戏（通过名称判断）
+function isTestVersionByName(name: string): boolean {
+  if (!name) return false;
+  const lowerName = name.toLowerCase();
+  for (const keyword of TEST_VERSION_KEYWORDS) {
+    if (lowerName.includes(keyword)) return true;
+  }
+  const testPatterns = [
+    /\s*[\(\[\-]\s*(beta|alpha|demo|test|prototype|early\s*access)\s*[\)\]\-]/i,
+    /\s*[\(\[\-]\s*[\d.]+\s*(beta|alpha|b)\s*[\)\]\-]/i,
+    /beta\s*v?\d/i,
+  ];
+  for (const pattern of testPatterns) {
+    if (pattern.test(lowerName)) return true;
+  }
+  return false;
+}
+
+// 检查是否是测试版/预发布版游戏（通过 Steam 标签判断）
+function isTestVersionByTag(tags: string[]): boolean {
+  const lower = tags.map((t) => t.toLowerCase());
+  return lower.some((t) => t.includes("early access"));
+}
+
+// 检查是否是测试版（综合判断：名称 + 标签 + 数据源标记）
+function isTestVersion(raw: RawGameData, normalizedTags: string[]): boolean {
+  if (raw._is_test_version === true) return true;
+  if (isTestVersionByName(raw.name || "")) return true;
+  if (isTestVersionByTag(normalizedTags)) return true;
+  return false;
+}
+
 // ============ 原始数据类型 (games.json) ============
 
 interface RawGameData {
@@ -56,6 +103,7 @@ interface RawGameData {
   discount: number;
   peak_ccu: number;
   tags: Record<string, number> | string[];
+  _is_test_version?: boolean;
 }
 
 // ============ 返回给前端的类型 ============
@@ -89,6 +137,7 @@ interface GameRecord {
   headerImage: string | null;
   screenshots: string[];
   steamUrl: string;
+  isTestVersion: boolean;
 }
 
 // ============ 类型筛选配置 (英文 tags) ============
@@ -164,6 +213,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
   const owners = parseEstimatedOwners(raw.estimated_owners);
   const totalReviews = raw.positive + raw.negative;
   const reviewScore = totalReviews > 0 ? Math.round((raw.positive / totalReviews) * 100) : 0;
+  const normalizedTags = normalizeTags(raw.tags);
 
   return {
     id: appId,
@@ -175,7 +225,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     publishers: raw.publishers || [],
     genres: raw.genres || [],
     categories: raw.categories || [],
-    tags: normalizeTags(raw.tags),
+    tags: normalizedTags,
     releaseDate: raw.release_date || null,
     isFree: raw.price === 0,
     price: raw.price,
@@ -193,7 +243,8 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     } : null,
     headerImage: raw.header_image || null,
     screenshots: raw.screenshots || [],
-    steamUrl: `https://store.steampowered.com/app/${appId}`
+    steamUrl: `https://store.steampowered.com/app/${appId}`,
+    isTestVersion: isTestVersion(raw, normalizedTags),
   };
 }
 
@@ -232,12 +283,16 @@ function loadDatabase(): GameRecord[] {
       games.push(transformGame(appId, data));
     }
 
-    dbCache.games = games;
+// 去重：同名游戏保留拥有者最多的条目（拥有者相同时取评论数最多的）
+    const dupesRemoved = deduplicateGames(games);
+    const dedupedGames = dupesRemoved.kept;
+
+    dbCache.games = dedupedGames;
     dbCache.loadedAt = now;
     dbCache.loadError = null;
-    console.log(`[db] 加载 ${games.length} 个游戏 (${(raw.length / 1024 / 1024).toFixed(1)}MB)`);
+    console.log(`[db] 加载 ${games.length} 个游戏，移除重复后保留 ${dedupedGames.length} 个，移除 ${dupesRemoved.removed} 个`);
 
-    return games;
+    return dedupedGames;
   } catch (e) {
     const msg = `加载数据库失败: ${e instanceof Error ? e.message : String(e)}`;
     console.error("[db]", msg);
@@ -246,11 +301,38 @@ function loadDatabase(): GameRecord[] {
   }
 }
 
-// ============ 搜索逻辑 ============
+/**
+ * 按游戏名称去重，保留拥有者数量最多的条目
+ * Steam 上同一游戏可能存在 Demo 版、限定版、捆绑包等多个条目，
+ * 它们名称相同但 estimated_owners 不同（Demo 版几乎为 0）
+ */
+function deduplicateGames(games: GameRecord[]): { kept: GameRecord[]; removed: number } {
+  // 用 Map 按名称（转小写后）聚合，value = 拥有者最多的条目
+  // 拥有者相同时，取评论数最多的条目
+  const map = new Map<string, GameRecord>();
 
-function escapeRegExp(s: string): string {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  for (const game of games) {
+    if (!game.name) continue;
+    const key = game.name.toLowerCase().trim();
+    const existing = map.get(key);
+    const existingTotalReviews = existing?.steamReviews?.totalReviews ?? 0;
+    const gameTotalReviews = game.steamReviews?.totalReviews ?? 0;
+
+    if (!existing) {
+      map.set(key, game);
+    } else if (
+      game.estimatedOwners > existing.estimatedOwners ||
+      (game.estimatedOwners === existing.estimatedOwners && gameTotalReviews > existingTotalReviews)
+    ) {
+      map.set(key, game);
+    }
+  }
+
+  const kept = Array.from(map.values());
+  return { kept, removed: games.length - kept.length };
 }
+
+// ============ 搜索逻辑 ============
 
 /**
  * 检查游戏是否匹配类型筛选
@@ -284,9 +366,15 @@ function searchGames(
   minReleaseDate?: string,
   maxReleaseDate?: string,
   minRating?: number,
-  minReviews?: number
+  minReviews?: number,
+  excludeTestVersions?: boolean
 ): { results: GameRecord[]; total: number; page: number; pageSize: number } {
   let results = allGames;
+
+  // 0. 测试版过滤
+  if (excludeTestVersions !== false) {
+    results = results.filter((g) => !g.isTestVersion);
+  }
 
   // 1. 类型筛选
   if (genreFilters.length > 0) {
@@ -394,16 +482,20 @@ function searchGames(
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
 
-  const query           = searchParams.get("q")?.trim() || "";
-  const genreFilters    = searchParams.getAll("genre").filter(Boolean);
-  const sortBy          = searchParams.get("sortBy") || "reviews";
-  const sortOrder       = searchParams.get("sortOrder") || "desc";
-  const minReleaseDate  = searchParams.get("minReleaseDate")?.trim() || undefined;
-  const maxReleaseDate  = searchParams.get("maxReleaseDate")?.trim() || undefined;
-  const page            = Math.max(1, parseInt(searchParams.get("page") || "1", 10) || 1);
-  const pageSize        = Math.min(50, Math.max(1, parseInt(searchParams.get("pageSize") || "20", 10) || 20));
-  const minRating       = parseInt(searchParams.get("minRating") || "0", 10) || 0;
-  const minReviews      = parseInt(searchParams.get("minReviews") || "0", 10) || 0;
+  // 参数解析与校验
+  const rawQuery = searchParams.get("q") || "";
+  const query = rawQuery.slice(0, 200); // 限制搜索词长度
+  const genreFilters = searchParams.getAll("genre").filter(Boolean).slice(0, 10); // 最多 10 个标签
+  const validSortBy = ["reviews", "rating", "date", "name"];
+  const sortBy = validSortBy.includes(searchParams.get("sortBy") || "") ? searchParams.get("sortBy")! : "reviews";
+  const sortOrder = searchParams.get("sortOrder") === "asc" ? "asc" : "desc";
+  const minReleaseDate = searchParams.get("minReleaseDate")?.slice(0, 10) || undefined;
+  const maxReleaseDate = searchParams.get("maxReleaseDate")?.slice(0, 10) || undefined;
+  const page = Math.max(1, Math.min(parseInt(searchParams.get("page") || "1", 10) || 1, 1000));
+  const pageSize = Math.min(50, Math.max(1, parseInt(searchParams.get("pageSize") || "20", 10) || 20));
+  const minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("minRating") || "0", 10) || 0));
+  const minReviews = Math.max(0, Math.min(parseInt(searchParams.get("minReviews") || "0", 10) || 0, 1_000_000_000));
+  const excludeTestVersions = searchParams.get("excludeTestVersions") !== "false";
 
   const allGames = loadDatabase();
 
@@ -448,7 +540,8 @@ export async function GET(request: NextRequest) {
     minReleaseDate,
     maxReleaseDate,
     minRating,
-    minReviews
+    minReviews,
+    excludeTestVersions
   );
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -463,6 +556,7 @@ export async function GET(request: NextRequest) {
       query,
       genreFilters: genreFilters.length > 0 ? genreFilters : undefined,
       incomplete: false,
+      excludeTestVersions,
       dbStats: {
         totalGames: allGames.length,
         loadedAt: dbCache.loadedAt ? new Date(dbCache.loadedAt).toISOString() : null,

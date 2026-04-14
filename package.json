@@ -1,15 +1,20 @@
 {
-  "name": "steam-game-analyzer",
+  "name": "turn-based-analyzer",
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\"",
+    "stop:dev": "powershell -Command \"Get-NetTCPConnection -LocalPort 3000,3001,3002 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force }\"",
     "dev": "next dev",
+    "dev:clean": "node scripts/clean-next.js && next dev",
+    "dev:fresh": "npm run stop:dev && npm run dev:clean",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "postinstall": "prisma generate",
+    "db:build": "tsx scripts/build-steam-db.ts",
     "build:meta": "python scripts/build-games-meta.py"
   },
   "dependencies": {

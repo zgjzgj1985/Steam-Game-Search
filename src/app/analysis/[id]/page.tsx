@@ -7,15 +7,16 @@ import { Game, BattleAnalysis } from "@/types/game";
 import { Button } from "@/components/ui/button";
 
 function getRequestBaseUrl(): string {
-  const h = headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host");
-  if (host) {
-    const local =
-      host.startsWith("localhost") || host.startsWith("127.0.0.1");
-    const proto = local ? "http" : (h.get("x-forwarded-proto") ?? "https");
-    return `${proto}://${host}`;
+  // 优先使用环境变量（适用于所有部署平台）
+  if (process.env.NEXT_PUBLIC_BASE_URL) {
+    return process.env.NEXT_PUBLIC_BASE_URL;
   }
-  return process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+
+  // 开发环境兜底：从请求头推断
+  const h = headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
+  const proto = h.get("x-forwarded-proto") ?? "http";
+  return `${proto}://${host}`;
 }
 
 /**
@@ -31,6 +32,9 @@ function resolveGenerateQuery(id: string): URLSearchParams {
   return params;
 }
 
+// 分析页面缓存 1 小时（LLM 生成成本高，避免重复调用）
+export const revalidate = 60 * 60;
+
 async function fetchAnalysisData(
   id: string
 ): Promise<{ game: Game; analysis: BattleAnalysis } | null> {
@@ -38,7 +42,7 @@ async function fetchAnalysisData(
     const base = getRequestBaseUrl();
     const q = resolveGenerateQuery(id);
     const res = await fetch(`${base}/api/analysis/generate?${q.toString()}`, {
-      cache: "no-store",
+      cache: "force-cache",
     });
 
     if (res.ok) {

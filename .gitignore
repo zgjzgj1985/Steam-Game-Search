@@ -41,3 +41,6 @@ next-env.d.ts
 public/data/games.json
 public/data/games-meta.json
 public/data/games-index.json
+
+# Backup files
+*.backup

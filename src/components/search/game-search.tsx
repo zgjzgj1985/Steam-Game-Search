@@ -42,6 +42,7 @@ function filtersSnapshot(f: SearchFilters): string {
     genres,
     minReleaseDate: f.minReleaseDate ?? "",
     maxReleaseDate: f.maxReleaseDate ?? "",
+    excludeTestVersions: f.excludeTestVersions ?? true,
   });
 }
 
@@ -56,6 +57,7 @@ export function GameSearch() {
     sortBy: "reviews",
     sortOrder: "desc",
     minReviews: 0,
+    excludeTestVersions: true,
   });
   const [isSearching, setIsSearching] = useState(false);
   const [results, setResults] = useState<Game[]>([]);
@@ -125,6 +127,9 @@ export function GameSearch() {
       filters.genres?.forEach((g) => params.append("genre", g));
       if (filters.minReleaseDate) params.set("minReleaseDate", filters.minReleaseDate);
       if (filters.maxReleaseDate) params.set("maxReleaseDate", filters.maxReleaseDate);
+      if (filters.excludeTestVersions !== undefined) {
+        params.set("excludeTestVersions", String(filters.excludeTestVersions));
+      }
       params.set("page", String(targetPage));
       params.set("pageSize", String(PAGE_SIZE));
 
@@ -224,6 +229,7 @@ export function GameSearch() {
       minReviews: 0,
       minReleaseDate: undefined,
       maxReleaseDate: undefined,
+      excludeTestVersions: true,
     });
   };
 
@@ -336,6 +342,29 @@ export function GameSearch() {
                     {genre}
                   </button>
                 ))}
+              </div>
+              {/* 测试版开关 */}
+              <div className="flex items-center justify-between pt-2">
+                <span className="text-sm font-medium">隐藏测试版游戏</span>
+                <button
+                  role="switch"
+                  aria-checked={filters.excludeTestVersions !== false}
+                  onClick={() =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      excludeTestVersions: prev.excludeTestVersions === false ? true : false,
+                    }))
+                  }
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                    filters.excludeTestVersions !== false ? "bg-primary" : "bg-muted"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform ${
+                      filters.excludeTestVersions !== false ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
               </div>
             </div>
 

@@ -928,6 +928,12 @@ export default function Mode2Page() {
       }
       // 过滤测试版
       params.set("excludeTestVersions", String(excludeTestVersions));
+      // 价格筛选
+      if (priceMin !== undefined) params.set("priceMin", String(priceMin));
+      if (priceMax !== undefined) params.set("priceMax", String(priceMax));
+      // 特色标签筛选
+      if (modernTagFilter) params.set("modernTagFilter", modernTagFilter);
+      if (featureTagFilter) params.set("featureTagFilter", featureTagFilter);
 
       const response = await fetch(`/api/mode2/filter?${params.toString()}`, {
         signal: ac.signal,
@@ -944,7 +950,7 @@ export default function Mode2Page() {
     } finally {
       setIsLoadingStats(false);
     }
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter]);
 
   // 获取搜索结果
   const fetchResults = useCallback(async () => {

@@ -406,12 +406,12 @@ function GameCard({ game }: { game: GameRecord }) {
               {/* 标签详情 */}
               <div className="flex flex-wrap gap-1 mt-1">
                 {game.matchedCoreTags.slice(0, 2).map((tag, i) => (
-                  <span key={i} className="px-1.5 py-0.5 text-[9px] font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded">
+                  <span key={i} className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded">
                     {tag}
                   </span>
                 ))}
                 {game.matchedModernTags.slice(0, 3).map((tag, i) => (
-                  <span key={`m-${i}`} className="px-1.5 py-0.5 text-[9px] font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 rounded">
+                  <span key={`m-${i}`} className="px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 rounded">
                     {tag}
                   </span>
                 ))}

@@ -44,3 +44,4 @@ public/data/games-index.json
 
 # Backup files
 *.backup
+*_backup

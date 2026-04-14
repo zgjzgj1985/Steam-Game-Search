@@ -90,8 +90,34 @@ interface PoolConfig {
   poolC: { minRating: number; maxRating: number; minReviews: number };
 }
 
+// 价格统计类型
+interface PriceStats {
+  min: number;
+  max: number;
+  avg: number;
+  median: number;
+  distribution: {
+    free: number;
+    under10: number;
+    under20: number;
+    under30: number;
+    under50: number;
+    over50: number;
+  };
+}
+
 // 池子条件类型
 type PoolConditions = { minRating: number; minReviews: number } | { minRating: number; maxRating: number; minReviews: number };
+
+// 特色标签选项
+const FEATURE_TAGS = [
+  { key: "survival", label: "生存建造", tags: ["Survival", "Crafting", "生存", "建造"] },
+  { key: "roguelite", label: "肉鸽融合", tags: ["Roguelite", "Roguelike", "类肉鸽"] },
+  { key: "deckbuilding", label: "牌组构建", tags: ["Deckbuilding", "牌组构建", "卡牌构建"] },
+  { key: "openworld", label: "开放世界", tags: ["开放世界", "Open World"] },
+  { key: "metroidvania", label: "银河恶魔城", tags: ["Metroidvania", "银河恶魔城"] },
+  { key: "morph", label: "形态融合", tags: ["形态融合"] },
+];
 
 interface FilterResponse {
   results: GameRecord[];
@@ -100,6 +126,7 @@ interface FilterResponse {
   pageSize: number;
   totalPages: number;
   stats: PoolStats;
+  priceStats?: PriceStats;
   poolConfig: PoolConfig;
   query: string;
   poolFilters: string[];
@@ -746,6 +773,15 @@ export default function Mode2Page() {
   // 过滤测试版游戏（默认开启）
   const [excludeTestVersions, setExcludeTestVersions] = useState<boolean>(true);
 
+  // 价格筛选状态
+  const [priceMin, setPriceMin] = useState<number | undefined>(undefined);
+  const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
+  const [priceStats, setPriceStats] = useState<PriceStats | null>(null);
+
+  // 特色标签筛选
+  const [modernTagFilter, setModernTagFilter] = useState<"hasCore" | "hasModern" | undefined>(undefined);
+  const [featureTagFilter, setFeatureTagFilter] = useState<string | undefined>(undefined);
+
   const abortRef = useRef<AbortController | null>(null);
   const resultsAbortRef = useRef<AbortController | null>(null);
 
@@ -803,6 +839,10 @@ export default function Mode2Page() {
     setMinReleaseDate(undefined);
     setMaxReleaseDate(undefined);
     setExcludeTestVersions(true);
+    setPriceMin(undefined);
+    setPriceMax(undefined);
+    setModernTagFilter(undefined);
+    setFeatureTagFilter(undefined);
   };
 
   // 获取统计数据
@@ -898,6 +938,12 @@ export default function Mode2Page() {
       }
       // 过滤测试版
       params.set("excludeTestVersions", String(excludeTestVersions));
+      // 价格筛选
+      if (priceMin !== undefined) params.set("priceMin", String(priceMin));
+      if (priceMax !== undefined) params.set("priceMax", String(priceMax));
+      // 特色标签筛选
+      if (modernTagFilter) params.set("modernTagFilter", modernTagFilter);
+      if (featureTagFilter) params.set("featureTagFilter", featureTagFilter);
 
       const response = await fetch(`/api/mode2/filter?${params.toString()}`, {
         signal: ac.signal,
@@ -913,20 +959,24 @@ export default function Mode2Page() {
       if (data.stats) {
         setStats(data.stats);
       }
+      // 更新价格统计
+      if (data.priceStats) {
+        setPriceStats(data.priceStats);
+      }
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") return;
       console.error("Failed to fetch results:", err);
     } finally {
       setIsLoadingResults(false);
     }
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, page, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, page, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter]);
 
   // 条件变化时获取统计
   useEffect(() => {
     const timer = setTimeout(fetchStats, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter]);
 
   // 获取搜索结果
   useEffect(() => {
@@ -934,7 +984,7 @@ export default function Mode2Page() {
     const timer = setTimeout(fetchResults, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter]);
 
   // 页码变化时获取结果
   useEffect(() => {
@@ -1186,6 +1236,173 @@ export default function Mode2Page() {
                 )}
               />
             </button>
+          </div>
+        </div>
+
+        {/* ========== 价格筛选 ========== */}
+        <div className="bg-card rounded-xl border p-4 mb-6">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="w-9 h-9 rounded-lg bg-green-500/10 flex items-center justify-center">
+              <span className="text-green-600 font-bold text-sm">$</span>
+            </div>
+            <span className="text-sm font-medium text-muted-foreground">价格筛选</span>
+
+            {/* 快捷价格区间 */}
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                onClick={() => {
+                  setPriceMin(undefined);
+                  setPriceMax(undefined);
+                }}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  priceMin === undefined && priceMax === undefined
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                全部
+              </button>
+              <button
+                onClick={() => {
+                  setPriceMin(0);
+                  setPriceMax(0);
+                }}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  priceMin === 0 && priceMax === 0
+                    ? "bg-green-600 text-white shadow-md"
+                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                免费
+              </button>
+              <button
+                onClick={() => {
+                  setPriceMin(undefined);
+                  setPriceMax(10);
+                }}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  priceMin === undefined && priceMax === 10
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                $10以下
+              </button>
+              <button
+                onClick={() => {
+                  setPriceMin(10);
+                  setPriceMax(30);
+                }}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  priceMin === 10 && priceMax === 30
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                $10-30
+              </button>
+              <button
+                onClick={() => {
+                  setPriceMin(30);
+                  setPriceMax(undefined);
+                }}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  priceMin === 30 && priceMax === undefined
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                $30以上
+              </button>
+            </div>
+
+            {/* 价格区间显示 */}
+            {(priceMin !== undefined || priceMax !== undefined) && (
+              <span className="text-xs text-primary">
+                {priceMin !== undefined ? `$${priceMin}` : "$0"} - {priceMax !== undefined ? `$${priceMax}` : "不限"}
+              </span>
+            )}
+          </div>
+
+          {/* 价格统计信息 */}
+          {priceStats && !isLoadingResults && (
+            <div className="mt-3 pt-3 border-t border-border/50">
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <span>均价: <span className="font-medium text-foreground">${priceStats.avg.toFixed(2)}</span></span>
+                <span>中位价: <span className="font-medium text-foreground">${priceStats.median.toFixed(2)}</span></span>
+                <span>区间: <span className="font-medium text-foreground">${priceStats.min.toFixed(2)} - ${priceStats.max.toFixed(2)}</span></span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ========== 特色标签筛选 ========== */}
+        <div className="bg-card rounded-xl border p-4 mb-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-purple-500" />
+            </div>
+            <span className="text-sm font-medium text-muted-foreground">创新融合标签</span>
+
+            {/* 特色标签快捷筛选 */}
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                onClick={() => setModernTagFilter(undefined)}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  modernTagFilter === undefined
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                全部
+              </button>
+              <button
+                onClick={() => setModernTagFilter("hasCore")}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  modernTagFilter === "hasCore"
+                    ? "bg-amber-500 text-white shadow-md"
+                    : "bg-amber-100 hover:bg-amber-200 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                )}
+              >
+                核心竞品
+              </button>
+              <button
+                onClick={() => setModernTagFilter("hasModern")}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  modernTagFilter === "hasModern"
+                    ? "bg-purple-600 text-white shadow-md"
+                    : "bg-purple-100 hover:bg-purple-200 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+                )}
+              >
+                有创新融合
+              </button>
+            </div>
+
+            {/* 具体特色标签 */}
+            <div className="flex flex-wrap gap-1.5 ml-2">
+              {FEATURE_TAGS.map((tag) => (
+                <button
+                  key={tag.key}
+                  onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
+                  className={cn(
+                    "px-2 py-0.5 rounded text-[10px] font-medium transition-colors",
+                    featureTagFilter === tag.key
+                      ? "bg-purple-600 text-white shadow-md"
+                      : "bg-purple-100 hover:bg-purple-200 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+                  )}
+                >
+                  {tag.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

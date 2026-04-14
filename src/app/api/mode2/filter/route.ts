@@ -96,6 +96,32 @@ interface PoolStats {
   poolC: number;
 }
 
+// 价格统计接口
+interface PriceStats {
+  min: number;
+  max: number;
+  avg: number;
+  median: number;
+  distribution: {
+    free: number;
+    under10: number;
+    under20: number;
+    under30: number;
+    under50: number;
+    over50: number;
+  };
+}
+
+// 特色标签筛选选项（与前端保持一致）
+const FEATURE_TAGS = [
+  { key: "survival", label: "生存建造", tags: ["Survival", "Crafting", "生存", "建造"] },
+  { key: "roguelite", label: "肉鸽融合", tags: ["Roguelite", "Roguelike", "类肉鸽"] },
+  { key: "deckbuilding", label: "牌组构建", tags: ["Deckbuilding", "牌组构建", "卡牌构建"] },
+  { key: "openworld", label: "开放世界", tags: ["开放世界", "Open World"] },
+  { key: "metroidvania", label: "银河恶魔城", tags: ["Metroidvania", "银河恶魔城"] },
+  { key: "morph", label: "形态融合", tags: ["形态融合"] },
+];
+
 // ============ 标签权重系统 ============
 
 // 核心标签（最高权重）- 生物收集/怪物养成类游戏必须有
@@ -656,8 +682,12 @@ function filterGames(
     minReleaseDate?: string;
     maxReleaseDate?: string;
     excludeTestVersions?: boolean; // 默认过滤测试版
+    priceMin?: number;
+    priceMax?: number;
+    modernTagFilter?: "hasCore" | "hasModern";
+    featureTagFilter?: string;
   }
-): { results: GameRecord[]; total: number; stats: PoolStats } {
+): { results: GameRecord[]; total: number; stats: PoolStats; priceStats?: PriceStats } {
   // 默认过滤测试版
   const excludeTest = options.excludeTestVersions !== false;
 
@@ -727,7 +757,41 @@ function filterGames(
     });
   }
 
-  // 5. 排序
+  // 5. 价格筛选
+  if (options.priceMin !== undefined || options.priceMax !== undefined) {
+    results = results.filter((g) => {
+      if (options.priceMin !== undefined && g.price < options.priceMin) return false;
+      if (options.priceMax !== undefined && g.price > options.priceMax) return false;
+      return true;
+    });
+  }
+
+  // 6. 特色标签筛选
+  if (options.modernTagFilter || options.featureTagFilter) {
+    results = results.filter((g) => {
+      // 核心标签筛选
+      if (options.modernTagFilter === "hasCore" && g.coreTagCount === 0) {
+        return false;
+      }
+      // 现代融合标签筛选
+      if (options.modernTagFilter === "hasModern" && g.modernTagCount === 0) {
+        return false;
+      }
+      // 具体特色标签筛选
+      if (options.featureTagFilter) {
+        const featureTag = FEATURE_TAGS.find((f) => f.key === options.featureTagFilter);
+        if (featureTag) {
+          const hasTag = g.uniqueFeatureTags.some((tag) =>
+            featureTag.tags.some((ft) => tag.toLowerCase().includes(ft.toLowerCase()))
+          );
+          if (!hasTag) return false;
+        }
+      }
+      return true;
+    });
+  }
+
+  // 7. 排序
   results.sort((a, b) => {
     let cmp = 0;
     switch (options.sortBy) {
@@ -759,13 +823,16 @@ function filterGames(
     poolC: results.filter((g) => g.pool === "C").length,
   };
 
-  // 7. 分页
+  // 7. 计算价格统计
+  const priceStats = calculatePriceStats(results);
+
+  // 8. 分页
   const page = options.page || 1;
   const pageSize = options.pageSize || 20;
   const offset = (page - 1) * pageSize;
   const paged = results.slice(offset, offset + pageSize);
 
-  return { results: paged, total: results.length, stats };
+  return { results: paged, total: results.length, stats, priceStats };
 }
 
 // 获取各池子的游戏数量（用于显示预览）
@@ -834,6 +901,47 @@ function getPoolCounts(
   return { total: poolA + poolB + poolC, totalTurnBased, poolA, poolB, poolC };
 }
 
+// 计算价格统计
+function calculatePriceStats(games: GameRecord[]): PriceStats {
+  const prices = games
+    .map((g) => g.price)
+    .filter((p) => p >= 0);
+
+  if (prices.length === 0) {
+    return {
+      min: 0,
+      max: 0,
+      avg: 0,
+      median: 0,
+      distribution: { free: 0, under10: 0, under20: 0, under30: 0, under50: 0, over50: 0 },
+    };
+  }
+
+  const sorted = [...prices].sort((a, b) => a - b);
+  const sum = prices.reduce((a, b) => a + b, 0);
+  const avg = sum / prices.length;
+  const median = sorted.length % 2 === 0
+    ? (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2
+    : sorted[Math.floor(sorted.length / 2)];
+
+  const distribution = {
+    free: prices.filter((p) => p === 0).length,
+    under10: prices.filter((p) => p > 0 && p < 10).length,
+    under20: prices.filter((p) => p >= 10 && p < 20).length,
+    under30: prices.filter((p) => p >= 20 && p < 30).length,
+    under50: prices.filter((p) => p >= 30 && p < 50).length,
+    over50: prices.filter((p) => p >= 50).length,
+  };
+
+  return {
+    min: sorted[0],
+    max: sorted[sorted.length - 1],
+    avg: Math.round(avg * 100) / 100,
+    median: Math.round(median * 100) / 100,
+    distribution,
+  };
+}
+
 // ============ API入口 ============
 
 export async function GET(request: NextRequest) {
@@ -873,6 +981,14 @@ export async function GET(request: NextRequest) {
 
   // 是否过滤测试版（默认 true）
   const excludeTestVersions = searchParams.get("excludeTestVersions") !== "false";
+
+  // 价格筛选参数
+  const priceMin = searchParams.get("priceMin") ? parseFloat(searchParams.get("priceMin")!) : undefined;
+  const priceMax = searchParams.get("priceMax") ? parseFloat(searchParams.get("priceMax")!) : undefined;
+
+  // 特色标签筛选参数
+  const modernTagFilter = searchParams.get("modernTagFilter") as "hasCore" | "hasModern" | undefined;
+  const featureTagFilter = searchParams.get("featureTagFilter") || undefined;
 
   // 是否只获取统计信息
   const statsOnly = searchParams.get("statsOnly") === "true";
@@ -916,7 +1032,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const { results, total, stats } = filterGames(allGames, {
+  const { results, total, stats, priceStats } = filterGames(allGames, {
     pools: pools.length > 0 ? pools : undefined,
     poolConfig,
     query,
@@ -928,6 +1044,10 @@ export async function GET(request: NextRequest) {
     minReleaseDate,
     maxReleaseDate,
     excludeTestVersions,
+    priceMin,
+    priceMax,
+    modernTagFilter,
+    featureTagFilter,
   });
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -939,6 +1059,7 @@ export async function GET(request: NextRequest) {
     pageSize,
     totalPages,
     stats,
+    priceStats,
     poolConfig,
     query,
     poolFilters: pools.length > 0 ? pools : ["A", "B", "C"],

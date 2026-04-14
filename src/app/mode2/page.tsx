@@ -318,12 +318,12 @@ function GameCard({ game }: { game: GameRecord }) {
             )}
           </div>
 
-          {/* C池避坑提示徽章 */}
+          {/* C池避坑提示徽章 - 点击引导 */}
           {game.pool === "C" && (
             <div className="absolute bottom-2 left-2 right-2 z-10">
-              <div className="px-2 py-1 text-[10px] font-medium bg-rose-500/95 text-white rounded shadow-lg flex items-center gap-1.5">
+              <div className="px-2 py-1.5 text-[10px] font-medium bg-gradient-to-r from-rose-600 to-red-500 text-white rounded shadow-lg flex items-center justify-center gap-1.5">
                 <AlertTriangle className="w-3 h-3" />
-                <span>避坑指南 · 点击读差评获取灵感</span>
+                <span>避坑指南 · 点击分析页读差评</span>
               </div>
             </div>
           )}
@@ -385,6 +385,40 @@ function GameCard({ game }: { game: GameRecord }) {
             )}
           </div>
 
+          {/* 标签匹配度进度条 */}
+          {game.tagWeight > 0 && (
+            <div className="mt-3 pt-3 border-t border-border/50">
+              <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-1">
+                <span>匹配度</span>
+                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className={cn(
+                      "h-full rounded-full transition-all",
+                      game.coreTagCount > 0 ? "bg-amber-500" : game.modernTagCount > 0 ? "bg-purple-500" : "bg-blue-500"
+                    )}
+                    style={{ width: `${Math.min(100, game.tagWeight * 10)}%` }}
+                  />
+                </div>
+                <span className="font-medium w-6 text-right">
+                  {Math.min(100, game.tagWeight * 10)}%
+                </span>
+              </div>
+              {/* 标签详情 */}
+              <div className="flex flex-wrap gap-1 mt-1">
+                {game.matchedCoreTags.slice(0, 2).map((tag, i) => (
+                  <span key={i} className="px-1.5 py-0.5 text-[9px] font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded">
+                    {tag}
+                  </span>
+                ))}
+                {game.matchedModernTags.slice(0, 3).map((tag, i) => (
+                  <span key={`m-${i}`} className="px-1.5 py-0.5 text-[9px] font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 rounded">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* 特色标签展示（差异化卖点） */}
           {game.differentiationLabels && game.differentiationLabels.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-1">
@@ -396,6 +430,19 @@ function GameCard({ game }: { game: GameRecord }) {
                   +{label}
                 </span>
               ))}
+            </div>
+          )}
+
+          {/* C池差评方向提示 */}
+          {game.pool === "C" && (
+            <div className="mt-3 p-2 bg-rose-50 dark:bg-rose-950/30 rounded-lg border border-rose-200 dark:border-rose-800">
+              <div className="flex items-start gap-2">
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-500 mt-0.5 shrink-0" />
+                <div className="text-[10px] text-rose-700 dark:text-rose-300">
+                  <span className="font-medium">避坑重点：</span>
+                  <span>点击上方"查看分析"，在LLM分析中查看差评关键词汇总，了解玩家主要抱怨方向</span>
+                </div>
+              </div>
             </div>
           )}
 
@@ -1332,10 +1379,67 @@ export default function Mode2Page() {
           {/* 价格统计信息 */}
           {priceStats && !isLoadingResults && (
             <div className="mt-3 pt-3 border-t border-border/50">
-              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-4 text-xs text-muted-foreground mb-2">
                 <span>均价: <span className="font-medium text-foreground">${priceStats.avg.toFixed(2)}</span></span>
                 <span>中位价: <span className="font-medium text-foreground">${priceStats.median.toFixed(2)}</span></span>
                 <span>区间: <span className="font-medium text-foreground">${priceStats.min.toFixed(2)} - ${priceStats.max.toFixed(2)}</span></span>
+              </div>
+              {/* 价格分布条形图 */}
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-muted-foreground w-8">分布:</span>
+                <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden flex">
+                  {priceStats.distribution.free > 0 && (
+                    <div
+                      className="h-full bg-green-500 flex items-center justify-center"
+                      style={{ width: `${(priceStats.distribution.free / priceStats.total) * 100}%` }}
+                      title={`免费: ${priceStats.distribution.free}`}
+                    />
+                  )}
+                  {priceStats.distribution.under10 > 0 && (
+                    <div
+                      className="h-full bg-emerald-400"
+                      style={{ width: `${(priceStats.distribution.under10 / priceStats.total) * 100}%` }}
+                      title={`<$10: ${priceStats.distribution.under10}`}
+                    />
+                  )}
+                  {priceStats.distribution.under20 > 0 && (
+                    <div
+                      className="h-full bg-blue-400"
+                      style={{ width: `${(priceStats.distribution.under20 / priceStats.total) * 100}%` }}
+                      title={`$10-20: ${priceStats.distribution.under20}`}
+                    />
+                  )}
+                  {priceStats.distribution.under30 > 0 && (
+                    <div
+                      className="h-full bg-purple-400"
+                      style={{ width: `${(priceStats.distribution.under30 / priceStats.total) * 100}%` }}
+                      title={`$20-30: ${priceStats.distribution.under30}`}
+                    />
+                  )}
+                  {priceStats.distribution.under50 > 0 && (
+                    <div
+                      className="h-full bg-amber-400"
+                      style={{ width: `${(priceStats.distribution.under50 / priceStats.total) * 100}%` }}
+                      title={`$30-50: ${priceStats.distribution.under50}`}
+                    />
+                  )}
+                  {priceStats.distribution.over50 > 0 && (
+                    <div
+                      className="h-full bg-red-400"
+                      style={{ width: `${(priceStats.distribution.over50 / priceStats.total) * 100}%` }}
+                      title={`$50+: ${priceStats.distribution.over50}`}
+                    />
+                  )}
+                </div>
+              </div>
+              {/* 图例 */}
+              <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5 text-[10px] text-muted-foreground">
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500"></span>免费({priceStats.distribution.free})</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400"></span>&lt;$10({priceStats.distribution.under10})</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400"></span>$10-20({priceStats.distribution.under20})</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-purple-400"></span>$20-30({priceStats.distribution.under30})</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400"></span>$30-50({priceStats.distribution.under50})</span>
+                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-400"></span>$50+({priceStats.distribution.over50})</span>
               </div>
             </div>
           )}

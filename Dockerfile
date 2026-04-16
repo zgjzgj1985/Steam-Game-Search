@@ -13,7 +13,7 @@ FROM deps AS builder
 WORKDIR /app
 COPY . .
 
-# 生成 Prisma Client (不执行 postinstall)
+# 生成 Prisma Client
 RUN npx prisma generate
 
 # 构建 Next.js
@@ -25,12 +25,23 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/public ./public
+# 复制 standalone 输出
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# 复制静态文件（如果存在）
+RUN if [ -d "/app/.next/static" ]; then \
+        mkdir -p .next/static && \
+        cp -r /app/.next/static/. .next/static/; \
+    fi
+
+# 复制 public 目录（如果存在）
+RUN if [ -d "/app/public" ]; then \
+        mkdir -p public && \
+        cp -r /app/public/. public/; \
+    fi
 
 USER nextjs
 

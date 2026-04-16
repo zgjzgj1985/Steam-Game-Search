@@ -1011,13 +1011,31 @@ function loadFromJson(sourceFile: string): { games: PrecomputedGame[]; source: '
   const t0 = Date.now();
   const raw = fs.readFileSync(sourceFile, "utf-8");
   const rawData = JSON.parse(raw) as Record<string, RawGameData>;
-  
+
   const games: PrecomputedGame[] = [];
   for (const [appId, data] of Object.entries(rawData)) {
     const game = transformGame(appId, data);
     if (game) games.push(game);
   }
-  
+
+  console.log(`   从JSON加载 ${games.length.toLocaleString()} 个游戏，耗时 ${Date.now() - t0}ms`);
+  return { games, source: 'json', count: games.length };
+}
+
+/**
+ * 使用预加载的 JSON 数据加载游戏
+ * 避免重复读取文件，优化性能
+ */
+function loadFromJsonWithData(sourceFile: string, rawData: Record<string, RawGameData>): { games: PrecomputedGame[]; source: 'json'; count: number } {
+  console.log("   从JSON文件加载...");
+  const t0 = Date.now();
+
+  const games: PrecomputedGame[] = [];
+  for (const [appId, data] of Object.entries(rawData)) {
+    const game = transformGame(appId, data);
+    if (game) games.push(game);
+  }
+
   console.log(`   从JSON加载 ${games.length.toLocaleString()} 个游戏，耗时 ${Date.now() - t0}ms`);
   return { games, source: 'json', count: games.length };
 }
@@ -1036,42 +1054,42 @@ async function main() {
   let sourceData: { games: PrecomputedGame[]; source: 'sqlite' | 'json'; count: number };
   let sourceFile: string;
 
-  // 先检查两个数据源的游戏数量
-  let jsonCount = 0;
+  // 优化: 只读取一次 JSON，将数据缓存在内存中
+  let cachedJsonData: Record<string, RawGameData> | null = null;
+  let cachedJsonCount = 0;
+  let cachedJsonHasHeader = false;
+
   if (fs.existsSync(SOURCE_JSON)) {
     const jsonRaw = fs.readFileSync(SOURCE_JSON, "utf-8");
-    const jsonData = JSON.parse(jsonRaw);
-    jsonCount = Object.keys(jsonData).length;
+    cachedJsonData = JSON.parse(jsonRaw) as Record<string, RawGameData>;
+    cachedJsonCount = Object.keys(cachedJsonData).length;
+
+    // 检查 header_image 数据
+    const samples = Object.values(cachedJsonData).slice(0, 10);
+    cachedJsonHasHeader = samples.some((g: any) => g && typeof g === 'object' && g.header_image && String(g.header_image).startsWith('http'));
   }
 
+  // 先检查 SQLite 数据
   let sqliteCount = 0;
   const sqliteData = await loadFromSQLite();
   if (sqliteData) {
     sqliteCount = sqliteData.count;
   }
 
-  console.log(`   数据源对比: JSON=${jsonCount.toLocaleString()} | SQLite=${sqliteCount.toLocaleString()}`);
+  console.log(`   数据源对比: JSON=${cachedJsonCount.toLocaleString()} | SQLite=${sqliteCount.toLocaleString()}`);
 
-  // 优先使用 JSON 数据源
-  // 原因：JSON 包含完整字段（包括 header_image），而 SQLite 在迁移时可能丢失部分字段
-  // 即使 JSON 和 SQLite 游戏数量相同，也应优先使用 JSON
-  if (fs.existsSync(SOURCE_JSON)) {
-    const jsonHasHeader = (() => {
-      try {
-        const sample = Object.values(JSON.parse(fs.readFileSync(SOURCE_JSON, "utf-8")) as Record<string, unknown>).slice(0, 10);
-        return sample.some((g: any) => g && typeof g === 'object' && (g as any).header_image && String((g as any).header_image).startsWith('http'));
-      } catch { return false; }
-    })();
-    if (jsonHasHeader || jsonCount >= sqliteCount) {
-      console.log(`   优先使用 JSON (包含完整字段，数据量 ${jsonCount.toLocaleString()})`);
-      sourceData = loadFromJson(SOURCE_JSON);
+  // 优先使用 JSON 数据源（包含完整字段）
+  if (cachedJsonData && cachedJsonCount > 0) {
+    if (cachedJsonHasHeader || cachedJsonCount >= sqliteCount) {
+      console.log(`   优先使用 JSON (包含完整字段，数据量 ${cachedJsonCount.toLocaleString()})`);
+      sourceData = loadFromJsonWithData(SOURCE_JSON, cachedJsonData);
       sourceFile = SOURCE_JSON;
     } else if (sqliteData) {
       console.log(`   JSON header_image 数据异常，切换到 SQLite`);
       sourceData = sqliteData;
       sourceFile = "SQLite Database";
     } else {
-      sourceData = loadFromJson(SOURCE_JSON);
+      sourceData = loadFromJsonWithData(SOURCE_JSON, cachedJsonData);
       sourceFile = SOURCE_JSON;
     }
   } else if (sqliteData) {

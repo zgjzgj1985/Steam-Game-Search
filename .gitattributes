@@ -1,0 +1,2 @@
+public/data/games.db filter=lfs diff=lfs merge=lfs -text
+public/data/games-*.json filter=lfs diff=lfs merge=lfs -text

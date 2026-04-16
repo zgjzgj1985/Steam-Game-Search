@@ -87,6 +87,11 @@ interface GameRecord {
   matchedModernTags: string[];
   uniqueFeatureTags: string[];
   differentiationLabels: string[];
+  // 当前选中的特色标签筛选（卡片显示用）
+  activeFeatureTagFilter?: string;
+  activeFeatureTagLabel?: string;
+  // 卡片展示用现代标签（已排重，排除与 activeFeatureTagLabel 重复的项）
+  displayModernTags: string[];
 }
 
 interface PoolStats {
@@ -164,6 +169,8 @@ const MODERN_TAGS = [
   "卡牌构建",
   "形态融合",
   "类肉鸽",
+  "Time Travel",
+  "时间旅行",
 ];
 
 // 特色标签映射（用于展示差异化卖点）
@@ -181,6 +188,8 @@ const DIFFERENTIATION_LABELS: Record<string, string> = {
   "形态融合": "形态融合",
   "银河恶魔城": "银河恶魔城",
   "Survival Game": "生存建造",
+  "Time Travel": "时间旅行",
+  "时间旅行": "时间旅行",
 };
 
 // 标签中文名称映射
@@ -279,9 +288,10 @@ function calculateTagWeight(tags: string[]): TagWeight {
       // 添加到特色标签
       if (!uniqueFeatureTags.includes(tag)) {
         uniqueFeatureTags.push(tag);
-        // 添加展示用标签
+        // 添加展示用标签（若转换后与 matchedModernTags 中文名重复则跳过，避免卡片标签重复）
         const label = DIFFERENTIATION_LABELS[tag] || DIFFERENTIATION_LABELS[tag.charAt(0).toUpperCase() + tag.slice(1)] || tag;
-        if (!differentiationLabels.includes(label)) {
+        const labelInChinese = TAG_CHINESE_NAMES[tag] || tag;
+        if (!differentiationLabels.includes(label) && label !== labelInChinese) {
           differentiationLabels.push(label);
         }
       }
@@ -526,6 +536,13 @@ const CACHE_FILE = path.join(process.cwd(), "public", "data", "games-cache.json"
 // 原始文件（仅在缓存不存在时降级使用）
 const DB_FILE = path.join(process.cwd(), "public", "data", "games-index.json");
 
+// 池子分布类型
+export interface PoolDistribution {
+  A: number;
+  B: number;
+  C: number;
+}
+
 // 动态标签选项类型
 export interface FeatureTagOption {
   key: string;
@@ -535,6 +552,7 @@ export interface FeatureTagOption {
   gameCount: number;
   coverage: number;
   avgWilson: number;
+  poolDistribution?: PoolDistribution;
 }
 
 interface CacheData {
@@ -1005,8 +1023,9 @@ function filterGames(
         // 从动态标签选项中查找
         const featureTag = options.featureTagOptions?.find((f) => f.key === options.featureTagFilter);
         if (featureTag) {
-          // 用原始标签名精确匹配
-          const hasTag = g.uniqueFeatureTags.some((tag) =>
+          // 直接检查游戏的原始标签，而不是依赖 uniqueFeatureTags
+          // 预计算时使用 isMechanismTag 统计标签，API筛选也应使用相同的逻辑
+          const hasTag = g.tags.some((tag) =>
             tag.toLowerCase() === featureTag.tag.toLowerCase()
           );
           if (!hasTag) return false;
@@ -1057,7 +1076,35 @@ function filterGames(
   const offset = (page - 1) * pageSize;
   const paged = results.slice(offset, offset + pageSize);
 
-  return { results: paged, total: results.length, stats, priceStats };
+  // 8. 动态计算特色标签（基于当前 MODERN_TAGS 配置）
+  const pagedWithFeatures = paged.map((game) => {
+    const tagWeight = calculateTagWeight(game.tags);
+    const featureTagOption = options.featureTagOptions?.find(
+      (f) => f.key === options.featureTagFilter
+    );
+    const activeTag = featureTagOption?.tag;
+    const activeLabel = featureTagOption?.label;
+    // 排重：featureTagOption.tag 是原始标签（如 "Time Travel"），与 matchedModernTags 英文原名对比
+    // 只对 displayModernTags 排重（matchedModernTags 是英文预计算数据）
+    const excludedRawTag = activeTag ? activeTag.toLowerCase() : "";
+    const excludedLabelInChinese = activeTag ? (TAG_CHINESE_NAMES[activeTag] || activeTag).toLowerCase() : "";
+    const displayModernTags = tagWeight.matchedModernTags.filter(
+      (t) => t.toLowerCase() !== excludedRawTag && t.toLowerCase() !== excludedLabelInChinese
+    );
+    // differentiationLabels 保留原样（前端通过条件判断选择展示 differentiationLabels 还是 activeFeatureTagLabel）
+    return {
+      ...game,
+      uniqueFeatureTags: tagWeight.uniqueFeatureTags,
+      differentiationLabels: tagWeight.differentiationLabels,
+      matchedModernTags: tagWeight.matchedModernTags,
+      modernTagCount: tagWeight.modernTagCount,
+      activeFeatureTagFilter: options.featureTagFilter,
+      activeFeatureTagLabel: activeLabel,
+      displayModernTags,
+    };
+  });
+
+  return { results: pagedWithFeatures, total: results.length, stats, priceStats };
 }
 
 // 获取各池子的游戏数量（用于显示预览）
@@ -1068,7 +1115,9 @@ function getPoolCounts(
   yearsFilter?: number,
   minReleaseDate?: string,
   maxReleaseDate?: string,
-  excludeTestVersions?: boolean
+  excludeTestVersions?: boolean,
+  featureTagFilter?: string,
+  featureTagOptions?: FeatureTagOption[]
 ): PoolStats {
   let poolA = 0, poolB = 0, poolC = 0;
   let totalTurnBased = 0;
@@ -1103,6 +1152,18 @@ function getPoolCounts(
       if (releaseTime > maxTime) continue;
     }
 
+    // 特色标签筛选（和各池子数量同步）
+    if (featureTagFilter) {
+      const featureTag = featureTagOptions?.find((f) => f.key === featureTagFilter);
+      if (featureTag) {
+        // 直接检查游戏的原始标签，与 filterGames 保持一致
+        const hasTag = game.tags.some((tag) =>
+          tag.toLowerCase() === featureTag.tag.toLowerCase()
+        );
+        if (!hasTag) continue;
+      }
+    }
+
     // 统计符合条件的回合制游戏数量
     totalTurnBased++;
 
@@ -1124,6 +1185,107 @@ function getPoolCounts(
   }
 
   return { total: poolA + poolB + poolC, totalTurnBased, poolA, poolB, poolC };
+}
+
+// 动态计算每个特色标签在用户勾选的池子中的实际数量
+function calculateFeatureTagCounts(
+  allGames: GameRecord[],
+  poolConfig: PoolConfig,
+  pools: ("A" | "B" | "C")[],
+  yearsFilter?: number,
+  minReleaseDate?: string,
+  maxReleaseDate?: string,
+  excludeTestVersions?: boolean
+): FeatureTagOption[] {
+  const excludeTest = excludeTestVersions !== false;
+
+  // 先筛选出符合条件的回合制游戏
+  let filteredGames = allGames.filter((g) => g.isTurnBased);
+  if (excludeTest) {
+    filteredGames = filteredGames.filter((g) => !g.isTestVersion);
+  }
+
+  // 应用日期过滤
+  if (yearsFilter && yearsFilter > 0) {
+    const cutoffDate = new Date();
+    cutoffDate.setFullYear(cutoffDate.getFullYear() - yearsFilter);
+    const cutoffTime = cutoffDate.getTime();
+    filteredGames = filteredGames.filter((g) => {
+      if (!g.releaseDate) return false;
+      return new Date(g.releaseDate).getTime() >= cutoffTime;
+    });
+  }
+  if (minReleaseDate) {
+    const minTime = new Date(minReleaseDate).getTime();
+    filteredGames = filteredGames.filter((g) => {
+      if (!g.releaseDate) return false;
+      return new Date(g.releaseDate).getTime() >= minTime;
+    });
+  }
+  if (maxReleaseDate) {
+    const maxTime = new Date(maxReleaseDate).getTime();
+    filteredGames = filteredGames.filter((g) => {
+      if (!g.releaseDate) return false;
+      return new Date(g.releaseDate).getTime() <= maxTime;
+    });
+  }
+
+  // 计算每个游戏属于哪个池子
+  const gamesWithPools = filteredGames.map((g) => ({
+    ...g,
+    pool: calculatePool(g, poolConfig),
+  }));
+
+  // 根据用户勾选的池子筛选游戏
+  const filteredByPool = gamesWithPools.filter((g) => {
+    if (g.pool === null) return false;
+    return pools.includes(g.pool);
+  });
+
+  // 从缓存中获取预计算的标签选项
+  const presetOptions = dbCache.featureTagOptions.length > 0 ? dbCache.featureTagOptions : [];
+
+  if (presetOptions.length === 0) return [];
+
+  // 计算每个标签在各池子中的分布
+  const poolADist = gamesWithPools.filter((g) => g.pool === "A");
+  const poolBDist = gamesWithPools.filter((g) => g.pool === "B");
+  const poolCDist = gamesWithPools.filter((g) => g.pool === "C");
+
+  // 动态计算每个标签在用户勾选的池子中的总数量
+  const result: FeatureTagOption[] = presetOptions.map((option) => {
+    const tagLower = option.tag.toLowerCase();
+
+    // 统计有该标签的游戏数量（跨所有用户勾选的池子）
+    const totalCount = filteredByPool.filter((g) =>
+      g.tags.some((t) => t.toLowerCase() === tagLower)
+    ).length;
+
+    // 统计各池子中有该标签的游戏数量
+    const poolACount = poolADist.filter((g) =>
+      g.tags.some((t) => t.toLowerCase() === tagLower)
+    ).length;
+    const poolBCount = poolBDist.filter((g) =>
+      g.tags.some((t) => t.toLowerCase() === tagLower)
+    ).length;
+    const poolCCount = poolCDist.filter((g) =>
+      g.tags.some((t) => t.toLowerCase() === tagLower)
+    ).length;
+
+    return {
+      ...option,
+      gameCount: totalCount,
+      count: totalCount,
+      coverage: filteredByPool.length > 0 ? Math.round((totalCount / filteredByPool.length) * 100) : 0,
+      poolDistribution: {
+        A: poolACount,
+        B: poolBCount,
+        C: poolCCount,
+      },
+    };
+  });
+
+  return result;
 }
 
 // 计算价格统计
@@ -1245,6 +1407,18 @@ export async function GET(request: NextRequest) {
     poolC: { minRating: poolC_minRating, maxRating: poolC_maxRating, minReviews: poolC_minReviews, requirePokemonLike: true },
   };
 
+  // 动态计算每个特色标签的实际数量（根据当前筛选条件）
+  // 这样标签显示的数量会和各池子实际筛选结果一致
+  const dynamicFeatureTagOptions = calculateFeatureTagCounts(
+    allGames,
+    poolConfig,
+    pools.length > 0 ? pools : ["A", "B", "C"],
+    yearsFilter,
+    minReleaseDate,
+    maxReleaseDate,
+    excludeTestVersions
+  );
+
   // 生成查询缓存键（第一页才缓存）
   const cacheKey = getQueryCacheKey({
     pools: pools.length > 0 ? pools : undefined,
@@ -1291,7 +1465,7 @@ export async function GET(request: NextRequest) {
           B: "核心竞品池 - 宝可梦Like成功案例，学习成功要素",
           C: "避坑指南池 - 宝可梦Like争议/失败案例，避开玩家痛点",
         },
-        featureTagOptions,
+        featureTagOptions: dynamicFeatureTagOptions,
         cached: true,
       });
     }
@@ -1301,7 +1475,8 @@ export async function GET(request: NextRequest) {
   if (statsOnly) {
     const stats = getPoolCounts(
       allGames, poolConfig, pools.length > 0 ? pools : undefined,
-      yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions
+      yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions,
+      featureTagFilter, featureTagOptions
     );
     return NextResponse.json({
       stats,
@@ -1327,7 +1502,7 @@ export async function GET(request: NextRequest) {
     priceMax,
     modernTagFilter,
     featureTagFilter,
-    featureTagOptions,
+    featureTagOptions: dynamicFeatureTagOptions,
   });
 
   // 缓存第一页的查询结果
@@ -1353,7 +1528,7 @@ export async function GET(request: NextRequest) {
       B: "核心竞品池 - 宝可梦Like成功案例，学习成功要素",
       C: "避坑指南池 - 宝可梦Like争议/失败案例，避开玩家痛点",
     },
-    featureTagOptions,
+    featureTagOptions: dynamicFeatureTagOptions,
   }, {
     headers: { "Cache-Control": "public, max-age=300, s-maxage=300" },
   });

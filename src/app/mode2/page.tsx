@@ -74,6 +74,11 @@ interface GameRecord {
   matchedModernTags: string[];
   uniqueFeatureTags: string[];
   differentiationLabels: string[];
+  // 当前选中的特色标签筛选（卡片显示用）
+  activeFeatureTagFilter?: string;
+  activeFeatureTagLabel?: string;
+  // 卡片展示用现代标签（已排重）
+  displayModernTags: string[];
 }
 
 interface PoolStats {
@@ -388,37 +393,69 @@ function GameCard({ game }: { game: GameRecord }) {
             )}
           </div>
 
-          {/* 标签匹配度进度条 */}
-          {game.tagWeight > 0 && (
+          {/* 标签匹配度进度条（无标签时显示池子信息） */}
+          {(game.tagWeight > 0 || game.pool || game.activeFeatureTagLabel) && (
             <div className="mt-3 pt-3 border-t border-border/50">
-              <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-1">
-                <span>匹配度</span>
-                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                  <div
-                    className={cn(
-                      "h-full rounded-full transition-all",
-                      game.coreTagCount > 0 ? "bg-amber-500" : game.modernTagCount > 0 ? "bg-purple-500" : "bg-blue-500"
+              {game.tagWeight > 0 ? (
+                <>
+                  <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-1">
+                    <span>匹配度</span>
+                    <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className={cn(
+                          "h-full rounded-full transition-all",
+                          game.coreTagCount > 0 ? "bg-amber-500" : game.modernTagCount > 0 ? "bg-purple-500" : "bg-blue-500"
+                        )}
+                        style={{ width: `${Math.min(100, game.tagWeight * 10)}%` }}
+                      />
+                    </div>
+                    <span className="font-medium w-6 text-right">
+                      {Math.min(100, game.tagWeight * 10)}%
+                    </span>
+                  </div>
+                  {/* 标签详情 */}
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {game.matchedCoreTags.slice(0, 2).map((tag, i) => (
+                      <span key={i} className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded">
+                        {tag}
+                      </span>
+                    ))}
+                    {(game.displayModernTags || []).slice(0, 3).map((tag, i) => (
+                      <span key={`m-${i}`} className="px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 rounded">
+                        {tag}
+                      </span>
+                    ))}
+                    {/* 融合创新标签（特色标签，中文显示） */}
+                    {(game.differentiationLabels || []).slice(0, 3).map((label, i) => (
+                      <span key={`f-${i}`} className="px-2 py-0.5 text-xs font-medium bg-gradient-to-r from-cyan-100 to-teal-100 text-cyan-700 dark:from-cyan-900/30 dark:to-teal-900/30 dark:text-cyan-400 rounded border border-cyan-200 dark:border-cyan-700">
+                        {label}
+                      </span>
+                    ))}
+                    {/* 用户选中的特色标签（与已排重的标签列表做最终检查，避免重复） */}
+                    {game.activeFeatureTagLabel && !(
+                      (game.differentiationLabels || []).some((l) => l.toLowerCase() === game.activeFeatureTagLabel!.toLowerCase()) ||
+                      (game.displayModernTags || []).some((t) => t.toLowerCase() === game.activeFeatureTagLabel!.toLowerCase())
+                    ) && (
+                      <span key="active-feature" className="px-2 py-0.5 text-xs font-medium bg-gradient-to-r from-cyan-100 to-teal-100 text-cyan-700 dark:from-cyan-900/30 dark:to-teal-900/30 dark:text-cyan-400 rounded border border-cyan-200 dark:border-cyan-700">
+                        {game.activeFeatureTagLabel}
+                      </span>
                     )}
-                    style={{ width: `${Math.min(100, game.tagWeight * 10)}%` }}
-                  />
+                  </div>
+                </>
+              ) : game.activeFeatureTagLabel ? (
+                /* 仅有选中的特色标签时，显示该标签 */
+                <div className="flex flex-wrap gap-1 mt-1">
+                  <span className="px-2 py-0.5 text-xs font-medium bg-gradient-to-r from-cyan-100 to-teal-100 text-cyan-700 dark:from-cyan-900/30 dark:to-teal-900/30 dark:text-cyan-400 rounded border border-cyan-200 dark:border-cyan-700">
+                    {game.activeFeatureTagLabel}
+                  </span>
                 </div>
-                <span className="font-medium w-6 text-right">
-                  {Math.min(100, game.tagWeight * 10)}%
-                </span>
-              </div>
-              {/* 标签详情 */}
-              <div className="flex flex-wrap gap-1 mt-1">
-                {game.matchedCoreTags.slice(0, 2).map((tag, i) => (
-                  <span key={i} className="px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 rounded">
-                    {tag}
-                  </span>
-                ))}
-                {game.matchedModernTags.slice(0, 3).map((tag, i) => (
-                  <span key={`m-${i}`} className="px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 rounded">
-                    {tag}
-                  </span>
-                ))}
-              </div>
+              ) : (
+                /* 无标签匹配时，仅显示池子归属提示 */
+                <p className="text-[10px] text-muted-foreground italic">
+                  {game.pool && <span className={cn("font-medium", POOL_CONFIG[game.pool]?.textColor)}>{POOL_CONFIG[game.pool]?.label}</span>}
+                  {game.pool && " · "}该游戏未匹配到特色标签
+                </p>
+              )}
             </div>
           )}
 
@@ -1502,27 +1539,37 @@ export default function Mode2Page() {
                   加载中...
                 </span>
               ) : (
-                featureTagOptions.map((tag) => (
-                  <button
-                    key={tag.key}
-                    onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
-                    title={`${tag.tag} · ${tag.gameCount}款B池游戏 · 覆盖率${tag.coverage}%`}
-                    className={cn(
-                      "group px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
-                      featureTagFilter === tag.key
-                        ? "bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50"
-                        : "bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 border border-purple-200/50 dark:border-purple-700/50"
-                    )}
-                  >
-                    <span>{tag.label}</span>
-                    <span className={cn(
-                      "ml-1.5 text-[10px] font-normal tabular-nums",
-                      featureTagFilter === tag.key ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
-                    )}>
-                      {tag.gameCount}
-                    </span>
-                  </button>
-                ))
+                featureTagOptions.map((tag) => {
+                  // 动态生成池子信息
+                  const dist = tag.poolDistribution;
+                  const poolParts: string[] = [];
+                  if (dist && dist.A > 0) poolParts.push(`A池${dist.A}款`);
+                  if (dist && dist.B > 0) poolParts.push(`B池${dist.B}款`);
+                  if (dist && dist.C > 0) poolParts.push(`C池${dist.C}款`);
+                  const poolInfo = poolParts.length > 0 ? poolParts.join(" · ") : "暂无分布";
+
+                  return (
+                    <button
+                      key={tag.key}
+                      onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
+                      title={`${tag.tag} · ${poolInfo} · 覆盖率${tag.coverage}%`}
+                      className={cn(
+                        "group px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
+                        featureTagFilter === tag.key
+                          ? "bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50"
+                          : "bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 border border-purple-200/50 dark:border-purple-700/50"
+                      )}
+                    >
+                      <span>{tag.label}</span>
+                      <span className={cn(
+                        "ml-1.5 text-[10px] font-normal tabular-nums",
+                        featureTagFilter === tag.key ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
+                      )}>
+                        {tag.gameCount}
+                      </span>
+                    </button>
+                  );
+                })
               )}
             </div>
           </div>

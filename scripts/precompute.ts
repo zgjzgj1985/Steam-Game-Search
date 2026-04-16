@@ -550,7 +550,8 @@ function calculateTagWeight(tags: string[]) {
   const differentiationLabels: string[] = [];
   for (const tag of matchedModernTags) {
     const label = DIFFERENTIATION_LABELS[tag] || DIFFERENTIATION_LABELS[tag.charAt(0).toUpperCase() + tag.slice(1)] || tag;
-    if (!differentiationLabels.includes(label)) {
+    const labelInChinese = TAG_CHINESE_NAMES[tag] || tag;
+    if (!differentiationLabels.includes(label) && label !== labelInChinese) {
       differentiationLabels.push(label);
     }
   }

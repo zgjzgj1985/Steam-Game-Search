@@ -151,25 +151,30 @@ export function GameCard({ game, className }: GameCardProps) {
             </div>
           )}
 
-          {/* Genre 标签 */}
-          {game.genres.length > 0 && (
-            <div className="absolute top-2 left-2 z-10 flex flex-wrap gap-1 max-w-[calc(100%-11rem)]">
-              {game.genres.slice(0, 3).map((genre) => (
-                <span
-                  key={genre}
-                  className="px-2 py-0.5 text-xs font-medium bg-background/80 backdrop-blur-sm rounded"
-                >
-                  {genre}
-                </span>
-              ))}
-              {game.isTestVersion && (
-                <span className="px-2 py-0.5 text-xs font-medium bg-purple-500/90 text-white rounded flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3" />
-                  测试版
-                </span>
-              )}
-            </div>
-          )}
+          {/* Genre 标签（排除已作为标签显示的 genre，避免重复） */}
+          {(() => {
+            const tagSet = new Set(game.tags.map((t) => t.toLowerCase()));
+            const uniqueGenres = game.genres.filter((g) => !tagSet.has(g.toLowerCase()));
+            if (uniqueGenres.length === 0) return null;
+            return (
+              <div className="absolute top-2 left-2 z-10 flex flex-wrap gap-1 max-w-[calc(100%-11rem)]">
+                {uniqueGenres.slice(0, 3).map((genre) => (
+                  <span
+                    key={genre}
+                    className="px-2 py-0.5 text-xs font-medium bg-background/80 backdrop-blur-sm rounded"
+                  >
+                    {genre}
+                  </span>
+                ))}
+                {game.isTestVersion && (
+                  <span className="px-2 py-0.5 text-xs font-medium bg-purple-500/90 text-white rounded flex items-center gap-1">
+                    <AlertTriangle className="w-3 h-3" />
+                    测试版
+                  </span>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Steam 跳转（右下角，独立不遮挡） */}
           <button

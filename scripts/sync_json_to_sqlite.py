@@ -34,6 +34,7 @@ def create_tables(conn):
             metacritic_score INTEGER DEFAULT 0,
             _p0_fetched INTEGER DEFAULT 0,
             _is_test_version INTEGER DEFAULT 0,
+            _is_suspicious_delisted INTEGER DEFAULT 0,
             _last_updated INTEGER DEFAULT 0
         )
     ''')
@@ -62,6 +63,22 @@ def create_tables(conn):
 
     conn.commit()
 
+def migrate_add_columns(conn):
+    """为已存在的数据库添加新列"""
+    cursor = conn.cursor()
+
+    # 检查 games 表是否有 _is_suspicious_delisted 列
+    cursor.execute("PRAGMA table_info(games)")
+    columns = [col[1] for col in cursor.fetchall()]
+
+    if '_is_suspicious_delisted' not in columns:
+        log('   迁移: 添加 _is_suspicious_delisted 列...')
+        cursor.execute('ALTER TABLE games ADD COLUMN _is_suspicious_delisted INTEGER DEFAULT 0')
+        conn.commit()
+        log('   迁移完成')
+
+    conn.commit()
+
 def sync_to_sqlite(index_path, db_path):
     """同步 JSON 数据到 SQLite"""
     log(f'加载 {index_path}...')
@@ -79,6 +96,7 @@ def sync_to_sqlite(index_path, db_path):
     conn.execute('PRAGMA synchronous=NORMAL')
 
     create_tables(conn)
+    migrate_add_columns(conn)
 
     # 获取 SQLite 中现有的游戏
     log('检查现有数据...')
@@ -129,6 +147,7 @@ def sync_to_sqlite(index_path, db_path):
             int(game.get('metacritic_score', 0) or 0),
             1 if game.get('_p0_fetched') else 0,
             1 if game.get('_is_test_version') else 0,
+            1 if game.get('_is_suspicious_delisted') else 0,
             int(time.time())
         ))
 
@@ -184,8 +203,9 @@ def _execute_batch(conn, games_batch, json_batch):
         INSERT OR REPLACE INTO games
         (appid, name, release_date, header_image, short_description,
          estimated_owners, price, positive, negative, peak_ccu,
-         metacritic_score, _p0_fetched, _is_test_version, _last_updated)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         metacritic_score, _p0_fetched, _is_test_version,
+         _is_suspicious_delisted, _last_updated)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ''', games_batch)
 
     # 插入或替换 JSON 表

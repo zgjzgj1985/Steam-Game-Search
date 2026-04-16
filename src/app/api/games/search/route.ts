@@ -447,11 +447,18 @@ function searchGames(
   if (minReleaseDate || maxReleaseDate) {
     const minDate = minReleaseDate ? new Date(minReleaseDate).getTime() : 0;
     const maxDate = maxReleaseDate ? new Date(maxReleaseDate).getTime() : Number.MAX_SAFE_INTEGER;
-    results = results.filter((g) => {
-      if (!g.releaseDate) return false;
-      const gameDate = new Date(g.releaseDate).getTime();
-      return gameDate >= minDate && gameDate <= maxDate;
-    });
+    // 验证日期有效性
+    if (isNaN(minDate) || isNaN(maxDate)) {
+      console.warn(`[search] 无效的日期筛选参数: min=${minReleaseDate}, max=${maxReleaseDate}`);
+    } else {
+      results = results.filter((g) => {
+        if (!g.releaseDate) return false;
+        const gameDate = new Date(g.releaseDate).getTime();
+        // 跳过无效日期的游戏
+        if (isNaN(gameDate)) return false;
+        return gameDate >= minDate && gameDate <= maxDate;
+      });
+    }
   }
 
   // 5. 文本搜索

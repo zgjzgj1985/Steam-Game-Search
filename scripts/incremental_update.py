@@ -19,41 +19,72 @@ def get_connection():
     return conn
 
 def update_game(conn, appid, data):
-    """更新单个游戏数据"""
+    """更新单个游戏数据，使用 INSERT OR REPLACE 保证数据一致性"""
     cursor = conn.cursor()
-    
-    # 更新主表
-    cursor.execute('''
-        UPDATE games SET
-            name = COALESCE(?, name),
-            release_date = COALESCE(?, release_date),
-            header_image = COALESCE(?, header_image),
-            short_description = COALESCE(?, short_description),
-            estimated_owners = COALESCE(?, estimated_owners),
-            price = COALESCE(?, price),
-            positive = COALESCE(?, positive),
-            negative = COALESCE(?, negative),
-            peak_ccu = COALESCE(?, peak_ccu),
-            metacritic_score = COALESCE(?, metacritic_score),
-            _p0_fetched = COALESCE(?, _p0_fetched),
-            _last_updated = ?
-        WHERE appid = ?
-    ''', (
-        data.get('name'),
-        data.get('release_date'),
-        data.get('header_image'),
-        data.get('short_description'),
-        data.get('estimated_owners'),
-        data.get('price'),
-        data.get('positive'),
-        data.get('negative'),
-        data.get('peak_ccu'),
-        data.get('metacritic_score'),
-        1 if data.get('_p0_fetched') else 0,
-        int(time.time()),
-        appid
-    ))
-    
+
+    # 先检查游戏是否存在
+    cursor.execute('SELECT 1 FROM games WHERE appid = ?', (appid,))
+    exists = cursor.fetchone() is not None
+
+    if exists:
+        # 存在则更新
+        cursor.execute('''
+            UPDATE games SET
+                name = ?,
+                release_date = ?,
+                header_image = ?,
+                short_description = ?,
+                estimated_owners = ?,
+                price = ?,
+                positive = ?,
+                negative = ?,
+                peak_ccu = ?,
+                metacritic_score = ?,
+                _p0_fetched = ?,
+                _is_suspicious_delisted = ?,
+                _last_updated = ?
+            WHERE appid = ?
+        ''', (
+            data.get('name', ''),
+            data.get('release_date', ''),
+            data.get('header_image', ''),
+            data.get('short_description', ''),
+            data.get('estimated_owners', ''),
+            float(data.get('price', 0) or 0),
+            int(data.get('positive', 0) or 0),
+            int(data.get('negative', 0) or 0),
+            int(data.get('peak_ccu', 0) or 0),
+            int(data.get('metacritic_score', 0) or 0),
+            1 if data.get('_p0_fetched') else 0,
+            1 if data.get('_is_suspicious_delisted') else 0,
+            int(time.time()),
+            appid
+        ))
+    else:
+        # 不存在则插入
+        cursor.execute('''
+            INSERT INTO games
+            (appid, name, release_date, header_image, short_description,
+             estimated_owners, price, positive, negative, peak_ccu,
+             metacritic_score, _p0_fetched, _is_suspicious_delisted, _last_updated)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            appid,
+            data.get('name', ''),
+            data.get('release_date', ''),
+            data.get('header_image', ''),
+            data.get('short_description', ''),
+            data.get('estimated_owners', ''),
+            float(data.get('price', 0) or 0),
+            int(data.get('positive', 0) or 0),
+            int(data.get('negative', 0) or 0),
+            int(data.get('peak_ccu', 0) or 0),
+            int(data.get('metacritic_score', 0) or 0),
+            1 if data.get('_p0_fetched') else 0,
+            1 if data.get('_is_suspicious_delisted') else 0,
+            int(time.time())
+        ))
+
     # 更新JSON字段表
     cursor.execute('''
         INSERT OR REPLACE INTO games_json
@@ -72,117 +103,120 @@ def update_game(conn, appid, data):
         data.get('about_the_game', ''),
         data.get('website', '')
     ))
-    
-    return cursor.rowcount > 0
+
+    return True
 
 def batch_update(conn, games_data, batch_size=500):
-    """批量更新游戏数据"""
+    """批量更新游戏数据，使用事务保证原子性"""
     cursor = conn.cursor()
     updated = 0
     errors = 0
-    
-    games_batch = []
-    json_batch = []
-    
-    for appid, data in games_data:
-        # 主表数据
-        games_batch.append((
-            data.get('name'),
-            data.get('release_date'),
-            data.get('header_image'),
-            data.get('short_description'),
-            data.get('estimated_owners'),
-            data.get('price'),
-            data.get('positive'),
-            data.get('negative'),
-            data.get('peak_ccu'),
-            data.get('metacritic_score'),
-            1 if data.get('_p0_fetched') else 0,
-            int(time.time()),
-            appid
-        ))
-        
-        # JSON字段
-        json_batch.append((
-            appid,
-            json.dumps(data.get('developers', []), ensure_ascii=False),
-            json.dumps(data.get('publishers', []), ensure_ascii=False),
-            json.dumps(data.get('genres', []), ensure_ascii=False),
-            json.dumps(data.get('categories', []), ensure_ascii=False),
-            json.dumps(data.get('screenshots', []), ensure_ascii=False),
-            json.dumps(data.get('tags', {}), ensure_ascii=False),
-            data.get('detailed_description', ''),
-            data.get('about_the_game', ''),
-            data.get('website', '')
-        ))
-        
-        # 批量执行
-        if len(games_batch) >= batch_size:
+    error_appids = []
+
+    # 先获取所有已存在的 appid
+    cursor.execute('SELECT appid FROM games')
+    existing_appids = set(row[0] for row in cursor.fetchall())
+
+    try:
+        for appid, data in games_data:
             try:
-                cursor.executemany('''
-                    UPDATE games SET
-                        name = COALESCE(?, name),
-                        release_date = COALESCE(?, release_date),
-                        header_image = COALESCE(?, header_image),
-                        short_description = COALESCE(?, short_description),
-                        estimated_owners = COALESCE(?, estimated_owners),
-                        price = COALESCE(?, price),
-                        positive = COALESCE(?, positive),
-                        negative = COALESCE(?, negative),
-                        peak_ccu = COALESCE(?, peak_ccu),
-                        metacritic_score = COALESCE(?, metacritic_score),
-                        _p0_fetched = COALESCE(?, _p0_fetched),
-                        _last_updated = ?
-                    WHERE appid = ?
-                ''', games_batch)
-                
-                cursor.executemany('''
+                if appid in existing_appids:
+                    # 存在则更新
+                    cursor.execute('''
+                        UPDATE games SET
+                            name = ?,
+                            release_date = ?,
+                            header_image = ?,
+                            short_description = ?,
+                            estimated_owners = ?,
+                            price = ?,
+                            positive = ?,
+                            negative = ?,
+                            peak_ccu = ?,
+                            metacritic_score = ?,
+                            _p0_fetched = ?,
+                            _is_suspicious_delisted = ?,
+                            _last_updated = ?
+                        WHERE appid = ?
+                    ''', (
+                        data.get('name', ''),
+                        data.get('release_date', ''),
+                        data.get('header_image', ''),
+                        data.get('short_description', ''),
+                        data.get('estimated_owners', ''),
+                        float(data.get('price', 0) or 0),
+                        int(data.get('positive', 0) or 0),
+                        int(data.get('negative', 0) or 0),
+                        int(data.get('peak_ccu', 0) or 0),
+                        int(data.get('metacritic_score', 0) or 0),
+                        1 if data.get('_p0_fetched') else 0,
+                        1 if data.get('_is_suspicious_delisted') else 0,
+                        int(time.time()),
+                        appid
+                    ))
+                else:
+                    # 不存在则插入
+                    cursor.execute('''
+                        INSERT INTO games
+                        (appid, name, release_date, header_image, short_description,
+                         estimated_owners, price, positive, negative, peak_ccu,
+                         metacritic_score, _p0_fetched, _is_suspicious_delisted, _last_updated)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', (
+                        appid,
+                        data.get('name', ''),
+                        data.get('release_date', ''),
+                        data.get('header_image', ''),
+                        data.get('short_description', ''),
+                        data.get('estimated_owners', ''),
+                        float(data.get('price', 0) or 0),
+                        int(data.get('positive', 0) or 0),
+                        int(data.get('negative', 0) or 0),
+                        int(data.get('peak_ccu', 0) or 0),
+                        int(data.get('metacritic_score', 0) or 0),
+                        1 if data.get('_p0_fetched') else 0,
+                        1 if data.get('_is_suspicious_delisted') else 0,
+                        int(time.time())
+                    ))
+                    existing_appids.add(appid)
+
+                # 更新JSON字段
+                cursor.execute('''
                     INSERT OR REPLACE INTO games_json
                     (appid, developers, publishers, genres, categories, screenshots, tags,
                      detailed_description, about_the_game, website)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', json_batch)
-                
-                updated += len(games_batch)
-                games_batch = []
-                json_batch = []
+                ''', (
+                    appid,
+                    json.dumps(data.get('developers', []), ensure_ascii=False),
+                    json.dumps(data.get('publishers', []), ensure_ascii=False),
+                    json.dumps(data.get('genres', []), ensure_ascii=False),
+                    json.dumps(data.get('categories', []), ensure_ascii=False),
+                    json.dumps(data.get('screenshots', []), ensure_ascii=False),
+                    json.dumps(data.get('tags', {}), ensure_ascii=False),
+                    data.get('detailed_description', ''),
+                    data.get('about_the_game', ''),
+                    data.get('website', '')
+                ))
+
+                updated += 1
+
             except Exception as e:
-                errors += len(games_batch)
-                games_batch = []
-                json_batch = []
-    
-    # 处理剩余数据
-    if games_batch:
-        try:
-            cursor.executemany('''
-                UPDATE games SET
-                    name = COALESCE(?, name),
-                    release_date = COALESCE(?, release_date),
-                    header_image = COALESCE(?, header_image),
-                    short_description = COALESCE(?, short_description),
-                    estimated_owners = COALESCE(?, estimated_owners),
-                    price = COALESCE(?, price),
-                    positive = COALESCE(?, positive),
-                    negative = COALESCE(?, negative),
-                    peak_ccu = COALESCE(?, peak_ccu),
-                    metacritic_score = COALESCE(?, metacritic_score),
-                    _p0_fetched = COALESCE(?, _p0_fetched),
-                    _last_updated = ?
-                WHERE appid = ?
-            ''', games_batch)
-            
-            cursor.executemany('''
-                INSERT OR REPLACE INTO games_json
-                (appid, developers, publishers, genres, categories, screenshots, tags,
-                 detailed_description, about_the_game, website)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', json_batch)
-            
-            updated += len(games_batch)
-        except Exception as e:
-            errors += len(games_batch)
-    
-    conn.commit()
+                errors += 1
+                error_appids.append(appid)
+                if len(error_appids) <= 10:  # 只记录前10个错误
+                    log(f'   [错误] 更新失败 appid={appid}: {e}')
+
+        # 批量提交
+        conn.commit()
+    except Exception as e:
+        log(f'   [严重错误] 批量更新失败，回滚事务: {e}')
+        conn.rollback()
+        raise e
+
+    if errors > 0:
+        log(f'   [警告] 更新完成，其中 {errors} 个游戏更新失败')
+
     return updated, errors
 
 def get_stats(conn):

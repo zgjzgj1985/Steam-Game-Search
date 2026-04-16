@@ -220,39 +220,83 @@ def parse_release_date(release_data):
     return date_str
 
 def fetch_game_data(appid, retries=3):
-    """获取游戏基础数据"""
+    """获取游戏基础数据，支持 429 限流处理"""
     url = STEAM_API.format(appid=appid)
+    headers = {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    }
+
     for attempt in range(retries):
         try:
-            r = requests.get(url, timeout=15)
+            r = requests.get(url, timeout=15, headers=headers)
+
+            # 429 限流处理
+            if r.status_code == 429:
+                # 获取重试时间（优先使用 Retry-After 头）
+                retry_after = int(r.headers.get('Retry-After', 30))
+                log(f'   [限流] appid={appid} 触发限流，等待 {retry_after} 秒...')
+                time.sleep(retry_after)
+                continue
+
             if r.status_code == 200:
                 d = r.json()
                 if str(appid) in d and d[str(appid)]['success']:
                     return d[str(appid)]['data']
+
+            # 其他错误，使用指数退避
             if attempt < retries - 1:
-                time.sleep(2)
-        except Exception:
+                wait_time = 2 ** attempt
+                time.sleep(wait_time)
+
+        except requests.exceptions.Timeout:
             if attempt < retries - 1:
-                time.sleep(2)
+                wait_time = 2 ** attempt
+                time.sleep(wait_time)
+        except requests.exceptions.RequestException as e:
+            if attempt < retries - 1:
+                wait_time = 2 ** attempt
+                time.sleep(wait_time)
+            else:
+                log(f'   [网络错误] appid={appid}: {e}')
+
     return None
 
 def fetch_reviews(appid, retries=3):
-    """获取游戏评价数据"""
+    """获取游戏评价数据，支持 429 限流处理"""
     url = REVIEWS_API.format(appid=appid)
+    headers = {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    }
+
     for attempt in range(retries):
         try:
-            r = requests.get(url, timeout=15)
+            r = requests.get(url, timeout=15, headers=headers)
+
+            # 429 限流处理
+            if r.status_code == 429:
+                retry_after = int(r.headers.get('Retry-After', 30))
+                log(f'   [限流] appid={appid} 评价获取触发限流，等待 {retry_after} 秒...')
+                time.sleep(retry_after)
+                continue
+
             if r.status_code == 200:
                 d = r.json()
-                if d.get('success') == 1:
-                    sq = d.get('query_summary', {})
-                    return sq.get('total_positive', 0), sq.get('total_negative', 0)
+                return d.get('query_summary', {})
+
             if attempt < retries - 1:
-                time.sleep(2)
-        except Exception:
+                wait_time = 2 ** attempt
+                time.sleep(wait_time)
+
+        except requests.exceptions.RequestException as e:
             if attempt < retries - 1:
-                time.sleep(2)
-    return None, None
+                wait_time = 2 ** attempt
+                time.sleep(wait_time)
+
+    return None
 
 def get_new_releases(max_pages=None):
     """

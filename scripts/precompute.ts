@@ -33,6 +33,7 @@ interface RawGameData {
   metacritic_score: number | null;
   _is_test_version?: boolean;
   _is_playtest?: boolean;
+  _is_suspicious_delisted?: boolean;
 }
 
 // 预计算后的游戏记录
@@ -69,6 +70,7 @@ interface PrecomputedGame {
   isTurnBased: boolean;
   isTestVersion: boolean;
   testVersionType: "name" | "tag" | "data" | "none";
+  isSuspiciousDelisted?: boolean;
   coreTagCount: number;
   secondaryTagCount: number;
   modernTagCount: number;
@@ -859,6 +861,18 @@ function getDefaultFeatureTags(): FeatureTagOption[] {
   ];
 }
 
+/**
+ * 构建去重键：开发商列表（排序后）+ 游戏名称
+ * 与 route.ts 的 buildDedupKey 保持一致
+ * 开发商相同时认为是同一游戏，不同开发商的同名游戏视为不同游戏
+ */
+function buildDedupKey(game: PrecomputedGame): string {
+  const devs = (game.developers || []).map((d) => d.toLowerCase().trim()).sort();
+  const devKey = devs.length > 0 ? devs.join("|") : "__NO_DEV__";
+  const nameKey = game.name.toLowerCase().trim();
+  return `${devKey}|||${nameKey}`;
+}
+
 function transformGame(appId: string, raw: RawGameData): PrecomputedGame | null {
   const owners = parseEstimatedOwners(raw.estimated_owners);
   const totalReviews = raw.positive + raw.negative;
@@ -912,6 +926,7 @@ function transformGame(appId: string, raw: RawGameData): PrecomputedGame | null 
     isTurnBased: turnBased,
     isTestVersion: isTest,
     testVersionType,
+    isSuspiciousDelisted: raw._is_suspicious_delisted === true,
     coreTagCount: tagWeight.coreTagCount,
     secondaryTagCount: tagWeight.secondaryTagCount,
     modernTagCount: tagWeight.modernTagCount,
@@ -944,7 +959,7 @@ async function loadFromSQLite(): Promise<{ games: PrecomputedGame[]; source: 'sq
     const rows = db.prepare(`
       SELECT g.appid, g.name, g.release_date, g.header_image, g.short_description,
              g.estimated_owners, g.price, g.positive, g.negative, g.peak_ccu,
-             g.metacritic_score, g._is_test_version,
+             g.metacritic_score, g._is_test_version, g._is_suspicious_delisted,
              j.developers, j.publishers, j.genres, j.categories, j.screenshots, j.tags
       FROM games g
       LEFT JOIN games_json j ON g.appid = j.appid
@@ -965,6 +980,7 @@ async function loadFromSQLite(): Promise<{ games: PrecomputedGame[]; source: 'sq
           peak_ccu: row.peak_ccu || 0,
           metacritic_score: row.metacritic_score || 0,
           _is_test_version: row._is_test_version === 1,
+          _is_suspicious_delisted: row._is_suspicious_delisted === 1,
           developers: row.developers ? JSON.parse(row.developers) : [],
           publishers: row.publishers ? JSON.parse(row.publishers) : [],
           genres: row.genres ? JSON.parse(row.genres) : [],
@@ -975,7 +991,7 @@ async function loadFromSQLite(): Promise<{ games: PrecomputedGame[]; source: 'sq
         const game = transformGame(String(row.appid), raw);
         if (game) games.push(game);
       } catch (e) {
-        // 跳过解析失败的游戏
+        console.warn(`   [警告] 解析游戏失败 appid=${row.appid}: ${e instanceof Error ? e.message : String(e)}`);
       }
     }
 
@@ -1071,11 +1087,11 @@ async function main() {
 
   // 2. 去重
   const t2 = Date.now();
-  console.log("🔄 去重（同名称保留拥有者最多的条目）...");
+  console.log("🔄 去重（开发商+名称，保留拥有者最多的条目）...");
   const dedupMap = new Map<string, PrecomputedGame>();
   for (const game of sourceData.games) {
     if (!game.name) continue;
-    const key = game.name.toLowerCase().trim();
+    const key = buildDedupKey(game);
     const existing = dedupMap.get(key);
     if (!existing) {
       dedupMap.set(key, game);

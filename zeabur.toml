@@ -1,0 +1,25 @@
+[service]
+name = "steam-analyzer"
+region = "ap-east"
+
+[runtime]
+node = "20"
+
+[build]
+dockerfile = "./Dockerfile"
+context = "."
+
+[start]
+command = "npm start"
+
+[service.port]
+port = 3000
+
+[service.healthCheck]
+path = "/"
+interval = 30
+timeout = 10
+restartLimit = 10
+
+[service.env]
+NODE_ENV = "production"

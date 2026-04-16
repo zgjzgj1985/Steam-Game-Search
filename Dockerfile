@@ -28,6 +28,9 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
+# 确保数据目录存在（Volume 挂载点）
+RUN mkdir -p /app/public/data
+
 # 复制 standalone 输出
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 

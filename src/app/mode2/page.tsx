@@ -96,6 +96,7 @@ interface PriceStats {
   max: number;
   avg: number;
   median: number;
+  total: number;
   distribution: {
     free: number;
     under10: number;
@@ -109,15 +110,16 @@ interface PriceStats {
 // 池子条件类型
 type PoolConditions = { minRating: number; minReviews: number } | { minRating: number; maxRating: number; minReviews: number };
 
-// 特色标签选项
-const FEATURE_TAGS = [
-  { key: "survival", label: "生存建造", tags: ["Survival", "Crafting", "生存", "建造"] },
-  { key: "roguelite", label: "肉鸽融合", tags: ["Roguelite", "Roguelike", "类肉鸽"] },
-  { key: "deckbuilding", label: "牌组构建", tags: ["Deckbuilding", "牌组构建", "卡牌构建"] },
-  { key: "openworld", label: "开放世界", tags: ["开放世界", "Open World"] },
-  { key: "metroidvania", label: "银河恶魔城", tags: ["Metroidvania", "银河恶魔城"] },
-  { key: "morph", label: "形态融合", tags: ["形态融合"] },
-];
+// 特色标签选项（动态从API获取）
+interface FeatureTagOption {
+  key: string;
+  label: string;
+  tag: string;
+  count: number;
+  gameCount: number;
+  coverage: number;
+  avgWilson: number;
+}
 
 interface FilterResponse {
   results: GameRecord[];
@@ -130,6 +132,7 @@ interface FilterResponse {
   poolConfig: PoolConfig;
   query: string;
   poolFilters: string[];
+  featureTagOptions?: FeatureTagOption[];
 }
 
 // ============ 池子配置 ============
@@ -426,7 +429,7 @@ function GameCard({ game }: { game: GameRecord }) {
                 <AlertTriangle className="w-3.5 h-3.5 text-rose-500 mt-0.5 shrink-0" />
                 <div className="text-[10px] text-rose-700 dark:text-rose-300">
                   <span className="font-medium">避坑重点：</span>
-                  <span>点击上方"查看分析"，在LLM分析中查看差评关键词汇总，了解玩家主要抱怨方向</span>
+                  <span>点击上方&quot;查看分析&quot;，在LLM分析中查看差评关键词汇总，了解玩家主要抱怨方向</span>
                 </div>
               </div>
             </div>
@@ -814,6 +817,7 @@ export default function Mode2Page() {
   // 特色标签筛选
   const [modernTagFilter, setModernTagFilter] = useState<"hasCore" | "hasModern" | undefined>(undefined);
   const [featureTagFilter, setFeatureTagFilter] = useState<string | undefined>(undefined);
+  const [featureTagOptions, setFeatureTagOptions] = useState<FeatureTagOption[]>([]);
 
   const abortRef = useRef<AbortController | null>(null);
   const resultsAbortRef = useRef<AbortController | null>(null);
@@ -876,6 +880,7 @@ export default function Mode2Page() {
     setPriceMax(undefined);
     setModernTagFilter(undefined);
     setFeatureTagFilter(undefined);
+    setFeatureTagOptions([]);
   };
 
   // 获取统计数据
@@ -1001,6 +1006,10 @@ export default function Mode2Page() {
       // 更新价格统计
       if (data.priceStats) {
         setPriceStats(data.priceStats);
+      }
+      // 更新动态标签选项（只在第一页时更新）
+      if (data.featureTagOptions && page === 1) {
+        setFeatureTagOptions(data.featureTagOptions);
       }
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") return;
@@ -1437,13 +1446,16 @@ export default function Mode2Page() {
           )}
         </div>
 
-        {/* ========== 特色标签筛选 ========== */}
+        {/* ========== 特色标签筛选（动态从B池游戏中提取）========== */}
         <div className="bg-card rounded-xl border p-4 mb-6">
           <div className="flex flex-wrap items-center gap-3">
             <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-purple-500" />
             </div>
             <span className="text-sm font-medium text-muted-foreground">创新融合标签</span>
+            <span className="text-[10px] text-muted-foreground/60 italic ml-1">
+              (从B池成功游戏中自动提取)
+            </span>
 
             {/* 特色标签快捷筛选 */}
             <div className="flex flex-wrap gap-1.5">
@@ -1482,22 +1494,36 @@ export default function Mode2Page() {
               </button>
             </div>
 
-            {/* 具体特色标签 */}
-            <div className="flex flex-wrap gap-1.5 ml-2">
-              {FEATURE_TAGS.map((tag) => (
-                <button
-                  key={tag.key}
-                  onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
-                  className={cn(
-                    "px-2 py-0.5 rounded text-[10px] font-medium transition-colors",
-                    featureTagFilter === tag.key
-                      ? "bg-purple-600 text-white shadow-md"
-                      : "bg-purple-100 hover:bg-purple-200 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
-                  )}
-                >
-                  {tag.label}
-                </button>
-              ))}
+            {/* 具体特色标签（动态加载） */}
+            <div className="flex flex-wrap gap-2 ml-2">
+              {featureTagOptions.length === 0 ? (
+                // 等待API返回时显示加载状态
+                <span className="text-xs text-muted-foreground/50 italic">
+                  加载中...
+                </span>
+              ) : (
+                featureTagOptions.map((tag) => (
+                  <button
+                    key={tag.key}
+                    onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
+                    title={`${tag.tag} · ${tag.gameCount}款B池游戏 · 覆盖率${tag.coverage}%`}
+                    className={cn(
+                      "group px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
+                      featureTagFilter === tag.key
+                        ? "bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50"
+                        : "bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 border border-purple-200/50 dark:border-purple-700/50"
+                    )}
+                  >
+                    <span>{tag.label}</span>
+                    <span className={cn(
+                      "ml-1.5 text-[10px] font-normal tabular-nums",
+                      featureTagFilter === tag.key ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
+                    )}>
+                      {tag.gameCount}
+                    </span>
+                  </button>
+                ))
+              )}
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@
 
 ### 核心功能
 
-- **游戏搜索**：本地数据库包含 12.2 万 Steam 游戏，支持好评率、评价数、类型、发售日期筛选
+- **游戏搜索**：本地数据库包含 12.3 万 Steam 游戏，支持好评率、评价数、类型、发售日期筛选
 - **AI 分析**：使用通义千问/Qwen 生成结构化战斗系统分析
 - **宝可梦Like筛选**：三池系统（神作参考池 / 核心竞品池 / 避坑指南池）
 - **可视化展示**：雷达图、流程图、截图画廊
@@ -57,7 +57,7 @@ Steam全域游戏搜索/
 │   └── types/
 │       └── game.ts          # 类型定义
 ├── public/data/              # 静态数据
-│   ├── games-index.json    # 搜索索引 (326 MB, 122,611 条)
+│   ├── games-index.json    # 搜索索引 (311 MB, 125,095 条)
 │   └── games-meta.json     # 详情补充 (342 MB)
 ├── prisma/
 │   └── schema.prisma        # 数据库 Schema (可选)
@@ -70,11 +70,11 @@ Steam全域游戏搜索/
 
 数据来自 [FronkonGames/steam-games-dataset](https://huggingface.co/datasets/FronkonGames/steam-games-dataset)（Hugging Face）：
 
-- **12.2 万条** Steam 游戏
-- **93%** 条目有完整 description（平均 1,320 字符）
+- **12.5 万条** Steam 游戏
+- **91.9%** 有评价数据
 - **99.9%** 有 header_image 封面图
 
-数据文件通过 Steam Store API 持续补充更新，确保评价数和价格等字段的最新状态。
+数据文件通过 Steam Store API 持续补充更新，使用统一工作流 `scripts/unified_workflow.py` 自动化执行（定时任务每周日02:00），包含增量采集、标签补全、SQLite同步、预计算缓存生成。
 
 ---
 
@@ -238,6 +238,14 @@ interface Game {
 ---
 
 ## 更新日志
+
+### 2026-04-15 - 统一工作流优化
+
+- **新增**：`scripts/unified_workflow.py` - 合并增量采集+标签补全+SQLite同步+预计算为一条命令
+- **优化**：多线程并发采集（详情8并发、标签4并发），约提升6-7倍速度
+- **优化**：检查点机制，支持中断续传
+- **简化**：`run-weekly-update.bat` 从3步简化为1步
+- **更新**：`数据采集维护文档.md` 更新至 v1.5.2
 
 ### 2026-04-14 - Bug修复与项目清理
 

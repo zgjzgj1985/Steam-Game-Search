@@ -34,6 +34,7 @@ interface RawGameData {
   tags: Record<string, number> | string[];
   metacritic_score: number | null;
   _is_test_version?: boolean;
+  _is_playtest?: boolean;
 }
 
 // ============ 返回类型 ============
@@ -102,6 +103,7 @@ interface PriceStats {
   max: number;
   avg: number;
   median: number;
+  total: number;
   distribution: {
     free: number;
     under10: number;
@@ -249,6 +251,11 @@ function calculateTagWeight(tags: string[]): TagWeight {
   const uniqueFeatureTags: string[] = [];
   const differentiationLabels: string[] = [];
 
+  // 精确匹配：标签必须完整匹配，不接受部分匹配
+  const exactMatch = (normalizedTags: string[], target: string): boolean => {
+    return normalizedTags.some((t) => t.toLowerCase() === target.toLowerCase());
+  };
+
   // 匹配核心标签
   for (const tag of CORE_TAGS) {
     if (normalizedTags.some((t) => t.includes(tag.toLowerCase()))) {
@@ -265,11 +272,11 @@ function calculateTagWeight(tags: string[]): TagWeight {
   }
 
   // 匹配现代融合标签（独立计算）
+  // 使用精确匹配避免误匹配（如"Open World RPG"不应匹配"Open World"）
   for (const tag of MODERN_TAGS) {
-    if (normalizedTags.some((t) => t.includes(tag.toLowerCase()))) {
+    if (exactMatch(normalizedTags, tag)) {
       matchedModernTags.push(tag);
       // 添加到特色标签
-      const normalized = tag.toLowerCase();
       if (!uniqueFeatureTags.includes(tag)) {
         uniqueFeatureTags.push(tag);
         // 添加展示用标签
@@ -425,15 +432,141 @@ function isTurnBased(tags: string[], genres: string[]): boolean {
 
 const dbCache: {
   games: GameRecord[];
+  featureTagOptions: FeatureTagOption[];
   loadedAt: number | null;
   loadError: string | null;
 } = {
   games: [],
+  featureTagOptions: [],
   loadedAt: null,
   loadError: null,
 };
 
+// ============ LRU 查询结果缓存 ============
+
+const MAX_QUERY_CACHE_SIZE = 50; // 最多缓存 50 个查询结果（内存友好）
+type QueryCacheKey = string;
+interface QueryCacheEntry {
+  results: GameRecord[];
+  total: number;
+  stats: PoolStats;
+  priceStats: PriceStats | undefined;
+  timestamp: number;
+}
+
+const queryCache = new Map<QueryCacheKey, QueryCacheEntry>();
+
+function getQueryCacheKey(params: {
+  pools?: string[];
+  query?: string;
+  sortBy?: string;
+  sortOrder?: string;
+  page?: number;
+  pageSize?: number;
+  yearsFilter?: number;
+  minReleaseDate?: string;
+  maxReleaseDate?: string;
+  excludeTestVersions?: boolean;
+  priceMin?: number;
+  priceMax?: number;
+  modernTagFilter?: string;
+  featureTagFilter?: string;
+  poolA_minRating?: number;
+  poolA_minReviews?: number;
+  poolB_minRating?: number;
+  poolB_minReviews?: number;
+  poolC_minRating?: number;
+  poolC_maxRating?: number;
+  poolC_minReviews?: number;
+}): QueryCacheKey {
+  const parts = [
+    params.pools?.join(",") || "",
+    params.query?.toLowerCase().trim() || "",
+    params.sortBy || "wilson",
+    params.sortOrder || "desc",
+    params.page || 1,
+    params.pageSize || 20,
+    params.yearsFilter || 0,
+    params.minReleaseDate || "",
+    params.maxReleaseDate || "",
+    params.excludeTestVersions !== false ? "1" : "0",
+    params.priceMin?.toFixed(2) || "",
+    params.priceMax?.toFixed(2) || "",
+    params.modernTagFilter || "",
+    params.featureTagFilter || "",
+    params.poolA_minRating || 75,
+    params.poolA_minReviews || 200,
+    params.poolB_minRating || 75,
+    params.poolB_minReviews || 50,
+    params.poolC_minRating || 40,
+    params.poolC_maxRating || 74,
+    params.poolC_minReviews || 50,
+  ];
+  return parts.join("|");
+}
+
+function getFromQueryCache(key: QueryCacheKey): QueryCacheEntry | null {
+  const entry = queryCache.get(key);
+  if (!entry) return null;
+  queryCache.delete(key);
+  queryCache.set(key, entry);
+  return entry;
+}
+
+function setQueryCache(key: QueryCacheKey, entry: QueryCacheEntry): void {
+  if (queryCache.size >= MAX_QUERY_CACHE_SIZE) {
+    const firstKey = queryCache.keys().next().value;
+    if (firstKey !== undefined) queryCache.delete(firstKey);
+  }
+  queryCache.set(key, entry);
+}
+
+// 预计算缓存文件（包含已去重、已计算威尔逊得分/标签权重的数据）
+const CACHE_FILE = path.join(process.cwd(), "public", "data", "games-cache.json");
+// 原始文件（仅在缓存不存在时降级使用）
 const DB_FILE = path.join(process.cwd(), "public", "data", "games-index.json");
+
+// 动态标签选项类型
+export interface FeatureTagOption {
+  key: string;
+  label: string;
+  tag: string;
+  count: number;
+  gameCount: number;
+  coverage: number;
+  avgWilson: number;
+}
+
+interface CacheData {
+  meta: {
+    version: number;
+    createdAt: string;
+    totalRaw: number;
+    totalAfterDedup: number;
+    totalTurnBased: number;
+    totalTestVersion: number;
+    poolA: number;
+    poolB: number;
+    poolC: number;
+  };
+  games: GameRecord[];
+  featureTagOptions?: FeatureTagOption[];
+}
+
+// API 响应类型
+interface FilterResponse {
+  results: GameRecord[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  stats: PoolStats;
+  priceStats?: PriceStats;
+  poolConfig: PoolConfig;
+  query: string;
+  poolFilters: string[];
+  featureTagOptions?: FeatureTagOption[];
+}
 
 function normalizeTags(raw: Record<string, number> | string[] | undefined): string[] {
   if (!raw) return [];
@@ -505,7 +638,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
   const turnBased = isTurnBased(tags, raw.genres || []);
 
   // 测试版检测：数据源标记 > 名称检测 > 标签检测
-  const isTestByData = raw._is_test_version === true;
+  const isTestByData = raw._is_test_version === true || raw._is_playtest === true;
   const isTestByName = detectTestVersionByName(raw.name || "");
   const isTestByTag = isTestVersionByTag(tags, categories);
   const isTest = isTestByData || isTestByName || isTestByTag;
@@ -568,7 +701,8 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
 }
 
 /**
- * 按游戏名称去重，保留拥有者数量最多的条目
+ * 按"开发商+游戏名称"组合去重，保留拥有者数量最多的条目
+ * 相比仅按名称去重，可以区分不同开发商开发的同名游戏
  * 拥有者相同时，取评论数最多的
  * Steam 上同一游戏可能存在 Demo 版、限定版、捆绑包等多个条目
  */
@@ -577,7 +711,7 @@ function deduplicateByName(games: GameRecord[]): GameRecord[] {
 
   for (const game of games) {
     if (!game.name) continue;
-    const key = game.name.toLowerCase().trim();
+    const key = buildDedupKey(game);
     const existing = map.get(key);
     const existingTotalReviews = existing?.steamReviews?.totalReviews ?? 0;
     const gameTotalReviews = game.steamReviews?.totalReviews ?? 0;
@@ -595,7 +729,32 @@ function deduplicateByName(games: GameRecord[]): GameRecord[] {
   return Array.from(map.values());
 }
 
-function loadDatabase(): GameRecord[] {
+/**
+ * 构建去重键：开发商列表（排序后）+ 游戏名称
+ */
+function buildDedupKey(game: GameRecord): string {
+  const devs = (game.developers || []).map((d) => d.toLowerCase().trim()).sort();
+  const devKey = devs.length > 0 ? devs.join("|") : "__NO_DEV__";
+  const nameKey = game.name.toLowerCase().trim();
+  return `${devKey}|||${nameKey}`;
+}
+
+interface CacheData {
+  meta: {
+    version: number;
+    createdAt: string;
+    totalRaw: number;
+    totalAfterDedup: number;
+    totalTurnBased: number;
+    totalTestVersion: number;
+    poolA: number;
+    poolB: number;
+    poolC: number;
+  };
+  games: GameRecord[];
+}
+
+function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOption[] } {
   const now = Date.now();
   const isProduction = process.env.NODE_ENV === "production";
 
@@ -606,15 +765,32 @@ function loadDatabase(): GameRecord[] {
     (isProduction || now - dbCache.loadedAt < 60 * 1000);
 
   if (cacheValid) {
-    console.log(`[Mode2] 使用缓存的 ${dbCache.games.length} 个游戏 (距上次加载 ${Math.round((now - dbCache.loadedAt!) / 1000)}s 前)`);
-    return dbCache.games;
+    console.log(`[Mode2] 使用内存缓存的 ${dbCache.games.length} 个游戏 (距上次加载 ${Math.round((now - dbCache.loadedAt!) / 1000)}s 前)`);
+    return { games: dbCache.games, featureTagOptions: dbCache.featureTagOptions };
   }
 
   try {
+    // 优先使用预计算缓存
+    if (fs.existsSync(CACHE_FILE)) {
+      const loadStart = Date.now();
+      const raw = fs.readFileSync(CACHE_FILE, "utf-8");
+      const cache = JSON.parse(raw) as CacheData;
+      dbCache.games = cache.games;
+      dbCache.featureTagOptions = cache.featureTagOptions || [];
+      dbCache.loadedAt = now;
+      dbCache.loadError = null;
+      console.log(`[Mode2] 从预计算缓存加载 ${cache.games.length} 个游戏，耗时 ${Date.now() - loadStart}ms`);
+      console.log(`[Mode2] 动态标签: ${cache.featureTagOptions?.length ?? 0} 个`);
+      console.log(`[Mode2] 缓存信息: 去重后 ${cache.meta.totalAfterDedup} 个 | 回合制 ${cache.meta.totalTurnBased} | A池 ${cache.meta.poolA} | B池 ${cache.meta.poolB} | C池 ${cache.meta.poolC}`);
+      return { games: dbCache.games, featureTagOptions: dbCache.featureTagOptions };
+    }
+
+    // 降级：使用原始 JSON 文件
+    console.warn("[Mode2] 预计算缓存不存在，降级使用原始 JSON");
     if (!fs.existsSync(DB_FILE)) {
       dbCache.loadError = `数据库文件不存在: ${DB_FILE}`;
       console.error("[Mode2] 文件不存在:", DB_FILE);
-      return [];
+      return { games: [], featureTagOptions: [] };
     }
 
     const loadStart = Date.now();
@@ -627,31 +803,25 @@ function loadDatabase(): GameRecord[] {
 
     const transformStart = Date.now();
     const games: GameRecord[] = [];
-    let testVersionCount = 0;
-    let turnBasedCount = 0;
-
     for (const [appId, data] of Object.entries(rawData)) {
       const game = transformGame(appId, data);
       games.push(game);
-      if (game.isTestVersion) testVersionCount++;
-      if (game.isTurnBased) turnBasedCount++;
     }
-
-    // 去重：同名游戏保留拥有者最多的条目
     const deduped = deduplicateByName(games);
     console.log(`[Mode2] 去重完成，保留 ${deduped.length} 个（移除 ${games.length - deduped.length} 个重复）`);
 
     dbCache.games = deduped;
+    dbCache.featureTagOptions = [];
     dbCache.loadedAt = now;
     dbCache.loadError = null;
-    console.log(`[Mode2] 数据转换完成，耗时 ${Date.now() - transformStart}ms，加载 ${deduped.length} 个游戏，其中测试版: ${testVersionCount}，回合制: ${turnBasedCount}`);
+    console.log(`[Mode2] 数据转换完成，耗时 ${Date.now() - transformStart}ms`);
 
-    return deduped;
+    return { games: deduped, featureTagOptions: [] };
   } catch (e) {
     const msg = `加载数据库失败: ${e instanceof Error ? e.message : String(e)}`;
     console.error("[Mode2]", msg);
     dbCache.loadError = msg;
-    return [];
+    return { games: [], featureTagOptions: [] };
   }
 }
 
@@ -738,8 +908,9 @@ function filterGames(
     priceMax?: number;
     modernTagFilter?: "hasCore" | "hasModern";
     featureTagFilter?: string;
+    featureTagOptions?: FeatureTagOption[];
   }
-): { results: GameRecord[]; total: number; stats: PoolStats; priceStats?: PriceStats } {
+): { results: GameRecord[]; total: number; stats: PoolStats; priceStats: PriceStats | undefined } {
   // 默认过滤测试版
   const excludeTest = options.excludeTestVersions !== false;
 
@@ -829,12 +1000,14 @@ function filterGames(
       if (options.modernTagFilter === "hasModern" && g.modernTagCount === 0) {
         return false;
       }
-      // 具体特色标签筛选
+      // 具体特色标签筛选（使用动态提取的标签）
       if (options.featureTagFilter) {
-        const featureTag = FEATURE_TAGS.find((f) => f.key === options.featureTagFilter);
+        // 从动态标签选项中查找
+        const featureTag = options.featureTagOptions?.find((f) => f.key === options.featureTagFilter);
         if (featureTag) {
+          // 用原始标签名精确匹配
           const hasTag = g.uniqueFeatureTags.some((tag) =>
-            featureTag.tags.some((ft) => tag.toLowerCase().includes(ft.toLowerCase()))
+            tag.toLowerCase() === featureTag.tag.toLowerCase()
           );
           if (!hasTag) return false;
         }
@@ -965,6 +1138,7 @@ function calculatePriceStats(games: GameRecord[]): PriceStats {
       max: 0,
       avg: 0,
       median: 0,
+      total: 0,
       distribution: { free: 0, under10: 0, under20: 0, under30: 0, under50: 0, over50: 0 },
     };
   }
@@ -990,6 +1164,7 @@ function calculatePriceStats(games: GameRecord[]): PriceStats {
     max: sorted[sorted.length - 1],
     avg: Math.round(avg * 100) / 100,
     median: Math.round(median * 100) / 100,
+    total: prices.length,
     distribution,
   };
 }
@@ -1046,7 +1221,7 @@ export async function GET(request: NextRequest) {
   const statsOnly = searchParams.get("statsOnly") === "true";
 
   console.log("[Mode2] 开始加载数据库");
-  const allGames = loadDatabase();
+  const { games: allGames, featureTagOptions } = loadDatabase();
   console.log(`[Mode2] 数据库加载完成，共 ${allGames.length} 个游戏`);
 
   if (dbCache.loadError) {
@@ -1069,6 +1244,58 @@ export async function GET(request: NextRequest) {
     poolB: { minRating: poolB_minRating, minReviews: poolB_minReviews, requirePokemonLike: true },
     poolC: { minRating: poolC_minRating, maxRating: poolC_maxRating, minReviews: poolC_minReviews, requirePokemonLike: true },
   };
+
+  // 生成查询缓存键（第一页才缓存）
+  const cacheKey = getQueryCacheKey({
+    pools: pools.length > 0 ? pools : undefined,
+    query,
+    sortBy,
+    sortOrder,
+    page,
+    pageSize,
+    yearsFilter,
+    minReleaseDate,
+    maxReleaseDate,
+    excludeTestVersions,
+    priceMin,
+    priceMax,
+    modernTagFilter,
+    featureTagFilter,
+    poolA_minRating,
+    poolA_minReviews,
+    poolB_minRating,
+    poolB_minReviews,
+    poolC_minRating,
+    poolC_maxRating,
+    poolC_minReviews,
+  });
+
+  // 尝试从查询缓存获取
+  if (page === 1) {
+    const cached = getFromQueryCache(cacheKey);
+    if (cached) {
+      console.log(`[Mode2] 命中查询缓存，返回 ${cached.results.length} 条结果`);
+      return NextResponse.json({
+        results: cached.results,
+        total: cached.total,
+        page: 1,
+        pageSize,
+        totalPages: Math.max(1, Math.ceil(cached.total / pageSize)),
+        stats: cached.stats,
+        priceStats: cached.priceStats,
+        poolConfig,
+        query,
+        poolFilters: pools.length > 0 ? pools : ["A", "B", "C"],
+        description: {
+          A: "神作参考池 - 普通回合制游戏，优秀UI和战斗机制参考",
+          B: "核心竞品池 - 宝可梦Like成功案例，学习成功要素",
+          C: "避坑指南池 - 宝可梦Like争议/失败案例，避开玩家痛点",
+        },
+        featureTagOptions,
+        cached: true,
+      });
+    }
+  }
 
   // 只获取统计信息
   if (statsOnly) {
@@ -1100,7 +1327,13 @@ export async function GET(request: NextRequest) {
     priceMax,
     modernTagFilter,
     featureTagFilter,
+    featureTagOptions,
   });
+
+  // 缓存第一页的查询结果
+  if (page === 1) {
+    setQueryCache(cacheKey, { results, total, stats, priceStats, timestamp: Date.now() });
+  }
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -1120,6 +1353,7 @@ export async function GET(request: NextRequest) {
       B: "核心竞品池 - 宝可梦Like成功案例，学习成功要素",
       C: "避坑指南池 - 宝可梦Like争议/失败案例，避开玩家痛点",
     },
+    featureTagOptions,
   }, {
     headers: { "Cache-Control": "public, max-age=300, s-maxage=300" },
   });

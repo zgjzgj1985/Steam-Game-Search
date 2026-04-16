@@ -1,0 +1,67 @@
+{
+  "total": 122611,
+  "free_count": 33414,
+  "paid_count": 89197,
+  "free_examples": [
+    {
+      "app_id": "2539430",
+      "name": "Black Dragon Mage Playtest",
+      "price": 0.0,
+      "type": "unknown"
+    },
+    {
+      "app_id": "3631080",
+      "name": "Maze Quest VR",
+      "price": 0,
+      "type": "unknown"
+    },
+    {
+      "app_id": "1946890",
+      "name": "Codename: Warlock Playtest",
+      "price": 0.0,
+      "type": "unknown"
+    },
+    {
+      "app_id": "2260230",
+      "name": "Midnight Dash",
+      "price": 0.0,
+      "type": "unknown"
+    },
+    {
+      "app_id": "2713630",
+      "name": "Black Market",
+      "price": 0,
+      "type": "unknown"
+    },
+    {
+      "app_id": "2072070",
+      "name": "RPG Plus - Virtual Tabletop",
+      "price": 0.0,
+      "type": "unknown"
+    },
+    {
+      "app_id": "2349750",
+      "name": "CyberVault Playtest",
+      "price": 0.0,
+      "type": "unknown"
+    },
+    {
+      "app_id": "2628280",
+      "name": "A Night In Omar's Burger Playtest",
+      "price": 0.0,
+      "type": "unknown"
+    },
+    {
+      "app_id": "657010",
+      "name": "Lucky Night: Texas Hold'em VR",
+      "price": 0.0,
+      "type": "unknown"
+    },
+    {
+      "app_id": "334030",
+      "name": "Epic Arena",
+      "price": 0.0,
+      "type": "unknown"
+    }
+  ]
+}

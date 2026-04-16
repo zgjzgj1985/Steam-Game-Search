@@ -51,10 +51,18 @@ function isTestVersionByTag(tags: string[]): boolean {
 }
 
 // 检查是否是测试版（综合判断：名称 + 标签 + 数据源标记）
+// 优先使用明确的标记字段，其次通过名称/标签推断
 function isTestVersion(raw: RawGameData, normalizedTags: string[]): boolean {
+  // 明确的标记字段（数据清洗后添加的字段）
   if (raw._is_test_version === true) return true;
+  if (raw._is_playtest === true) return true;
+
+  // 通过名称判断
   if (isTestVersionByName(raw.name || "")) return true;
+
+  // 通过 Steam 标签判断
   if (isTestVersionByTag(normalizedTags)) return true;
+
   return false;
 }
 
@@ -104,6 +112,8 @@ interface RawGameData {
   peak_ccu: number;
   tags: Record<string, number> | string[];
   _is_test_version?: boolean;
+  _is_playtest?: boolean;
+  _is_suspicious_delisted?: boolean;
 }
 
 // ============ 返回给前端的类型 ============
@@ -138,6 +148,7 @@ interface GameRecord {
   screenshots: string[];
   steamUrl: string;
   isTestVersion: boolean;
+  isSuspiciousDelisted?: boolean;
 }
 
 // ============ 类型筛选配置 (英文 tags) ============
@@ -170,6 +181,9 @@ const dbCache: DbCache = {
   loadError: null,
 };
 
+// 预计算缓存文件（包含已去重、已计算的数据）
+const CACHE_FILE = path.join(process.cwd(), "public", "data", "games-cache.json");
+// 原始文件（仅在缓存不存在时降级使用）
 const DB_FILE = path.join(process.cwd(), "public", "data", "games-index.json");
 
 /**
@@ -245,6 +259,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     screenshots: raw.screenshots || [],
     steamUrl: `https://store.steampowered.com/app/${appId}`,
     isTestVersion: isTestVersion(raw, normalizedTags),
+    isSuspiciousDelisted: raw._is_suspicious_delisted === true,
   };
 }
 
@@ -270,6 +285,20 @@ function loadDatabase(): GameRecord[] {
   }
 
   try {
+    // 优先使用预计算缓存
+    if (fs.existsSync(CACHE_FILE)) {
+      const t0 = Date.now();
+      const raw = fs.readFileSync(CACHE_FILE, "utf-8");
+      const cache = JSON.parse(raw) as { meta: unknown; games: GameRecord[] };
+      dbCache.games = cache.games;
+      dbCache.loadedAt = now;
+      dbCache.loadError = null;
+      console.log(`[db] 从预计算缓存加载 ${cache.games.length} 个游戏，耗时 ${Date.now() - t0}ms`);
+      return dbCache.games;
+    }
+
+    // 降级：使用原始 JSON 文件
+    console.warn("[db] 预计算缓存不存在，降级使用原始 JSON");
     if (!fs.existsSync(DB_FILE)) {
       dbCache.loadError = `数据库文件不存在: ${DB_FILE}`;
       return [];
@@ -283,7 +312,6 @@ function loadDatabase(): GameRecord[] {
       games.push(transformGame(appId, data));
     }
 
-// 去重：同名游戏保留拥有者最多的条目（拥有者相同时取评论数最多的）
     const dupesRemoved = deduplicateGames(games);
     const dedupedGames = dupesRemoved.kept;
 
@@ -302,18 +330,19 @@ function loadDatabase(): GameRecord[] {
 }
 
 /**
- * 按游戏名称去重，保留拥有者数量最多的条目
+ * 按"开发商+游戏名称"组合去重，保留拥有者数量最多的条目
+ * 相比仅按名称去重，可以区分不同开发商开发的同名游戏
  * Steam 上同一游戏可能存在 Demo 版、限定版、捆绑包等多个条目，
  * 它们名称相同但 estimated_owners 不同（Demo 版几乎为 0）
  */
 function deduplicateGames(games: GameRecord[]): { kept: GameRecord[]; removed: number } {
-  // 用 Map 按名称（转小写后）聚合，value = 拥有者最多的条目
-  // 拥有者相同时，取评论数最多的条目
+  // 用 Map 按"开发商+名称"（转小写后）聚合，value = 拥有者最多的条目
+  // 开发商相同时，取拥有者最多的条目；拥有者相同时，取评论数最多的条目
   const map = new Map<string, GameRecord>();
 
   for (const game of games) {
     if (!game.name) continue;
-    const key = game.name.toLowerCase().trim();
+    const key = buildDedupKey(game);
     const existing = map.get(key);
     const existingTotalReviews = existing?.steamReviews?.totalReviews ?? 0;
     const gameTotalReviews = game.steamReviews?.totalReviews ?? 0;
@@ -330,6 +359,17 @@ function deduplicateGames(games: GameRecord[]): { kept: GameRecord[]; removed: n
 
   const kept = Array.from(map.values());
   return { kept, removed: games.length - kept.length };
+}
+
+/**
+ * 构建去重键：开发商列表（排序后）+ 游戏名称
+ * 开发商相同时认为是同一游戏，不同开发商的同名游戏视为不同游戏
+ */
+function buildDedupKey(game: GameRecord): string {
+  const devs = (game.developers || []).map((d) => d.toLowerCase().trim()).sort();
+  const devKey = devs.length > 0 ? devs.join("|") : "__NO_DEV__";
+  const nameKey = game.name.toLowerCase().trim();
+  return `${devKey}|||${nameKey}`;
 }
 
 // ============ 搜索逻辑 ============
@@ -367,13 +407,19 @@ function searchGames(
   maxReleaseDate?: string,
   minRating?: number,
   minReviews?: number,
-  excludeTestVersions?: boolean
+  excludeTestVersions?: boolean,
+  excludeSuspiciousDelisted?: boolean
 ): { results: GameRecord[]; total: number; page: number; pageSize: number } {
   let results = allGames;
 
   // 0. 测试版过滤
   if (excludeTestVersions !== false) {
     results = results.filter((g) => !g.isTestVersion);
+  }
+
+  // 0b. 可疑下架游戏过滤
+  if (excludeSuspiciousDelisted !== false) {
+    results = results.filter((g) => g.isSuspiciousDelisted !== true);
   }
 
   // 1. 类型筛选
@@ -496,6 +542,7 @@ export async function GET(request: NextRequest) {
   const minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("minRating") || "0", 10) || 0));
   const minReviews = Math.max(0, Math.min(parseInt(searchParams.get("minReviews") || "0", 10) || 0, 1_000_000_000));
   const excludeTestVersions = searchParams.get("excludeTestVersions") !== "false";
+  const excludeSuspiciousDelisted = searchParams.get("excludeSuspiciousDelisted") !== "false";
 
   const allGames = loadDatabase();
 
@@ -541,7 +588,8 @@ export async function GET(request: NextRequest) {
     maxReleaseDate,
     minRating,
     minReviews,
-    excludeTestVersions
+    excludeTestVersions,
+    excludeSuspiciousDelisted
   );
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
@@ -557,6 +605,7 @@ export async function GET(request: NextRequest) {
       genreFilters: genreFilters.length > 0 ? genreFilters : undefined,
       incomplete: false,
       excludeTestVersions,
+      excludeSuspiciousDelisted,
       dbStats: {
         totalGames: allGames.length,
         loadedAt: dbCache.loadedAt ? new Date(dbCache.loadedAt).toISOString() : null,

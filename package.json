@@ -15,12 +15,15 @@
     "db:generate": "prisma generate",
     "postinstall": "prisma generate",
     "db:build": "tsx scripts/build-steam-db.ts",
-    "build:meta": "python scripts/build-games-meta.py"
+    "build:meta": "python scripts/build-games-meta.py",
+    "precompute": "ts-node --esm scripts/precompute.ts",
+    "update-data": "ts-node --esm scripts/update-data.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-tabs": "^1.0.4",
+    "better-sqlite3": "^12.9.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
@@ -36,6 +39,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20.12.12",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",

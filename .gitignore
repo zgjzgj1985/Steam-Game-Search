@@ -37,11 +37,27 @@ next-env.d.ts
 /prisma/*.db
 /prisma/*.db-journal
 
-# Large data files
-public/data/games.json
-public/data/games-meta.json
-public/data/games-index.json
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.py.bak
+
+# Large data files (不在 Git 版本控制中)
+/public/data/*.json
+/public/data/*.db
+/public/data/*.json.unified_backup
+/public/data/*.ext_backup
+/public/data/*.last_run
 
 # Backup files
 *.backup
 *_backup
+
+# Temporary files
+temp_*
+*.tmp
+*.log
+
+# Documentation
+数据采集维护文档.md

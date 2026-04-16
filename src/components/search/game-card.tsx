@@ -172,16 +172,18 @@ export function GameCard({ game, className }: GameCardProps) {
           )}
 
           {/* Steam 跳转（右下角，独立不遮挡） */}
-          <a
-            href={steamStoreUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              window.open(steamStoreUrl, "_blank", "noopener,noreferrer");
+            }}
             className="absolute bottom-2 right-2 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#1b2838] hover:bg-[#2a475e] text-white text-xs font-medium shadow-lg transition-all hover:scale-105 hover:shadow-xl"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             <span>Steam</span>
-          </a>
+          </button>
         </div>
 
         {/* 游戏信息 */}

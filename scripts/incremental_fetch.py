@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 增量更新脚本 - 检测Steam新增/修改的游戏并更新本地数据库
 
@@ -9,204 +10,42 @@
 
 用途: 定时任务自动执行，保持数据新鲜
 """
-import json
-import time
-import requests
 import sys
-import shutil
-import re
+import time
+import json
 from pathlib import Path
 from datetime import datetime, timedelta
 
+from config import (
+    INDEX_FILE, BACKUP_FILE, INCR_BACKUP_FILE, STATE_FILE,
+    REQUEST_DELAY, SAVE_EVERY, MAX_NEW_GAMES, MAX_UPDATE_GAMES,
+    MAX_SEARCH_PAGES
+)
+from logging_utils import log
+from data_utils import load_games_index, safe_save_json, normalize_genres, normalize_categories
+from steam_api import fetch_game_data, fetch_reviews
+
 sys.stdout.reconfigure(encoding='utf-8')
 
-# ==================== 配置 ====================
-INDEX_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json')
-BACKUP_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json.incr_backup')
-TEMP_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json.incr_temp')
-STATE_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json.last_run')
+# Steam 搜索页面 URL
+STEAM_STORE_URL = 'https://store.steampowered.com/search/?term={term}&page={page}'
 
-# Steam API
-STEAM_API = 'https://store.steampowered.com/api/appdetails?appids={appid}&cc=cn&l=schinese'
-REVIEWS_API = 'https://store.steampowered.com/appreviews/{appid}?json=1&language=all&purchase_type=all'
 
-# 请求间隔(秒)
-REQUEST_DELAY = 0.5
+def parse_release_date(date_str):
+    """
+    解析游戏发布日期，支持多种格式
+    """
+    if not date_str:
+        return ''
 
-# 检查点保存间隔
-SAVE_EVERY = 100
-
-# 每次运行最多处理数量(避免单个任务运行太久)
-MAX_NEW_GAMES = 3000
-MAX_UPDATE_GAMES = 500
-
-# Steam 搜索页面最大页数（每页25个，约覆盖43天）
-MAX_SEARCH_PAGES = 100
-
-# ==================== 日志 ====================
-def log(msg):
-    print(f'[{datetime.now().strftime("%H:%M:%S")}] {msg}', flush=True)
-
-# ==================== Steam API ID 映射表 ====================
-# Steam API 2025年末改变了 genres/categories 返回格式：
-# 旧格式: [{id:"1", description:"Action"}]
-# 新格式: ["1","25","4"] 或 [2,10,29]
-
-GENRE_ID_MAP = {
-    # ===== 游戏类型（基于2026年Steam API实际数据验证）====
-    # Steam 在 2025年末至2026年初重构了 genres ID 体系
-    # 验证来源：直接调用 Steam API 对比第三方数据集 ID
-    "1": "Action",
-    "2": "Strategy",
-    "3": "RPG",
-    "4": "Casual",
-    "7": "Education",
-    "8": "Utilities",
-    "9": "Racing",
-    "10": "Photo Editing",
-    "13": "Sports",
-    "17": "Documentary",
-    "18": "Sports",
-    "20": "Software Training",
-    "23": "Indie",
-    "24": "Video Production",
-    "25": "Adventure",
-    "26": "Violent",
-    "27": "Nudity",
-    "28": "Simulation",
-    "29": "Massively Multiplayer",
-    "30": "Farming Sim",
-    "35": "Free To Play",
-    "37": "Free To Play",
-    "51": "Animation & Modeling",
-    "52": "Audio Production",
-    "53": "Design & Illustration",
-    "54": "Education",
-    "55": "Photo Editing",
-    "56": "Software Training",
-    "57": "Utilities",
-    "58": "Video Production",
-    "59": "Web Publishing",
-    "60": "Game Development",
-    "70": "Early Access",
-}
-
-CATEGORY_ID_MAP = {
-    1: "Multi-player", 2: "PvP", 8: "Anti-Cheat", 9: "Steam Cloud",
-    10: "Steam Leaderboards", 13: "Single-player", 14: "Full controller support",
-    15: "Steam Trading Cards", 17: "Steam Workshop", 18: "In-App Product",
-    20: "Valve Anti-Cheat", 21: "Captions available", 22: "Includes Source SDK",
-    23: "Includes Source Filmmaker", 24: "Commentary available",
-    25: "Dynamic Renaming", 27: "Clan Chat", 28: "Chat", 29: "Voice Chat",
-    30: "Broadcast", 32: "User Generated Content", 35: "Mods",
-    36: "Online PvP", 37: "Shared/Split Screen PvP",
-    38: "Cross-Platform Multiplayer", 39: "Online Co-op", 41: "Co-op",
-    42: "Local Co-op", 43: "Shared/Split Screen Co-op",
-    44: "Shared/Split Screen", 47: "MMO", 48: "Open World", 49: "PvE",
-    50: "Partial Controller Support", 52: "Local Multi-player",
-    53: "Asynchronous Multiplayer", 54: "Turn-based", 61: "Online Game",
-    62: "Virtual Reality", 63: "SteamVR Teleportation", 64: "3D Vision",
-    65: "Tracked Motion Controllers", 66: "Room Scale", 67: "Seated",
-    68: "Standing", 69: "Native Vive", 70: "Native Rift", 71: "Native WMR",
-    72: "GPU Access", 73: "HDR", 74: "Steam Input API", 75: "Reflex",
-    76: "DualSense", 77: "DualShock", 78: "Xbox", 79: "Sega",
-}
-
-def normalize_genres(raw):
-    """将 genres 标准化为字符串数组，兼容新旧格式"""
-    if not raw:
-        return []
-    if not isinstance(raw, list) or len(raw) == 0:
-        return []
-    first = raw[0]
-    # 旧格式: [{id:"1", description:"Action"}]
-    if isinstance(first, dict) and 'description' in first:
-        return [g.get('description', '') for g in raw if g.get('description')]
-    # 新格式: ["1","25","4"] 或 [1, 25, 4]
-    if isinstance(first, (str, int)):
-        result = []
-        for item in raw:
-            key = str(int(item)) if isinstance(item, (int, str)) and str(item).isdigit() else None
-            if key and key in GENRE_ID_MAP:
-                result.append(GENRE_ID_MAP[key])
-        return result
-    # 正常文本数组
-    if isinstance(first, str):
-        return raw
-    return []
-
-def normalize_categories(raw):
-    """将 categories 标准化为字符串数组，兼容新旧格式"""
-    if not raw:
-        return []
-    if not isinstance(raw, list) or len(raw) == 0:
-        return []
-    first = raw[0]
-    # 旧格式: [{id:2, description:"Steam Play"}]
-    if isinstance(first, dict) and 'description' in first:
-        return [c.get('description', '') for c in raw if c.get('description')]
-    # 新格式: [2, 10, 29] 或 ["2","10","29"]
-    if isinstance(first, (int, str)):
-        result = []
-        for item in raw:
-            try:
-                key = int(item) if isinstance(item, str) else item
-                if key in CATEGORY_ID_MAP:
-                    result.append(CATEGORY_ID_MAP[key])
-            except (ValueError, TypeError):
-                continue
-        return result
-    return []
-
-# ==================== 工具函数 ====================
-def save_json(data, path):
-    """安全保存JSON文件"""
-    with open(TEMP_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False)
-    try:
-        with open(TEMP_FILE, 'r', encoding='utf-8') as f:
-            json.load(f)
-    except json.JSONDecodeError:
-        try:
-            TEMP_FILE.unlink()
-        except:
-            pass
-        return False
-    if path.exists():
-        shutil.copy2(path, BACKUP_FILE)
-    TEMP_FILE.replace(path)
-    return True
-
-def save_state(state):
-    """保存运行状态"""
-    with open(STATE_FILE, 'w', encoding='utf-8') as f:
-        json.dump(state, f, ensure_ascii=False)
-
-def parse_release_date(release_data):
-    """解析Steam API返回的发行日期"""
-    if isinstance(release_data, dict):
-        date_str = release_data.get('date', '')
-    else:
-        date_str = release_data or ''
-
-    # 标准化：去除多余空格，转换为标准格式存储
-    # Steam API 常见格式:
-    #   "2026 年 4 月 13 日" (中文，年月日有空格)
-    #   "2026年4月13日" (中文，无空格)
-    #   "Apr 13, 2026" (英文)
-    #   "Apr, 2026" (仅年月)
-    #   "2026-04-13" (ISO)
-    date_str = ' '.join(date_str.split())  # 合并多余空格
-
-    # 中文格式（有空格）
-    if '年' in date_str and '月' in date_str:
-        # "2026 年 4 月 13 日" -> "2026年4月13日"
+    # 中文格式
+    if '年' in date_str:
         normalized = date_str.replace(' ', '').replace('  ', '')
         for fmt in ['%Y年%m月%d日', '%Y年%m月']:
             try:
                 dt = datetime.strptime(normalized, fmt)
                 return dt.strftime('%Y-%m-%d') if '%d' in fmt else dt.strftime('%Y-%m')
-            except:
+            except Exception:
                 continue
 
     for fmt in ['%Y-%m-%d', '%b %d, %Y', '%b, %Y']:
@@ -216,145 +55,61 @@ def parse_release_date(release_data):
         except ValueError:
             continue
 
-    # 无法解析时返回原文
     return date_str
 
-def fetch_game_data(appid, retries=3):
-    """获取游戏基础数据，支持 429 限流处理"""
-    url = STEAM_API.format(appid=appid)
-    headers = {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-    }
 
-    for attempt in range(retries):
-        try:
-            r = requests.get(url, timeout=15, headers=headers)
+def save_json(data, path):
+    """保存 JSON 文件"""
+    return safe_save_json(data, path, BACKUP_FILE)
 
-            # 429 限流处理
-            if r.status_code == 429:
-                # 获取重试时间（优先使用 Retry-After 头）
-                retry_after = int(r.headers.get('Retry-After', 30))
-                log(f'   [限流] appid={appid} 触发限流，等待 {retry_after} 秒...')
-                time.sleep(retry_after)
-                continue
 
-            if r.status_code == 200:
-                d = r.json()
-                if str(appid) in d and d[str(appid)]['success']:
-                    return d[str(appid)]['data']
+def save_state(state):
+    """保存运行状态"""
+    with open(STATE_FILE, 'w', encoding='utf-8') as f:
+        json.dump(state, f, ensure_ascii=False, indent=2)
 
-            # 其他错误，使用指数退避
-            if attempt < retries - 1:
-                wait_time = 2 ** attempt
-                time.sleep(wait_time)
-
-        except requests.exceptions.Timeout:
-            if attempt < retries - 1:
-                wait_time = 2 ** attempt
-                time.sleep(wait_time)
-        except requests.exceptions.RequestException as e:
-            if attempt < retries - 1:
-                wait_time = 2 ** attempt
-                time.sleep(wait_time)
-            else:
-                log(f'   [网络错误] appid={appid}: {e}')
-
-    return None
-
-def fetch_reviews(appid, retries=3):
-    """获取游戏评价数据，支持 429 限流处理"""
-    url = REVIEWS_API.format(appid=appid)
-    headers = {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Accept': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-    }
-
-    for attempt in range(retries):
-        try:
-            r = requests.get(url, timeout=15, headers=headers)
-
-            # 429 限流处理
-            if r.status_code == 429:
-                retry_after = int(r.headers.get('Retry-After', 30))
-                log(f'   [限流] appid={appid} 评价获取触发限流，等待 {retry_after} 秒...')
-                time.sleep(retry_after)
-                continue
-
-            if r.status_code == 200:
-                d = r.json()
-                return d.get('query_summary', {})
-
-            if attempt < retries - 1:
-                wait_time = 2 ** attempt
-                time.sleep(wait_time)
-
-        except requests.exceptions.RequestException as e:
-            if attempt < retries - 1:
-                wait_time = 2 ** attempt
-                time.sleep(wait_time)
-
-    return None
 
 def get_new_releases(max_pages=None):
-    """
-    从Steam新发行页面获取新游戏appid列表
+    """从Steam新游戏页面获取新游戏appid列表"""
+    import re
+    from urllib.request import Request, urlopen
+    from urllib.error import URLError, HTTPError
 
-    策略: Steam的"最新"排序页面会展示最近发行的游戏
-    通过解析HTML获取appid列表
-    """
     if max_pages is None:
         max_pages = MAX_SEARCH_PAGES
 
-    log(f'[Step 1] 从Steam发现新游戏（最多{max_pages}页）...')
-
     all_appids = []
+    seen = set()
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
-    }
-
-    for page in range(1, max_pages + 1):
+    for page in range(max_pages):
         try:
-            # Steam新游戏页面
-            url = f'https://store.steampowered.com/search/results?sort_by=Released_DESC&sort_dir=desc&category1=2&category2=0&category3=0&specials=0&ignore_autoview=1&search=1&page={page}'
-            r = requests.get(url, headers=headers, timeout=30)
+            url = STEAM_STORE_URL.format(term='a', page=page)
+            req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urlopen(req, timeout=15) as response:
+                html = response.read().decode('utf-8')
 
-            if r.status_code != 200:
-                log(f'    页面{page}请求失败: {r.status_code}')
-                break
+            pattern = r'/app/(\d+)/'
+            found = set(re.findall(pattern, html))
 
-            # 从HTML提取appid
-            # 格式: data-ds-appid="123456"
-            found = re.findall(r'data-ds-appid="(\d+)"', r.text)
-
-            if not found:
-                # 备选格式
-                found = re.findall(r'"app_(\d+)"', r.text)
+            new_found = found - seen
+            seen.update(found)
+            all_appids.extend(int(aid) for aid in new_found)
 
             if not found:
-                log(f'    页面{page}没有找到更多游戏，停止')
                 break
 
-            for aid in found:
-                if int(aid) not in all_appids:
-                    all_appids.append(int(aid))
+            time.sleep(REQUEST_DELAY)
 
-            if page % 10 == 0:
-                log(f'    页面{page}: 发现{len(found)}个游戏，总计{len(all_appids)}个')
-
-            if page < max_pages:
-                time.sleep(REQUEST_DELAY)
-
+        except (URLError, HTTPError) as e:
+            log(f'    页面{page}错误: {e}')
+            break
         except Exception as e:
             log(f'    页面{page}错误: {e}')
             break
 
     log(f'    共发现{len(all_appids)}个appid')
     return all_appids
+
 
 def get_recently_updated_games(db, days_back=30, limit=500):
     """
@@ -372,7 +127,7 @@ def get_recently_updated_games(db, days_back=30, limit=500):
         if not date_str:
             continue
 
-        # 解析日期（支持多种格式）
+        # 解析日期
         parsed = None
         # ISO 格式
         if date_str.startswith('202'):
@@ -380,24 +135,26 @@ def get_recently_updated_games(db, days_back=30, limit=500):
                 try:
                     parsed = datetime.strptime(date_str, fmt)
                     break
-                except:
+                except Exception:
                     pass
-        # 中文格式（有无空格）
+
+        # 中文格式
         if not parsed and '年' in date_str:
             normalized = date_str.replace(' ', '')
             for fmt in ['%Y年%m月%d日', '%Y年%m月']:
                 try:
                     parsed = datetime.strptime(normalized, fmt)
                     break
-                except:
+                except Exception:
                     pass
+
         # 英文格式
         if not parsed:
             for fmt in ['%b %d, %Y', '%b, %Y']:
                 try:
                     parsed = datetime.strptime(date_str, fmt)
                     break
-                except:
+                except Exception:
                     pass
 
         if parsed and parsed >= cutoff:
@@ -408,6 +165,7 @@ def get_recently_updated_games(db, days_back=30, limit=500):
     # 只取前limit个(按appid降序，越大越新)
     recent.sort(reverse=True)
     return recent[:limit]
+
 
 def main():
     t0 = time.time()
@@ -421,8 +179,7 @@ def main():
         log('    错误: games-index.json不存在')
         return
 
-    with open(INDEX_FILE, 'r', encoding='utf-8') as f:
-        db = json.load(f)
+    db = load_games_index(INDEX_FILE)
 
     local_appids = set(db.keys())
     log(f'    本地游戏数: {len(local_appids):,}')
@@ -556,6 +313,7 @@ def main():
     log(f'  总游戏数: {total_now:,} (本次新增{results.get("success", 0) if new_appids else 0}个)')
     log(f'  有评价: {has_reviews:,}')
     log(f'  耗时: {elapsed:.0f}秒 ({elapsed/60:.1f}分钟)')
+
 
 if __name__ == '__main__':
     try:

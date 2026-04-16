@@ -1,128 +1,43 @@
+# -*- coding: utf-8 -*-
 """
 SQLite 数据同步脚本
 将 games-index.json 中的所有数据同步到 SQLite 数据库
 处理增量数据（新游戏插入）和现有数据更新
 """
-import json
-import sqlite3
 import time
-from pathlib import Path
 
-INDEX_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json')
-DB_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games.db')
+from config import INDEX_FILE, DB_FILE, BATCH_SIZE
+from logging_utils import log
+from data_utils import load_games_index
+from db_utils import get_db_connection, create_tables, migrate_add_columns
 
-def log(msg):
-    print(msg, flush=True)
+sys.stdout.reconfigure(encoding='utf-8')
 
-def create_tables(conn):
-    """创建数据库表（如果不存在）"""
-    cursor = conn.cursor()
-
-    # 游戏主表
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS games (
-            appid INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            release_date TEXT,
-            header_image TEXT,
-            short_description TEXT,
-            estimated_owners TEXT,
-            price REAL DEFAULT 0,
-            positive INTEGER DEFAULT 0,
-            negative INTEGER DEFAULT 0,
-            peak_ccu INTEGER DEFAULT 0,
-            metacritic_score INTEGER DEFAULT 0,
-            _p0_fetched INTEGER DEFAULT 0,
-            _is_test_version INTEGER DEFAULT 0,
-            _is_suspicious_delisted INTEGER DEFAULT 0,
-            _last_updated INTEGER DEFAULT 0
-        )
-    ''')
-
-    # JSON字段表
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS games_json (
-            appid INTEGER PRIMARY KEY,
-            developers TEXT,
-            publishers TEXT,
-            genres TEXT,
-            categories TEXT,
-            screenshots TEXT,
-            tags TEXT,
-            detailed_description TEXT,
-            about_the_game TEXT,
-            website TEXT
-        )
-    ''')
-
-    # 创建索引
-    cursor.execute('CREATE INDEX IF NOT EXISTS idx_games_name ON games(name)')
-    cursor.execute('CREATE INDEX IF NOT EXISTS idx_games_positive ON games(positive DESC)')
-    cursor.execute('CREATE INDEX IF NOT EXISTS idx_games_release ON games(release_date)')
-    cursor.execute('CREATE INDEX IF NOT EXISTS idx_games_price ON games(price)')
-
-    conn.commit()
-
-def migrate_add_columns(conn):
-    """为已存在的数据库添加新列"""
-    cursor = conn.cursor()
-
-    # 检查 games 表是否有 _is_suspicious_delisted 列
-    cursor.execute("PRAGMA table_info(games)")
-    columns = [col[1] for col in cursor.fetchall()]
-
-    if '_is_suspicious_delisted' not in columns:
-        log('   迁移: 添加 _is_suspicious_delisted 列...')
-        cursor.execute('ALTER TABLE games ADD COLUMN _is_suspicious_delisted INTEGER DEFAULT 0')
-        conn.commit()
-        log('   迁移完成')
-
-    conn.commit()
 
 def sync_to_sqlite(index_path, db_path):
     """同步 JSON 数据到 SQLite"""
-    log(f'加载 {index_path}...')
-    t0 = time.time()
+    # 加载 JSON 数据
+    json_data = load_games_index(index_path)
 
-    with open(index_path, 'r', encoding='utf-8') as f:
-        json_data = json.load(f)
-
-    log(f'JSON 文件包含 {len(json_data):,} 个游戏，耗时 {time.time()-t0:.1f}s')
-    log('')
-
-    # 创建/连接数据库
-    conn = sqlite3.connect(db_path)
-    conn.execute('PRAGMA journal_mode=WAL')
-    conn.execute('PRAGMA synchronous=NORMAL')
-
+    # 连接数据库
+    conn = get_db_connection(db_path)
     create_tables(conn)
     migrate_add_columns(conn)
 
-    # 获取 SQLite 中现有的游戏
-    log('检查现有数据...')
+    # 获取现有数据
     cursor = conn.cursor()
     cursor.execute('SELECT appid FROM games')
     existing_ids = set(row[0] for row in cursor.fetchall())
     log(f'SQLite 现有 {len(existing_ids):,} 个游戏')
 
     # 统计
-    stats = {
-        'new': 0,
-        'updated': 0,
-        'unchanged': 0,
-        'errors': 0
-    }
-
-    # 批量处理
-    batch_size = 1000
+    batch_size = BATCH_SIZE
     games_batch = []
     json_batch = []
-    appids_in_batch = set()
 
     t0 = time.time()
     json_appids = set(int(k) for k in json_data.keys())
 
-    # 找出需要新增和更新的游戏
     new_appids = json_appids - existing_ids
     existing_appids = json_appids & existing_ids
 
@@ -131,49 +46,19 @@ def sync_to_sqlite(index_path, db_path):
     # 处理所有游戏
     for appid_str, game in json_data.items():
         appid = int(appid_str)
+        game['appid'] = appid
 
-        # 主表数据
-        games_batch.append((
-            appid,
-            game.get('name', ''),
-            game.get('release_date', ''),
-            game.get('header_image', ''),
-            game.get('short_description', ''),
-            game.get('estimated_owners', ''),
-            float(game.get('price', 0) or 0),
-            int(game.get('positive', 0) or 0),
-            int(game.get('negative', 0) or 0),
-            int(game.get('peak_ccu', 0) or 0),
-            int(game.get('metacritic_score', 0) or 0),
-            1 if game.get('_p0_fetched') else 0,
-            1 if game.get('_is_test_version') else 0,
-            1 if game.get('_is_suspicious_delisted') else 0,
-            int(time.time())
-        ))
-
-        # JSON字段
-        json_batch.append((
-            appid,
-            json.dumps(game.get('developers', []), ensure_ascii=False),
-            json.dumps(game.get('publishers', []), ensure_ascii=False),
-            json.dumps(game.get('genres', []), ensure_ascii=False),
-            json.dumps(game.get('categories', []), ensure_ascii=False),
-            json.dumps(game.get('screenshots', []), ensure_ascii=False),
-            json.dumps(game.get('tags', {}), ensure_ascii=False),
-            game.get('detailed_description', ''),
-            game.get('about_the_game', ''),
-            game.get('website', '')
-        ))
-
-        appids_in_batch.add(appid)
+        # 使用公共函数准备数据
+        from data_utils import prepare_game_record, prepare_json_record
+        games_batch.append(prepare_game_record(game))
+        json_batch.append(prepare_json_record(game))
 
         # 批量插入
         if len(games_batch) >= batch_size:
             _execute_batch(conn, games_batch, json_batch)
-            log(f'    处理中... {len(appids_in_batch):,} / {len(json_data):,}')
+            log(f'    处理中... {len(games_batch):,} / {len(json_data):,}')
             games_batch = []
             json_batch = []
-            appids_in_batch = set()
 
     # 处理剩余数据
     if games_batch:
@@ -191,8 +76,8 @@ def sync_to_sqlite(index_path, db_path):
     log(f'其中 2026 年游戏: {count_2026:,} 个')
 
     conn.close()
-
     return True
+
 
 def _execute_batch(conn, games_batch, json_batch):
     """执行批量插入/更新"""
@@ -218,7 +103,11 @@ def _execute_batch(conn, games_batch, json_batch):
 
     conn.commit()
 
+
 if __name__ == '__main__':
+    import sys
+    sys.stdout.reconfigure(encoding='utf-8')
+
     log('=' * 60)
     log('SQLite 数据同步工具')
     log('将 games-index.json 同步到 SQLite 数据库')

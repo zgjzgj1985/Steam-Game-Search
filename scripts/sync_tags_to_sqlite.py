@@ -1,29 +1,30 @@
+# -*- coding: utf-8 -*-
 """
 将 games-index.json 中抓取的 tags 同步到 SQLite 数据库
 """
+import sys
 import json
-import sqlite3
-from pathlib import Path
 
-INDEX_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json')
-DB_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games.db')
+from config import INDEX_FILE, DB_FILE
+from logging_utils import log
+from data_utils import load_games_index
+from db_utils import get_db_connection
 
-def log(msg):
-    print(msg, flush=True)
+sys.stdout.reconfigure(encoding='utf-8')
+
 
 def main():
     log('=== 同步 tags 到 SQLite ===')
 
-    with open(INDEX_FILE, 'r', encoding='utf-8') as f:
-        games = json.load(f)
+    games = load_games_index(INDEX_FILE)
 
-    conn = sqlite3.connect(DB_FILE)
+    conn = get_db_connection(DB_FILE)
     cur = conn.cursor()
 
     updated = 0
     for appid, game in games.items():
         tags = game.get('tags', {})
-        if not tags or len(tags) == 0:
+        if not tags:
             continue
 
         tags_json = json.dumps(tags, ensure_ascii=False)
@@ -38,6 +39,7 @@ def main():
 
     log(f'更新了 {updated} 个游戏的 tags')
     log('SQLite 数据库已更新')
+
 
 if __name__ == '__main__':
     main()

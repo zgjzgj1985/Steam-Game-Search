@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Steam 用户标签补全脚本（多线程版）
 为 games-index.json 中缺失 tags 的 2026 年游戏批量抓取用户标签
@@ -6,18 +7,25 @@ import json
 import re
 import time
 import random
+import sys
 import urllib.request
 import urllib.error
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 
-INDEX_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json')
-STATE_FILE = Path(r'D:\Steam全域游戏搜索\public\data\tags-scrape-state.json')
+from config import (
+    INDEX_FILE, BACKUP_FILE,
+    STATE_FILE, DEFAULT_WORKERS, REQUEST_DELAY
+)
+from logging_utils import log
+from data_utils import load_games_index, safe_save_json
+
+sys.stdout.reconfigure(encoding='utf-8')
+
 TAGS_OUTPUT = Path(r'D:\Steam全域游戏搜索\public\data\scraped-tags.json')
 BATCH_SAVE = 200
-MAX_WORKERS = 8
-REQUEST_DELAY = (0.3, 1.0)  # 每个线程的随机延迟范围
+MAX_WORKERS = DEFAULT_WORKERS
 
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -30,15 +38,16 @@ _lock = Lock()
 _global_success = 0
 _global_fail = 0
 
-def log(msg):
-    print(msg, flush=True)
 
 def extract_tags(html):
+    """从 HTML 中提取标签"""
     tags = re.findall(r'<a[^>]+class="[^"]*tag[^"]*"[^>]*>([^<]+)</a>', html, re.IGNORECASE)
     tags = [t.strip() for t in tags if t.strip() and len(t.strip()) > 1]
     return tags[:20]
 
+
 def scrape_one(appid_name):
+    """抓取单个游戏的标签"""
     appid, name = appid_name
     time.sleep(random.uniform(*REQUEST_DELAY))
 
@@ -57,14 +66,14 @@ def scrape_one(appid_name):
     except Exception as e:
         return (appid, name, None, str(e))
 
+
 def main():
     global _global_success, _global_fail
 
     log('=== Steam 用户标签补全（多线程版）===')
     log(f'并发数: {MAX_WORKERS}')
 
-    with open(INDEX_FILE, 'r', encoding='utf-8') as f:
-        games = json.load(f)
+    games = load_games_index(INDEX_FILE)
 
     state = {'done': {}, 'failed': {}}
     if STATE_FILE.exists():
@@ -132,8 +141,7 @@ def main():
 
             # 批量保存
             if len(batch_buf) >= BATCH_SAVE:
-                with open(INDEX_FILE, 'w', encoding='utf-8') as f:
-                    json.dump(games, f, ensure_ascii=False, indent=2)
+                safe_save_json(games, INDEX_FILE, BACKUP_FILE)
                 with open(TAGS_OUTPUT, 'w', encoding='utf-8') as f:
                     json.dump(scraped_tags, f, ensure_ascii=False, indent=2)
                 state['done'] = done
@@ -144,8 +152,7 @@ def main():
                 batch_buf.clear()
 
     # 最终保存
-    with open(INDEX_FILE, 'w', encoding='utf-8') as f:
-        json.dump(games, f, ensure_ascii=False, indent=2)
+    safe_save_json(games, INDEX_FILE, BACKUP_FILE)
     with open(TAGS_OUTPUT, 'w', encoding='utf-8') as f:
         json.dump(scraped_tags, f, ensure_ascii=False, indent=2)
     state['done'] = done
@@ -164,6 +171,7 @@ def main():
     if has_card[:3]:
         for aid, name in has_card[:3]:
             log(f'  {aid} {name}: {scraped_tags[aid]}')
+
 
 if __name__ == '__main__':
     main()

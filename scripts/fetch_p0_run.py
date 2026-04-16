@@ -1,24 +1,29 @@
+# -*- coding: utf-8 -*-
 """
 采集P0: 为2024+零评价有类型有标签的游戏批量获取评价数
 """
-import json, re, time, requests, sys, shutil
-from pathlib import Path
+import re
+import sys
+import time
+
+from config import INDEX_FILE, BACKUP_FILE
+from logging_utils import log
+from data_utils import load_games_index, safe_save_json
+from steam_api import fetch_reviews
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-# 使用正确的路径
-INDEX_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json')
-BACKUP_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json.p0_backup')
-TEMP_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json.temp')
-REVIEWS_API = 'https://store.steampowered.com/appreviews/{appid}?json=1&language=all&purchase_type=all'
 
 def get_year(date_str):
+    """从日期字符串提取年份"""
     if not date_str:
         return 0
     m = re.search(r'(\d{4})', str(date_str))
     return int(m.group(1)) if m else 0
 
+
 def has_tags(game):
+    """检查游戏是否有标签"""
     t = game.get('tags', [])
     if isinstance(t, list):
         return len(t) > 0
@@ -26,42 +31,11 @@ def has_tags(game):
         return len(t) > 0
     return False
 
-def fetch(appid, retries=3):
-    url = REVIEWS_API.format(appid=appid)
-    for attempt in range(retries):
-        try:
-            r = requests.get(url, timeout=15)
-            if r.status_code == 200:
-                d = r.json()
-                if d.get('success') == 1:
-                    sq = d.get('query_summary', {})
-                    return sq.get('total_positive', 0), sq.get('total_negative', 0)
-            if attempt < retries - 1:
-                time.sleep(2)
-        except Exception:
-            if attempt < retries - 1:
-                time.sleep(2)
-    return None, None
 
-def save(data, path):
-    with open(TEMP_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False)
-    try:
-        with open(TEMP_FILE, 'r', encoding='utf-8') as f:
-            json.load(f)
-    except json.JSONDecodeError:
-        TEMP_FILE.unlink(missing_ok=True)
-        return False
-    if path.exists():
-        shutil.copy2(path, BACKUP_FILE)
-    TEMP_FILE.replace(path)
-    return True
-
-print('[1] Loading games-index.json ...')
+log('[1] 加载 games-index.json ...')
 t0 = time.time()
-with open(INDEX_FILE, 'r', encoding='utf-8') as f:
-    db = json.load(f)
-print(f'    Loaded {len(db):,} games in {time.time()-t0:.1f}s')
+db = load_games_index(INDEX_FILE)
+log(f'    加载 {len(db):,} 个游戏，耗时 {time.time()-t0:.1f}s')
 
 targets = []
 for appid, g in db.items():
@@ -77,17 +51,17 @@ for appid, g in db.items():
     targets.append(appid)
 
 total = len(targets)
-print(f'    Target games (2024+, zero reviews, has genres, has tags): {total:,}')
+log(f'    目标游戏（2024+, 零评价, 有类型, 有标签）: {total:,}')
 
 done = sum(1 for aid in targets if db[aid].get('_p0_fetched'))
-print(f'    Already done: {done:,}')
+log(f'    已完成: {done:,}')
 
 if done >= total:
-    print('[2] All done!')
+    log('[2] 全部完成！')
     sys.exit(0)
 
-print(f'[2] Starting fetch from #{done} ... (remaining: {total - done:,})')
-print('=' * 60)
+log(f'[2] 开始采集 #{done} ... (剩余: {total - done:,})')
+log('=' * 60)
 
 results = {'success': 0, 'failed': 0, 'got_reviews': 0, 'still_zero': 0}
 fetch_start = time.time()
@@ -96,15 +70,16 @@ save_every = 200
 processed_this_run = 0
 
 for appid in targets:
-    if db[appid].get('_p0_fetched'):
+    appid_str = str(appid)
+    if db[appid_str].get('_p0_fetched'):
         continue
 
-    pos, neg = fetch(appid)
+    pos, neg = fetch_reviews(int(appid))
 
     if pos is not None:
-        db[appid]['positive'] = pos
-        db[appid]['negative'] = neg
-        db[appid]['_p0_fetched'] = True
+        db[appid_str]['positive'] = pos
+        db[appid_str]['negative'] = neg
+        db[appid_str]['_p0_fetched'] = True
         results['success'] += 1
         if pos + neg > 0:
             results['got_reviews'] += 1
@@ -123,40 +98,40 @@ for appid in targets:
         pct = processed_this_run / (total - done) * 100
         success_rate = results['got_reviews'] / results['success'] * 100 if results['success'] > 0 else 0
 
-        print(f'    [{processed_this_run:,}/{total - done:,} ({pct:.1f}%)] '
-              f'Success:{results["success"]} | GotReviews:{results["got_reviews"]}({success_rate:.1f}%) | '
-              f'Failed:{results["failed"]} | {rate:.1f}/s | ETA:{remaining/60:.0f}min')
+        log(f'    [{processed_this_run:,}/{total - done:,} ({pct:.1f}%)] '
+              f'成功:{results["success"]} | 有评价:{results["got_reviews"]}({success_rate:.1f}%) | '
+              f'失败:{results["failed"]} | {rate:.1f}/s | 预计剩余:{remaining/60:.0f}分钟')
 
     if processed_this_run % save_every == 0:
-        print(f'    [Saving checkpoint ...]')
-        if save(db, INDEX_FILE):
+        log(f'    [保存检查点 ...]')
+        if safe_save_json(db, INDEX_FILE, BACKUP_FILE):
             save_count += 1
-            print(f'    [Checkpoint #{save_count} saved]')
+            log(f'    [检查点 #{save_count} 已保存]')
         else:
-            print(f'    [Save FAILED - will retry next interval]')
+            log(f'    [保存失败 - 将在下一个间隔重试]')
 
-print('')
-print(f'=== This Run Results ===')
-print(f'  Processed: {processed_this_run}')
-print(f'  Success:   {results["success"]}')
-print(f'  Failed:    {results["failed"]}')
-print(f'  Got reviews:   {results["got_reviews"]} ({results["got_reviews"]/results["success"]*100:.1f}%)')
-print(f'  Still zero:    {results["still_zero"]}')
+log('')
+log(f'=== 本次运行结果 ===')
+log(f'  已处理: {processed_this_run}')
+log(f'  成功:   {results["success"]}')
+log(f'  失败:    {results["failed"]}')
+log(f'  有评价:   {results["got_reviews"]} ({results["got_reviews"]/results["success"]*100:.1f}%)')
+log(f'  仍为零:    {results["still_zero"]}')
 
-print(f'\n=== Final Save ===')
-if save(db, INDEX_FILE):
-    print(f'    [Final save OK]')
+log(f'\n=== 最终保存 ===')
+if safe_save_json(db, INDEX_FILE, BACKUP_FILE):
+    log(f'    [最终保存成功]')
     save_count += 1
 else:
-    print(f'    [Final save FAILED]')
+    log(f'    [最终保存失败]')
 
 has_reviews = sum(1 for g in db.values() if (g.get('positive', 0) or 0) + (g.get('negative', 0) or 0) > 0)
 done_final = sum(1 for aid in targets if db[aid].get('_p0_fetched'))
 
-print(f'\n=== Session Stats ===')
-print(f'  Total games in db:    {len(db):,}')
-print(f'  Games with reviews:  {has_reviews:,}')
-print(f'  Targets done:         {done_final:,}/{total:,} ({done_final/total*100:.1f}%)')
-print(f'  Checkpoints saved:   {save_count}')
-print(f'  Elapsed:              {time.time() - fetch_start:.0f}s')
-print('[DONE]')
+log(f'\n=== 会话统计 ===')
+log(f'  数据库中游戏总数:    {len(db):,}')
+log(f'  有评价的游戏:  {has_reviews:,}')
+log(f'  目标完成:         {done_final:,}/{total:,} ({done_final/total*100:.1f}%)')
+log(f'  保存检查点:   {save_count}')
+log(f'  耗时:              {time.time() - fetch_start:.0f}s')
+log('[完成]')

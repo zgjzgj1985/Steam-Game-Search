@@ -45,7 +45,7 @@ const TabsTrigger = React.forwardRef<
     {...props}
   >
     {icon && (
-      <span className="data-[state=active]:text-[#0f1923] text-white/60 data-[state=active]:text-[#0f1923]">
+      <span className="text-white/50 [&[data-state=active]]:text-[#0f1923]">
         {icon}
       </span>
     )}

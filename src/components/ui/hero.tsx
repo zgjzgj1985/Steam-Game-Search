@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Sword, BarChart3, Layers, Sparkles, Target } from "lucide-react";
+import { Search, Sword, BarChart3, Layers, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +30,7 @@ export function Hero({ className }: HeroProps) {
             <br />
             发现创新玩法，评估策略深度，比较数值平衡
           </p>
-          
+
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <Link
               href="/mode2"
@@ -38,16 +38,8 @@ export function Hero({ className }: HeroProps) {
             >
               <span className="font-semibold text-emerald-500">新功能</span> 宝可梦Like筛选器
             </Link>
-            <div className="px-4 py-2 bg-background rounded-lg border shadow-sm">
-              <span className="font-semibold text-primary">50+</span> 经典游戏
-            </div>
-            <div className="px-4 py-2 bg-background rounded-lg border shadow-sm">
-              <span className="font-semibold text-primary">5</span> 分析维度
-            </div>
-            <div className="px-4 py-2 bg-background rounded-lg border shadow-sm">
-              <span className="font-semibold text-primary">100+</span> 战斗截图
-            </div>
           </div>
+
         </div>
       </div>
       

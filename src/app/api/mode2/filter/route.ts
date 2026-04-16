@@ -715,6 +715,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     matchedModernTags: tagWeight.matchedModernTags,
     uniqueFeatureTags: tagWeight.uniqueFeatureTags,
     differentiationLabels: tagWeight.differentiationLabels,
+    displayModernTags: tagWeight.matchedModernTags,
   };
 }
 

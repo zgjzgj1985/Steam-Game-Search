@@ -130,14 +130,14 @@ export function GameCard({ game, className }: GameCardProps) {
   const cardDesc = getCardDescription(game);
 
   return (
-    <div className={cn("relative group", className)}>
+    <div className={cn("relative group flex flex-col h-full", className)}>
       {/* 主卡片（整体可点） */}
       <Link
         href={`/analysis/${game.id}`}
-        className="block rounded-lg border bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/50"
+        className="flex flex-col flex-1 rounded-lg border bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/50"
       >
         {/* 封面 */}
-        <div className="relative aspect-video bg-muted overflow-hidden">
+        <div className="relative aspect-video bg-muted overflow-hidden shrink-0">
           {headerSrc ? (
             <Image
               src={headerSrc}
@@ -192,7 +192,7 @@ export function GameCard({ game, className }: GameCardProps) {
         </div>
 
         {/* 游戏信息 */}
-        <div className="p-4">
+        <div className="p-4 flex flex-col flex-1 min-h-0">
           <h3 className="font-semibold text-lg mb-2 line-clamp-1 group-hover:text-primary transition-colors">
             {game.name}
           </h3>
@@ -208,23 +208,23 @@ export function GameCard({ game, className }: GameCardProps) {
           )}
 
           {game.releaseDate && (
-            <p className="text-xs text-muted-foreground mb-3">{game.releaseDate}</p>
+            <p className="text-xs text-muted-foreground">{game.releaseDate}</p>
           )}
 
           {matchLabels.length > 0 && (
-            <p className="text-xs text-primary/90 mb-3 leading-relaxed">
+            <p className="text-xs text-primary/90 leading-relaxed line-clamp-1">
               <span className="text-muted-foreground">命中：</span>
               {matchLabels.slice(0, 3).join(" · ")}
             </p>
           )}
 
           {cardDesc ? (
-            <p className="text-xs text-muted-foreground mb-3 leading-relaxed line-clamp-2">
+            <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
               {cardDesc}
             </p>
           ) : null}
 
-          <div className="flex items-center gap-3 text-sm">
+          <div className="flex items-center gap-3 text-sm mt-auto pt-2">
             {displayScore && ScoreIcon && (
               <div className={cn("flex items-center gap-1 font-medium", scoreColor)}>
                 <ScoreIcon
@@ -252,7 +252,7 @@ export function GameCard({ game, className }: GameCardProps) {
             )}
           </div>
 
-          <div className="mt-4 flex items-center text-sm text-primary font-medium">
+          <div className="mt-auto flex items-center text-sm text-primary font-medium pt-3 border-t border-border/40 mt-3">
             <span>查看分析</span>
             <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
           </div>

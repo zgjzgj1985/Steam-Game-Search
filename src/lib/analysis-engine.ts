@@ -1,306 +1,219 @@
-import { Game, BattleAnalysis, AnalysisNarrative } from "@/types/game";
-import { chatJSON } from "@/lib/llm";
-import { buildJSONPrompt } from "@/lib/analysis-prompt";
+import { Game, PokemonLikeAnalysis } from "@/types/game";
+import { chatPokemonLikeAnalysis, parsePokemonLikeAnalysis } from "@/lib/llm";
 
-export async function generateAnalysis(game: Game): Promise<BattleAnalysis> {
-  const raw = await chatJSON<BattleAnalysisRaw>([
-    {
-      role: "user",
-      content: buildJSONPrompt(game),
-    },
-  ]);
+/**
+ * 生成宝可梦Like游戏专项分析
+ */
+export async function generateAnalysis(
+  game: Game,
+  pool?: "A" | "B" | "C" | null
+): Promise<PokemonLikeAnalysis> {
+  const gameInfo = buildGameInfo(game);
 
-  return parseAnalysis(raw, game);
+  const content = await chatPokemonLikeAnalysis(gameInfo, pool);
+  const raw = parsePokemonLikeAnalysis(content);
+
+  return parseAnalysis(raw, game, pool);
 }
 
-interface BattleAnalysisRaw {
-  narrative?: {
-    verdict?: string;
+/**
+ * 构建游戏信息字符串，供LLM分析使用
+ */
+function buildGameInfo(game: Game): string {
+  const parts: string[] = [];
+
+  parts.push(`游戏名称：${game.name}`);
+  parts.push(`开发商：${game.developers.join(", ") || "未知"}`);
+  parts.push(`发行商：${game.publishers.join(", ") || "未知"}`);
+
+  if (game.releaseDate) {
+    parts.push(`发售日期：${game.releaseDate}`);
+  }
+
+  parts.push(`类型标签：${game.genres.join(", ") || "未知"}`);
+  parts.push(`游戏标签：${game.tags.join(", ") || "无"}`);
+
+  if (game.steamReviews) {
+    const { totalPositive, totalNegative, reviewScore, reviewScoreDescription } = game.steamReviews;
+    const totalReviews = totalPositive + totalNegative;
+    parts.push(
+      `Steam评价：${reviewScore}% (${reviewScoreDescription})，${totalPositive.toLocaleString()}好评 / ${totalNegative.toLocaleString()}差评，总计${totalReviews.toLocaleString()}条评价`
+    );
+  }
+
+  if (game.price === 0) {
+    parts.push("价格：免费");
+  } else if (game.price) {
+    parts.push(`价格：$${(game.price / 100).toFixed(2)}`);
+  }
+
+  if (game.shortDescription) {
+    const desc = game.shortDescription
+      .replace(/<[^>]+>/g, "")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/\s+/g, " ")
+      .trim();
+    parts.push(`\n游戏简介：\n${desc.slice(0, 1000)}`);
+  }
+
+  if (game.description) {
+    const fullDesc = game.description
+      .replace(/<[^>]+>/g, "")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "&")
+      .replace(/\s+/g, " ")
+      .trim();
+    parts.push(`\n完整描述：\n${fullDesc.slice(0, 3000)}`);
+  }
+
+  if (game.isPokemonLike && game.pokemonLikeTags && game.pokemonLikeTags.length > 0) {
+    parts.push(`\n宝可梦Like标签：${game.pokemonLikeTags.join(", ")}`);
+  }
+
+  return parts.join("\n\n");
+}
+
+interface RawAnalysis {
+  verdict?: string;
+  coreGameplay?: {
+    description?: string;
+    creatureCollection?: boolean;
+    creatureCount?: string;
+    captureSystem?: string;
+    evolutionSystem?: string;
+    teamBuilding?: string;
+    playerExperience?: string;
+  };
+  battleSystem?: {
+    turnMechanism?: string;
+    typeAdvantages?: string;
+    moveSystem?: string;
+    uniqueMechanics?: string[];
+    battlePace?: string;
+  };
+  differentiation?: {
+    coreTag?: string;
+    innovationDescription?: string;
+    combinedMechanics?: string[];
+    whySuccessful?: string;
+    marketPosition?: string;
+  };
+  negativeFeedback?: {
     summary?: string;
-    battleInsight?: string;
-    strategyInsight?: string;
-    keyTakeaways?: string[];
-    dataCaveat?: string;
+    topComplaints?: string[];
+    complaintKeywords?: string[];
+    designPitfalls?: string[];
+    playerExpectations?: string;
   };
-  battleMechanics: {
-    turnSystem: string;
-    actionSystem: string;
-    targetSystem: string;
-    damageFormula: string;
-    critSystem: string;
-    elements: {
-      hasElements: boolean;
-      elements: string[];
-      interactions?: { attacker: string; defender: string; multiplier: number }[];
-    };
-    statusEffects: {
-      name: string;
-      type: string;
-      duration: string;
-      stacks: boolean;
-    }[];
-    ultimateSkills: boolean;
-    comboSystem: boolean;
-    breakGauge?: { name: string; max: number; gainMethod: string; usage: string } | null;
-    specialMechanics?: string[];
+  designSuggestions?: {
+    strengthsToLearn?: string[];
+    pitfallsToAvoid?: string[];
+    difficultyBalance?: string;
+    grindAnalysis?: string;
+    recommendation?: string;
   };
-  strategicDepth: {
-    positioning: {
-      hasPositioning: boolean;
-      gridSize?: { width: number; height: number } | null;
-      facing?: boolean;
-      height?: boolean;
-      terrain?: boolean;
-    };
-    synergies: {
-      hasSynergies: boolean;
-      types: string[];
-      examples: {
-        name: string;
-        description: string;
-        powerLevel: string;
-      }[];
-    };
-    counterStrategies: {
-      name: string;
-      description: string;
-      difficulty: string;
-    }[];
-    difficultySettings: {
-      hasSettings: boolean;
-      options: { name: string; description: string; effect: string }[];
-    };
-    tacticalOptions?: {
-      category: string;
-      options: string[];
-      importanceScore: number;
-    }[];
-    replayabilityScore: number;
-  };
-  innovationElements: {
-    name: string;
-    description: string;
-    impact: string;
-    category: string;
-    detail?: string;
-  }[];
-  overallScore: number;
-}
-
-function defaultNarrative(game: Game): AnalysisNarrative {
-  return {
-    verdict: `《${game.name}》的完整战斗叙事未返回，请确认 LLM 已按新版 JSON 输出 narrative 字段。`,
-    summary:
-      "若你仍看到本说明，通常是模型未返回 narrative 或 JSON 解析失败。请重新打开页面触发重新生成，或检查 API 配置与模型是否支持长输出。",
-    battleInsight: "",
-    strategyInsight: "",
-    keyTakeaways: [],
-    dataCaveat: "分析基于 Steam 商店简介与标签；实机机制以游戏为准。",
+  referenceValue?: {
+    forPoolA?: number;
+    forPoolB?: number;
+    forPoolC?: number;
+    overallScore?: number;
   };
 }
 
-function parseNarrative(raw: BattleAnalysisRaw, game: Game): AnalysisNarrative {
-  const base = defaultNarrative(game);
-  const n = raw.narrative;
-  if (!n) return base;
-
-  const keyTakeaways = Array.isArray(n.keyTakeaways)
-    ? n.keyTakeaways.map((s) => String(s).trim()).filter(Boolean)
-    : [];
-
-  return {
-    verdict: (n.verdict && n.verdict.trim()) || base.verdict,
-    summary: (n.summary && n.summary.trim()) || base.summary,
-    battleInsight: (n.battleInsight && n.battleInsight.trim()) || base.battleInsight,
-    strategyInsight: (n.strategyInsight && n.strategyInsight.trim()) || base.strategyInsight,
-    keyTakeaways: keyTakeaways.length > 0 ? keyTakeaways : base.keyTakeaways,
-    dataCaveat: (n.dataCaveat && n.dataCaveat.trim()) || base.dataCaveat,
-  };
-}
-
-function parseAnalysis(raw: BattleAnalysisRaw, game: Game): BattleAnalysis {
+function parseAnalysis(
+  raw: RawAnalysis,
+  game: Game,
+  pool?: "A" | "B" | "C" | null
+): PokemonLikeAnalysis {
   const gameId = game.id;
+
+  const coreGameplay = raw.coreGameplay || {};
+  const battleSystem = raw.battleSystem || {};
+  const differentiation = raw.differentiation || {};
+  const negativeFeedback = raw.negativeFeedback || {};
+  const designSuggestions = raw.designSuggestions || {};
+  const referenceValue = raw.referenceValue || {};
+
   return {
-    id: `analysis-${gameId}-${Date.now()}`,
+    id: `pokemon-analysis-${gameId}-${Date.now()}`,
     gameId,
-    narrative: parseNarrative(raw, game),
-    battleMechanics: {
-      turnSystem: normalizeTurnSystem(raw.battleMechanics.turnSystem),
-      actionSystem: normalizeActionSystem(raw.battleMechanics.actionSystem),
-      targetSystem: normalizeTargetSystem(raw.battleMechanics.targetSystem),
-      damageFormula: raw.battleMechanics.damageFormula || "未知",
-      critSystem: normalizeCritSystem(raw.battleMechanics.critSystem),
-      elements: {
-        hasElements: raw.battleMechanics.elements?.hasElements ?? false,
-        elements: raw.battleMechanics.elements?.elements ?? [],
-        interactions: raw.battleMechanics.elements?.interactions ?? [],
-      },
-      statusEffects: (raw.battleMechanics.statusEffects || []).map((e) => ({
-        name: e.name,
-        type: normalizeStatusType(e.type),
-        duration: normalizeDuration(e.duration),
-        stacks: e.stacks ?? false,
-      })),
-      ultimateSkills: raw.battleMechanics.ultimateSkills ?? false,
-      comboSystem: raw.battleMechanics.comboSystem ?? false,
-      breakGauge: raw.battleMechanics.breakGauge || undefined,
-      specialMechanics: raw.battleMechanics.specialMechanics || [],
+    gameName: game.name,
+    generatedAt: new Date().toISOString(),
+    pool: pool || null,
+    verdict: raw.verdict || `${game.name}是一款需要进一步分析的回合制游戏`,
+
+    coreGameplay: {
+      type: "coreGameplay" as const,
+      description: coreGameplay.description || "暂无核心玩法描述",
+      creatureCollection: coreGameplay.creatureCollection ?? false,
+      creatureCount: coreGameplay.creatureCount || "未知",
+      captureSystem: coreGameplay.captureSystem || "暂无捕捉系统",
+      evolutionSystem: coreGameplay.evolutionSystem || "暂无进化系统",
+      teamBuilding: coreGameplay.teamBuilding || "暂无队伍构建系统",
+      playerExperience: coreGameplay.playerExperience || "暂无玩家体验描述",
     },
-    strategicDepth: {
-      positioning: {
-        hasPositioning: raw.strategicDepth?.positioning?.hasPositioning ?? false,
-        gridSize: raw.strategicDepth?.positioning?.gridSize || undefined,
-        facing: raw.strategicDepth?.positioning?.facing ?? false,
-        height: raw.strategicDepth?.positioning?.height ?? false,
-        terrain: raw.strategicDepth?.positioning?.terrain ?? false,
-      },
-      synergies: {
-        hasSynergies: raw.strategicDepth?.synergies?.hasSynergies ?? false,
-        types: normalizeSynergyTypes(raw.strategicDepth?.synergies?.types || []),
-        examples: (raw.strategicDepth?.synergies?.examples || []).map((ex) => ({
-          name: ex.name,
-          description: ex.description,
-          powerLevel: normalizePowerLevel(ex.powerLevel),
-        })),
-      },
-      counterStrategies: (raw.strategicDepth?.counterStrategies || []).map((cs) => ({
-        name: cs.name,
-        description: cs.description,
-        difficulty: normalizeDifficulty(cs.difficulty),
-      })),
-      difficultySettings: {
-        hasSettings: raw.strategicDepth?.difficultySettings?.hasSettings ?? false,
-        options: raw.strategicDepth?.difficultySettings?.options || [],
-      },
-      tacticalOptions: (raw.strategicDepth?.tacticalOptions || []).map((to) => ({
-        category: to.category,
-        options: to.options || [],
-        importanceScore: Math.min(100, Math.max(0, to.importanceScore || 0)),
-      })),
-      replayabilityScore: Math.min(100, Math.max(0, raw.strategicDepth?.replayabilityScore || 0)),
+
+    battleSystem: {
+      type: "battleSystem" as const,
+      turnMechanism: battleSystem.turnMechanism || "暂无回合制机制描述",
+      typeAdvantages: battleSystem.typeAdvantages || "暂无属性克制描述",
+      moveSystem: battleSystem.moveSystem || "暂无技能系统描述",
+      uniqueMechanics: Array.isArray(battleSystem.uniqueMechanics)
+        ? battleSystem.uniqueMechanics.filter(Boolean)
+        : [],
+      battlePace: battleSystem.battlePace || "暂无战斗节奏描述",
     },
-    innovationElements: (raw.innovationElements || []).map((ie) => ({
-      name: ie.name,
-      description: ie.description,
-      impact: normalizeImpact(ie.impact),
-      category: normalizeInnovationCategory(ie.category),
-      detail: ie.detail || ie.description,
-    })),
-    overallScore: Math.min(100, Math.max(0, raw.overallScore || 0)),
-    generatedAt: new Date(),
+
+    differentiation: {
+      type: "differentiation" as const,
+      coreTag: differentiation.coreTag || "普通回合制",
+      innovationDescription: differentiation.innovationDescription || "暂无差异化描述",
+      combinedMechanics: Array.isArray(differentiation.combinedMechanics)
+        ? differentiation.combinedMechanics.filter(Boolean)
+        : [],
+      whySuccessful: differentiation.whySuccessful || "暂无成功原因分析",
+      marketPosition: differentiation.marketPosition || "暂无市场定位分析",
+    },
+
+    negativeFeedback: {
+      type: "negativeFeedback" as const,
+      summary: negativeFeedback.summary || "暂无差评分析",
+      topComplaints: Array.isArray(negativeFeedback.topComplaints)
+        ? negativeFeedback.topComplaints.filter(Boolean)
+        : [],
+      complaintKeywords: Array.isArray(negativeFeedback.complaintKeywords)
+        ? negativeFeedback.complaintKeywords.filter(Boolean)
+        : [],
+      designPitfalls: Array.isArray(negativeFeedback.designPitfalls)
+        ? negativeFeedback.designPitfalls.filter(Boolean)
+        : [],
+      playerExpectations: negativeFeedback.playerExpectations || "暂无玩家预期分析",
+    },
+
+    designSuggestions: {
+      type: "designSuggestions" as const,
+      strengthsToLearn: Array.isArray(designSuggestions.strengthsToLearn)
+        ? designSuggestions.strengthsToLearn.filter(Boolean)
+        : [],
+      pitfallsToAvoid: Array.isArray(designSuggestions.pitfallsToAvoid)
+        ? designSuggestions.pitfallsToAvoid.filter(Boolean)
+        : [],
+      difficultyBalance: designSuggestions.difficultyBalance || "暂无难度分析",
+      grindAnalysis: designSuggestions.grindAnalysis || "暂无肝度分析",
+      recommendation: designSuggestions.recommendation || "暂无综合建议",
+    },
+
+    referenceValue: {
+      forPoolA: clampScore(referenceValue.forPoolA),
+      forPoolB: clampScore(referenceValue.forPoolB),
+      forPoolC: clampScore(referenceValue.forPoolC),
+      overallScore: clampScore(referenceValue.overallScore),
+    },
   };
 }
 
-function normalizeTurnSystem(v: string): BattleAnalysis["battleMechanics"]["turnSystem"] {
-  const m: Record<string, BattleAnalysis["battleMechanics"]["turnSystem"]> = {
-    ATB: "ATB",
-    Traditional: "Traditional",
-    Side: "Side",
-    RealTime: "RealTime",
-    Hybrid: "Hybrid",
-    传统: "Traditional",
-    即时: "RealTime",
-  };
-  return m[v] || "Unknown";
-}
-
-function normalizeActionSystem(v: string): BattleAnalysis["battleMechanics"]["actionSystem"] {
-  const m: Record<string, BattleAnalysis["battleMechanics"]["actionSystem"]> = {
-    Menu: "Menu",
-    Card: "Card",
-    Timed: "Timed",
-    Position: "Position",
-    Combo: "Combo",
-    Mixed: "Mixed",
-  };
-  return m[v] || "Mixed";
-}
-
-function normalizeTargetSystem(v: string): BattleAnalysis["battleMechanics"]["targetSystem"] {
-  const m: Record<string, BattleAnalysis["battleMechanics"]["targetSystem"]> = {
-    Single: "Single",
-    Multi: "Multi",
-    All: "All",
-    Row: "Row",
-    Column: "Column",
-    Custom: "Custom",
-  };
-  return m[v] || "Multi";
-}
-
-function normalizeCritSystem(v: string): BattleAnalysis["battleMechanics"]["critSystem"] {
-  const m: Record<string, BattleAnalysis["battleMechanics"]["critSystem"]> = {
-    Fixed: "Fixed",
-    Rate: "Rate",
-    Stack: "Stack",
-    Skill: "Skill",
-    None: "None",
-  };
-  return m[v] || "None";
-}
-
-function normalizeStatusType(v: string): "Buff" | "Debuff" | "Special" {
-  const m: Record<string, "Buff" | "Debuff" | "Special"> = {
-    Buff: "Buff",
-    Debuff: "Debuff",
-    Special: "Special",
-  };
-  return m[v] || "Special";
-}
-
-function normalizeDuration(v: string): "Permanent" | "Timed" | "Stack" {
-  const m: Record<string, "Permanent" | "Timed" | "Stack"> = {
-    Permanent: "Permanent",
-    Timed: "Timed",
-    Stack: "Stack",
-    永久: "Permanent",
-  };
-  return m[v] || "Timed";
-}
-
-function normalizeSynergyTypes(types: string[]): BattleAnalysis["strategicDepth"]["synergies"]["types"] {
-  const valid = new Set(["Element", "Class", "Position", "Timing", "Equipment", "Status"]);
-  return types.filter((t) => valid.has(t)) as BattleAnalysis["strategicDepth"]["synergies"]["types"];
-}
-
-function normalizePowerLevel(v: string): "Low" | "Medium" | "High" {
-  const m: Record<string, "Low" | "Medium" | "High"> = {
-    Low: "Low",
-    Medium: "Medium",
-    High: "High",
-  };
-  return m[v] || "Medium";
-}
-
-function normalizeDifficulty(v: string): "Easy" | "Medium" | "Hard" {
-  const m: Record<string, "Easy" | "Medium" | "Hard"> = {
-    Easy: "Easy",
-    Medium: "Medium",
-    Hard: "Hard",
-  };
-  return m[v] || "Medium";
-}
-
-function normalizeImpact(v: string): "Low" | "Medium" | "High" {
-  const m: Record<string, "Low" | "Medium" | "High"> = {
-    Low: "Low",
-    Medium: "Medium",
-    High: "High",
-    高: "High",
-    中: "Medium",
-    低: "Low",
-  };
-  return m[v] || "Medium";
-}
-
-function normalizeInnovationCategory(v: string): "Mechanic" | "Visual" | "System" | "Narrative" {
-  const m: Record<string, "Mechanic" | "Visual" | "System" | "Narrative"> = {
-    Mechanic: "Mechanic",
-    Visual: "Visual",
-    System: "System",
-    Narrative: "Narrative",
-    机制: "Mechanic",
-    系统: "System",
-  };
-  return m[v] || "Mechanic";
+function clampScore(value: number | undefined): number {
+  if (typeof value !== "number" || isNaN(value)) return 50;
+  return Math.min(100, Math.max(0, Math.round(value)));
 }

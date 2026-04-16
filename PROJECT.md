@@ -1,10 +1,11 @@
 # Steam 全域游戏搜索
 
-> **版本**: v1.5.4
+> **版本**: v1.6.0
 > **更新日期**: 2026-04-16
 >
 > **版本变更说明**:
-> - v1.5.4: **标签排重修复**：修复特色标签筛选时卡片上同时显示中英文重复标签的问题。API端新增 `displayModernTags` 字段，使用原始标签名与选中特色标签精确对比排重；`differentiationLabels` 也进行相应排重。新增 `Time Travel` 和 `时间旅行` 到 MODERN_TAGS 和 DIFFERENTIATION_LABELS。
+> - v1.6.0: **游戏分析功能完全重写**：从"通用回合制战斗系统分析"转向"宝可梦Like游戏专项评估"。新增核心玩法、差异化创新、差评分析、设计建议等分析模块；针对三池(A/B/C)提供差异化的分析侧重点；C池重点展示差评分析和避坑指南。
+> - v1.5.4: **标签排重修复**：修复特色标签筛选时卡片上同时显示中英文重复标签的问题。
 
 ## 项目概述
 
@@ -238,6 +239,31 @@ interface Game {
   screenshots: string[];
   steamUrl: string;
   isTestVersion: boolean;
+  isPokemonLike?: boolean;
+  pokemonLikeTags?: string[];
+  wilsonScore?: number;
+  pool?: "A" | "B" | "C" | null;
+}
+```
+
+### PokemonLikeAnalysis 接口
+
+宝可梦Like游戏专项分析类型（服务于模式2的三池筛选系统）：
+
+```typescript
+interface PokemonLikeAnalysis {
+  id: string;
+  gameId: string;
+  gameName: string;
+  generatedAt: string;
+  pool: "A" | "B" | "C" | null;  // 池子归属
+  verdict: string;                // 一句话总结
+  coreGameplay: CoreGameplay;     // 核心玩法描述
+  battleSystem: BattleSystem;     // 战斗系统评估
+  differentiation: Differentiation; // 差异化创新点
+  negativeFeedback: NegativeFeedback; // 差评分析
+  designSuggestions: DesignSuggestions; // 设计建议
+  referenceValue: ReferenceValue; // 参考价值评分
 }
 ```
 
@@ -245,7 +271,15 @@ interface Game {
 
 ## 更新日志
 
-### 2026-04-15 - 统一工作流优化
+### 2026-04-16 - 游戏分析功能完全重写
+
+- **重构**：游戏分析从"通用回合制战斗系统分析"转向"宝可梦Like游戏专项评估"
+- **新增**：`PokemonLikeAnalysis` 类型定义，包含核心玩法、差异化创新、差评分析、设计建议等模块
+- **新增**：4个新分析组件（`core-gameplay`、`battle-system-view`、`differentiation-view`、`negative-feedback`、`design-suggestions`）
+- **新增**：`chatPokemonLikeAnalysis` LLM专用提示词，针对三池特点提供差异化分析
+- **优化**：`analysis-detail` 组件重写，展示池子归属标识和参考价值评分
+- **删除**：旧分析组件（battle-mechanics、strategic-depth、innovation、analysis-narrative）
+- **C池重点**：差评分析和设计缺陷警示
 
 - **新增**：`scripts/unified_workflow.py` - 合并增量采集+标签补全+SQLite同步+预计算为一条命令
 - **优化**：多线程并发采集（详情8并发、标签4并发），约提升6-7倍速度

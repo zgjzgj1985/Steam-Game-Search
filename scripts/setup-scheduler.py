@@ -65,7 +65,7 @@ def show_task_info():
     log('=' * 50)
     log('任务名称: SteamGameWeeklyUpdate')
     log('执行时间: 每周日 02:00 (凌晨2点)')
-    log('执行脚本: D:\\Steam全局游戏搜索\\scripts\\run-weekly-update.bat')
+    log('执行脚本: D:\\Steam全域游戏搜索\\scripts\\run-weekly-update.bat')
     log('')
     log('工作流程:')
     log('  1. unified_workflow.py - 统一工作流(增量采集+标签补全+SQLite同步+预计算)')

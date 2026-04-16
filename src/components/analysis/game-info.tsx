@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { Star, Users, Calendar, Gamepad2, Building2 } from "lucide-react";
+import { Calendar, Building2, ExternalLink, Users, Crown, Gamepad2, AlertTriangle } from "lucide-react";
 import { Game } from "@/types/game";
-import { cn } from "@/lib/utils";
 import { resolveSteamHeaderImageUrl } from "@/lib/steam-header-image";
 
 interface GameInfoProps {
@@ -9,9 +8,16 @@ interface GameInfoProps {
   className?: string;
 }
 
+// 池子配置
+const POOL_CONFIG = {
+  A: { label: "A池", name: "神作参考", icon: Crown, color: "text-amber-400", bg: "bg-amber-400/10" },
+  B: { label: "B池", name: "核心竞品", icon: Crown, color: "text-emerald-400", bg: "bg-emerald-400/10" },
+  C: { label: "C池", name: "避坑指南", icon: AlertTriangle, color: "text-rose-400", bg: "bg-rose-400/10" },
+};
+
 /**
- * Hero 风格游戏信息展示组件
- * 包含全宽背景图、游戏标题、核心数据指标
+ * 游戏详情 Hero 区域
+ * 简洁高级设计，移除廉价边框，使用留白分隔
  */
 export function GameInfo({ game, className }: GameInfoProps) {
   const reviewPercentage = game.steamReviews
@@ -20,11 +26,22 @@ export function GameInfo({ game, className }: GameInfoProps) {
 
   const headerSrc = resolveSteamHeaderImageUrl(game);
 
+  // 价格显示
+  const priceDisplay = game.isFree
+    ? "免费"
+    : game.price > 0
+      ? `¥${(game.price / 100).toFixed(0)}`
+      : "未知";
+
+  // 游玩方式
+  const playModes = game.categories || [];
+  const isMultiplayer = playModes.some(c => c.includes("Multi") || c.includes("Co-op"));
+  const isCardGame = game.genres.some(g => g.includes("卡牌") || g.includes("Card"));
+
   return (
-    <div className={cn("relative -mx-4 -mt-4", className)}>
-      {/* Hero 背景区域 */}
-      <div className="relative h-[320px] md:h-[400px] overflow-hidden">
-        {/* 背景图片 */}
+    <div className={className}>
+      {/* Hero 背景 */}
+      <div className="relative h-[340px] md:h-[400px] overflow-hidden">
         {headerSrc ? (
           <Image
             src={headerSrc}
@@ -37,135 +54,162 @@ export function GameInfo({ game, className }: GameInfoProps) {
           <div className="absolute inset-0 bg-gradient-to-br from-[#1b2838] to-[#2a475e]" />
         )}
 
-        {/* 渐变遮罩 */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0f1923] via-[#0f1923]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0f1923]/80 via-transparent to-transparent" />
+        {/* 渐变遮罩 - 更柔和 */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0d1520] via-[#0d1520]/40 to-transparent" />
 
-        {/* 游戏封面缩略图 */}
-        <div className="absolute left-6 bottom-6 md:left-10 md:bottom-10">
-          <div className="relative w-28 h-40 md:w-36 md:h-52 rounded-lg overflow-hidden shadow-2xl ring-2 ring-white/10">
-            {headerSrc ? (
-              <Image
-                src={headerSrc}
-                alt={game.name}
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-[#1b2838]">
-                <Gamepad2 className="w-12 h-12 text-[#66c0f4]" />
-              </div>
-            )}
+        {/* 主内容区 */}
+        <div className="absolute inset-0 flex">
+          {/* 左侧 - 封面 */}
+          <div className="self-end pb-10 pl-8 md:pl-12">
+            <div className="relative w-28 h-40 md:w-36 md:h-52 rounded-lg overflow-hidden shadow-2xl">
+              {headerSrc ? (
+                <Image
+                  src={headerSrc}
+                  alt={game.name}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-[#1b2838]">
+                  <span className="text-white/20 text-5xl font-bold">{game.name[0]}</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* 游戏标题和信息 */}
-        <div className="absolute left-[140px] md:left-[180px] bottom-6 md:left-[200px] right-6">
-          <div className="space-y-3">
-            {/* 游戏名称 */}
-            <h1 className="text-2xl md:text-4xl font-bold text-white drop-shadow-lg">
-              {game.name}
-            </h1>
+          {/* 右侧 - 信息 */}
+          <div className="flex-1 self-end pb-10 pl-6 md:pl-10 pr-8 md:pr-12">
+            <div className="max-w-3xl">
+              <h1 className="text-xl md:text-3xl font-bold text-white mb-3 tracking-tight">
+                {game.name}
+              </h1>
 
-            {/* 类型标签 */}
-            <div className="flex flex-wrap gap-2">
-              {game.genres.slice(0, 3).map((genre) => (
-                <span
-                  key={genre}
-                  className="px-3 py-1 text-xs font-medium bg-white/10 backdrop-blur-sm rounded-full text-white/90 border border-white/20"
+              {/* 类型标签 */}
+              {game.genres.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {game.genres.slice(0, 3).map((genre) => (
+                    <span
+                      key={genre}
+                      className="text-xs text-white/60 bg-white/5 px-2.5 py-1 rounded-full"
+                    >
+                      {genre}
+                    </span>
+                  ))}
+                  {isMultiplayer && (
+                    <span className="text-xs text-white/60 bg-white/5 px-2.5 py-1 rounded-full">
+                      多人
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* 基本信息行 */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/40">
+                {game.developers[0] && (
+                  <span className="flex items-center gap-1.5">
+                    <Building2 className="w-3.5 h-3.5" />
+                    {game.developers[0]}{game.developers.length > 1 && ` 等`}
+                  </span>
+                )}
+                {game.releaseDate && (
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="w-3.5 h-3.5" />
+                    {new Date(game.releaseDate).toLocaleDateString("zh-CN", {
+                      year: "numeric",
+                      month: "short",
+                    })}
+                  </span>
+                )}
+                <span className="text-white/30">{priceDisplay}</span>
+                <a
+                  href={game.steamUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1 text-[#66c0f4]/70 hover:text-[#66c0f4] transition-colors"
                 >
-                  {genre}
-                </span>
-              ))}
-            </div>
-
-            {/* 开发商信息 */}
-            <div className="flex items-center gap-4 text-sm text-white/60">
-              {game.developers.length > 0 && (
-                <div className="flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4" />
-                  <span>{game.developers[0]}</span>
-                </div>
-              )}
-              {game.releaseDate && (
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4" />
-                  <span>{new Date(game.releaseDate).toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })}</span>
-                </div>
-              )}
+                  Steam
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* 右上角 - 池子标签 */}
+        {game.pool && POOL_CONFIG[game.pool] && (
+          <div className={`absolute top-6 right-8 ${POOL_CONFIG[game.pool].bg} ${POOL_CONFIG[game.pool].color} px-3 py-1.5 rounded-full text-xs font-medium`}>
+            {POOL_CONFIG[game.pool].label} · {POOL_CONFIG[game.pool].name}
+          </div>
+        )}
       </div>
 
-      {/* 核心数据指标条 */}
-      <div className="bg-[#0f1923] border-t border-[#2a475e]/50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* 数据指标条 - 更简洁的展示 */}
+      <div className="bg-[#0d1520]">
+        <div className="container mx-auto px-8 py-6">
+          <div className="flex flex-wrap gap-8 md:gap-16">
             {/* 好评率 */}
             {reviewPercentage !== null && (
-              <div className="flex items-center gap-4 p-3 rounded-lg bg-[#1b2838]/50 border border-[#2a475e]/30">
-                <div className={cn(
-                  "flex items-center justify-center w-14 h-14 rounded-lg",
-                  reviewPercentage >= 90 && "bg-green-500/20",
-                  reviewPercentage >= 70 && reviewPercentage < 90 && "bg-yellow-500/20",
-                  reviewPercentage < 70 && "bg-red-500/20"
-                )}>
-                  <span className={cn(
-                    "text-xl font-bold",
-                    reviewPercentage >= 90 && "text-green-400",
-                    reviewPercentage >= 70 && reviewPercentage < 90 && "text-yellow-400",
-                    reviewPercentage < 70 && "text-red-400"
-                  )}>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/5">
+                  <span className={`text-base font-semibold ${
+                    reviewPercentage >= 90 ? "text-emerald-400" :
+                    reviewPercentage >= 70 ? "text-amber-400" : "text-rose-400"
+                  }`}>
                     {reviewPercentage}%
                   </span>
                 </div>
                 <div>
-                  <p className="text-xs text-white/50 uppercase tracking-wider">好评率</p>
-                  <p className="text-lg font-semibold text-white">
-                    {(game.steamReviews?.totalReviews ?? 0).toLocaleString("zh-CN")}
-                    <span className="text-xs text-white/50 ml-1">条评价</span>
+                  <p className="text-xs text-white/40">好评率</p>
+                  <p className="text-sm text-white/70">
+                    {(game.steamReviews?.totalReviews ?? 0).toLocaleString("zh-CN")} 条评价
                   </p>
                 </div>
               </div>
             )}
 
-            {/* MC 评分 */}
-            {game.metacriticScore && (
-              <div className="flex items-center gap-4 p-3 rounded-lg bg-[#1b2838]/50 border border-[#2a475e]/30">
-                <div className="flex items-center justify-center w-14 h-14 rounded-lg bg-orange-500/20">
-                  <span className="text-xl font-bold text-orange-400">{game.metacriticScore}</span>
+            {/* 同时在线峰值 */}
+            {game.peakCCU && game.peakCCU > 0 && (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/5">
+                  <Users className="w-5 h-5 text-white/50" />
                 </div>
                 <div>
-                  <p className="text-xs text-white/50 uppercase tracking-wider">Metacritic</p>
-                  <p className="text-lg font-semibold text-white">
-                    {game.metacriticScore >= 75 ? "好评" : game.metacriticScore >= 50 ? "褒贬不一" : "差评"}
+                  <p className="text-xs text-white/40">峰值在线</p>
+                  <p className="text-sm text-white/70">
+                    {game.peakCCU.toLocaleString("zh-CN")}
                   </p>
                 </div>
               </div>
             )}
 
-            {/* 标签数量 */}
-            <div className="flex items-center gap-4 p-3 rounded-lg bg-[#1b2838]/50 border border-[#2a475e]/30">
-              <div className="flex items-center justify-center w-14 h-14 rounded-lg bg-purple-500/20">
-                <span className="text-xl font-bold text-purple-400">{game.tags.length}</span>
+            {/* 标签 */}
+            {game.pokemonLikeTags && game.pokemonLikeTags.length > 0 && (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/5">
+                  <Gamepad2 className="w-5 h-5 text-white/50" />
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {game.pokemonLikeTags.slice(0, 4).map((tag) => (
+                    <span key={tag} className="text-xs text-white/40 bg-white/5 px-2 py-0.5 rounded">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-white/50 uppercase tracking-wider">游戏标签</p>
-                <p className="text-lg font-semibold text-white">相关标签</p>
-              </div>
-            </div>
+            )}
 
-            {/* 查看详情 */}
-            <div className="flex items-center gap-4 p-3 rounded-lg bg-[#66c0f4]/10 border border-[#66c0f4]/30">
-              <div className="flex items-center justify-center w-14 h-14 rounded-lg bg-[#66c0f4]/20">
-                <Star className="w-6 h-6 text-[#66c0f4]" />
+            {/* 评分描述 */}
+            {game.steamReviews?.reviewScoreDescription && (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/5">
+                  <span className="text-xs text-white/40">Steam</span>
+                </div>
+                <div>
+                  <p className="text-xs text-white/40">评价等级</p>
+                  <p className="text-sm text-white/70">{game.steamReviews.reviewScoreDescription}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-white/50 uppercase tracking-wider">LLM</p>
-                <p className="text-lg font-semibold text-[#66c0f4]">智能分析</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

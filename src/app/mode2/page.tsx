@@ -124,6 +124,11 @@ interface FeatureTagOption {
   gameCount: number;
   coverage: number;
   avgWilson: number;
+  poolDistribution?: {
+    A: number;
+    B: number;
+    C: number;
+  };
 }
 
 interface FilterResponse {
@@ -258,13 +263,13 @@ function GameCard({ game }: { game: GameRecord }) {
   const cardDesc = fullDesc.length > 120 ? fullDesc.slice(0, 120).trimEnd() + "…" : fullDesc;
 
   return (
-    <div className="relative group">
+    <div className={cn("relative group flex flex-col h-full")}>
       <Link
         href={`/analysis/${game.id}`}
-        className="block rounded-xl border bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/50"
+        className="flex flex-col flex-1 rounded-xl border bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/50"
       >
         {/* 封面 */}
-        <div className="relative aspect-video bg-muted overflow-hidden">
+        <div className="relative aspect-video bg-muted overflow-hidden shrink-0">
           {game.headerImage ? (
             <Image
               src={game.headerImage}
@@ -313,8 +318,8 @@ function GameCard({ game }: { game: GameRecord }) {
             </div>
           )}
 
-          {/* 价格 */}
-          <div className="absolute top-2 right-2 z-10">
+          {/* 价格 + Steam跳转（并排显示在右上角） */}
+          <div className="absolute top-2 right-2 z-20 flex items-center gap-1.5">
             {game.price > 0 ? (
               <div className="px-2 py-0.5 text-xs font-medium bg-background/90 backdrop-blur-sm rounded text-muted-foreground shadow-sm">
                 ${game.price.toFixed(2)}
@@ -324,11 +329,24 @@ function GameCard({ game }: { game: GameRecord }) {
                 免费
               </div>
             )}
+            {/* Steam跳转按钮 */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(game.steamUrl, "_blank", "noopener,noreferrer");
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#1b2838] hover:bg-[#2a475e] text-white text-xs font-medium shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Steam</span>
+            </button>
           </div>
 
           {/* C池避坑提示徽章 - 点击引导 */}
           {game.pool === "C" && (
-            <div className="absolute bottom-2 left-2 right-2 z-10">
+            <div className="absolute bottom-2 left-2 right-24 z-10">
               <div className="px-2 py-1.5 text-[10px] font-medium bg-gradient-to-r from-rose-600 to-red-500 text-white rounded shadow-lg flex items-center justify-center gap-1.5">
                 <AlertTriangle className="w-3 h-3" />
                 <span>避坑指南 · 点击分析页读差评</span>
@@ -338,7 +356,7 @@ function GameCard({ game }: { game: GameRecord }) {
         </div>
 
         {/* 游戏信息 */}
-        <div className="p-4">
+        <div className="p-4 flex flex-col flex-1 min-h-0">
           <h3 className="font-semibold text-lg mb-1 line-clamp-1 group-hover:text-primary transition-colors">
             {game.name}
           </h3>
@@ -363,7 +381,7 @@ function GameCard({ game }: { game: GameRecord }) {
             </p>
           )}
 
-          <div className="flex items-center gap-3 text-sm">
+          <div className="flex items-center gap-3 text-sm mt-auto">
             {/* 威尔逊得分 - 使用 Trophy 图标 + W 标签 */}
             {wilsonDisplay && (
               <div className={cn("flex items-center gap-1 font-medium", scoreColor)}>
@@ -461,7 +479,7 @@ function GameCard({ game }: { game: GameRecord }) {
 
           {/* C池差评方向提示 */}
           {game.pool === "C" && (
-            <div className="mt-3 p-2 bg-rose-50 dark:bg-rose-950/30 rounded-lg border border-rose-200 dark:border-rose-800">
+            <div className="mt-3 p-2 bg-rose-50 dark:bg-rose-950/30 rounded-lg border border-rose-200 dark:border-rose-800 shrink-0">
               <div className="flex items-start gap-2">
                 <AlertTriangle className="w-3.5 h-3.5 text-rose-500 mt-0.5 shrink-0" />
                 <div className="text-[10px] text-rose-700 dark:text-rose-300">
@@ -472,24 +490,13 @@ function GameCard({ game }: { game: GameRecord }) {
             </div>
           )}
 
-          <div className="mt-4 flex items-center text-sm text-primary font-medium">
+          <div className="mt-auto flex items-center text-sm text-primary font-medium pt-3 border-t border-border/40">
             <span>查看分析</span>
             <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
           </div>
         </div>
       </Link>
 
-      {/* Steam链接 */}
-      <a
-        href={game.steamUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={(e) => e.stopPropagation()}
-        className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#1b2838] hover:bg-[#2a475e] text-white text-xs font-medium transition-all hover:scale-105 hover:shadow-xl"
-      >
-        <ExternalLink className="w-3.5 h-3.5" />
-        Steam
-      </a>
     </div>
   );
 }

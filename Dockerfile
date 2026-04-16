@@ -34,7 +34,8 @@ RUN mkdir -p /app/public/data
 # 复制 standalone 输出
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 
-# 静态文件已包含在 standalone 输出中
+# 复制 .next/static 目录（CSS/JS 等静态资源）
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static .next/static/
 
 # public 目录由 Volume 挂载提供，无需复制
 

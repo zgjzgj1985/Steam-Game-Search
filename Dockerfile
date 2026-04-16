@@ -34,17 +34,9 @@ RUN mkdir -p /app/public/data
 # 复制 standalone 输出
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 
-# 复制静态文件（如果存在）
-RUN if [ -d "/app/.next/static" ]; then \
-        mkdir -p .next/static && \
-        cp -r /app/.next/static/. .next/static/; \
-    fi
+# 静态文件已包含在 standalone 输出中
 
-# 复制 public 目录（如果存在）
-RUN if [ -d "/app/public" ]; then \
-        mkdir -p public && \
-        cp -r /app/public/. public/; \
-    fi
+# public 目录由 Volume 挂载提供，无需复制
 
 USER nextjs
 

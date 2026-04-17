@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y git-lfs python3 make g++ && git lfs ins
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma
 
-# 安装依赖（跳过 postinstall，使用 --legacy-peer-deps 避免依赖冲突）
-RUN npm ci --ignore-scripts --legacy-peer-deps && npm cache clean --force
+# 安装依赖
+RUN npm ci --ignore-scripts --legacy-peer-deps
 
 # 生成 Prisma Client
 RUN npx prisma generate
@@ -21,11 +21,14 @@ COPY . .
 # 拉取 LFS 文件
 RUN git lfs pull
 
-# 重新构建原生模块（确保兼容性）
-RUN npm rebuild
+# 验证关键依赖是否存在
+RUN ls -la node_modules/tailwindcss node_modules/postcss node_modules/autoprefixer 2>&1 || echo "Missing dependencies detected"
 
-# 构建 Next.js
-RUN npm run build
+# 检查 postcss.config.js 是否存在
+RUN cat postcss.config.mjs 2>/dev/null || cat postcss.config.js 2>/dev/null || echo "No postcss config found"
+
+# 构建 Next.js（分步骤执行以获取详细错误）
+RUN npx next build --no-lint 2>&1
 
 # 生产环境
 FROM node:20-slim

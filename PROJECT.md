@@ -1,9 +1,10 @@
 # Steam 全域游戏搜索
 
-> **版本**: v1.6.1
+> **版本**: v1.7.0
 > **更新日期**: 2026-04-17
 
 > **版本历史**:
+> - v1.7.0: **部署修复**：修复 Dockerfile 多阶段构建路径、public 目录复制、.dockerignore 排除配置、.gitattributes LFS 追踪、更新 zeabur.json 构建命令、新增 .env.deploy.example 统一环境变量模板
 > - v1.6.1: **Docker构建修复**：模式2/对比页UI组件路径别名问题，新增 `fetch_regional_reviews.py` 区域评价采集脚本，`precompute.py` 支持区域数据预计算，模式2展示国内/海外评价对比
 > - v1.6.0: **模式2重构**：新增"宝可梦Like标签"筛选选项，新增分析图表A/B/C池子分布统计
 > - v1.5.4: **标签排重修复**：修复特色标签筛选时卡片重复显示标签问题
@@ -292,6 +293,17 @@ interface PokemonLikeAnalysis {
 ---
 
 ## 变更日志
+
+### 2026-04-17 - v1.7.0
+
+- **部署修复**：全面审查并修复部署方案
+- **修复**：Dockerfile 多阶段构建路径错误（`/app/.next/standalone` → `/app/.next/standalone/`）
+- **修复**：Dockerfile 未复制 public 目录问题，确保数据文件正确包含在容器中
+- **修复**：`.dockerignore` 错误排除 `public/data/*.json` 配置
+- **修复**：`.gitattributes` LFS 追踪模式 `games-*.json` 与实际文件名不匹配
+- **更新**：`zeabur.json` 添加 `git lfs pull` 命令，确保构建时拉取 LFS 文件
+- **新增**：`.env.deploy.example` 统一部署环境变量模板
+- **更新**：`ZEABUR_DEPLOY.md` 完整部署文档
 
 ### 2026-04-17 - v1.6.1
 

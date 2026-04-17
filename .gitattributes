@@ -1,5 +1,13 @@
+# =============================================
+# Git LFS 配置 - 大型数据文件追踪
+# =============================================
+# 大型数据文件使用 Git LFS 存储（避免仓库体积膨胀）
+# 注意：LFS 规则必须放在 * case=strict 之前，否则会被覆盖
+public/data/games-index.json filter=lfs diff=lfs merge=lfs -text
+public/data/games-cache.json filter=lfs diff=lfs merge=lfs -text
+public/data/games-meta.json filter=lfs diff=lfs merge=lfs -text
 public/data/games.db filter=lfs diff=lfs merge=lfs -text
-public/data/games-*.json filter=lfs diff=lfs merge=lfs -text
 
-# 强制 Git 在所有平台上使用正确的大小写路径（解决 Linux 构建时的大小写敏感问题）
-* case=strict
+# 强制 Git 在所有平台上使用正确的大小写路径
+# 解决 Linux 构建时的大小写敏感问题
+* case=strict text=auto eol=lf

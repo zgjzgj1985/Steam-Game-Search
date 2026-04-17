@@ -1,6 +1,6 @@
 {
   "build": {
-    "command": "npm install && npm run build",
+    "command": "git lfs pull && npm install && npm run build",
     "output": ".next"
   },
   "server": {

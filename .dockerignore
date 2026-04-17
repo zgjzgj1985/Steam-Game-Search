@@ -1,3 +1,7 @@
+# =============================================
+# Steam Game Search - Docker 构建排除配置
+# =============================================
+
 # dependencies
 node_modules
 .pnp
@@ -22,9 +26,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# local env files（生产环境通过 Zeabur 环境变量注入）
 .env*.local
 .env
+!.env.example
+!.env.zeabur.example
 
 # vercel
 .vercel
@@ -52,9 +58,16 @@ temp_*
 *.backup
 *_backup
 
-# Documentation
+# Documentation（不参与构建）
 数据采集维护文档.md
+README.md
+PROJECT.md
+ZEABUR_DEPLOY.md
+模式2.md
+模式2任务计划.md
 
-# Large data files - 由 Git LFS 管理
-public/data/*.json
-public/data/*.db
+# =============================================
+# 数据文件说明：
+# - public/data/*.json - 需要复制到镜像中，不能排除！
+# - public/data/*.db   - 外部挂载或通过 Volume 挂载，可以排除
+# =============================================

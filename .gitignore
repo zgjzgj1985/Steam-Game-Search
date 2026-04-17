@@ -49,7 +49,7 @@ __pycache__/
 /public/data/*.backup
 /public/data/*.json.last_run
 /public/data/games-index-filtered.json
-/public/data/games-meta.json
+# public/data/games-meta.json - 通过 Git LFS 追踪，需要保留在仓库中
 /public/data/scraped-tags.json
 /public/data/tags-scrape-state.json
 /public/data/*.ext_backup

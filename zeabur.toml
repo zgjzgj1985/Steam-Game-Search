@@ -10,7 +10,7 @@ dockerfile = "./Dockerfile"
 context = "."
 
 [start]
-command = "npm start"
+command = "node server.js"
 
 [service.port]
 port = 3000

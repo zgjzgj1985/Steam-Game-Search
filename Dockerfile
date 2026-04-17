@@ -38,7 +38,12 @@ COPY --from=0 /app/.next/standalone ./
 COPY --from=0 /app/.next/static ./.next/static/
 COPY --from=0 /app/public ./public
 
+# 复制 node_modules（包含 Prisma Client 等运行时依赖）
+# 注意：必须完整复制 node_modules，因为 Prisma 需要 .prisma 目录中的引擎二进制文件
+COPY --from=0 /app/node_modules ./node_modules
+
 EXPOSE 3000
 ENV PORT=3000
 
+# 容器启动时执行数据库迁移（确保 schema 最新）
 CMD ["node", "server.js"]

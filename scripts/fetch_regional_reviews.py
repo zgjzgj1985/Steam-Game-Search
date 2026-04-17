@@ -54,7 +54,9 @@ class SteamReviewFetcher:
         self.current_delay = INITIAL_DELAY
 
     async def fetch_reviews(self, appid: int, region: str) -> dict:
-        language = "schinese" if region == "cn" else "all_exclude_schinese"
+        # schinese = 国内评价, all = 总评价
+        # 海外评价 = all - schinese
+        language = "schinese" if region == "cn" else "all"
         url = f"{STEAM_API_BASE}/appreviews/{appid}"
         params = {"json": 1, "language": language, "purchase_type": "all", "filter": "all"}
 
@@ -106,13 +108,23 @@ class SteamReviewFetcher:
         return {"positive": 0, "negative": 0, "total": 0, "review_score": 0}
 
     async def fetch_game_regions(self, appid: int) -> dict:
-        tasks = [self.fetch_reviews(appid, "cn"), self.fetch_reviews(appid, "overseas")]
-        cn_result, overseas_result = await asyncio.gather(*tasks, return_exceptions=True)
+        # 并行获取国内和全部评价
+        tasks = [self.fetch_reviews(appid, "cn"), self.fetch_reviews(appid, "all")]
+        cn_result, all_result = await asyncio.gather(*tasks, return_exceptions=True)
 
-        return {
-            "cn": cn_result if isinstance(cn_result, dict) else {"positive": 0, "negative": 0, "total": 0},
-            "overseas": overseas_result if isinstance(overseas_result, dict) else {"positive": 0, "negative": 0, "total": 0}
+        cn = cn_result if isinstance(cn_result, dict) else {"positive": 0, "negative": 0, "total": 0}
+        all_data = all_result if isinstance(all_result, dict) else {"positive": 0, "negative": 0, "total": 0}
+
+        # 海外评价 = 全部 - 国内
+        overseas = {
+            "positive": max(0, all_data.get("positive", 0) - cn.get("positive", 0)),
+            "negative": max(0, all_data.get("negative", 0) - cn.get("negative", 0)),
+            "total": max(0, all_data.get("total", 0) - cn.get("total", 0)),
+            "review_score": all_data.get("review_score", 0),
+            "review_score_desc": all_data.get("review_score_desc", "")
         }
+
+        return {"cn": cn, "overseas": overseas}
 
 # ============ 数据处理 ============
 

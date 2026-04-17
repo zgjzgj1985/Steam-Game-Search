@@ -81,7 +81,7 @@ export default async function Home() {
 
       <footer className="w-full min-w-0 border-t py-12">
         <div className="container mx-auto w-full min-w-0 px-4 text-center text-muted-foreground">
-          <p>回合制战斗分析工具 - 深入分析回合制游戏的战斗系统</p>
+          <p>Steam全域游戏搜索 - 发现Steam平台精彩游戏</p>
           <p className="mt-2 text-sm">
             数据来源：Steam Store API
           </p>

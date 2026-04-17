@@ -22,7 +22,7 @@ export function Hero({ className }: HeroProps) {
           </div>
 
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            回合制战斗分析工具
+            Steam全域游戏搜索
           </h1>
 
           <p className="text-xl text-muted-foreground mb-8">

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { Search, Sword, BarChart3, Layers, Sparkles } from "lucide-react";
 import Link from "next/link";
@@ -22,21 +22,19 @@ export function Hero({ className }: HeroProps) {
           </div>
           
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            回合制战斗分析工具
-          </h1>
+            鍥炲悎鍒舵垬鏂楀垎鏋愬伐鍏?          </h1>
           
           <p className="text-xl text-muted-foreground mb-8">
-            深入分析Steam等平台上的回合制游戏战斗系统
+            娣卞叆鍒嗘瀽Steam绛夊钩鍙颁笂鐨勫洖鍚堝埗娓告垙鎴樻枟绯荤粺
             <br />
-            发现创新玩法，评估策略深度，比较数值平衡
-          </p>
+            鍙戠幇鍒涙柊鐜╂硶锛岃瘎浼扮瓥鐣ユ繁搴︼紝姣旇緝鏁板€煎钩琛?          </p>
 
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <Link
               href="/mode2"
               className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 transition-colors group"
             >
-              <span className="font-semibold text-emerald-500">新功能</span> 宝可梦Like筛选器
+              <span className="font-semibold text-emerald-500">鏂板姛鑳?/span> 瀹濆彲姊ike绛涢€夊櫒
             </Link>
           </div>
 

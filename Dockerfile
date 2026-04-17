@@ -12,6 +12,9 @@ COPY prisma ./prisma
 # 安装依赖
 RUN npm ci --ignore-scripts --legacy-peer-deps
 
+# 显式安装所有 CSS 相关依赖（解决 postcss 找不到的问题）
+RUN npm install tailwindcss postcss autoprefixer --save-dev --legacy-peer-deps
+
 # 生成 Prisma Client
 RUN npx prisma generate
 
@@ -21,14 +24,11 @@ COPY . .
 # 拉取 LFS 文件
 RUN git lfs pull
 
-# 验证关键依赖是否存在
-RUN ls -la node_modules/tailwindcss node_modules/postcss node_modules/autoprefixer 2>&1 || echo "Missing dependencies detected"
+# 重新构建原生模块
+RUN npm rebuild
 
-# 检查 postcss.config.js 是否存在
-RUN cat postcss.config.mjs 2>/dev/null || cat postcss.config.js 2>/dev/null || echo "No postcss config found"
-
-# 构建 Next.js（分步骤执行以获取详细错误）
-RUN npx next build --no-lint 2>&1
+# 构建 Next.js
+RUN npm run build
 
 # 生产环境
 FROM node:20-slim

@@ -43,12 +43,12 @@ __pycache__/
 *.pyo
 *.py.bak
 
-# Large data files (不在 Git 版本控制中)
-/public/data/*.json
-/public/data/*.db
-/public/data/*.json.unified_backup
-/public/data/*.ext_backup
-/public/data/*.last_run
+# Large data files (使用 Git LFS 管理)
+# /public/data/*.json
+# /public/data/*.db
+# /public/data/*.json.unified_backup
+# /public/data/*.ext_backup
+# /public/data/*.last_run
 
 # Backup files
 *.backup

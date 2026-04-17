@@ -1,7 +1,14 @@
 FROM node:20-alpine AS base
 
 # =============================================
-# 第一阶段：依赖安装（充分利用 Docker 缓存）
+# 第一阶段：安装 Git LFS
+# =============================================
+FROM base AS lfs-installer
+RUN apk add --no-cache git git-lfs && \
+    git lfs install
+
+# =============================================
+# 第二阶段：依赖安装（充分利用 Docker 缓存）
 # =============================================
 FROM base AS deps
 WORKDIR /app
@@ -29,12 +36,18 @@ RUN npx prisma generate
 FROM deps AS builder
 WORKDIR /app
 
+# 安装 git-lfs 用于拉取数据文件
+RUN apk add --no-cache git git-lfs && git lfs install
+
 # 复制第一阶段的 node_modules
 COPY --from=deps /app/node_modules ./node_modules
 # 复制 Prisma Client（从 prisma 阶段）
 COPY --from=prisma /app/node_modules/.prisma ./node_modules/.prisma
 # 复制源代码
 COPY . .
+
+# 拉取 LFS 文件
+RUN git lfs pull
 
 # 构建 Next.js（standalone 模式会自动输出到 .next/standalone/）
 RUN npm run build

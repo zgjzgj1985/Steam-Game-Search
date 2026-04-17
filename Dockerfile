@@ -10,7 +10,7 @@ COPY package.json package-lock.json* ./
 COPY prisma ./prisma
 
 # 安装依赖（包括 devDependencies）
-RUN npm ci
+RUN npm ci --include=dev
 
 # 生成 Prisma Client
 RUN npx prisma generate

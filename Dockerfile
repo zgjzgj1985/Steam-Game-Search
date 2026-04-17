@@ -1,9 +1,9 @@
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
 
 # 安装构建依赖
-RUN apk add --no-cache git git-lfs && git lfs install
+RUN apt-get update && apt-get install -y git-lfs && git lfs install
 
 # 先复制 package 文件和 prisma schema
 COPY package.json package-lock.json* ./
@@ -25,13 +25,13 @@ RUN git lfs pull
 RUN npm run build
 
 # 生产环境
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-RUN apk add --no-cache git git-lfs
+RUN apt-get update && apt-get install -y git-lfs && git lfs install
 
 # 复制构建产物
 COPY --from=0 /app/.next/standalone ./

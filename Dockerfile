@@ -5,14 +5,12 @@ WORKDIR /app
 # 安装构建依赖
 RUN apk add --no-cache git git-lfs && git lfs install
 
-# 复制 package 文件
+# 先复制 package 文件和 prisma schema
 COPY package.json package-lock.json* ./
-
-# 安装依赖
-RUN npm ci && npm cache clean --force
-
-# 复制 prisma schema
 COPY prisma ./prisma
+
+# 安装依赖（跳过 postinstall）
+RUN npm ci --ignore-scripts && npm cache clean --force
 
 # 生成 Prisma Client
 RUN npx prisma generate

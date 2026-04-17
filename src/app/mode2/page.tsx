@@ -230,28 +230,79 @@ function formatWan(n: number): string {
   return String(n);
 }
 
-function getPositiveRate(reviews: GameRecord["steamReviews"]): number | null {
+// 根据评价来源获取好评率
+function getPositiveRateBySource(reviews: GameRecord["steamReviews"], source: ReviewSource): number | null {
+  if (source === "cn") {
+    if (!reviews || reviews.totalReviews === 0) return null;
+    return Math.round((reviews.totalPositive / reviews.totalReviews) * 100);
+  }
+  // 默认返回总体好评率
   if (!reviews || reviews.totalReviews === 0) return null;
   return Math.round((reviews.totalPositive / reviews.totalReviews) * 100);
 }
 
 // ============ 游戏卡片 ============
 
-function GameCard({ game }: { game: GameRecord }) {
-  const positiveRate = getPositiveRate(game.steamReviews);
+function GameCard({ game, reviewSource }: { game: GameRecord; reviewSource?: ReviewSource }) {
+  // 根据评价来源获取好评率
+  const positiveRate = (() => {
+    if (reviewSource === "cn" && game.cnReviews) {
+      return game.cnReviews.totalReviews > 0
+        ? Math.round((game.cnReviews.totalPositive / game.cnReviews.totalReviews) * 100)
+        : null;
+    } else if (reviewSource === "overseas" && game.overseasReviews) {
+      return game.overseasReviews.totalReviews > 0
+        ? Math.round((game.overseasReviews.totalPositive / game.overseasReviews.totalReviews) * 100)
+        : null;
+    }
+    // 默认全部评价
+    return game.steamReviews && game.steamReviews.totalReviews > 0
+      ? Math.round((game.steamReviews.totalPositive / game.steamReviews.totalReviews) * 100)
+      : null;
+  })();
+
+  // 根据评价来源获取威尔逊得分
+  const wilsonScore = (() => {
+    if (reviewSource === "cn") {
+      return game.cnWilsonScore;
+    } else if (reviewSource === "overseas") {
+      return game.overseasWilsonScore;
+    }
+    return game.wilsonScore;
+  })();
+
+  // 根据评价来源获取评价数和评价来源标签
+  const reviewInfo = (() => {
+    if (reviewSource === "cn" && game.cnReviews) {
+      return {
+        total: game.cnReviews.totalReviews,
+        label: "国内评价"
+      };
+    } else if (reviewSource === "overseas" && game.overseasReviews) {
+      return {
+        total: game.overseasReviews.totalReviews,
+        label: "海外评价"
+      };
+    }
+    return {
+      total: game.steamReviews?.totalReviews ?? 0,
+      label: null
+    };
+  })();
+
   const poolConfig = game.pool ? POOL_CONFIG[game.pool] : null;
   const PoolIcon = poolConfig ? poolConfig.icon : null;
 
   // 威尔逊得分显示（0-1转为百分比）
-  const wilsonDisplay = game.wilsonScore > 0
-    ? `${(game.wilsonScore * 100).toFixed(0)}%`
+  const wilsonDisplay = wilsonScore > 0
+    ? `${(wilsonScore * 100).toFixed(0)}%`
     : null;
 
   // 评分颜色逻辑
-  const scoreColor = game.wilsonScore > 0
-    ? game.wilsonScore >= 0.7
+  const scoreColor = wilsonScore > 0
+    ? wilsonScore >= 0.7
       ? "text-green-600"
-      : game.wilsonScore >= 0.5
+      : wilsonScore >= 0.5
         ? "text-yellow-600"
         : "text-red-600"
     : positiveRate !== null
@@ -422,11 +473,11 @@ function GameCard({ game }: { game: GameRecord }) {
               </div>
             )}
 
-            {game.steamReviews && game.steamReviews.totalReviews > 0 && (
+            {reviewInfo.total > 0 && (
               <div className="flex items-center gap-1 text-muted-foreground">
                 <Users className="w-4 h-4" />
                 <span>
-                  {game.steamReviews.totalReviews.toLocaleString("en-US")}条评价
+                  {reviewInfo.total.toLocaleString("en-US")}条{reviewInfo.label ? `（${reviewInfo.label}）` : ""}
                 </span>
               </div>
             )}
@@ -1097,7 +1148,7 @@ export default function Mode2Page() {
     const timer = setTimeout(fetchStats, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter, reviewSource]);
 
   // 获取搜索结果
   useEffect(() => {
@@ -1105,7 +1156,7 @@ export default function Mode2Page() {
     const timer = setTimeout(fetchResults, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter, reviewSource]);
 
   // 页码变化时获取结果
   useEffect(() => {
@@ -1650,7 +1701,7 @@ export default function Mode2Page() {
         {!isLoadingResults && results.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {results.map((game) => (
-              <GameCard key={game.id} game={game} />
+              <GameCard key={game.id} game={game} reviewSource={reviewSource} />
             ))}
           </div>
         )}

@@ -272,10 +272,57 @@ def transform_game(row):
             'reviewScoreDescription': get_review_score_desc(review_score)
         }
     
+    # 处理国内评价数据（国内/海外评价筛选功能）
+    cn_reviews_raw = row.get('cn_reviews')
+    cn_reviews = None
+    if cn_reviews_raw:
+        cn_positive = cn_reviews_raw.get('positive', 0) or 0
+        cn_negative = cn_reviews_raw.get('negative', 0) or 0
+        cn_total = cn_reviews_raw.get('total', 0) or 0
+        if cn_total > 0:
+            cn_score = round(cn_positive / cn_total * 100)
+            cn_reviews = {
+                'totalPositive': cn_positive,
+                'totalNegative': cn_negative,
+                'totalReviews': cn_total,
+                'reviewScore': cn_score,
+                'reviewScoreDescription': get_review_score_desc(cn_score)
+            }
+    
+    # 处理海外评价数据
+    overseas_reviews_raw = row.get('overseas_reviews')
+    overseas_reviews = None
+    if overseas_reviews_raw:
+        overseas_positive = overseas_reviews_raw.get('positive', 0) or 0
+        overseas_negative = overseas_reviews_raw.get('negative', 0) or 0
+        overseas_total = overseas_reviews_raw.get('total', 0) or 0
+        if overseas_total > 0:
+            overseas_score = round(overseas_positive / overseas_total * 100)
+            overseas_reviews = {
+                'totalPositive': overseas_positive,
+                'totalNegative': overseas_negative,
+                'totalReviews': overseas_total,
+                'reviewScore': overseas_score,
+                'reviewScoreDescription': get_review_score_desc(overseas_score)
+            }
+    
     # 兼容处理不同格式的字段名（appid可能是int或str）
     appid = row.get('appid')
     if appid is None:
         return None
+    
+    # 计算国内/海外威尔逊得分
+    cn_wilson = 0
+    if cn_reviews_raw:
+        cn_pos = cn_reviews_raw.get('positive', 0) or 0
+        cn_neg = cn_reviews_raw.get('negative', 0) or 0
+        cn_wilson = wilson_score(cn_pos, cn_neg)
+    
+    overseas_wilson = 0
+    if overseas_reviews_raw:
+        overseas_pos = overseas_reviews_raw.get('positive', 0) or 0
+        overseas_neg = overseas_reviews_raw.get('negative', 0) or 0
+        overseas_wilson = wilson_score(overseas_pos, overseas_neg)
     
     return {
         'id': str(appid),
@@ -295,6 +342,12 @@ def transform_game(row):
         'estimatedOwnersMax': owners.get('max'),
         'peakCCU': row.get('peak_ccu') or 0,
         'steamReviews': reviews,
+        # 区域评价数据（国内/海外评价筛选功能）
+        'cnReviews': cn_reviews,
+        'overseasReviews': overseas_reviews,
+        # 区域威尔逊得分
+        'cnWilsonScore': cn_wilson,
+        'overseasWilsonScore': overseas_wilson,
         'headerImage': row.get('header_image') or None,
         'screenshots': safe_json_parse(row.get('screenshots'), []),
         'steamUrl': f"https://store.steampowered.com/app/{appid}",

@@ -5,16 +5,16 @@
 ## 功能特点
 
 ### 游戏搜索
-- 本地数据库包含 12.3 万 Steam 游戏
+- 本地数据库包含 12.3 万+ Steam 游戏
 - 按好评率、评价数、类型、发售日期筛选
 - 按好评率、评价数、发售日期、名称排序
 - 展示游戏基本信息、评分和截图
 
 ### 宝可梦Like游戏分析
-基于三池筛选系统的专项分析：
+基于三池筛选系统的专项分析
 - 核心玩法：生物收集、捕捉方式、进化系统、队伍构建
 - 差异化创新：融合玩法、成功原因、市场定位
-- 差评分析：玩家主要抱怨、设计缺陷警示
+- 差评分析：玩家主要抱怨、设计缺陷警告
 - 设计建议：值得学习的优点、需要避开的坑
 
 ### 可视化展示
@@ -37,11 +37,53 @@
 | 状态管理 | Zustand |
 | 数据获取 | SWR |
 | 可视化 | Recharts + Mermaid |
-| 数据源 | 本地 JSON 数据库 |
+| 数据存储 | 本地 JSON 数据文件 |
+
+---
+
+## 项目结构
+
+```
+Steam全域游戏搜索/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── page.tsx           # 模式1首页
+│   │   ├── mode2/page.tsx     # 模式2宝可梦Like筛选
+│   │   ├── analysis/[id]/     # 分析详情
+│   │   ├── compare/           # 游戏对比
+│   │   └── api/              # API Routes
+│   │       ├── games/        # 游戏搜索/详情API
+│   │       ├── mode2/filter/ # 模式2筛选API
+│   │       └── analysis/     # AI分析API
+│   ├── components/
+│   │   ├── ui/              # UI基础组件
+│   │   ├── search/         # 搜索组件
+│   │   ├── analysis/       # 分析组件
+│   │   ├── charts/         # 图表组件
+│   │   └── media/          # 媒体组件
+│   ├── lib/
+│   │   ├── steam.ts        # Steam API封装
+│   │   ├── llm.ts          # LLM API封装
+│   │   └── utils.ts        # 工具函数
+│   └── types/
+│       └── game.ts         # 游戏类型定义
+├── public/data/              # 数据文件
+│   ├── games-index.json    # 游戏索引 (约320MB)
+│   ├── games-meta.json     # 游戏元数据 (约342MB)
+│   └── games-cache.json    # 游戏缓存 (约322MB)
+├── prisma/
+│   └── schema.prisma        # Prisma Schema
+├── scripts/                  # 数据处理脚本
+├── package.json
+└── next.config.js
+```
+
+---
 
 ## 快速开始
 
 ### 环境要求
+
 - Node.js 18+
 - npm
 
@@ -51,71 +93,61 @@
 npm install
 ```
 
-### 启动开发服务器
+### 开发模式
 
 ```bash
 npm run dev
 ```
 
-### 构建生产版本
+### 生产构建
 
 ```bash
 npm run build
-npm start
+npm run start
 ```
 
-## 项目结构
+### 清理缓存
 
-```
-steam-game-analyzer/
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── page.tsx           # 首页
-│   │   ├── analysis/[id]/     # 分析详情页
-│   │   └── compare/           # 对比页面
-│   ├── components/
-│   │   ├── ui/                # UI组件
-│   │   ├── search/            # 搜索组件
-│   │   ├── analysis/          # 分析组件
-│   │   ├── charts/            # 图表组件
-│   │   └── media/             # 媒体组件
-│   ├── lib/
-│   │   ├── steam.ts           # Steam API
-│   │   ├── llm.ts             # LLM API
-│   │   ├── analysis-engine.ts  # 分析引擎
-│   │   └── utils.ts           # 工具函数
-│   └── types/
-│       └── game.ts            # 类型定义
-├── public/data/
-│   ├── games-index.json    # 搜索索引 (326 MB, 122,611 条)
-│   └── games-meta.json     # 详情补充 (342 MB)
-├── prisma/
-│   └── schema.prisma          # 数据库模型
-└── package.json
+```bash
+npm run clean
 ```
 
-## 数据来源
-
-游戏数据主要来自 [FronkonGames/steam-games-dataset](https://huggingface.co/datasets/FronkonGames/steam-games-dataset)：
-- 122,611 条 Steam 游戏
-- 93% 条目有完整 description（平均 1,320 字符）
-- 数据通过 Steam Store API 持续补充更新
+---
 
 ## 环境变量
 
-创建 `.env` 文件：
+复制 `.env.example` 到 `.env` 并配置：
 
 ```env
+DATABASE_URL="file:./dev.db"
+
+# 公共URL
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+
 # LLM 配置 (通义千问)
 LLM_PROVIDER=qianwen
 DASHSCOPE_API_KEY=your_api_key_here
 LLM_MODEL_QIANWEN=qwen3.6-plus
 LLM_BASE_URL_QIANWEN=https://dashscope.aliyuncs.com/compatible-mode/v1
 
-# 数据库
-DATABASE_URL="file:./games.db"
+# 或 OpenAI 配置
+LLM_API_KEY=sk-...
+LLM_BASE_URL_OPENAI=https://api.openai.com/v1
+LLM_MODEL_OPENAI=gpt-4o-mini
 ```
 
-## 许可证
+---
 
-MIT License
+## 数据维护
+
+详见 [数据采集维护文档.md](./数据采集维护文档.md)
+
+### 数据来源
+
+数据来自 [FronkonGames/steam-games-dataset](https://huggingface.co/datasets/FronkonGames/steam-games-dataset)：
+
+- **12.5 万+** Steam 游戏
+- **91.9%** 有描述信息
+- **99.9%** 有封面图
+
+每周日凌晨 2:00 自动执行增量更新，通过 Steam Store API 获取最新评价数据，更新 SQLite 数据库记录。

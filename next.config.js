@@ -20,6 +20,11 @@ const nextConfig = {
         // 生产环境忽略
       }
     }
+    // 显式配置路径别名，确保 Docker 构建时正确解析
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@": path.resolve(__dirname, "src"),
+    };
     return config;
   },
   images: {

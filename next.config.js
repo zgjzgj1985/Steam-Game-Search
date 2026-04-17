@@ -1,5 +1,4 @@
 const path = require("path");
-const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -13,7 +12,13 @@ const nextConfig = {
         cacheDirectory: path.join(__dirname, "node_modules", ".cache", "webpack"),
       };
       // 开发环境启用大小写敏感检查，捕获 Windows 开发但 Linux 构建时的大小写问题
-      config.plugins.push(new CaseSensitivePathsPlugin());
+      // 使用 try-catch 延迟加载，避免生产构建报错
+      try {
+        const CaseSensitivePathsPlugin = require("case-sensitive-paths-webpack-plugin");
+        config.plugins.push(new CaseSensitivePathsPlugin());
+      } catch {
+        // 生产环境忽略
+      }
     }
     return config;
   },

@@ -23,6 +23,7 @@ import {
   Gamepad2,
   Info,
   Trophy,
+  Globe,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -1659,6 +1660,63 @@ export default function Mode2Page() {
                 })
               )}
             </div>
+          </div>
+        </div>
+
+        {/* ========== 评价来源筛选 ========== */}
+        <div className="bg-card rounded-xl border p-4 mb-6">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center">
+              <Globe className="w-4 h-4 text-blue-500" />
+            </div>
+            <span className="text-sm font-medium text-muted-foreground">评价来源</span>
+            <span className="text-[10px] text-muted-foreground/60 italic ml-1">
+              (按国内/海外评价分别筛选和计算)
+            </span>
+
+            {/* 评价来源快捷筛选 */}
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                onClick={() => setReviewSource("all")}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  reviewSource === "all"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+                )}
+              >
+                全部
+              </button>
+              <button
+                onClick={() => setReviewSource("cn")}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  reviewSource === "cn"
+                    ? "bg-red-500 text-white shadow-md"
+                    : "bg-red-50 hover:bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                )}
+              >
+                国内评价
+              </button>
+              <button
+                onClick={() => setReviewSource("overseas")}
+                className={cn(
+                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
+                  reviewSource === "overseas"
+                    ? "bg-blue-500 text-white shadow-md"
+                    : "bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                )}
+              >
+                海外评价
+              </button>
+            </div>
+
+            {/* 当前筛选来源显示 */}
+            {reviewSource !== "all" && (
+              <span className="text-xs text-primary">
+                当前显示: {reviewSource === "cn" ? "国内" : "海外"}评价数据
+              </span>
+            )}
           </div>
         </div>
 

@@ -44,11 +44,19 @@ __pycache__/
 *.py.bak
 
 # Large data files (使用 Git LFS 管理)
-# /public/data/*.json
-# /public/data/*.db
-# /public/data/*.json.unified_backup
-# /public/data/*.ext_backup
-# /public/data/*.last_run
+# LFS 追踪的文件不受 .gitignore 影响
+# 本地数据文件不应提交到 Git
+/public/data/*.backup
+/public/data/*.json.last_run
+/public/data/games-index-filtered.json
+/public/data/games-meta.json
+/public/data/scraped-tags.json
+/public/data/tags-scrape-state.json
+/public/data/*.ext_backup
+/public/data/*.unified_backup
+/public/data/*.p0_backup
+/public/data/*.all_backup
+/public/data/*.incr_backup
 
 # Backup files
 *.backup

@@ -1,0 +1,10 @@
+{
+  "build": {
+    "command": "npm install && npm run build",
+    "output": ".next"
+  },
+  "server": {
+    "port": 3000,
+    "runtime": "nodejs"
+  }
+}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ModularAnalysis } from "@/components/analysis/modular-analysis";
 import { Game } from "@/types/game";
-import { Button } from "../../components/ui/button";
+import { Button } from "@/components/ui/button";
 
 function getRequestBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_BASE_URL) {

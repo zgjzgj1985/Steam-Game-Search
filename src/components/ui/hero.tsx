@@ -20,27 +20,29 @@ export function Hero({ className }: HeroProps) {
             <Layers className="w-8 h-8 text-primary" />
             <Sparkles className="w-8 h-8 text-primary" />
           </div>
-          
+
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            鍥炲悎鍒舵垬鏂楀垎鏋愬伐鍏?          </h1>
-          
+            回合制战斗分析工具
+          </h1>
+
           <p className="text-xl text-muted-foreground mb-8">
-            娣卞叆鍒嗘瀽Steam绛夊钩鍙颁笂鐨勫洖鍚堝埗娓告垙鎴樻枟绯荤粺
+            深入分析 Steam 等平台的回合制游戏战斗系统
             <br />
-            鍙戠幇鍒涙柊鐜╂硶锛岃瘎浼扮瓥鐣ユ繁搴︼紝姣旇緝鏁板€煎钩琛?          </p>
+            发现创新玩法，评测策略深度，比较数据价值
+          </p>
 
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <Link
               href="/mode2"
               className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg hover:bg-emerald-500/20 transition-colors group"
             >
-              <span className="font-semibold text-emerald-500">鏂板姛鑳?/span> 瀹濆彲姊ike绛涢€夊櫒
+              <span className="font-semibold text-emerald-500">新功能</span> 专家级游戏选择器
             </Link>
           </div>
 
         </div>
       </div>
-      
+
       <div className="absolute -bottom-1 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
     </section>
   );

@@ -4,8 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 
 interface ScreenshotGalleryProps {
   screenshots: string[];

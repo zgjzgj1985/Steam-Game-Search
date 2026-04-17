@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Search, Filter, X, ChevronLeft, ChevronRight, Calendar, SlidersHorizontal, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import { GameCard } from "@/components/search/game-card";
 import { SearchFilters, Game } from "@/types/game";
 import { format, addYears, subYears } from "date-fns";

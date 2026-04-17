@@ -1,7 +1,7 @@
 import { GameSearch } from "@/components/search/game-search";
 import { FeaturedGames } from "@/components/search/featured-games";
 import { AnalysisCategories } from "@/components/analysis/categories";
-import { Hero } from "@/components/ui/hero";
+import { Hero } from "../components/ui/hero";
 import { steamService } from "@/lib/steam";
 
 function withTimeout<T>(promise: Promise<T>, ms: number, fallback: T): Promise<T> {

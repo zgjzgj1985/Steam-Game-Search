@@ -109,6 +109,7 @@ interface PrecomputedGame {
   matchedModernTags: string[];
   uniqueFeatureTags: string[];
   differentiationLabels: string[];
+  pool: "A" | "B" | "C" | null;
 }
 
 interface CacheMeta {
@@ -997,6 +998,10 @@ function transformGame(appId: string, raw: RawGameData): PrecomputedGame | null 
     matchedModernTags: tagWeight.matchedModernTags,
     uniqueFeatureTags: tagWeight.uniqueFeatureTags,
     differentiationLabels: tagWeight.differentiationLabels,
+    pool: calculatePool({
+      steamReviews: totalReviews > 0 ? { totalPositive: raw.positive, totalNegative: raw.negative, reviewScore, totalReviews, reviewScoreDescription: getReviewScoreDesc(reviewScore) } : null,
+      isPokemonLike, tags, genres
+    }),
   };
 }
 
@@ -1230,6 +1235,123 @@ async function main() {
   console.log(`   缓存已保存: ${CACHE_FILE}`);
   console.log(`   文件大小: ${sizeMB} MB`);
   console.log(`   写入耗时 ${Date.now() - t4}ms`);
+
+  // 6. 生成 SQLite 数据库（供 API 直接查询，避免 OOM）
+  const t6 = Date.now();
+  console.log("\n💾 生成 SQLite 缓存数据库...");
+  try {
+    const sqlite3 = await import("better-sqlite3");
+    const CACHE_DB_FILE = path.join(process.cwd(), "public", "data", "games-cache.db");
+
+    // 删除旧数据库
+    if (fs.existsSync(CACHE_DB_FILE)) {
+      fs.unlinkSync(CACHE_DB_FILE);
+    }
+
+    const db = sqlite3.default(CACHE_DB_FILE);
+    db.pragma("journal_mode = WAL");
+    db.pragma("synchronous = NORMAL");
+
+    // 建表
+    db.exec(`
+      CREATE TABLE games_cache (
+        appid TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        short_description TEXT,
+        header_image TEXT,
+        developers TEXT,
+        publishers TEXT,
+        genres TEXT,
+        categories TEXT,
+        screenshots TEXT,
+        tags TEXT,
+        release_date TEXT,
+        price REAL DEFAULT 0,
+        estimated_owners TEXT,
+        estimated_owners_num INTEGER DEFAULT 0,
+        peak_ccu INTEGER DEFAULT 0,
+        metacritic_score INTEGER DEFAULT 0,
+        positive INTEGER DEFAULT 0,
+        negative INTEGER DEFAULT 0,
+        total_reviews INTEGER DEFAULT 0,
+        review_score INTEGER DEFAULT 0,
+        cn_positive INTEGER DEFAULT 0,
+        cn_negative INTEGER DEFAULT 0,
+        cn_total INTEGER DEFAULT 0,
+        overseas_positive INTEGER DEFAULT 0,
+        overseas_negative INTEGER DEFAULT 0,
+        overseas_total INTEGER DEFAULT 0,
+        is_turn_based INTEGER DEFAULT 0,
+        pool TEXT,
+        wilson_score REAL DEFAULT 0,
+        cn_wilson_score REAL DEFAULT 0,
+        overseas_wilson_score REAL DEFAULT 0,
+        is_pokemon_like INTEGER DEFAULT 0,
+        pokemon_like_tags TEXT DEFAULT '[]',
+        tag_weight REAL DEFAULT 0,
+        unique_feature_tags TEXT DEFAULT '[]',
+        differentiation_labels TEXT DEFAULT '[]',
+        is_free INTEGER DEFAULT 0,
+        search_vector TEXT
+      );
+      CREATE INDEX idx_name ON games_cache(name);
+      CREATE INDEX idx_pool ON games_cache(pool);
+      CREATE INDEX idx_wilson ON games_cache(wilson_score DESC);
+      CREATE INDEX idx_turn_based ON games_cache(is_turn_based);
+      CREATE INDEX idx_price ON games_cache(price);
+      CREATE INDEX idx_release ON games_cache(release_date);
+      CREATE INDEX idx_review_score ON games_cache(review_score DESC);
+      CREATE VIRTUAL TABLE games_fts USING fts5(
+        appid, name, short_description, developers, publishers, genres, tags,
+        content='games_cache', content_rowid='rowid'
+      );
+    `);
+
+    // 批量插入
+    const insert = db.prepare(
+      `INSERT INTO games_cache VALUES (${Array(38).fill("?").join(",")})`
+    );
+    const insertBatch = db.transaction((games: typeof deduped) => {
+      for (const g of games) {
+        const owners = parseEstimatedOwners(String(g.estimatedOwners));
+        const totalReviews = g.steamReviews?.totalReviews ?? 0;
+        const reviewScore = g.steamReviews?.reviewScore ?? 0;
+        const cnTotal = g.cnReviews?.totalReviews ?? 0;
+        const overseasTotal = g.overseasReviews?.totalReviews ?? 0;
+        insert.run(
+          g.steamAppId, g.name, g.shortDescription, g.headerImage || "",
+          JSON.stringify(g.developers), JSON.stringify(g.publishers),
+          JSON.stringify(g.genres), JSON.stringify(g.categories),
+          JSON.stringify(g.screenshots), JSON.stringify(g.tags),
+          g.releaseDate || "", g.price, String(g.estimatedOwners),
+          owners.value, g.peakCCU, 0,
+          g.steamReviews?.totalPositive ?? 0, g.steamReviews?.totalNegative ?? 0,
+          totalReviews, reviewScore,
+          g.cnReviews?.totalPositive ?? 0, g.cnReviews?.totalNegative ?? 0, cnTotal,
+          g.overseasReviews?.totalPositive ?? 0, g.overseasReviews?.totalNegative ?? 0, overseasTotal,
+          g.isTurnBased ? 1 : 0, g.pool || "",
+          g.wilsonScore, g.cnWilsonScore, g.overseasWilsonScore,
+          g.isPokemonLike ? 1 : 0, JSON.stringify(g.pokemonLikeTags || []),
+          g.tagWeight, JSON.stringify(g.uniqueFeatureTags || []),
+          JSON.stringify(g.differentiationLabels || []),
+          g.isFree ? 1 : 0,
+          `${g.name} ${g.shortDescription}`
+        );
+      }
+    });
+
+    insertBatch(deduped);
+    db.exec("INSERT INTO games_fts(games_fts) VALUES('rebuild')");
+    db.close();
+
+    const dbSizeMB = (fs.statSync(CACHE_DB_FILE).size / 1024 / 1024).toFixed(2);
+    console.log(`   SQLite 数据库已保存: ${CACHE_DB_FILE}`);
+    console.log(`   数据库大小: ${dbSizeMB} MB`);
+    console.log(`   耗时 ${Date.now() - t6}ms`);
+  } catch (e) {
+    console.warn(`   SQLite 数据库生成失败: ${e instanceof Error ? e.message : String(e)}`);
+    console.warn("   API 将继续使用 JSON 文件加载");
+  }
 
   const totalMs = Date.now() - t0;
   console.log(`\n✅ 预计算完成！总耗时 ${totalMs}ms (${(totalMs / 1000).toFixed(1)}s)`);

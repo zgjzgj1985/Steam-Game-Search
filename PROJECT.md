@@ -1,9 +1,10 @@
 # Steam 全域游戏搜索
 
-> **版本**: v1.7.1
+> **版本**: v1.8.0
 > **更新日期**: 2026-04-17
 
 > **版本历史**:
+> - v1.8.0: **性能优化**：新增 `build-cache-db.py` 将 336MB JSON 转换为 SQLite 数据库，解决 Zeabur 部署时 OOM 问题。API 优先从 SQLite 查询，失败自动降级 JSON。`precompute.ts` 也支持生成 SQLite。`.gitattributes` 添加 `games-cache.db` LFS 追踪。
 > - v1.7.1: **界面更新**：将首页标题从"回合制战斗分析工具"更改为"Steam全域游戏搜索"，统一产品名称
 > - v1.7.0: **部署修复**：修复 Dockerfile 多阶段构建路径、public 目录复制、.dockerignore 排除配置、.gitattributes LFS 追踪、更新 zeabur.json 构建命令、新增 .env.deploy.example 统一环境变量模板
 > - v1.6.1: **Docker构建修复**：模式2/对比页UI组件路径别名问题，新增 `fetch_regional_reviews.py` 区域评价采集脚本，`precompute.py` 支持区域数据预计算，模式2展示国内/海外评价对比

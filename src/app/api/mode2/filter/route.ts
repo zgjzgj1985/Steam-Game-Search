@@ -2,16 +2,20 @@
  * 模式2: 宝可梦Like游戏筛选API
  * ================================
  * 从海量回合制游戏中筛选出有价值的参考对象
- * 
+ *
  * 三池筛选逻辑（默认条件，可通过参数覆盖）:
  * - A池(神作参考): 普通回合制, 好评率>=75%, 评论数>50
  * - B池(核心竞品): 宝可梦Like, 好评率>=75%, 评论数>50
  * - C池(避坑指南): 宝可梦Like, 好评率40%-74%, 评论数>50
+ *
+ * 性能优化：优先使用 SQLite 数据库（games-cache.db）直接查询，
+ * 避免将 300MB JSON 文件全部加载到内存导致 OOM
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import type Database from "better-sqlite3";
 
 // ============ 评价来源类型 ============
 
@@ -564,10 +568,75 @@ function setQueryCache(key: QueryCacheKey, entry: QueryCacheEntry): void {
   queryCache.set(key, entry);
 }
 
-// 预计算缓存文件（包含已去重、已计算威尔逊得分/标签权重的数据）
 const CACHE_FILE = path.join(process.cwd(), "public", "data", "games-cache.json");
 // 原始文件（仅在缓存不存在时降级使用）
 const DB_FILE = path.join(process.cwd(), "public", "data", "games-index.json");
+const CACHE_DB_FILE = path.join(process.cwd(), "public", "data", "games-cache.db");
+
+// SQLite 数据库连接（延迟初始化，避免构建时加载）
+let sqliteDb: any = null;
+function getSqliteDb() {
+  if (!sqliteDb && fs.existsSync(CACHE_DB_FILE)) {
+    try {
+      const Database = require("better-sqlite3");
+      sqliteDb = new Database(CACHE_DB_FILE, { readonly: true });
+      sqliteDb.pragma("journal_mode = WAL");
+      sqliteDb.pragma("mmap_size = 268435456");
+    } catch { sqliteDb = null; }
+  }
+  return sqliteDb;
+}
+
+// SQLite 行转 GameRecord
+function rowToGameRecord(row: any): GameRecord {
+  const totalReviews = row.positive + row.negative;
+  const reviewScore = totalReviews > 0 ? Math.round((row.positive / totalReviews) * 100) : 0;
+  const totalCn = row.cn_positive + row.cn_negative;
+  const cnScore = totalCn > 0 ? Math.round((row.cn_positive / totalCn) * 100) : 0;
+  const totalOv = row.overseas_positive + row.overseas_negative;
+  const ovScore = totalOv > 0 ? Math.round((row.overseas_positive / totalOv) * 100) : 0;
+  return {
+    id: row.appid,
+    name: row.name,
+    steamAppId: row.appid,
+    shortDescription: row.short_description || "",
+    developers: row.developers ? JSON.parse(row.developers) : [],
+    publishers: row.publishers ? JSON.parse(row.publishers) : [],
+    genres: row.genres ? JSON.parse(row.genres) : [],
+    tags: row.tags ? JSON.parse(row.tags) : [],
+    categories: row.categories ? JSON.parse(row.categories) : [],
+    releaseDate: row.release_date || null,
+    isFree: row.is_free === 1,
+    price: row.price || 0,
+    estimatedOwners: row.estimated_owners_num || 0,
+    peakCCU: row.peak_ccu || 0,
+    steamReviews: { totalPositive: row.positive, totalNegative: row.negative, totalReviews, reviewScore, reviewScoreDescription: getReviewScoreDesc(reviewScore) },
+    cnReviews: { totalPositive: row.cn_positive, totalNegative: row.cn_negative, totalReviews: totalCn, reviewScore: cnScore, reviewScoreDescription: getReviewScoreDesc(cnScore) },
+    overseasReviews: { totalPositive: row.overseas_positive, totalNegative: row.overseas_negative, totalReviews: totalOv, reviewScore: ovScore, reviewScoreDescription: getReviewScoreDesc(ovScore) },
+    headerImage: row.header_image || null,
+    screenshots: row.screenshots ? JSON.parse(row.screenshots) : [],
+    steamUrl: `https://store.steampowered.com/app/${row.appid}/`,
+    isPokemonLike: row.is_pokemon_like === 1,
+    pokemonLikeTags: row.pokemon_like_tags ? JSON.parse(row.pokemon_like_tags) : [],
+    wilsonScore: row.wilson_score,
+    cnWilsonScore: row.cn_wilson_score,
+    overseasWilsonScore: row.overseas_wilson_score,
+    pool: row.pool === "A" || row.pool === "B" || row.pool === "C" ? row.pool as "A" | "B" | "C" : null,
+    isTurnBased: row.is_turn_based === 1,
+    isTestVersion: row._is_test_version === 1,
+    testVersionType: "none",
+    coreTagCount: 0,
+    secondaryTagCount: 0,
+    modernTagCount: 0,
+    tagWeight: row.tag_weight,
+    matchedCoreTags: [],
+    matchedSecondaryTags: [],
+    matchedModernTags: [],
+    uniqueFeatureTags: row.unique_feature_tags ? JSON.parse(row.unique_feature_tags) : [],
+    differentiationLabels: row.differentiation_labels ? JSON.parse(row.differentiation_labels) : [],
+    displayModernTags: [],
+  };
+}
 
 // 池子分布类型
 export interface PoolDistribution {
@@ -852,8 +921,26 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
     return { games: dbCache.games, featureTagOptions: dbCache.featureTagOptions };
   }
 
+  // ============ 优先: SQLite 直接查询 ============
+  const db = getSqliteDb();
+  if (db) {
+    const loadStart = Date.now();
+    try {
+      const rows = db.prepare("SELECT * FROM games_cache").all() as any[];
+      const games = rows.map(rowToGameRecord);
+      dbCache.games = games;
+      dbCache.featureTagOptions = [];
+      dbCache.loadedAt = now;
+      dbCache.loadError = null;
+      console.log(`[Mode2] 从 SQLite 加载 ${games.length} 个游戏，耗时 ${Date.now() - loadStart}ms`);
+      return { games, featureTagOptions: [] };
+    } catch (e) {
+      console.warn(`[Mode2] SQLite 查询失败，降级到 JSON: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+
+  // ============ 降级: JSON 文件 ============
   try {
-    // 优先使用预计算缓存
     if (fs.existsSync(CACHE_FILE)) {
       const loadStart = Date.now();
       const raw = fs.readFileSync(CACHE_FILE, "utf-8");
@@ -862,13 +949,12 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
       dbCache.featureTagOptions = cache.featureTagOptions || [];
       dbCache.loadedAt = now;
       dbCache.loadError = null;
-      console.log(`[Mode2] 从预计算缓存加载 ${cache.games.length} 个游戏，耗时 ${Date.now() - loadStart}ms`);
+      console.log(`[Mode2] 从 JSON 缓存加载 ${cache.games.length} 个游戏，耗时 ${Date.now() - loadStart}ms`);
       console.log(`[Mode2] 动态标签: ${cache.featureTagOptions?.length ?? 0} 个`);
       console.log(`[Mode2] 缓存信息: 去重后 ${cache.meta.totalAfterDedup} 个 | 回合制 ${cache.meta.totalTurnBased} | A池 ${cache.meta.poolA} | B池 ${cache.meta.poolB} | C池 ${cache.meta.poolC}`);
       return { games: dbCache.games, featureTagOptions: dbCache.featureTagOptions };
     }
 
-    // 降级：使用原始 JSON 文件
     console.warn("[Mode2] 预计算缓存不存在，降级使用原始 JSON");
     if (!fs.existsSync(DB_FILE)) {
       dbCache.loadError = `数据库文件不存在: ${DB_FILE}`;

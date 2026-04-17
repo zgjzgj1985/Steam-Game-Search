@@ -185,6 +185,21 @@ const dbCache: DbCache = {
 const CACHE_FILE = path.join(process.cwd(), "public", "data", "games-cache.json");
 // 原始文件（仅在缓存不存在时降级使用）
 const DB_FILE = path.join(process.cwd(), "public", "data", "games-index.json");
+const CACHE_DB_FILE = path.join(process.cwd(), "public", "data", "games-cache.db");
+
+// SQLite 连接（延迟初始化）
+let sqliteDb: any = null;
+function getSqliteDb() {
+  if (!sqliteDb && fs.existsSync(CACHE_DB_FILE)) {
+    try {
+      const Database = require("better-sqlite3");
+      sqliteDb = new Database(CACHE_DB_FILE, { readonly: true });
+      sqliteDb.pragma("journal_mode = WAL");
+      sqliteDb.pragma("mmap_size = 268435456");
+    } catch { sqliteDb = null; }
+  }
+  return sqliteDb;
+}
 
 /**
  * 解析 estimated_owners 字符串，返回玩家数量估算
@@ -284,8 +299,54 @@ function loadDatabase(): GameRecord[] {
     return dbCache.games;
   }
 
+  // ============ 优先: SQLite 直接查询 ============
+  const db = getSqliteDb();
+  if (db) {
+    try {
+      const t0 = Date.now();
+      const rows = db.prepare("SELECT * FROM games_cache").all() as any[];
+      const games = rows.map((row: any) => ({
+        id: row.appid,
+        steamAppId: row.appid,
+        name: row.name || "",
+        description: "",
+        shortDescription: row.short_description || "",
+        developers: row.developers ? JSON.parse(row.developers) : [],
+        publishers: row.publishers ? JSON.parse(row.publishers) : [],
+        genres: row.genres ? JSON.parse(row.genres) : [],
+        categories: row.categories ? JSON.parse(row.categories) : [],
+        tags: row.tags ? JSON.parse(row.tags) : [],
+        releaseDate: row.release_date || null,
+        isFree: row.is_free === 1,
+        price: row.price || 0,
+        metacriticScore: row.metacritic_score > 0 ? row.metacritic_score : null,
+        estimatedOwners: row.estimated_owners_num || 0,
+        peakCCU: row.peak_ccu || 0,
+        steamReviews: row.positive + row.negative > 0 ? {
+          totalPositive: row.positive,
+          totalNegative: row.negative,
+          totalReviews: row.positive + row.negative,
+          reviewScore: row.review_score,
+          reviewScoreDescription: getReviewScoreDesc(row.review_score),
+        } : null,
+        headerImage: row.header_image || null,
+        screenshots: row.screenshots ? JSON.parse(row.screenshots) : [],
+        steamUrl: `https://store.steampowered.com/app/${row.appid}`,
+        isTestVersion: row._is_test_version === 1,
+        isSuspiciousDelisted: row._is_suspicious_delisted === 1,
+      }));
+      dbCache.games = games;
+      dbCache.loadedAt = now;
+      dbCache.loadError = null;
+      console.log(`[db] 从 SQLite 加载 ${games.length} 个游戏，耗时 ${Date.now() - t0}ms`);
+      return dbCache.games;
+    } catch (e) {
+      console.warn(`[db] SQLite 查询失败，降级到 JSON: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+
+  // ============ 降级: JSON 文件 ============
   try {
-    // 优先使用预计算缓存
     if (fs.existsSync(CACHE_FILE)) {
       const t0 = Date.now();
       const raw = fs.readFileSync(CACHE_FILE, "utf-8");
@@ -297,7 +358,6 @@ function loadDatabase(): GameRecord[] {
       return dbCache.games;
     }
 
-    // 降级：使用原始 JSON 文件
     console.warn("[db] 预计算缓存不存在，降级使用原始 JSON");
     if (!fs.existsSync(DB_FILE)) {
       dbCache.loadError = `数据库文件不存在: ${DB_FILE}`;

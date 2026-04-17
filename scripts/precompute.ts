@@ -34,6 +34,17 @@ interface RawGameData {
   _is_test_version?: boolean;
   _is_playtest?: boolean;
   _is_suspicious_delisted?: boolean;
+  // 区域评价数据（国内/海外）
+  cn_reviews?: {
+    positive: number;
+    negative: number;
+    total: number;
+  };
+  overseas_reviews?: {
+    positive: number;
+    negative: number;
+    total: number;
+  };
 }
 
 // 预计算后的游戏记录
@@ -61,12 +72,30 @@ interface PrecomputedGame {
     reviewScore: number;
     reviewScoreDescription: string;
   } | null;
+  // 区域评价数据（国内/海外）
+  cnReviews: {
+    totalPositive: number;
+    totalNegative: number;
+    totalReviews: number;
+    reviewScore: number;
+    reviewScoreDescription: string;
+  } | null;
+  overseasReviews: {
+    totalPositive: number;
+    totalNegative: number;
+    totalReviews: number;
+    reviewScore: number;
+    reviewScoreDescription: string;
+  } | null;
   headerImage: string | null;
   screenshots: string[];
   steamUrl: string;
   isPokemonLike: boolean;
   pokemonLikeTags: string[];
   wilsonScore: number;
+  // 区域威尔逊得分
+  cnWilsonScore: number;
+  overseasWilsonScore: number;
   isTurnBased: boolean;
   isTestVersion: boolean;
   testVersionType: "name" | "tag" | "data" | "none";
@@ -894,6 +923,18 @@ function transformGame(appId: string, raw: RawGameData): PrecomputedGame | null 
 
   const tagWeight = calculateTagWeight(tags);
 
+  // 处理国内评价数据
+  const cnReviews = raw.cn_reviews;
+  const cnTotal = cnReviews?.total || 0;
+  const cnReviewScore = cnTotal > 0 && cnReviews ? Math.round((cnReviews.positive / cnTotal) * 100) : 0;
+  const cnWilson = cnReviews && cnTotal > 0 ? wilsonScore(cnReviews.positive, cnReviews.negative) : 0;
+
+  // 处理海外评价数据
+  const overseasReviews = raw.overseas_reviews;
+  const overseasTotal = overseasReviews?.total || 0;
+  const overseasReviewScore = overseasTotal > 0 && overseasReviews ? Math.round((overseasReviews.positive / overseasTotal) * 100) : 0;
+  const overseasWilson = overseasReviews && overseasTotal > 0 ? wilsonScore(overseasReviews.positive, overseasReviews.negative) : 0;
+
   return {
     id: appId,
     steamAppId: appId,
@@ -918,12 +959,31 @@ function transformGame(appId: string, raw: RawGameData): PrecomputedGame | null 
       reviewScore,
       reviewScoreDescription: getReviewScoreDesc(reviewScore),
     } : null,
+    // 国内评价数据
+    cnReviews: cnReviews && cnTotal > 0 ? {
+      totalPositive: cnReviews.positive,
+      totalNegative: cnReviews.negative,
+      totalReviews: cnTotal,
+      reviewScore: cnReviewScore,
+      reviewScoreDescription: getReviewScoreDesc(cnReviewScore),
+    } : null,
+    // 海外评价数据
+    overseasReviews: overseasReviews && overseasTotal > 0 ? {
+      totalPositive: overseasReviews.positive,
+      totalNegative: overseasReviews.negative,
+      totalReviews: overseasTotal,
+      reviewScore: overseasReviewScore,
+      reviewScoreDescription: getReviewScoreDesc(overseasReviewScore),
+    } : null,
     headerImage: raw.header_image || null,
     screenshots: raw.screenshots || [],
     steamUrl: `https://store.steampowered.com/app/${appId}`,
     isPokemonLike,
     pokemonLikeTags,
     wilsonScore: wilsonScore(raw.positive, raw.negative),
+    // 区域威尔逊得分
+    cnWilsonScore: cnWilson,
+    overseasWilsonScore: overseasWilson,
     isTurnBased: turnBased,
     isTestVersion: isTest,
     testVersionType,

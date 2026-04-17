@@ -13,6 +13,10 @@ import { NextRequest, NextResponse } from "next/server";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
+// ============ 评价来源类型 ============
+
+type ReviewSource = "all" | "cn" | "overseas";
+
 // ============ 原始数据类型 ============
 
 interface RawGameData {
@@ -35,6 +39,17 @@ interface RawGameData {
   metacritic_score: number | null;
   _is_test_version?: boolean;
   _is_playtest?: boolean;
+  // 区域评价数据（国内/海外）
+  cn_reviews?: {
+    positive: number;
+    negative: number;
+    total: number;
+  };
+  overseas_reviews?: {
+    positive: number;
+    negative: number;
+    total: number;
+  };
 }
 
 // ============ 返回类型 ============
@@ -63,6 +78,21 @@ interface GameRecord {
     reviewScore: number;
     reviewScoreDescription: string;
   } | null;
+  // 区域评价数据（国内/海外）
+  cnReviews: {
+    totalPositive: number;
+    totalNegative: number;
+    totalReviews: number;
+    reviewScore: number;
+    reviewScoreDescription: string;
+  } | null;
+  overseasReviews: {
+    totalPositive: number;
+    totalNegative: number;
+    totalReviews: number;
+    reviewScore: number;
+    reviewScoreDescription: string;
+  } | null;
   headerImage: string | null;
   screenshots: string[];
   steamUrl: string;
@@ -70,6 +100,9 @@ interface GameRecord {
   isPokemonLike: boolean;
   pokemonLikeTags: string[];
   wilsonScore: number;
+  // 区域威尔逊得分
+  cnWilsonScore: number;
+  overseasWilsonScore: number;
   pool: "A" | "B" | "C" | null;
   // 是否是回合制游戏（用于模式2筛选）
   isTurnBased: boolean;
@@ -671,6 +704,18 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
   // 计算标签权重
   const tagWeight = calculateTagWeight(tags);
 
+  // 处理国内评价数据
+  const cnReviewsRaw = raw.cn_reviews;
+  const cnTotal = cnReviewsRaw?.total || 0;
+  const cnReviewScore = cnTotal > 0 && cnReviewsRaw ? Math.round((cnReviewsRaw.positive / cnTotal) * 100) : 0;
+  const cnWilson = cnReviewsRaw && cnTotal > 0 ? wilsonScore(cnReviewsRaw.positive, cnReviewsRaw.negative) : 0;
+
+  // 处理海外评价数据
+  const overseasReviewsRaw = raw.overseas_reviews;
+  const overseasTotal = overseasReviewsRaw?.total || 0;
+  const overseasReviewScore = overseasTotal > 0 && overseasReviewsRaw ? Math.round((overseasReviewsRaw.positive / overseasTotal) * 100) : 0;
+  const overseasWilson = overseasReviewsRaw && overseasTotal > 0 ? wilsonScore(overseasReviewsRaw.positive, overseasReviewsRaw.negative) : 0;
+
   return {
     id: appId,
     steamAppId: appId,
@@ -695,12 +740,31 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
       reviewScore,
       reviewScoreDescription: getReviewScoreDesc(reviewScore),
     } : null,
+    // 国内评价数据
+    cnReviews: cnReviewsRaw && cnTotal > 0 ? {
+      totalPositive: cnReviewsRaw.positive,
+      totalNegative: cnReviewsRaw.negative,
+      totalReviews: cnTotal,
+      reviewScore: cnReviewScore,
+      reviewScoreDescription: getReviewScoreDesc(cnReviewScore),
+    } : null,
+    // 海外评价数据
+    overseasReviews: overseasReviewsRaw && overseasTotal > 0 ? {
+      totalPositive: overseasReviewsRaw.positive,
+      totalNegative: overseasReviewsRaw.negative,
+      totalReviews: overseasTotal,
+      reviewScore: overseasReviewScore,
+      reviewScoreDescription: getReviewScoreDesc(overseasReviewScore),
+    } : null,
     headerImage: raw.header_image || null,
     screenshots: raw.screenshots || [],
     steamUrl: `https://store.steampowered.com/app/${appId}`,
     isPokemonLike: pokemonCheck.isPokemonLike,
     pokemonLikeTags: pokemonCheck.matchingTags,
     wilsonScore: wilson,
+    // 区域威尔逊得分
+    cnWilsonScore: cnWilson,
+    overseasWilsonScore: overseasWilson,
     pool: null, // 动态计算，不在这里设置
     isTurnBased: turnBased,
     isTestVersion: isTest,
@@ -867,9 +931,16 @@ interface PoolConfig {
 
 function calculatePool(
   game: GameRecord,
-  config: PoolConfig
+  config: PoolConfig,
+  reviewSource: ReviewSource = "all"
 ): "A" | "B" | "C" | null {
-  const { steamReviews, isPokemonLike, isPokemonLike: pokemonLike, tags } = game;
+  // 根据评价来源选择评价数据
+  let steamReviews = game.steamReviews;
+  if (reviewSource === "cn" && game.cnReviews) {
+    steamReviews = game.cnReviews;
+  } else if (reviewSource === "overseas" && game.overseasReviews) {
+    steamReviews = game.overseasReviews;
+  }
 
   // 必须有评价数据
   if (!steamReviews || steamReviews.totalReviews === 0) {
@@ -877,7 +948,7 @@ function calculatePool(
   }
 
   const { reviewScore, totalReviews } = steamReviews;
-  const blacklisted = isBlacklisted(tags, game.genres || []);
+  const blacklisted = isBlacklisted(game.tags, game.genres || []);
 
   // 黑名单游戏不进入任何池子
   if (blacklisted) {
@@ -885,18 +956,18 @@ function calculatePool(
   }
 
   // A池: 普通回合制游戏（不是宝可梦Like）
-  if (!pokemonLike && reviewScore >= config.poolA.minRating && totalReviews >= config.poolA.minReviews) {
+  if (!game.isPokemonLike && reviewScore >= config.poolA.minRating && totalReviews >= config.poolA.minReviews) {
     return "A";
   }
 
   // B池: 宝可梦Like + 高好评率
-  if (pokemonLike && reviewScore >= config.poolB.minRating && totalReviews >= config.poolB.minReviews) {
+  if (game.isPokemonLike && reviewScore >= config.poolB.minRating && totalReviews >= config.poolB.minReviews) {
     return "B";
   }
 
   // C池: 宝可梦Like + 中等好评率
   if (
-    pokemonLike &&
+    game.isPokemonLike &&
     reviewScore >= config.poolC.minRating &&
     reviewScore <= config.poolC.maxRating &&
     totalReviews >= config.poolC.minReviews
@@ -928,10 +999,12 @@ function filterGames(
     modernTagFilter?: "hasCore" | "hasModern";
     featureTagFilter?: string;
     featureTagOptions?: FeatureTagOption[];
+    reviewSource?: ReviewSource; // 评价来源筛选
   }
 ): { results: GameRecord[]; total: number; stats: PoolStats; priceStats: PriceStats | undefined } {
   // 默认过滤测试版
   const excludeTest = options.excludeTestVersions !== false;
+  const reviewSource = options.reviewSource || "all";
 
   // 0. 测试版过滤（先于其他过滤执行）
   let filtered = allGames;
@@ -939,10 +1012,10 @@ function filterGames(
     filtered = filtered.filter((g) => !g.isTestVersion);
   }
 
-  // 1. 计算每个游戏的池子归属
+  // 1. 计算每个游戏的池子归属（根据评价来源）
   const gamesWithPools = filtered.filter((g) => g.isTurnBased).map((game) => ({
     ...game,
-    pool: calculatePool(game, options.poolConfig),
+    pool: calculatePool(game, options.poolConfig, reviewSource),
   }));
 
   // 2. 日期过滤（先应用日期筛选）
@@ -1036,24 +1109,39 @@ function filterGames(
     });
   }
 
-  // 7. 排序
+  // 7. 排序（根据评价来源使用对应的威尔逊得分）
   results.sort((a, b) => {
     let cmp = 0;
     switch (options.sortBy) {
-      case "wilson":
-        cmp = b.wilsonScore - a.wilsonScore;
+      case "wilson": {
+        // 根据评价来源选择威尔逊得分
+        const aWilson = reviewSource === "cn" ? a.cnWilsonScore : reviewSource === "overseas" ? a.overseasWilsonScore : a.wilsonScore;
+        const bWilson = reviewSource === "cn" ? b.cnWilsonScore : reviewSource === "overseas" ? b.overseasWilsonScore : b.wilsonScore;
+        cmp = bWilson - aWilson;
         break;
-      case "rating":
-        cmp = (b.steamReviews?.reviewScore ?? 0) - (a.steamReviews?.reviewScore ?? 0);
+      }
+      case "rating": {
+        // 根据评价来源选择好评率
+        const aReviews = reviewSource === "cn" ? a.cnReviews : reviewSource === "overseas" ? a.overseasReviews : a.steamReviews;
+        const bReviews = reviewSource === "cn" ? b.cnReviews : reviewSource === "overseas" ? b.overseasReviews : b.steamReviews;
+        cmp = (bReviews?.reviewScore ?? 0) - (aReviews?.reviewScore ?? 0);
         break;
-      case "reviews":
-        cmp = (b.steamReviews?.totalReviews ?? 0) - (a.steamReviews?.totalReviews ?? 0);
+      }
+      case "reviews": {
+        // 根据评价来源选择评价数
+        const aReviews = reviewSource === "cn" ? a.cnReviews : reviewSource === "overseas" ? a.overseasReviews : a.steamReviews;
+        const bReviews = reviewSource === "cn" ? b.cnReviews : reviewSource === "overseas" ? b.overseasReviews : b.steamReviews;
+        cmp = (bReviews?.totalReviews ?? 0) - (aReviews?.totalReviews ?? 0);
         break;
+      }
       case "date":
         cmp = new Date(b.releaseDate || 0).getTime() - new Date(a.releaseDate || 0).getTime();
         break;
-      default:
-        cmp = b.wilsonScore - a.wilsonScore;
+      default: {
+        const aWilson = reviewSource === "cn" ? a.cnWilsonScore : reviewSource === "overseas" ? a.overseasWilsonScore : a.wilsonScore;
+        const bWilson = reviewSource === "cn" ? b.cnWilsonScore : reviewSource === "overseas" ? b.overseasWilsonScore : b.wilsonScore;
+        cmp = bWilson - aWilson;
+      }
     }
     if (cmp === 0) cmp = a.name.localeCompare(b.name, "zh-CN");
     return options.sortOrder === "asc" ? -cmp : cmp;
@@ -1380,6 +1468,13 @@ export async function GET(request: NextRequest) {
   const modernTagFilter = searchParams.get("modernTagFilter") as "hasCore" | "hasModern" | undefined;
   const featureTagFilter = searchParams.get("featureTagFilter") || undefined;
 
+  // 评价来源参数（默认全部）
+  const rawReviewSource = searchParams.get("reviewSource") ?? "all";
+  const reviewSource: ReviewSource =
+    rawReviewSource === "cn" || rawReviewSource === "overseas"
+      ? rawReviewSource
+      : "all";
+
   // 是否只获取统计信息
   const statsOnly = searchParams.get("statsOnly") === "true";
 
@@ -1504,6 +1599,7 @@ export async function GET(request: NextRequest) {
     modernTagFilter,
     featureTagFilter,
     featureTagOptions: dynamicFeatureTagOptions,
+    reviewSource,
   });
 
   // 缓存第一页的查询结果
@@ -1524,6 +1620,7 @@ export async function GET(request: NextRequest) {
     poolConfig,
     query,
     poolFilters: pools.length > 0 ? pools : ["A", "B", "C"],
+    reviewSource, // 当前评价来源
     description: {
       A: "神作参考池 - 普通回合制游戏，优秀UI和战斗机制参考",
       B: "核心竞品池 - 宝可梦Like成功案例，学习成功要素",

@@ -37,6 +37,9 @@ import { zhCN } from "date-fns/locale";
 
 // ============ 类型定义 ============
 
+// 评价来源类型
+type ReviewSource = "all" | "cn" | "overseas";
+
 interface GameRecord {
   id: string;
   name: string;
@@ -55,6 +58,24 @@ interface GameRecord {
     reviewScore: number;
     reviewScoreDescription: string;
   } | null;
+  // 区域评价数据
+  cnReviews: {
+    totalPositive: number;
+    totalNegative: number;
+    totalReviews: number;
+    reviewScore: number;
+    reviewScoreDescription: string;
+  } | null;
+  overseasReviews: {
+    totalPositive: number;
+    totalNegative: number;
+    totalReviews: number;
+    reviewScore: number;
+    reviewScoreDescription: string;
+  } | null;
+  // 区域威尔逊得分
+  cnWilsonScore: number;
+  overseasWilsonScore: number;
   headerImage: string | null;
   steamUrl: string;
   isPokemonLike: boolean;
@@ -863,6 +884,9 @@ export default function Mode2Page() {
   const [featureTagFilter, setFeatureTagFilter] = useState<string | undefined>(undefined);
   const [featureTagOptions, setFeatureTagOptions] = useState<FeatureTagOption[]>([]);
 
+  // 评价来源筛选（默认全部）
+  const [reviewSource, setReviewSource] = useState<ReviewSource>("all");
+
   const abortRef = useRef<AbortController | null>(null);
   const resultsAbortRef = useRef<AbortController | null>(null);
 
@@ -925,6 +949,7 @@ export default function Mode2Page() {
     setModernTagFilter(undefined);
     setFeatureTagFilter(undefined);
     setFeatureTagOptions([]);
+    setReviewSource("all");
   };
 
   // 获取统计数据
@@ -969,6 +994,8 @@ export default function Mode2Page() {
       // 特色标签筛选
       if (modernTagFilter) params.set("modernTagFilter", modernTagFilter);
       if (featureTagFilter) params.set("featureTagFilter", featureTagFilter);
+      // 评价来源筛选
+      if (reviewSource !== "all") params.set("reviewSource", reviewSource);
 
       const response = await fetch(`/api/mode2/filter?${params.toString()}`, {
         signal: ac.signal,
@@ -985,7 +1012,7 @@ export default function Mode2Page() {
     } finally {
       setIsLoadingStats(false);
     }
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter, reviewSource]);
 
   // 获取搜索结果
   const fetchResults = useCallback(async () => {
@@ -1032,6 +1059,8 @@ export default function Mode2Page() {
       // 特色标签筛选
       if (modernTagFilter) params.set("modernTagFilter", modernTagFilter);
       if (featureTagFilter) params.set("featureTagFilter", featureTagFilter);
+      // 评价来源筛选
+      if (reviewSource !== "all") params.set("reviewSource", reviewSource);
 
       const response = await fetch(`/api/mode2/filter?${params.toString()}`, {
         signal: ac.signal,

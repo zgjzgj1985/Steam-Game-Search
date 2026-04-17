@@ -24,7 +24,8 @@ INCR_TEMP_FILE = DATA_DIR / 'games-index.json.incr_temp'
 STATE_FILE = DATA_DIR / 'games-index.json.last_run'
 
 # Steam API 配置
-STEAM_API = 'https://store.steampowered.com/api/appdetails?appids={appid}&cc=cn&l=schinese'
+STEAM_API_BASE = 'https://store.steampowered.com'
+STEAM_API = STEAM_API_BASE + '/api/appdetails?appids={appid}&cc=cn&l=schinese'
 REVIEWS_API = 'https://store.steampowered.com/appreviews/{appid}?json=1&language=all&purchase_type=all'
 STEAM_STORE_URL = 'https://store.steampowered.com/search/?term={term}&page={page}'
 

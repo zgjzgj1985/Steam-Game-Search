@@ -1,9 +1,16 @@
 # Steam 全域游戏搜索
 
-> **版本**: v1.8.0
-> **更新日期**: 2026-04-17
+> **版本**: v1.12.1
+> **更新日期**: 2026-04-20
 
 > **版本历史**:
+> - v1.12.1: **聚类脚本 LLM 语义分析升级**：分11批调用 Gemini 对 207 个自由标签进行语义归类。聚类结果：41个归入标准分类、49个归入16个新分类（战斗策略/养成方式/叙事驱动/探索方式/多人社交等）、70个标记为噪声丢弃。人工审查回收 33 个高价值标签（如阵营抉择→叙事驱动、弱点追击→战斗策略等）。涉及文件：`scripts/cluster_tags.py`、`scripts/review_discard.py`、`scripts/manual_recover.py`。
+> - v1.12.0: **融合标签开放化**：融合玩法标签从"固定封闭标签"升级为"开放自由标签 + 定期聚类归类"双层架构。`analyze_mechanics.py` 允许 LLM 自由发明新标签（最多6个），新增 `cluster_tags.py` 聚类脚本将相似标签归入标准分类，新增 `tag_clusters.json` 聚类映射表。解决旧体系无法发现新兴玩法（如吃鸡、搜打撤等）的根本性局限。`precompute.py` 支持加载聚类映射，`route.ts` 新增 `llmRawMechanics` 字段。涉及文件：`scripts/analyze_mechanics.py`、`scripts/cluster_tags.py`、`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。新增数据文件：`tag_clusters.json`、`emerge_tags_log.json`。
+> - v1.11.0: **融合标签质量重构（Phase 1+2）**：第一性原理审查发现旧标签体系存在根本缺陷——66%游戏被标"探索冒险"（任何RPG标配）、52%被标"战棋策略"（核心玩法非融合玩法）、37%被标"像素风格"（美术≠机制）。重写 `analyze_mechanics.py` prompt，重新设计标签体系（丢弃探索冒险/战棋策略/像素风格，保留肉鸽融合/牌组构建/形态融合等具体机制标签），实现二次置信度验证（两模型交叉验证）。新标签体系使 B 池有效覆盖率从泛化的 66% 降至精确的 25%（肉鸽融合），真正实现了"区分融合玩法"的设计目标。涉及文件：`scripts/analyze_mechanics.py`、`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。
+> - v1.10.0: **融合创新标签重构**：新增 `analyze_mechanics.py` 脚本，对 B 池 67 款游戏进行 LLM 融合玩法分析，生成真实的"融合了什么玩法"标签（形态融合、肉鸽融合、牌组构建等），替代原有的 Steam 标签频率统计。涉及文件：`scripts/analyze_mechanics.py`、`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。新增 `combinedMechanics.json` 数据文件。
+> - v1.9.0: **特色标签优化**：基于 B 池游戏标签频率分析（68款），重新设计特色标签筛选系统。删除无效标签（形态融合、银河恶魔城），新增高价值信号（像素风格、探索冒险），修正肉鸽融合标签名（Rogue-lite/Rogue-like）。优化后特色标签在 B 池覆盖率从平均 5% 提升至 28%。涉及文件：`src/app/api/mode2/filter/route.ts`、`scripts/precompute.py`。
+> - v1.8.2: **Bug修复**：修复模式1搜索去重逻辑优先保留测试版而非正式版的问题。当同一游戏同时存在正式版和测试版时，去重逻辑原本优先保留玩家数最多的版本，导致测试版被错误保留。修复：去重时优先判断是否为正式版/测试版，保留正式版；同为正式版或测试版时才比较玩家数。涉及文件：`src/app/api/games/search/route.ts`、`scripts/precompute.py`。
+> - v1.8.1: **Bug修复**：修复模式2特色标签筛选失效问题。SQLite 数据库不存储 `featureTagOptions` 字段，导致从 SQLite 加载时该字段为空数组。新增 `loadFeatureTagOptionsFromJson()` 函数从 JSON 缓存补充读取，SQLite-first 架构更完整。
 > - v1.8.0: **性能优化**：新增 `build-cache-db.py` 将 336MB JSON 转换为 SQLite 数据库，解决 Zeabur 部署时 OOM 问题。API 优先从 SQLite 查询，失败自动降级 JSON。`precompute.ts` 也支持生成 SQLite。`.gitattributes` 添加 `games-cache.db` LFS 追踪。
 > - v1.7.1: **界面更新**：将首页标题从"回合制战斗分析工具"更改为"Steam全域游戏搜索"，统一产品名称
 > - v1.7.0: **部署修复**：修复 Dockerfile 多阶段构建路径、public 目录复制、.dockerignore 排除配置、.gitattributes LFS 追踪、更新 zeabur.json 构建命令、新增 .env.deploy.example 统一环境变量模板

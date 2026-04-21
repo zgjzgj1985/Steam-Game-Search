@@ -129,6 +129,13 @@ interface GameRecord {
   activeFeatureTagLabel?: string;
   // 卡片展示用现代标签（已排重，排除与 activeFeatureTagLabel 重复的项）
   displayModernTags: string[];
+  // LLM 融合玩法分析（来自 combinedMechanics.json）
+  llmMechanics: string[];
+  llmMechanicsSummary: string;
+  // 自由标签（v3 新增，来自 combinedMechanics.json 的 rawMechanics 字段）
+  llmRawMechanics: string[];
+  // 过滤后的创新融合标签（排除品类标配标签）
+  innovationTags: string[];
 }
 
 interface PoolStats {
@@ -156,15 +163,158 @@ interface PriceStats {
   };
 }
 
-// 特色标签筛选选项（与前端保持一致）
-const FEATURE_TAGS = [
-  { key: "survival", label: "生存建造", tags: ["Survival", "Crafting", "生存", "建造"] },
-  { key: "roguelite", label: "肉鸽融合", tags: ["Roguelite", "Roguelike", "类肉鸽"] },
-  { key: "deckbuilding", label: "牌组构建", tags: ["Deckbuilding", "牌组构建", "卡牌构建"] },
-  { key: "openworld", label: "开放世界", tags: ["开放世界", "Open World"] },
-  { key: "metroidvania", label: "银河恶魔城", tags: ["Metroidvania", "银河恶魔城"] },
-  { key: "morph", label: "形态融合", tags: ["形态融合"] },
-];
+// 特色标签选项（动态从 combinedMechanics.json 的 tagStats 加载，移除硬编码限制）
+// 来源：B 池游戏 LLM 融合玩法分析 v2（combinedMechanics.json）
+
+// 基础标签黑名单：这些是"品类标配"标签，不是真正的创新融合
+// 来自 combinedMechanics.json rawMechanics 字段中 LLM 误标记的通用标签
+// 这些标签会在展示时被过滤掉，不作为"创新融合标签"显示
+const INNOVATION_TAG_BLACKLIST: Record<string, boolean> = {
+  // 品类标配标签
+  "怪物收集": true,
+  "怪物收集/养成": true,
+  "角色扮演": true,
+  "RPG": true,
+  "JRPG": true,
+  "RPG角色扮演": true,
+  "回合制": true,
+  "回合制战斗": true,
+  "回合制策略": true,
+  "回合制战术": true,
+  "宝可梦Like": true,
+  "Steam 评测": true,
+  "Creature Collector": true,
+  "RPG": true,
+  "JRPG": true,
+  "Turn-Based": true,
+  "Turn-Based Combat": true,
+  "Turn-Based Strategy": true,
+  "Turn-Based Tactics": true,
+  "Story Rich": true,
+  "Adventure": true,
+  "Singleplayer": true,
+  "Fantasy": true,
+  "2D": true,
+  "3D": true,
+  "Anime": true,
+  "Pixel Graphics": true,
+  "Indie": true,
+  "Action": true,
+  "Strategy": true,
+  "Casual": true,
+  "Family Friendly": true,
+  "Cute": true,
+  "Colorful": true,
+  "Funny": true,
+  "Replay Value": true,
+  "MMORPG": true,
+  "Auto Battler": true,
+  "Card Game": true,
+  "Deckbuilding": true,
+  "Roguelike Deckbuilder": true,
+  "Rogue-lite": true,
+  "Rogue-like": true,
+  "Roguelite": true,
+  "Roguelike": true,
+  "Metroidvania": true,
+  "Card Battler": true,
+  "Board Game": true,
+  "Tabletop": true,
+  "Simulation": true,
+  "Sandbox": true,
+  "Farming Sim": true,
+  "Survival": true,
+  "Survival Game": true,
+  "Crafting": true,
+  "Open World": true,
+  "Exploration": true,
+  "Collectathon": true,
+  "Dungeon Crawler": true,
+  "Dark": true,
+  "Atmospheric": true,
+  "Great Soundtrack": true,
+  "Female Protagonist": true,
+  "Multiple Endings": true,
+  "Choices Matter": true,
+  "PvE": true,
+  "PvP": true,
+  "Co-op": true,
+  "Multiplayer": true,
+  "Party-Based RPG": true,
+  "Strategy RPG": true,
+  "Tactical RPG": true,
+  "Time Management": true,
+  "Resource Management": true,
+  "Life Sim": true,
+  "Relaxing": true,
+  "Character Customization": true,
+  "Perma Death": true,
+  "Procedural Generation": true,
+  "Loot": true,
+  // 更多 LLM 误标的基础标签
+  "开放世界": true,
+  "开放世界探索": true,
+  "开放区域探索": true,
+  "剧情驱动": true,
+  "叙事丰富": true,
+  "半开放世界探索": true,
+  // 泛化的基础玩法标签（无差异化价值）
+  "双人协作": true,
+  "多人协作": true,
+  "多人竞技": true,
+  "异步对战": true,
+  "异步多人": true,
+  "时间管理": true,
+  "生活模拟": true,
+  "社交羁绊": true,
+  "好感度养成": true,
+  "快节奏回合制": true,
+  "轻度策略": true,
+  "极简养成": true,
+  "内置卡牌": true,
+  "数字世界观": true,
+  "心灵潜入": true,
+  "非暴力交涉": true,
+  "解谜探索": true,
+  "平台跳跃": true,
+  "机关解谜": true,
+  "半即时指令战斗": true,
+  "ATB战斗": true,
+  "无限地牢": true,
+  "无尽爬塔": true,
+  "无尽进程": true,
+  "无限构筑": true,
+  "海量收集": true,
+  "海量组合": true,
+  "海量支线任务": true,
+  "随机地牢": true,
+  "刷宝掉落": true,
+  "刷宝驱动": true,
+  "装备驱动": true,
+  "装备镶嵌": true,
+  "装备打造": true,
+  "素材打造": true,
+  "游戏素材": true,
+  "程序生成": true,
+  "程序化生成世界": true,
+  "双世界穿梭": true,
+  "主角变身": true,
+  "主角尺寸切换": true,
+  "季节变化": true,
+  "分支叙事": true,
+  "网状叙事": true,
+  "多分支剧情": true,
+  "多分支叙事": true,
+  "流程交换": true,
+  "角色定制": true,
+  "自由角色构筑": true,
+  "任务驱动": true,
+  "JRPG叙事": true,
+  "轻度肉鸽": true,
+  "肉鸽Lite": true,
+  "肉鸽LITE": true,
+  "非战斗解法": true,
+};
 
 // ============ 标签权重系统 ============
 
@@ -191,40 +341,45 @@ const SECONDARY_TAGS = [
 
 // 现代融合标签（创新点）- 差异化卖点
 const MODERN_TAGS = [
-  "Roguelite",
-  "Roguelike",
-  "Deckbuilding",
-  "开放世界",
-  "Open World",
-  "Metroidvania",
-  "银河恶魔城",
-  "Survival",
-  "Crafting",
-  "生存",
-  "建造",
-  "牌组构建",
-  "卡牌构建",
-  "形态融合",
-  "类肉鸽",
-  "Time Travel",
-  "时间旅行",
+  "Deckbuilding", "Card Battler", "Card Game",
+  "Pixel Graphics",
+  "Exploration", "Collectathon", "Dungeon Crawler",
+  "Rogue-lite", "Rogue-like", "Roguelite", "Roguelike", "类肉鸽",
+  "开放世界", "Open World",
+  "Survival", "Crafting", "Survival Game", "生存", "建造",
+  "形态融合", "Time Travel", "时间旅行",
 ];
 
 // 特色标签映射（用于展示差异化卖点）
 const DIFFERENTIATION_LABELS: Record<string, string> = {
-  "Survival": "生存建造",
-  "Crafting": "合成系统",
-  "Metroidvania": "银河恶魔城",
-  "开放世界": "开放世界",
-  "Open World": "开放世界",
+  // 牌组构建
+  "Deckbuilding": "牌组构建",
+  "Card Battler": "牌组构建",
+  "Card Game": "卡牌游戏",
+  // 像素风格
+  "Pixel Graphics": "像素风格",
+  // 探索冒险
+  "Exploration": "探索冒险",
+  "Collectathon": "收集冒险",
+  "Dungeon Crawler": "地牢探索",
+  // 肉鸽融合
+  "Rogue-lite": "肉鸽融合",
+  "Rogue-like": "肉鸽融合",
   "Roguelite": "肉鸽融合",
   "Roguelike": "肉鸽融合",
-  "Deckbuilding": "牌组构建",
-  "牌组构建": "牌组构建",
-  "卡牌构建": "牌组构建",
-  "形态融合": "形态融合",
-  "银河恶魔城": "银河恶魔城",
+  "类肉鸽": "肉鸽融合",
+  // 开放世界
+  "开放世界": "开放世界",
+  "Open World": "开放世界",
+  // 生存建造
+  "Survival": "生存建造",
   "Survival Game": "生存建造",
+  "Crafting": "合成系统",
+  "生存": "生存建造",
+  "建造": "建造系统",
+  // 形态融合
+  "形态融合": "形态融合",
+  // 时间旅行
   "Time Travel": "时间旅行",
   "时间旅行": "时间旅行",
 };
@@ -491,6 +646,7 @@ const dbCache: {
 
 // ============ LRU 查询结果缓存 ============
 
+const CACHE_VERSION = "v3"; // 每次修改去重逻辑需要递增以清除旧缓存
 const MAX_QUERY_CACHE_SIZE = 50; // 最多缓存 50 个查询结果（内存友好）
 type QueryCacheKey = string;
 interface QueryCacheEntry {
@@ -527,6 +683,7 @@ function getQueryCacheKey(params: {
   poolC_minReviews?: number;
 }): QueryCacheKey {
   const parts = [
+    CACHE_VERSION,
     params.pools?.join(",") || "",
     params.query?.toLowerCase().trim() || "",
     params.sortBy || "wilson",
@@ -572,6 +729,7 @@ const CACHE_FILE = path.join(process.cwd(), "public", "data", "games-cache.json"
 // 原始文件（仅在缓存不存在时降级使用）
 const DB_FILE = path.join(process.cwd(), "public", "data", "games-index.json");
 const CACHE_DB_FILE = path.join(process.cwd(), "public", "data", "games-cache.db");
+const COMBINED_MECHANICS_FILE = path.join(process.cwd(), "public", "data", "combinedMechanics.json");
 
 // SQLite 数据库连接（延迟初始化，避免构建时加载）
 let sqliteDb: any = null;
@@ -623,8 +781,15 @@ function rowToGameRecord(row: any): GameRecord {
     overseasWilsonScore: row.overseas_wilson_score,
     pool: row.pool === "A" || row.pool === "B" || row.pool === "C" ? row.pool as "A" | "B" | "C" : null,
     isTurnBased: row.is_turn_based === 1,
-    isTestVersion: row._is_test_version === 1,
-    testVersionType: "none",
+    // SQLite 没有 _is_test_version 字段，通过名称和标签自动检测
+    isTestVersion: detectTestVersionByName(row.name || "") || isTestVersionByTag(
+      typeof row.tags === "string" ? JSON.parse(row.tags) : (row.tags || []),
+      typeof row.categories === "string" ? JSON.parse(row.categories) : (row.categories || [])
+    ),
+    testVersionType: detectTestVersionByName(row.name || "") ? "name" : isTestVersionByTag(
+      typeof row.tags === "string" ? JSON.parse(row.tags) : (row.tags || []),
+      typeof row.categories === "string" ? JSON.parse(row.categories) : (row.categories || [])
+    ) ? "tag" : "none",
     coreTagCount: 0,
     secondaryTagCount: 0,
     modernTagCount: 0,
@@ -635,7 +800,68 @@ function rowToGameRecord(row: any): GameRecord {
     uniqueFeatureTags: row.unique_feature_tags ? JSON.parse(row.unique_feature_tags) : [],
     differentiationLabels: row.differentiation_labels ? JSON.parse(row.differentiation_labels) : [],
     displayModernTags: [],
+    llmMechanics: row.llm_mechanics ? JSON.parse(row.llm_mechanics) : [],
+    llmMechanicsSummary: row.llm_mechanics_summary || "",
+    // llmRawMechanics 字段仅在 JSON 缓存中可用，SQLite 路径下为空数组
+    llmRawMechanics: [],
   };
+}
+
+// 从 combinedMechanics.json 加载 LLM 玩法分析数据并合并到游戏记录中
+function mergeLlMechancics(games: GameRecord[]): void {
+  try {
+    if (!fs.existsSync(COMBINED_MECHANICS_FILE)) {
+      return;
+    }
+    const raw = fs.readFileSync(COMBINED_MECHANICS_FILE, "utf-8");
+    const mechanicsData = JSON.parse(raw) as any;
+    // combinedMechanics.json 结构: { games: { "appId": {...} }, tagStats, rawTagStats, tagOptions }
+    const gamesData = mechanicsData.games || {};
+
+    // 建立 appId -> LLM 数据的映射（同时按 ID 和名称索引）
+    const mechanicsMap = new Map<string, any>();
+    for (const [key, data] of Object.entries(gamesData)) {
+      mechanicsMap.set(key, data);
+      const name = (data as any).name;
+      if (name) {
+        mechanicsMap.set(name, data);
+      }
+    }
+
+    // 合并到每个游戏
+    let mergedCount = 0;
+    for (const game of games) {
+      const data = mechanicsMap.get(game.id) || mechanicsMap.get(game.name);
+      if (data) {
+        // 合并 llmMechanics（对应 JSON 中的 mechanics 字段）
+        const llmMechanics = (data as any).mechanics || [];
+        const existingSet = new Set(game.llmMechanics);
+        for (const m of llmMechanics) {
+          if (!existingSet.has(m)) {
+            game.llmMechanics.push(m);
+          }
+        }
+        // 合并 llmRawMechanics
+        const rawMechanics = (data as any).rawMechanics || [];
+        const rawSet = new Set(game.llmRawMechanics);
+        for (const m of rawMechanics) {
+          if (!rawSet.has(m)) {
+            game.llmRawMechanics.push(m);
+          }
+        }
+        // 合并 llmMechanicsSummary
+        if (!game.llmMechanicsSummary && (data as any).summary) {
+          game.llmMechanicsSummary = (data as any).summary;
+        }
+        mergedCount++;
+      }
+    }
+    if (mergedCount > 0) {
+      console.log(`[Mode2] 从 combinedMechanics.json 合并了 ${mergedCount} 个游戏的 LLM 玩法数据`);
+    }
+  } catch (e) {
+    console.warn(`[Mode2] 合并 LLM 玩法数据失败: ${e instanceof Error ? e.message : String(e)}`);
+  }
 }
 
 // 池子分布类型
@@ -751,7 +977,8 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
   const totalReviews = raw.positive + raw.negative;
   const reviewScore = totalReviews > 0 ? Math.round((raw.positive / totalReviews) * 100) : 0;
   const tags = normalizeTags(raw.tags);
-  const categories = raw.categories || [];
+  // games-index.json 的 categories 是数字数组（如 [2, 22, 29]），转换为字符串
+  const categories = (raw.categories || []).map((c: unknown) => String(c));
 
   const pokemonCheck = checkPokemonLike(tags, raw.genres || []);
   const blacklisted = isBlacklisted(tags, raw.genres || []);
@@ -849,6 +1076,9 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     uniqueFeatureTags: tagWeight.uniqueFeatureTags,
     differentiationLabels: tagWeight.differentiationLabels,
     displayModernTags: tagWeight.matchedModernTags,
+    llmMechanics: [],
+    llmMechanicsSummary: "",
+    llmRawMechanics: [],
   };
 }
 
@@ -891,19 +1121,62 @@ function buildDedupKey(game: GameRecord): string {
   return `${devKey}|||${nameKey}`;
 }
 
-interface CacheData {
-  meta: {
-    version: number;
-    createdAt: string;
-    totalRaw: number;
-    totalAfterDedup: number;
-    totalTurnBased: number;
-    totalTestVersion: number;
-    poolA: number;
-    poolB: number;
-    poolC: number;
-  };
-  games: GameRecord[];
+function loadFeatureTagOptionsFromJson(): FeatureTagOption[] {
+  try {
+    if (fs.existsSync(CACHE_FILE) && fs.statSync(CACHE_FILE).size > 0) {
+      const raw = fs.readFileSync(CACHE_FILE, "utf-8");
+      const cache = JSON.parse(raw) as CacheData;
+      if (cache.featureTagOptions && cache.featureTagOptions.length > 0) {
+        return cache.featureTagOptions;
+      }
+    }
+  } catch (e) {
+    console.warn(`[Mode2] 读取 JSON 缓存中的动态标签失败: ${e instanceof Error ? e.message : String(e)}`);
+  }
+
+  // 回退：从 combinedMechanics.json 动态计算 featureTagOptions
+  return computeFeatureTagOptionsFromMechanics();
+}
+
+// 从 combinedMechanics.json 动态计算特色标签选项
+// 从 tagStats 中读取全部标签，按 count 降序排列
+function computeFeatureTagOptionsFromMechanics(): FeatureTagOption[] {
+  try {
+    if (!fs.existsSync(COMBINED_MECHANICS_FILE)) {
+      console.warn("[Mode2] combinedMechanics.json 不存在，无法计算动态标签");
+      return [];
+    }
+    const raw = fs.readFileSync(COMBINED_MECHANICS_FILE, "utf-8");
+    const mechanicsData = JSON.parse(raw) as any;
+
+    // 使用 rawTagStats（来自 rawMechanics 字段的原始标签统计，共207个）
+    // 这是 LLM 从 B池游戏中提取的所有创新融合标签
+    const tagStats = mechanicsData.rawTagStats || mechanicsData.tagStats || {};
+
+    // 从 tagStats 动态构建标签选项，排除黑名单标签
+    const options: FeatureTagOption[] = [];
+    for (const [tag, count] of Object.entries(tagStats)) {
+      if ((count as number) <= 0) continue;
+      // 排除黑名单标签
+      if (INNOVATION_TAG_BLACKLIST[tag]) continue;
+      const key = tag.toLowerCase().replace(/\s+/g, "_");
+      options.push({
+        key,
+        label: tag,
+        tag,
+        count: count as number,
+      });
+    }
+
+    // 按 count 降序排列
+    options.sort((a, b) => b.count - a.count);
+
+    console.log(`[Mode2] 从 combinedMechanics.json 加载 ${options.length} 个特色标签`);
+    return options;
+  } catch (e) {
+    console.warn(`[Mode2] 从 combinedMechanics.json 计算动态标签失败: ${e instanceof Error ? e.message : String(e)}`);
+    return [];
+  }
 }
 
 function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOption[] } {
@@ -927,13 +1200,54 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
     const loadStart = Date.now();
     try {
       const rows = db.prepare("SELECT * FROM games_cache").all() as any[];
-      const games = rows.map(rowToGameRecord);
+      let games = rows.map(rowToGameRecord);
+
+      // 检查原始数据中是否有同一 ID 多条记录的情况
+      const rawIdCount: Record<string, number> = {};
+      for (const row of rows) {
+        rawIdCount[row.appid] = (rawIdCount[row.appid] || 0) + 1;
+      }
+      const rawDupIds = Object.entries(rawIdCount).filter(([, c]) => c > 1);
+      if (rawDupIds.length > 0) {
+        console.log(`[Mode2] 警告: SQLite 中有 ${rawDupIds.length} 个重复 appid:`, rawDupIds.slice(0, 3));
+      }
+
+      // 检查去重前是否有重复 key（开发商+名称）
+      const beforeDedupKeyCount: Record<string, number> = {};
+      for (const g of games) {
+        const key = buildDedupKey(g);
+        beforeDedupKeyCount[key] = (beforeDedupKeyCount[key] || 0) + 1;
+      }
+      const beforeDup = Object.entries(beforeDedupKeyCount).filter(([, c]) => c > 1);
+      if (beforeDup.length > 0) {
+        console.log(`[Mode2] 去重前有 ${beforeDup.length} 个重复 key（前3个）:`, beforeDup.slice(0, 3));
+      }
+
+      const beforeCount = games.length;
+      games = deduplicateByName(games);
+      const removed = beforeCount - games.length;
+      if (removed > 0) {
+        console.log(`[Mode2] 去重移除 ${removed} 个重复游戏（${beforeCount} -> ${games.length}）`);
+      }
+      // 检查去重后是否还有重复 ID
+      const afterDedupIdCount: Record<string, number> = {};
+      for (const g of games) {
+        afterDedupIdCount[g.id] = (afterDedupIdCount[g.id] || 0) + 1;
+      }
+      const afterDup = Object.entries(afterDedupIdCount).filter(([, c]) => c > 1);
+      if (afterDup.length > 0) {
+        console.log(`[Mode2] 严重: 去重后仍有 ${afterDup.length} 个重复 ID（前5个）:`, afterDup.slice(0, 5));
+      }
+
       dbCache.games = games;
-      dbCache.featureTagOptions = [];
+      // 从 combinedMechanics.json 合并 LLM 玩法分析数据到每个游戏
+      mergeLlMechancics(games);
+      dbCache.featureTagOptions = loadFeatureTagOptionsFromJson();
       dbCache.loadedAt = now;
       dbCache.loadError = null;
       console.log(`[Mode2] 从 SQLite 加载 ${games.length} 个游戏，耗时 ${Date.now() - loadStart}ms`);
-      return { games, featureTagOptions: [] };
+      console.log(`[Mode2] 动态标签: ${dbCache.featureTagOptions.length} 个`);
+      return { games, featureTagOptions: dbCache.featureTagOptions };
     } catch (e) {
       console.warn(`[Mode2] SQLite 查询失败，降级到 JSON: ${e instanceof Error ? e.message : String(e)}`);
     }
@@ -941,21 +1255,23 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
 
   // ============ 降级: JSON 文件 ============
   try {
-    if (fs.existsSync(CACHE_FILE)) {
+    if (fs.existsSync(CACHE_FILE) && fs.statSync(CACHE_FILE).size > 0) {
       const loadStart = Date.now();
       const raw = fs.readFileSync(CACHE_FILE, "utf-8");
       const cache = JSON.parse(raw) as CacheData;
       dbCache.games = cache.games;
-      dbCache.featureTagOptions = cache.featureTagOptions || [];
+      // 从 combinedMechanics.json 合并 LLM 玩法分析数据到每个游戏
+      mergeLlMechancics(cache.games);
+      dbCache.featureTagOptions = loadFeatureTagOptionsFromJson();
       dbCache.loadedAt = now;
       dbCache.loadError = null;
       console.log(`[Mode2] 从 JSON 缓存加载 ${cache.games.length} 个游戏，耗时 ${Date.now() - loadStart}ms`);
-      console.log(`[Mode2] 动态标签: ${cache.featureTagOptions?.length ?? 0} 个`);
+      console.log(`[Mode2] 动态标签: ${dbCache.featureTagOptions.length} 个`);
       console.log(`[Mode2] 缓存信息: 去重后 ${cache.meta.totalAfterDedup} 个 | 回合制 ${cache.meta.totalTurnBased} | A池 ${cache.meta.poolA} | B池 ${cache.meta.poolB} | C池 ${cache.meta.poolC}`);
       return { games: dbCache.games, featureTagOptions: dbCache.featureTagOptions };
     }
 
-    console.warn("[Mode2] 预计算缓存不存在，降级使用原始 JSON");
+    console.warn("[Mode2] 预计算缓存不存在或为空，降级使用原始 JSON");
     if (!fs.existsSync(DB_FILE)) {
       dbCache.loadError = `数据库文件不存在: ${DB_FILE}`;
       console.error("[Mode2] 文件不存在:", DB_FILE);
@@ -980,12 +1296,14 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
     console.log(`[Mode2] 去重完成，保留 ${deduped.length} 个（移除 ${games.length - deduped.length} 个重复）`);
 
     dbCache.games = deduped;
-    dbCache.featureTagOptions = [];
+    // 从 combinedMechanics.json 合并 LLM 玩法分析数据到每个游戏
+    mergeLlMechancics(deduped);
+    dbCache.featureTagOptions = loadFeatureTagOptionsFromJson();
     dbCache.loadedAt = now;
     dbCache.loadError = null;
     console.log(`[Mode2] 数据转换完成，耗时 ${Date.now() - transformStart}ms`);
 
-    return { games: deduped, featureTagOptions: [] };
+    return { games: deduped, featureTagOptions: dbCache.featureTagOptions };
   } catch (e) {
     const msg = `加载数据库失败: ${e instanceof Error ? e.message : String(e)}`;
     console.error("[Mode2]", msg);
@@ -1178,16 +1496,14 @@ function filterGames(
       if (options.modernTagFilter === "hasModern" && g.modernTagCount === 0) {
         return false;
       }
-      // 具体特色标签筛选（使用动态提取的标签）
+      // 具体特色标签筛选（同时检查 llmMechanics 和 llmRawMechanics）
       if (options.featureTagFilter) {
-        // 从动态标签选项中查找
         const featureTag = options.featureTagOptions?.find((f) => f.key === options.featureTagFilter);
         if (featureTag) {
-          // 直接检查游戏的原始标签，而不是依赖 uniqueFeatureTags
-          // 预计算时使用 isMechanismTag 统计标签，API筛选也应使用相同的逻辑
-          const hasTag = g.tags.some((tag) =>
-            tag.toLowerCase() === featureTag.tag.toLowerCase()
-          );
+          // 同时匹配 llmMechanics（权威标签）和 llmRawMechanics（原始标签）
+          const llmM = (g.llmMechanics || []) as string[];
+          const llmRawM = (g.llmRawMechanics || []) as string[];
+          const hasTag = llmM.includes(featureTag.tag) || llmRawM.includes(featureTag.tag);
           if (!hasTag) return false;
         }
       }
@@ -1252,6 +1568,11 @@ function filterGames(
   const paged = results.slice(offset, offset + pageSize);
 
   // 8. 动态计算特色标签（基于当前 MODERN_TAGS 配置）
+  // 特色标签中文名映射（合并两个映射表）
+  const ALL_TAG_LABELS: Record<string, string> = {
+    ...DIFFERENTIATION_LABELS,
+    ...TAG_CHINESE_NAMES,
+  };
   const pagedWithFeatures = paged.map((game) => {
     const tagWeight = calculateTagWeight(game.tags);
     const featureTagOption = options.featureTagOptions?.find(
@@ -1259,27 +1580,106 @@ function filterGames(
     );
     const activeTag = featureTagOption?.tag;
     const activeLabel = featureTagOption?.label;
+
+    // 从 uniqueFeatureTags 转换为中文展示标签
+    // 用 Set 去重：不同英文标签可能映射到同一个中文标签（如 Card Battler 和 Deckbuilding 都映射到"牌组构建"）
+    const seenLabels = new Set<string>();
+    const differentiationLabels: string[] = [];
+    for (const t of tagWeight.uniqueFeatureTags) {
+      const label = ALL_TAG_LABELS[t] || t;
+      if (!seenLabels.has(label)) {
+        seenLabels.add(label);
+        differentiationLabels.push(label);
+      }
+    }
+
     // 排重：featureTagOption.tag 是原始标签（如 "Time Travel"），与 matchedModernTags 英文原名对比
     // 只对 displayModernTags 排重（matchedModernTags 是英文预计算数据）
     const excludedRawTag = activeTag ? activeTag.toLowerCase() : "";
-    const excludedLabelInChinese = activeTag ? (TAG_CHINESE_NAMES[activeTag] || activeTag).toLowerCase() : "";
-    const displayModernTags = tagWeight.matchedModernTags.filter(
-      (t) => t.toLowerCase() !== excludedRawTag && t.toLowerCase() !== excludedLabelInChinese
-    );
-    // differentiationLabels 保留原样（前端通过条件判断选择展示 differentiationLabels 还是 activeFeatureTagLabel）
+    // 用中文标签做排重检查（因为 differentiationLabels 已转换为中文）
+    const excludedLabelInChinese = activeTag ? (ALL_TAG_LABELS[activeTag] || activeTag) : "";
+    // matchedModernTags 转中文后也需要去重（不同英文标签可能映射到同一中文标签）
+    const displaySeen = new Set<string>();
+    const displayModernTags: string[] = [];
+    for (const t of tagWeight.matchedModernTags) {
+      const label = ALL_TAG_LABELS[t] || t;
+      // 排除原始标签匹配 AND 中文标签匹配（避免与已选的特色标签重复）
+      const isExcludedByRaw = t.toLowerCase() === excludedRawTag;
+      const isExcludedByChinese = label === excludedLabelInChinese;
+      if (isExcludedByRaw || isExcludedByChinese) continue;
+      if (!displaySeen.has(label)) {
+        displaySeen.add(label);
+        displayModernTags.push(label);
+      }
+    }
+
+    // 检查 activeFeatureTagLabel 是否已存在于 differentiationLabels（用中文标签比较）
+    const activeFeatureTagLabel = (() => {
+      if (!activeLabel) return undefined;
+      // 用 Set 检查是否已存在（基于中文标签比较）
+      if (seenLabels.has(activeLabel)) return undefined;
+      return activeLabel;
+    })();
+
+    // 构建创新融合标签：过滤 llmRawMechanics，排除基础标签和已显示的特色标签
+    const rawMechanicsBlacklist: Record<string, boolean> = INNOVATION_TAG_BLACKLIST;
+    const innovationTagSeen = new Set<string>();
+    const innovationTags: string[] = [];
+
+    // 先加入 activeFeatureTagLabel（用户筛选的标签）
+    if (activeFeatureTagLabel) {
+      innovationTagSeen.add(activeFeatureTagLabel.toLowerCase());
+    }
+    // 加入 differentiationLabels 中已有的标签（避免重复）
+    for (const l of differentiationLabels) {
+      innovationTagSeen.add(l.toLowerCase());
+    }
+    // 过滤 llmRawMechanics：排除黑名单标签和已显示的标签
+    for (const tag of (game.llmRawMechanics || [])) {
+      const lower = tag.toLowerCase();
+      // 跳过黑名单（品类标配）和已显示的标签
+      if (rawMechanicsBlacklist[tag] || rawMechanicsBlacklist[lower] || innovationTagSeen.has(lower)) {
+        continue;
+      }
+      innovationTagSeen.add(lower);
+      innovationTags.push(tag);
+    }
+
+    // 同时将 llmMechanics 中非黑名单的标签也加入（作为权威补充）
+    for (const tag of (game.llmMechanics || [])) {
+      const lower = tag.toLowerCase();
+      if (rawMechanicsBlacklist[tag] || rawMechanicsBlacklist[lower] || innovationTagSeen.has(lower)) {
+        continue;
+      }
+      innovationTagSeen.add(lower);
+      innovationTags.push(tag);
+    }
+
     return {
       ...game,
       uniqueFeatureTags: tagWeight.uniqueFeatureTags,
-      differentiationLabels: tagWeight.differentiationLabels,
+      differentiationLabels,
       matchedModernTags: tagWeight.matchedModernTags,
       modernTagCount: tagWeight.modernTagCount,
       activeFeatureTagFilter: options.featureTagFilter,
-      activeFeatureTagLabel: activeLabel,
+      activeFeatureTagLabel,
       displayModernTags,
+      innovationTags,
     };
   });
 
-  return { results: pagedWithFeatures, total: results.length, stats, priceStats };
+  // 最终安全去重：按 ID 去重，防止任何环节产生的重复
+  const seenIds = new Set<string>();
+  const deduplicated = pagedWithFeatures.filter((game) => {
+    if (seenIds.has(game.id)) {
+      console.log(`[Mode2] 警告: 过滤掉重复 ID ${game.id} (${game.name})`);
+      return false;
+    }
+    seenIds.add(game.id);
+    return true;
+  });
+
+  return { results: deduplicated, total: results.length, stats, priceStats };
 }
 
 // 获取各池子的游戏数量（用于显示预览）
@@ -1331,10 +1731,10 @@ function getPoolCounts(
     if (featureTagFilter) {
       const featureTag = featureTagOptions?.find((f) => f.key === featureTagFilter);
       if (featureTag) {
-        // 直接检查游戏的原始标签，与 filterGames 保持一致
-        const hasTag = game.tags.some((tag) =>
-          tag.toLowerCase() === featureTag.tag.toLowerCase()
-        );
+        // 同时检查 llmMechanics 和 llmRawMechanics
+        const llmM = (game.llmMechanics || []) as string[];
+        const llmRawM = (game.llmRawMechanics || []) as string[];
+        const hasTag = llmM.includes(featureTag.tag) || llmRawM.includes(featureTag.tag);
         if (!hasTag) continue;
       }
     }
@@ -1428,24 +1828,21 @@ function calculateFeatureTagCounts(
   const poolCDist = gamesWithPools.filter((g) => g.pool === "C");
 
   // 动态计算每个标签在用户勾选的池子中的总数量
+  // 同时检查 llmMechanics（权威标签，7个）和 llmRawMechanics（原始标签，207个）
   const result: FeatureTagOption[] = presetOptions.map((option) => {
     const tagLower = option.tag.toLowerCase();
 
-    // 统计有该标签的游戏数量（跨所有用户勾选的池子）
-    const totalCount = filteredByPool.filter((g) =>
-      g.tags.some((t) => t.toLowerCase() === tagLower)
-    ).length;
+    // 检查游戏是否有该标签（同时匹配 llmMechanics 和 llmRawMechanics）
+    const hasTag = (g: GameRecord) => {
+      const llmM = (g.llmMechanics || []).map((m: string) => m.toLowerCase());
+      const llmRawM = (g.llmRawMechanics || []).map((m: string) => m.toLowerCase());
+      return llmM.includes(tagLower) || llmRawM.includes(tagLower);
+    };
 
-    // 统计各池子中有该标签的游戏数量
-    const poolACount = poolADist.filter((g) =>
-      g.tags.some((t) => t.toLowerCase() === tagLower)
-    ).length;
-    const poolBCount = poolBDist.filter((g) =>
-      g.tags.some((t) => t.toLowerCase() === tagLower)
-    ).length;
-    const poolCCount = poolCDist.filter((g) =>
-      g.tags.some((t) => t.toLowerCase() === tagLower)
-    ).length;
+    const totalCount = filteredByPool.filter(hasTag).length;
+    const poolACount = poolADist.filter(hasTag).length;
+    const poolBCount = poolBDist.filter(hasTag).length;
+    const poolCCount = poolCDist.filter(hasTag).length;
 
     return {
       ...option,

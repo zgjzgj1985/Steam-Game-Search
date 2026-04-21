@@ -1,10 +1,10 @@
 {
-  "last_update": "2026-04-17T14:19:00.688776",
+  "last_update": "2026-04-17T17:13:52.324469",
   "total_collected": 77076,
   "stats": {
-    "success": 153135,
-    "failed": 3872,
+    "success": 153204,
+    "failed": 1220,
     "rate_limited": 0,
-    "total_requests": 153141
+    "total_requests": 154153
   }
 }

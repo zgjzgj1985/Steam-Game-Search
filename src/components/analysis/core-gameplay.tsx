@@ -25,10 +25,9 @@ export function CoreGameplayView({ coreGameplay, className }: CoreGameplayViewPr
     <div className={className}>
       {/* 标题 */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-          <Gamepad2 className="w-4 h-4 text-cyan-400" />
-        </div>
+        <Gamepad2 className="w-4 h-4 text-cyan-400" />
         <h3 className="text-lg font-semibold text-white">核心玩法</h3>
+        <div className="flex-1 h-px bg-gradient-to-r from-cyan-400/40 to-transparent ml-2" />
       </div>
 
       {/* 整体描述 */}

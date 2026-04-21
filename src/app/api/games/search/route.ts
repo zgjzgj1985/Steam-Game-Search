@@ -305,115 +305,143 @@ function loadDatabase(): GameRecord[] {
     try {
       const t0 = Date.now();
       const rows = db.prepare("SELECT * FROM games_cache").all() as any[];
-      const games = rows.map((row: any) => ({
-        id: row.appid,
-        steamAppId: row.appid,
-        name: row.name || "",
-        description: "",
-        shortDescription: row.short_description || "",
-        developers: row.developers ? JSON.parse(row.developers) : [],
-        publishers: row.publishers ? JSON.parse(row.publishers) : [],
-        genres: row.genres ? JSON.parse(row.genres) : [],
-        categories: row.categories ? JSON.parse(row.categories) : [],
-        tags: row.tags ? JSON.parse(row.tags) : [],
-        releaseDate: row.release_date || null,
-        isFree: row.is_free === 1,
-        price: row.price || 0,
-        metacriticScore: row.metacritic_score > 0 ? row.metacritic_score : null,
-        estimatedOwners: row.estimated_owners_num || 0,
-        peakCCU: row.peak_ccu || 0,
-        steamReviews: row.positive + row.negative > 0 ? {
-          totalPositive: row.positive,
-          totalNegative: row.negative,
-          totalReviews: row.positive + row.negative,
-          reviewScore: row.review_score,
-          reviewScoreDescription: getReviewScoreDesc(row.review_score),
-        } : null,
-        headerImage: row.header_image || null,
-        screenshots: row.screenshots ? JSON.parse(row.screenshots) : [],
-        steamUrl: `https://store.steampowered.com/app/${row.appid}`,
-        isTestVersion: row._is_test_version === 1,
-        isSuspiciousDelisted: row._is_suspicious_delisted === 1,
-      }));
+      // SQLite games_cache 表没有 _is_test_version 列，用名称检测
+      const detectedTestCount = { total: 0, test: 0 };
+      const games = rows.map((row: any) => {
+        const name = row.name || "";
+        const devTags: string[] = [];
+        try { devTags.push(...JSON.parse(row.developers || "[]")); } catch {}
+        try { devTags.push(...JSON.parse(row.categories || "[]")); } catch {}
+        const detectedTest = isTestVersion({ name } as RawGameData, devTags);
+        if (detectedTest) detectedTestCount.test++;
+        detectedTestCount.total++;
+        return {
+          id: row.appid,
+          steamAppId: row.appid,
+          name,
+          description: "",
+          shortDescription: row.short_description || "",
+          developers: row.developers ? JSON.parse(row.developers) : [],
+          publishers: row.publishers ? JSON.parse(row.publishers) : [],
+          genres: row.genres ? JSON.parse(row.genres) : [],
+          categories: row.categories ? JSON.parse(row.categories) : [],
+          tags: row.tags ? JSON.parse(row.tags) : [],
+          releaseDate: row.release_date || null,
+          isFree: row.is_free === 1,
+          price: row.price || 0,
+          metacriticScore: row.metacritic_score > 0 ? row.metacritic_score : null,
+          estimatedOwners: row.estimated_owners_num || 0,
+          peakCCU: row.peak_ccu || 0,
+          steamReviews: row.positive + row.negative > 0 ? {
+            totalPositive: row.positive,
+            totalNegative: row.negative,
+            totalReviews: row.positive + row.negative,
+            reviewScore: row.review_score,
+            reviewScoreDescription: getReviewScoreDesc(row.review_score),
+          } : null,
+          headerImage: row.header_image || null,
+          screenshots: row.screenshots ? JSON.parse(row.screenshots) : [],
+          steamUrl: `https://store.steampowered.com/app/${row.appid}`,
+          isTestVersion: detectedTest,
+          isSuspiciousDelisted: row._is_suspicious_delisted === 1,
+        };
+      });
+      console.log(`[db] SQLite 检测到 ${detectedTestCount.test} / ${detectedTestCount.total} 个测试版（通过名称判断）`);
       dbCache.games = games;
       dbCache.loadedAt = now;
       dbCache.loadError = null;
       console.log(`[db] 从 SQLite 加载 ${games.length} 个游戏，耗时 ${Date.now() - t0}ms`);
-      return dbCache.games;
     } catch (e) {
       console.warn(`[db] SQLite 查询失败，降级到 JSON: ${e instanceof Error ? e.message : String(e)}`);
+      dbCache.games = [];
     }
   }
 
-  // ============ 降级: JSON 文件 ============
-  try {
-    if (fs.existsSync(CACHE_FILE)) {
-      const t0 = Date.now();
-      const raw = fs.readFileSync(CACHE_FILE, "utf-8");
-      const cache = JSON.parse(raw) as { meta: unknown; games: GameRecord[] };
-      dbCache.games = cache.games;
-      dbCache.loadedAt = now;
-      dbCache.loadError = null;
-      console.log(`[db] 从预计算缓存加载 ${cache.games.length} 个游戏，耗时 ${Date.now() - t0}ms`);
-      return dbCache.games;
-    }
+  // SQLite 加载失败时，尝试 JSON 缓存
+  if (dbCache.games.length === 0) {
+    try {
+      if (fs.existsSync(CACHE_FILE) && fs.statSync(CACHE_FILE).size > 0) {
+        const t0 = Date.now();
+        const raw = fs.readFileSync(CACHE_FILE, "utf-8");
+        const cache = JSON.parse(raw) as { meta: unknown; games: GameRecord[] };
+        dbCache.games = cache.games;
+        dbCache.loadedAt = now;
+        dbCache.loadError = null;
+        console.log(`[db] 从预计算缓存加载 ${cache.games.length} 个游戏，耗时 ${Date.now() - t0}ms`);
+      } else {
+        console.warn("[db] 预计算缓存不存在，降级使用原始 JSON");
+        if (!fs.existsSync(DB_FILE)) {
+          dbCache.loadError = `数据库文件不存在: ${DB_FILE}`;
+          return [];
+        }
 
-    console.warn("[db] 预计算缓存不存在，降级使用原始 JSON");
-    if (!fs.existsSync(DB_FILE)) {
-      dbCache.loadError = `数据库文件不存在: ${DB_FILE}`;
+        const raw = fs.readFileSync(DB_FILE, "utf-8");
+        const rawData = JSON.parse(raw) as Record<string, RawGameData>;
+        const games: GameRecord[] = [];
+        for (const [appId, data] of Object.entries(rawData)) {
+          games.push(transformGame(appId, data));
+        }
+        dbCache.games = games;
+        dbCache.loadedAt = now;
+        dbCache.loadError = null;
+        console.log(`[db] 从原始 JSON 加载 ${games.length} 个游戏`);
+      }
+    } catch (e) {
+      const msg = `加载数据库失败: ${e instanceof Error ? e.message : String(e)}`;
+      console.error("[db]", msg);
+      dbCache.loadError = msg;
       return [];
     }
-
-    const raw = fs.readFileSync(DB_FILE, "utf-8");
-    const rawData = JSON.parse(raw) as Record<string, RawGameData>;
-
-    const games: GameRecord[] = [];
-    for (const [appId, data] of Object.entries(rawData)) {
-      games.push(transformGame(appId, data));
-    }
-
-    const dupesRemoved = deduplicateGames(games);
-    const dedupedGames = dupesRemoved.kept;
-
-    dbCache.games = dedupedGames;
-    dbCache.loadedAt = now;
-    dbCache.loadError = null;
-    console.log(`[db] 加载 ${games.length} 个游戏，移除重复后保留 ${dedupedGames.length} 个，移除 ${dupesRemoved.removed} 个`);
-
-    return dedupedGames;
-  } catch (e) {
-    const msg = `加载数据库失败: ${e instanceof Error ? e.message : String(e)}`;
-    console.error("[db]", msg);
-    dbCache.loadError = msg;
-    return [];
   }
+
+  // ============ 所有数据加载路径统一去重 ============
+  const rawCount = dbCache.games.length;
+  const { kept, removed } = deduplicateGames(dbCache.games);
+  dbCache.games = kept;
+  if (removed > 0) {
+    console.log(`[db] 去重后保留 ${kept.length} 个游戏，移除 ${removed} 个重复（包含测试版替换）`);
+  }
+
+  return dbCache.games;
 }
 
 /**
- * 按"开发商+游戏名称"组合去重，保留拥有者数量最多的条目
- * 相比仅按名称去重，可以区分不同开发商开发的同名游戏
- * Steam 上同一游戏可能存在 Demo 版、限定版、捆绑包等多个条目，
- * 它们名称相同但 estimated_owners 不同（Demo 版几乎为 0）
+ * 按"开发商+游戏名称"组合去重
+ * 优先保留正式版本（而非玩家数更多的测试版）
+ * 同为正式版或同为测试版时，优先保留玩家数最多的条目
  */
 function deduplicateGames(games: GameRecord[]): { kept: GameRecord[]; removed: number } {
-  // 用 Map 按"开发商+名称"（转小写后）聚合，value = 拥有者最多的条目
-  // 开发商相同时，取拥有者最多的条目；拥有者相同时，取评论数最多的条目
   const map = new Map<string, GameRecord>();
 
   for (const game of games) {
     if (!game.name) continue;
     const key = buildDedupKey(game);
     const existing = map.get(key);
-    const existingTotalReviews = existing?.steamReviews?.totalReviews ?? 0;
-    const gameTotalReviews = game.steamReviews?.totalReviews ?? 0;
 
     if (!existing) {
       map.set(key, game);
-    } else if (
-      game.estimatedOwners > existing.estimatedOwners ||
-      (game.estimatedOwners === existing.estimatedOwners && gameTotalReviews > existingTotalReviews)
-    ) {
-      map.set(key, game);
+    } else {
+      const existingIsTest = existing.isTestVersion;
+      const gameIsTest = game.isTestVersion;
+
+      // 规则1：一方为测试版，另一方为正式版 → 保留正式版
+      if (existingIsTest !== gameIsTest) {
+        if (gameIsTest) {
+          // 当前是正式版，已有是测试版 → 替换
+          map.set(key, game);
+        }
+        // else: 当前是测试版，已有是正式版 → 跳过
+      } else {
+        // 规则2：同为正式版或同为测试版 → 按玩家数和评价数排序
+        const existingTotalReviews = existing.steamReviews?.totalReviews ?? 0;
+        const gameTotalReviews = game.steamReviews?.totalReviews ?? 0;
+        if (
+          game.estimatedOwners > existing.estimatedOwners ||
+          (game.estimatedOwners === existing.estimatedOwners && gameTotalReviews > existingTotalReviews)
+        ) {
+          map.set(key, game);
+        }
+      }
     }
   }
 
@@ -474,7 +502,14 @@ function searchGames(
 
   // 0. 测试版过滤
   if (excludeTestVersions !== false) {
+    const beforeCount = results.length;
     results = results.filter((g) => !g.isTestVersion);
+    console.log(`[search] 测试版过滤: 过滤前 ${beforeCount} 个，过滤后 ${results.length} 个`);
+    // 调试：检查 balatro 相关游戏
+    const balatroGames = allGames.filter((g) => g.name.toLowerCase().includes("balatro"));
+    if (balatroGames.length > 0) {
+      console.log(`[debug] Balatro 相关游戏: ${balatroGames.map((g) => `${g.name}[${g.isTestVersion ? "测试" : "正式"}]`).join(", ")}`);
+    }
   }
 
   // 0b. 可疑下架游戏过滤

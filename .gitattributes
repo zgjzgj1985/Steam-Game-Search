@@ -8,7 +8,6 @@ public/data/games-cache.json filter=lfs diff=lfs merge=lfs -text
 public/data/games-cache.db filter=lfs diff=lfs merge=lfs -text
 public/data/games-meta.json filter=lfs diff=lfs merge=lfs -text
 public/data/games.db filter=lfs diff=lfs merge=lfs -text
-
 # 强制 Git 在所有平台上使用正确的大小写路径
 # 解决 Linux 构建时的大小写敏感问题
 * case=strict text=auto eol=lf

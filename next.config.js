@@ -4,6 +4,11 @@ const path = require("path");
 const nextConfig = {
   output: "standalone",
 
+  // 将 better-sqlite3 标记为外部包，避免 Next.js 尝试打包原生模块
+  experimental: {
+    serverComponentsExternalPackages: ["better-sqlite3"],
+  },
+
   // 将 webpack 文件缓存放到 ASCII 子路径，减轻 Windows + 非 ASCII 项目路径下偶发的静态资源 404
   webpack: (config, { dev }) => {
     if (dev) {

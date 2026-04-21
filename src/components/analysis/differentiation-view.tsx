@@ -17,10 +17,9 @@ export function DifferentiationView({ differentiation, className }: Differentiat
     <div className={className}>
       {/* 标题 */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-9 h-9 rounded-xl bg-amber-500/10 flex items-center justify-center">
-          <Star className="w-4 h-4 text-amber-400" />
-        </div>
+        <Star className="w-4 h-4 text-amber-400" />
         <h3 className="text-lg font-semibold text-white">差异化创新</h3>
+        <div className="flex-1 h-px bg-gradient-to-r from-amber-400/40 to-transparent ml-2" />
       </div>
 
       {/* 核心标签 */}

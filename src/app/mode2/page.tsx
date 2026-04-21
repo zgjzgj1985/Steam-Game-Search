@@ -24,6 +24,8 @@ import {
   Info,
   Trophy,
   Globe,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -101,6 +103,13 @@ interface GameRecord {
   activeFeatureTagLabel?: string;
   // 卡片展示用现代标签（已排重）
   displayModernTags: string[];
+  // LLM 融合玩法分析（来自 combinedMechanics.json）
+  llmMechanics: string[];
+  llmMechanicsSummary: string;
+  // 自由标签（v3 新增，来自 combinedMechanics.json 的 rawMechanics 字段）
+  llmRawMechanics: string[];
+  // 过滤后的创新融合标签（排除品类标配标签）
+  innovationTags: string[];
 }
 
 interface PoolStats {
@@ -223,6 +232,23 @@ const QUICK_DATE_RANGES = [
 ];
 
 // ============ 工具函数 ============
+
+// 宝可梦标签中文映射
+const POKEMON_TAG_LABELS: Record<string, string> = {
+  "Creature Collector": "生物收集",
+  "Monster Catching": "怪物捕捉",
+  "Monster Taming": "怪物养成",
+  "Creature Collection": "生物收集",
+};
+
+// 翻译标签为中文（如果存在映射则使用映射值，否则保留原标签）
+function translateTag(tag: string): string {
+  return POKEMON_TAG_LABELS[tag] || tag;
+}
+
+function translateTags(tags: string[]): string[] {
+  return tags.map(translateTag);
+}
 
 function formatWan(n: number): string {
   if (n >= 100_000_000) return `${(n / 100_000_000).toFixed(1)}亿`;
@@ -374,7 +400,7 @@ function GameCard({ game, reviewSource }: { game: GameRecord; reviewSource?: Rev
               {/* 宝可梦标签 */}
               {game.isPokemonLike && game.pokemonLikeTags.length > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-background/80 backdrop-blur-sm rounded">
-                  {game.pokemonLikeTags[0]}
+                  {translateTags(game.pokemonLikeTags)[0]}
                 </span>
               )}
               {/* 标签权重徽章 */}
@@ -511,22 +537,14 @@ function GameCard({ game, reviewSource }: { game: GameRecord; reviewSource?: Rev
                         {tag}
                       </span>
                     ))}
-                    {(game.displayModernTags || []).slice(0, 3).map((tag, i) => (
+                    {/* 创新融合标签：使用后端过滤后的 innovationTags，展示 LLM 真正识别的创新玩法 */}
+                    {((game.innovationTags || []).slice(0, 3)).map((label, i) => (
                       <span key={`m-${i}`} className="px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 rounded">
-                        {tag}
-                      </span>
-                    ))}
-                    {/* 融合创新标签（特色标签，中文显示） */}
-                    {(game.differentiationLabels || []).slice(0, 3).map((label, i) => (
-                      <span key={`f-${i}`} className="px-2 py-0.5 text-xs font-medium bg-gradient-to-r from-cyan-100 to-teal-100 text-cyan-700 dark:from-cyan-900/30 dark:to-teal-900/30 dark:text-cyan-400 rounded border border-cyan-200 dark:border-cyan-700">
                         {label}
                       </span>
                     ))}
-                    {/* 用户选中的特色标签（与已排重的标签列表做最终检查，避免重复） */}
-                    {game.activeFeatureTagLabel && !(
-                      (game.differentiationLabels || []).some((l) => l.toLowerCase() === game.activeFeatureTagLabel!.toLowerCase()) ||
-                      (game.displayModernTags || []).some((t) => t.toLowerCase() === game.activeFeatureTagLabel!.toLowerCase())
-                    ) && (
+                    {/* 用户选中的特色标签 */}
+                    {game.activeFeatureTagLabel && (
                       <span key="active-feature" className="px-2 py-0.5 text-xs font-medium bg-gradient-to-r from-cyan-100 to-teal-100 text-cyan-700 dark:from-cyan-900/30 dark:to-teal-900/30 dark:text-cyan-400 rounded border border-cyan-200 dark:border-cyan-700">
                         {game.activeFeatureTagLabel}
                       </span>
@@ -935,6 +953,7 @@ export default function Mode2Page() {
   const [modernTagFilter, setModernTagFilter] = useState<"hasCore" | "hasModern" | undefined>(undefined);
   const [featureTagFilter, setFeatureTagFilter] = useState<string | undefined>(undefined);
   const [featureTagOptions, setFeatureTagOptions] = useState<FeatureTagOption[]>([]);
+  const [featureTagSearch, setFeatureTagSearch] = useState("");
 
   // 评价来源筛选（默认全部）
   const [reviewSource, setReviewSource] = useState<ReviewSource>("all");
@@ -1001,6 +1020,7 @@ export default function Mode2Page() {
     setModernTagFilter(undefined);
     setFeatureTagFilter(undefined);
     setFeatureTagOptions([]);
+    setFeatureTagSearch("");
     setReviewSource("all");
   };
 
@@ -1571,15 +1591,15 @@ export default function Mode2Page() {
           )}
         </div>
 
-        {/* ========== 特色标签筛选（动态从B池游戏中提取）========== */}
+        {/* ========== 特色标签筛选（分组展示 + 搜索）========== */}
         <div className="bg-card rounded-xl border p-4 mb-6">
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 mb-4">
             <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-purple-500" />
             </div>
             <span className="text-sm font-medium text-muted-foreground">创新融合标签</span>
             <span className="text-[10px] text-muted-foreground/60 italic ml-1">
-              (从B池成功游戏中自动提取)
+              (从B池成功游戏中自动提取，按玩法类型分组)
             </span>
 
             {/* 特色标签快捷筛选 */}
@@ -1618,48 +1638,202 @@ export default function Mode2Page() {
                 有创新融合
               </button>
             </div>
+          </div>
 
-            {/* 具体特色标签（动态加载） */}
-            <div className="flex flex-wrap gap-2 ml-2">
-              {featureTagOptions.length === 0 ? (
-                // 等待API返回时显示加载状态
-                <span className="text-xs text-muted-foreground/50 italic">
-                  加载中...
-                </span>
-              ) : (
-                featureTagOptions.map((tag) => {
-                  // 动态生成池子信息
-                  const dist = tag.poolDistribution;
-                  const poolParts: string[] = [];
-                  if (dist && dist.A > 0) poolParts.push(`A池${dist.A}款`);
-                  if (dist && dist.B > 0) poolParts.push(`B池${dist.B}款`);
-                  if (dist && dist.C > 0) poolParts.push(`C池${dist.C}款`);
-                  const poolInfo = poolParts.length > 0 ? poolParts.join(" · ") : "暂无分布";
-
-                  return (
-                    <button
-                      key={tag.key}
-                      onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
-                      title={`${tag.tag} · ${poolInfo} · 覆盖率${tag.coverage}%`}
-                      className={cn(
-                        "group px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
-                        featureTagFilter === tag.key
-                          ? "bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50"
-                          : "bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 border border-purple-200/50 dark:border-purple-700/50"
-                      )}
-                    >
-                      <span>{tag.label}</span>
-                      <span className={cn(
-                        "ml-1.5 text-[10px] font-normal tabular-nums",
-                        featureTagFilter === tag.key ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
-                      )}>
-                        {tag.gameCount}
-                      </span>
-                    </button>
-                  );
-                })
-              )}
+          {/* 标签搜索框 */}
+          <div className="relative mb-4">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="w-4 h-4 text-muted-foreground/70" />
             </div>
+            <input
+              type="text"
+              placeholder="搜索标签名称..."
+              value={featureTagSearch}
+              onChange={(e) => setFeatureTagSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 text-sm border rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+            {featureTagSearch && (
+              <button
+                onClick={() => setFeatureTagSearch("")}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* 标签分组展示 */}
+          <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
+            {(() => {
+              // 标签分组定义
+              const TAG_GROUPS = [
+                {
+                  key: 'card', name: '卡牌玩法', icon: '🎴', color: 'bg-blue-500/10 text-blue-600',
+                  keywords: ['肉鸽', '牌组', '卡牌', '手牌', '集换', '塔防', '纸牌']
+                },
+                {
+                  key: 'battle', name: '战斗系统', icon: '⚔️', color: 'bg-red-500/10 text-red-600',
+                  keywords: ['自动战斗', '弱点追击', '潜行', 'ATB', '即时', '战术', '回合']
+                },
+                {
+                  key: 'narrative', name: '叙事玩法', icon: '📖', color: 'bg-amber-500/10 text-amber-600',
+                  keywords: ['叙事', '剧情', '分支', '网状', 'CRPG', '视觉小说', 'Story Rich']
+                },
+                {
+                  key: 'raising', name: '养成系统', icon: '🧬', color: 'bg-emerald-500/10 text-emerald-600',
+                  keywords: ['阵营', '生物', '怪物', '交涉', '招募', '派系', '好感', '基因', '合成']
+                },
+                {
+                  key: 'build', name: '构筑系统', icon: '🔧', color: 'bg-cyan-500/10 text-cyan-600',
+                  keywords: ['构筑', 'Build', '职业', '特性', '羁绊', '背包', '队伍构建', '配队']
+                },
+                {
+                  key: 'building', name: '建造经营', icon: '🏗️', color: 'bg-orange-500/10 text-orange-600',
+                  keywords: ['建造', '经营', '基地', '农场', '牧场', '公会', '资源', '模拟']
+                },
+                {
+                  key: 'exploration', name: '探索系统', icon: '🗺️', color: 'bg-teal-500/10 text-teal-600',
+                  keywords: ['探索', '地牢', '爬塔', '银河恶魔城', '开放世界', '程序生成']
+                },
+                {
+                  key: 'collection', name: '收集驱动', icon: '💎', color: 'bg-violet-500/10 text-violet-600',
+                  keywords: ['刷宝', '装备', '素材', '收集', '技能继承']
+                },
+                {
+                  key: 'strategy', name: '策略系统', icon: '♟️', color: 'bg-slate-500/10 text-slate-600',
+                  keywords: ['战棋', '策略', '网格', '博弈', '棋盘', '双单位']
+                },
+                {
+                  key: 'social', name: '社交系统', icon: '👥', color: 'bg-pink-500/10 text-pink-600',
+                  keywords: ['MMO', '多人', '异步', '社交', '竞技', '协作']
+                },
+                {
+                  key: 'puzzle', name: '解谜系统', icon: '🧩', color: 'bg-indigo-500/10 text-indigo-600',
+                  keywords: ['解谜', '推理', '案件', '物理解谜', '骇客']
+                },
+                {
+                  key: 'rhythm', name: '时间节奏', icon: '⏱️', color: 'bg-rose-500/10 text-rose-600',
+                  keywords: ['时间管理', 'QTE', '节奏']
+                },
+                {
+                  key: 'other', name: '其他玩法', icon: '✨', color: 'bg-gray-500/10 text-gray-600',
+                  keywords: []
+                },
+              ];
+
+              // 过滤标签
+              const searchLower = featureTagSearch.toLowerCase().trim();
+              const filteredOptions = searchLower
+                ? featureTagOptions.filter(tag =>
+                    tag.label.toLowerCase().includes(searchLower) ||
+                    tag.tag.toLowerCase().includes(searchLower)
+                  )
+                : featureTagOptions;
+
+              // 按分组
+              const grouped: Record<string, typeof featureTagOptions> = {};
+              const uncategorized: typeof featureTagOptions = [];
+
+              for (const tag of filteredOptions) {
+                let matched = false;
+                for (const group of TAG_GROUPS) {
+                  if (group.key === 'other') continue;
+                  if (group.keywords.some(kw => tag.label.includes(kw) || tag.tag.toLowerCase().includes(kw.toLowerCase()))) {
+                    if (!grouped[group.key]) grouped[group.key] = [];
+                    grouped[group.key].push(tag);
+                    matched = true;
+                    break;
+                  }
+                }
+                if (!matched) {
+                  uncategorized.push(tag);
+                }
+              }
+
+              if (grouped['other']) {
+                grouped['other'] = [...(grouped['other'] || []), ...uncategorized];
+              } else if (uncategorized.length > 0) {
+                grouped['other'] = uncategorized;
+              }
+
+              const hasResults = filteredOptions.length > 0;
+
+              return (
+                <>
+                  {!hasResults ? (
+                    <div className="text-center py-6 text-sm text-muted-foreground">
+                      {featureTagSearch ? `未找到包含"${featureTagSearch}"的标签` : '加载中...'}
+                    </div>
+                  ) : (
+                    TAG_GROUPS.map(group => {
+                      const tags = grouped[group.key] || [];
+                      if (tags.length === 0 && searchLower) return null;
+
+                      const totalCount = tags.reduce((sum, t) => sum + (t.gameCount || 0), 0);
+
+                      return (
+                        <div key={group.key} className="border rounded-lg overflow-hidden">
+                          {/* 分组标题 */}
+                          <button
+                            onClick={() => {
+                              const el = document.getElementById(`tag-group-${group.key}`);
+                              if (el) {
+                                el.classList.toggle('hidden');
+                              }
+                            }}
+                            className="w-full flex items-center justify-between px-3 py-2 hover:bg-muted/50 transition-colors"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-sm">{group.name}</span>
+                              <span className="text-xs text-muted-foreground">({tags.length}个标签, {totalCount}款游戏)</span>
+                            </div>
+                            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                          </button>
+
+                          {/* 标签列表 */}
+                          <div id={`tag-group-${group.key}`} className="px-3 pb-3 flex flex-wrap gap-2">
+                            {tags.length === 0 ? (
+                              <span className="text-xs text-muted-foreground/50 py-2">无</span>
+                            ) : (
+                              tags.map((tag) => {
+                                const dist = tag.poolDistribution;
+                                const poolParts: string[] = [];
+                                if (dist && dist.A > 0) poolParts.push(`A池${dist.A}款`);
+                                if (dist && dist.B > 0) poolParts.push(`B池${dist.B}款`);
+                                if (dist && dist.C > 0) poolParts.push(`C池${dist.C}款`);
+                                const poolInfo = poolParts.length > 0 ? poolParts.join(" · ") : "暂无分布";
+
+                                return (
+                                  <button
+                                    key={tag.key}
+                                    onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
+                                    title={`${tag.tag} · ${poolInfo} · 覆盖率${tag.coverage}%`}
+                                    className={cn(
+                                      "group px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all",
+                                      featureTagFilter === tag.key
+                                        ? "bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50"
+                                        : "bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 border border-purple-200/50 dark:border-purple-700/50"
+                                    )}
+                                  >
+                                    <span>{tag.label}</span>
+                                    <span className={cn(
+                                      "ml-1.5 text-[10px] font-normal tabular-nums",
+                                      featureTagFilter === tag.key ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
+                                    )}>
+                                      {tag.gameCount}
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </>
+              );
+            })()}
           </div>
         </div>
 

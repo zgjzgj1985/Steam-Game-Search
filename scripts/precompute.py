@@ -35,31 +35,68 @@ SECONDARY_TAGS = [
 ]
 
 MODERN_TAGS = [
-    "Roguelite", "Roguelike", "Deckbuilding", "开放世界", "Open World",
-    "Metroidvania", "银河恶魔城", "Survival", "Crafting", "生存", "建造",
-    "牌组构建", "卡牌构建", "形态融合", "类肉鸽",
+    "Deckbuilding", "Card Battler", "Card Game",
+    "Pixel Graphics",
+    "Exploration", "Collectathon", "Dungeon Crawler",
+    "Rogue-lite", "Rogue-like", "Roguelite", "Roguelike", "类肉鸽",
+    "开放世界", "Open World",
+    "Survival", "Crafting", "Survival Game", "生存", "建造",
+    "形态融合", "Time Travel", "时间旅行",
 ]
 
 DIFFERENTIATION_LABELS = {
-    "Survival": "生存建造", "Crafting": "合成系统", "Metroidvania": "银河恶魔城",
+    # 牌组构建
+    "Deckbuilding": "牌组构建", "Card Battler": "牌组构建", "Card Game": "卡牌游戏",
+    # 像素风格
+    "Pixel Graphics": "像素风格",
+    # 探索冒险
+    "Exploration": "探索冒险", "Collectathon": "收集冒险", "Dungeon Crawler": "地牢探索",
+    # 肉鸽融合
+    "Rogue-lite": "肉鸽融合", "Rogue-like": "肉鸽融合",
+    "Roguelite": "肉鸽融合", "Roguelike": "肉鸽融合", "类肉鸽": "肉鸽融合",
+    # 开放世界
     "开放世界": "开放世界", "Open World": "开放世界",
-    "Roguelite": "肉鸽融合", "Roguelike": "肉鸽融合",
-    "Deckbuilding": "牌组构建", "牌组构建": "牌组构建", "卡牌构建": "牌组构建",
-    "形态融合": "形态融合", "银河恶魔城": "银河恶魔城", "Survival Game": "生存建造",
+    # 生存建造
+    "Survival": "生存建造", "Survival Game": "生存建造",
+    "Crafting": "合成系统", "生存": "生存建造", "建造": "建造系统",
+    # 形态融合
+    "形态融合": "形态融合",
+    # 银河恶魔城
+    "Metroidvania": "银河恶魔城", "银河恶魔城": "银河恶魔城",
+    # 时间旅行
+    "Time Travel": "时间旅行", "时间旅行": "时间旅行",
 }
 
 TAG_CHINESE_NAMES = {
+    # 核心标签
     "Creature Collector": "生物收集", "Monster Catching": "怪物捕捉",
     "Monster Tamer": "怪物养成", "Collectathon": "收集冒险",
     "生物收集": "生物收集", "怪物捕捉": "怪物捕捉", "怪物养成": "怪物养成",
+    # 次级标签
     "JRPG": "JRPG", "Party-Based RPG": "队伍RPG", "Tactical RPG": "战术RPG",
     "Turn-Based Tactics": "回合制战术", "Turn-Based Strategy": "回合制策略",
     "回合制策略": "回合制策略", "角色扮演": "角色扮演", "RPG": "RPG",
+    # 牌组构建
+    "Deckbuilding": "牌组构建", "Card Battler": "牌组构建", "Card Game": "卡牌游戏",
+    # 像素风格
+    "Pixel Graphics": "像素风格",
+    # 探索冒险
+    "Exploration": "探索冒险", "Dungeon Crawler": "地牢探索",
+    # 肉鸽融合
+    "Rogue-lite": "肉鸽融合", "Rogue-like": "肉鸽融合",
+    "Roguelite": "肉鸽融合", "Roguelike": "肉鸽融合", "类肉鸽": "肉鸽融合",
+    # 开放世界
+    "开放世界": "开放世界", "Open World": "开放世界",
+    # 生存建造
     "Survival": "生存建造", "Survival Game": "生存建造", "Crafting": "合成系统",
-    "Roguelite": "肉鸽融合", "Roguelike": "类肉鸽", "Deckbuilding": "牌组构建",
-    "Open World": "开放世界", "开放世界": "开放世界",
+    # 形态融合
+    "形态融合": "形态融合",
+    # 银河恶魔城
     "Metroidvania": "银河恶魔城", "银河恶魔城": "银河恶魔城",
-    "卡牌构建": "牌组构建", "牌组构建": "牌组构建", "形态融合": "形态融合",
+    # 时间旅行
+    "Time Travel": "时间旅行", "时间旅行": "时间旅行",
+    # 卡牌构建
+    "卡牌构建": "牌组构建", "牌组构建": "牌组构建",
 }
 
 TEST_VERSION_KEYWORDS = [
@@ -77,7 +114,113 @@ POOL_CONFIG = {
     'poolC': {'minRating': 40, 'maxRating': 74, 'minReviews': 50},
 }
 
+# 特色标签定义（基于 LLM 融合玩法分析 v3）
+# 来源：B 池游戏融合玩法分析（combinedMechanics.json）
+# 设计原则：标签必须是具体的机制、必须排他、必须有案例
+LLM_MECHANICS_TAG_OPTIONS = [
+    {'key': 'roguelite',     'label': '肉鸽融合',    'tag': '肉鸽融合'},
+    {'key': 'deckbuilding',  'label': '牌组构建',    'tag': '牌组构建'},
+    {'key': 'morphing',     'label': '形态融合',    'tag': '形态融合'},
+    {'key': 'survival',     'label': '生存建造',    'tag': '生存建造'},
+    {'key': 'mmo',          'label': 'MMO元素',     'tag': 'MMO元素'},
+    {'key': 'autobattle',   'label': '自动战斗',    'tag': '自动战斗'},
+    {'key': 'bullet',       'label': '弹幕射击',    'tag': '弹幕射击'},
+    {'key': 'timetravel',   'label': '时间旅行',    'tag': '时间旅行'},
+    {'key': 'metroidvania', 'label': '银河恶魔城',  'tag': '银河恶魔城'},
+    {'key': 'sandbox',      'label': '沙盒建造',    'tag': '沙盒建造'},
+]
+
+# 标准标签列表（用于聚类归类）
+CANONICAL_LLM_TAGS = [ft['tag'] for ft in LLM_MECHANICS_TAG_OPTIONS]
+
 # ============ 工具函数 ============
+
+def load_combined_mechanics():
+    """加载 LLM 融合玩法分析结果（支持 v3 的自由标签）"""
+    mechanics_file = Path(r'D:\Steam全域游戏搜索\public\data\combinedMechanics.json')
+    if not mechanics_file.exists():
+        return {}
+    try:
+        with open(mechanics_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        # 构建 {appid: {mechanics: [...], rawMechanics: [...], summary: '...'}} 的映射
+        result = {}
+        for appid, game_data in data.get('games', {}).items():
+            result[str(appid)] = {
+                'mechanics': game_data.get('mechanics', []),      # 标准标签（向后兼容）
+                'rawMechanics': game_data.get('rawMechanics', []),  # 自由标签（v3 新增）
+                'summary': game_data.get('summary', ''),
+            }
+        log(f'Loaded LLM mechanics for {len(result)} games')
+        return result
+    except Exception as e:
+        log(f'Warning: Failed to load combinedMechanics.json: {e}')
+        return {}
+
+
+# 模块级缓存
+combined_mechanics_cache = None
+
+
+def get_combined_mechanics():
+    global combined_mechanics_cache
+    if combined_mechanics_cache is None:
+        combined_mechanics_cache = load_combined_mechanics()
+    return combined_mechanics_cache
+
+
+# ============ 聚类映射（v3 新增）============
+
+def load_tag_clusters():
+    """加载标签聚类映射表"""
+    cluster_file = Path(__file__).parent / 'tag_clusters.json'
+    if not cluster_file.exists():
+        log('Warning: tag_clusters.json not found, skipping cluster mapping')
+        return {}
+    try:
+        with open(cluster_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        log(f'Loaded tag cluster map: {len(data.get("clusterMap", {}))} mappings')
+        return data.get('clusterMap', {})
+    except Exception as e:
+        log(f'Warning: Failed to load tag_clusters.json: {e}')
+        return {}
+
+
+# 模块级聚类映射缓存
+TAG_CLUSTER_MAP = None
+
+
+def get_tag_cluster_map():
+    """获取标签聚类映射表（带缓存）"""
+    global TAG_CLUSTER_MAP
+    if TAG_CLUSTER_MAP is None:
+        TAG_CLUSTER_MAP = load_tag_clusters()
+    return TAG_CLUSTER_MAP
+
+
+def map_raw_mechanics_to_canonical(raw_mechanics, cluster_map, canonical_tags):
+    """
+    将自由标签归类到标准分类
+    - 优先匹配预定义的标准标签
+    - 然后通过聚类映射归类
+    """
+    if not raw_mechanics:
+        return []
+
+    canonical_set = set(canonical_tags)
+    result = set()
+
+    for tag in raw_mechanics:
+        if tag in canonical_set:
+            # 直接匹配标准标签
+            result.add(tag)
+        elif cluster_map and tag in cluster_map:
+            # 通过聚类映射归类
+            canonical = cluster_map[tag]
+            result.add(canonical)
+
+    return list(result)
 
 def normalize_tags(raw):
     if not raw:
@@ -231,26 +374,26 @@ def safe_json_parse(value, default=None):
             return default
     return default
 
-def transform_game(row):
+def transform_game(row, llm_mechanics=None, cluster_map=None):
     owners = parse_estimated_owners(row.get('estimated_owners') or row.get('estimated_owners', '0 - 0') or '0 - 0')
     positive = row.get('positive') or 0
     negative = row.get('negative') or 0
     total_reviews = positive + negative
     review_score = round(positive / total_reviews * 100) if total_reviews > 0 else 0
-    
+
     tags = normalize_tags(row.get('tags'))
     categories = safe_json_parse(row.get('categories'), [])
     genres = safe_json_parse(row.get('genres'), [])
-    
+
     pokemon_like_tags = check_pokemon_like(tags)
     is_pokemon_like = len(pokemon_like_tags) > 0
     turn_based = is_turn_based(tags, genres)
-    
+
     is_test_by_data = row.get('_is_test_version') == 1
     is_test_by_name = detect_test_version_by_name(row.get('name') or '')
     is_test_by_tag = is_test_version_by_tag(tags, categories)
     is_test = is_test_by_data or is_test_by_name or is_test_by_tag
-    
+
     if is_test_by_data:
         test_type = 'data'
     elif is_test_by_name:
@@ -259,9 +402,9 @@ def transform_game(row):
         test_type = 'tag'
     else:
         test_type = 'none'
-    
+
     tag_weight = calculate_tag_weight(tags)
-    
+
     reviews = None
     if total_reviews > 0:
         reviews = {
@@ -271,7 +414,7 @@ def transform_game(row):
             'reviewScore': review_score,
             'reviewScoreDescription': get_review_score_desc(review_score)
         }
-    
+
     # 处理国内评价数据（国内/海外评价筛选功能）
     cn_reviews_raw = row.get('cn_reviews')
     cn_reviews = None
@@ -288,7 +431,7 @@ def transform_game(row):
                 'reviewScore': cn_score,
                 'reviewScoreDescription': get_review_score_desc(cn_score)
             }
-    
+
     # 处理海外评价数据
     overseas_reviews_raw = row.get('overseas_reviews')
     overseas_reviews = None
@@ -305,28 +448,42 @@ def transform_game(row):
                 'reviewScore': overseas_score,
                 'reviewScoreDescription': get_review_score_desc(overseas_score)
             }
-    
+
     # 兼容处理不同格式的字段名（appid可能是int或str）
     appid = row.get('appid')
     if appid is None:
         return None
-    
+
     # 计算国内/海外威尔逊得分
     cn_wilson = 0
     if cn_reviews_raw:
         cn_pos = cn_reviews_raw.get('positive', 0) or 0
         cn_neg = cn_reviews_raw.get('negative', 0) or 0
         cn_wilson = wilson_score(cn_pos, cn_neg)
-    
+
     overseas_wilson = 0
     if overseas_reviews_raw:
         overseas_pos = overseas_reviews_raw.get('positive', 0) or 0
         overseas_neg = overseas_reviews_raw.get('negative', 0) or 0
         overseas_wilson = wilson_score(overseas_pos, overseas_neg)
-    
+
+    # LLM 融合玩法分析数据
+    appid_str = str(appid)
+    llm_data = llm_mechanics.get(appid_str) if llm_mechanics else None
+    llm_mechanics_list = llm_data.get('mechanics', []) if llm_data else []
+    llm_raw_mechanics = llm_data.get('rawMechanics', []) if llm_data else []
+    llm_summary = llm_data.get('summary', '') if llm_data else ''
+
+    # 通过聚类映射将自由标签归类到标准分类（v3 新增）
+    llm_canonical = map_raw_mechanics_to_canonical(
+        llm_raw_mechanics,
+        cluster_map,
+        CANONICAL_LLM_TAGS
+    )
+
     return {
-        'id': str(appid),
-        'steamAppId': str(appid),
+        'id': appid_str,
+        'steamAppId': appid_str,
         'name': row.get('name') or '',
         'shortDescription': row.get('short_description') or '',
         'developers': safe_json_parse(row.get('developers'), []),
@@ -366,7 +523,79 @@ def transform_game(row):
         'matchedModernTags': tag_weight['matchedModernTags'],
         'uniqueFeatureTags': tag_weight['matchedModernTags'],
         'differentiationLabels': tag_weight['differentiationLabels'],
+        # LLM 融合玩法分析（来自 combinedMechanics.json）
+        # llmMechanics: 标准标签（向后兼容，优先使用聚类归类结果）
+        'llmMechanics': llm_canonical if llm_canonical else llm_mechanics_list,
+        # llmRawMechanics: 自由标签（v3 新增，用于展示和筛选）
+        'llmRawMechanics': llm_raw_mechanics,
+        'llmMechanicsSummary': llm_summary,
     }
+
+
+def calculate_feature_tag_options(games):
+    """计算特色标签选项及其统计数据（基于 LLM 融合玩法分析）"""
+    feature_tag_options = []
+
+    for ft in LLM_MECHANICS_TAG_OPTIONS:
+        raw_tag = ft['tag']  # 中文标签，如 '探索冒险'
+
+        total_count = 0
+        pool_a_count = 0
+        pool_b_count = 0
+        pool_c_count = 0
+        total_wilson = 0
+
+        for game in games:
+            if not game.get('isTurnBased') or game.get('isTestVersion'):
+                continue
+
+            # 检查 LLM 分析的融合玩法中是否包含该标签
+            llm_mechanics = game.get('llmMechanics') or []
+            has_tag = raw_tag in llm_mechanics
+
+            if not has_tag:
+                continue
+
+            total_count += 1
+
+            # 计算池子归属
+            reviews = game.get('steamReviews')
+            if reviews and reviews.get('totalReviews', 0) > 0:
+                score = reviews.get('reviewScore', 0)
+                total = reviews.get('totalReviews', 0)
+                is_pokemon = game.get('isPokemonLike', False)
+                tags = game.get('tags', [])
+
+                if not is_blacklisted(tags):
+                    if not is_pokemon and score >= 75 and total >= 50:
+                        pool_a_count += 1
+                    elif is_pokemon and score >= 75 and total >= 50:
+                        pool_b_count += 1
+                    elif is_pokemon and 40 <= score <= 74 and total >= 50:
+                        pool_c_count += 1
+
+            ws = game.get('wilsonScore', 0)
+            if ws > 0:
+                total_wilson += ws
+
+        avg_wilson = total_wilson / total_count if total_count > 0 else 0
+
+        feature_tag_options.append({
+            'key': ft['key'],
+            'label': ft['label'],
+            'tag': raw_tag,
+            'count': total_count,
+            'gameCount': total_count,
+            'coverage': 0,
+            'avgWilson': round(avg_wilson, 4),
+            'poolDistribution': {
+                'A': pool_a_count,
+                'B': pool_b_count,
+                'C': pool_c_count,
+            },
+        })
+
+    return feature_tag_options
 
 # ============ 主程序 ============
 
@@ -467,34 +696,66 @@ def main():
         if new_count > 0 or updated_count > 0:
             log(f'  Incremental: {new_count} new, {updated_count} updated')
     
+    # 加载 LLM 融合玩法分析数据
+    t_llm = time.time()
+    log('Loading LLM mechanics...')
+    llm_mechanics = get_combined_mechanics()
+    log(f'LLM mechanics loaded in {time.time()-t_llm:.1f}s')
+
+    # 加载标签聚类映射表（v3 新增）
+    t_cluster = time.time()
+    log('Loading tag cluster map...')
+    cluster_map = get_tag_cluster_map()
+    log(f'Tag cluster map loaded in {time.time()-t_cluster:.1f}s')
+
     # ==================== 3. 转换所有游戏数据 ====================
     log(f'Transforming {len(all_games_map):,} games...')
     t1 = time.time()
     games = []
     for appid, row_dict in all_games_map.items():
-        game = transform_game(row_dict)
+        game = transform_game(row_dict, llm_mechanics, cluster_map)
         if game:
             games.append(game)
     
     log(f'Transformed {len(games):,} games in {time.time()-t1:.1f}s')
     
-    # 去重
+    # 去重：优先保留正式版（而非玩家数更多的测试版）
     t2 = time.time()
     log('Deduplicating...')
     dedup_map = {}
+    test_replaced = 0  # 被正式版替换掉的测试版数量
     for game in games:
         key = game['name'].lower().strip()
         existing = dedup_map.get(key)
         if not existing:
             dedup_map[key] = game
-        elif (game['estimatedOwners'] > existing['estimatedOwners'] or
-              (game['estimatedOwners'] == existing['estimatedOwners'] and
-               (game['steamReviews']['totalReviews'] if game['steamReviews'] else 0) >
-               (existing['steamReviews']['totalReviews'] if existing['steamReviews'] else 0))):
-            dedup_map[key] = game
-    
+        else:
+            existing_is_test = existing.get('isTestVersion', False)
+            game_is_test = game.get('isTestVersion', False)
+
+            if existing_is_test != game_is_test:
+                # 一方为测试版，另一方为正式版 → 保留正式版
+                if game_is_test:
+                    # 当前是测试版，已有是正式版 → 跳过
+                    test_replaced += 1
+                else:
+                    # 当前是正式版，已有是测试版 → 替换
+                    dedup_map[key] = game
+                    test_replaced += 1
+            else:
+                # 同为正式版或同为测试版 → 按玩家数和评价数排序
+                game_owners = game.get('estimatedOwners') or 0
+                existing_owners = existing.get('estimatedOwners') or 0
+                game_reviews = (game.get('steamReviews') or {}).get('totalReviews') or 0
+                existing_reviews = (existing.get('steamReviews') or {}).get('totalReviews') or 0
+                if (game_owners > existing_owners or
+                    (game_owners == existing_owners and game_reviews > existing_reviews)):
+                    dedup_map[key] = game
+
     deduped = list(dedup_map.values())
     log(f'Deduplication complete: {len(deduped):,} kept ({len(games) - len(deduped):,} removed) in {time.time()-t2:.1f}s')
+    if test_replaced > 0:
+        log(f'  (其中 {test_replaced:,} 个测试版被正式版替换)')
     
     # 池子统计
     t3 = time.time()
@@ -502,21 +763,30 @@ def main():
     pools = {'A': 0, 'B': 0, 'C': 0}
     turn_based_count = 0
     test_version_count = 0
-    
+
     for game in deduped:
         if game['isTurnBased']:
             turn_based_count += 1
         if game['isTestVersion']:
             test_version_count += 1
-        
+
         pool = calculate_pool(game['steamReviews'], game['isPokemonLike'], game['tags'])
         if pool:
             pools[pool] += 1
-    
+
     log(f'Pools: A={pools["A"]:,} B={pools["B"]:,} C={pools["C"]:,}')
     log(f'Turn-based: {turn_based_count:,} | Test versions: {test_version_count:,}')
     log(f'Stats calculated in {time.time()-t3:.1f}s')
-    
+
+    # 计算特色标签选项（基于 LLM 融合玩法分析）
+    t3b = time.time()
+    log('Calculating feature tag options (from LLM mechanics)...')
+    feature_tag_options = calculate_feature_tag_options(deduped)
+    log(f'Feature tag options: {len(feature_tag_options)} tags')
+    for ft in feature_tag_options:
+        log(f'  - {ft["label"]} ({ft["tag"]}): {ft["gameCount"]} games, avgWilson={ft["avgWilson"]:.4f}')
+    log(f'Feature tag options calculated in {time.time()-t3b:.1f}s')
+
     # 生成缓存
     t4 = time.time()
     log('Generating cache file...')
@@ -536,6 +806,7 @@ def main():
             'poolC': pools['C'],
         },
         'games': deduped,
+        'featureTagOptions': feature_tag_options,
     }
     
     with open(CACHE_FILE, 'w', encoding='utf-8') as f:

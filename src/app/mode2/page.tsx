@@ -37,6 +37,7 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { format, subYears } from "date-fns";
 import { zhCN } from "date-fns/locale";
+import { SYNONYM_MERGE as TAG_SYNONYM_MERGE } from "@/lib/tag-config";
 
 // ============ 类型定义 ============
 
@@ -1730,7 +1731,12 @@ export default function Mode2Page() {
                   )
                 : featureTagOptions;
 
-              // 按分组
+              // 同义词合并映射（废弃标签 → 保留标签）
+              // 来源: @/lib/tag-config（由 manage_tags.py --export-config 生成）
+              // 已通过 import 导入，直接使用 SYNONYM_MERGE 常量
+              // （不再在此处定义，删除了 ~80 行硬编码副本）
+
+              // ============ 分组 & 同义词合并 ============
               const grouped: Record<string, typeof featureTagOptions> = {};
               const uncategorized: typeof featureTagOptions = [];
 
@@ -1748,6 +1754,29 @@ export default function Mode2Page() {
                 if (!matched) {
                   uncategorized.push(tag);
                 }
+              }
+
+              // 对每个分组内的标签做同义词合并（废弃标签合并到保留标签，累加 count）
+              for (const groupKey of Object.keys(grouped)) {
+                const tags = grouped[groupKey];
+                const merged: Record<string, typeof featureTagOptions[0]> = {};
+                for (const t of tags) {
+                  const target = TAG_SYNONYM_MERGE[t.label];
+                  const key = target || t.label;
+                  const finalTag = target || t.tag;
+                  if (merged[key]) {
+                    merged[key].count += t.count;
+                    merged[key].gameCount += t.gameCount || 0;
+                  } else {
+                    merged[key] = {
+                      ...t,
+                      key,
+                      label: target || t.label,
+                      tag: finalTag,
+                    };
+                  }
+                }
+                grouped[groupKey] = Object.values(merged).sort((a, b) => b.count - a.count);
               }
 
               if (grouped['other']) {

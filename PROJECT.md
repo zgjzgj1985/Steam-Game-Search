@@ -1,9 +1,12 @@
 # Steam 全域游戏搜索
 
-> **版本**: v1.12.1
-> **更新日期**: 2026-04-20
+> **版本**: v1.13.2
+> **更新日期**: 2026-04-21
 
 > **版本历史**:
+> - v1.13.2: **Bug修复：BLACKLIST_TAGS 过于严格导致游戏被误排除**：修复 B 池游戏数量为0的根本原因。问题：BLACKLIST_TAGS 包含 "Board Game"，使用子串匹配（`includes`），导致所有包含 "board game" 的游戏（如 Evolution Board Game）被排除在所有池子之外。修复：清理 BLACKLIST_TAGS，只保留 NSFW/Hentai 等真正有问题的标签，移除 Board Game / Grand Strategy / 4X Strategy / Text-Based 等过于宽泛的标签。涉及文件：`src/app/api/mode2/filter/route.ts`。
+> - v1.13.1: **Bug修复：创新标签数量异常**：修复 featureTagOptions 只有10个标签的问题。根本原因：① INNOVATION_BLACKLIST 包含了大量创新玩法标签（如阵营抉择、程序生成、刷宝掉落等），② `precompute.py` 的 `calculate_feature_tag_options()` 使用硬编码的10个标签。修复：① 清理 INNOVATION_BLACKLIST，只保留品类标配标签；② 重写 `calculate_feature_tag_options()` 从 `combinedMechanics.json` 的 rawTagStats 动态加载所有标签；③ 重新运行预计算生成108个标签。涉及文件：`src/lib/tag-config.ts`、`scripts/precompute.py`、`public/data/games-cache.json`。
+> - v1.13.0: **标签体系三端统一重构**：构建单一配置源 `manage_tags.py --export-config` 生成 `tag-config.json`，统一管理同义词映射（92条）、黑名单（87个）、核心标签（10个）、分组分类（22个）。消除 `manage_tags.py`、`precompute.py`、`route.ts` 三处重复定义。黑名单重新设计为只包含品类标配标签，同义词合并的目标端标签不再进入黑名单。`mergeLlMechancics()` 合并时应用同义词合并。`computeFeatureTagOptionsFromMechanics()` 从 rawTagStats 加载时应用同义词合并，解决统计口径不一致导致 count=0 的问题。涉及文件：`scripts/manage_tags.py`、`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`、`src/lib/tag-config.ts`。
 > - v1.12.1: **聚类脚本 LLM 语义分析升级**：分11批调用 Gemini 对 207 个自由标签进行语义归类。聚类结果：41个归入标准分类、49个归入16个新分类（战斗策略/养成方式/叙事驱动/探索方式/多人社交等）、70个标记为噪声丢弃。人工审查回收 33 个高价值标签（如阵营抉择→叙事驱动、弱点追击→战斗策略等）。涉及文件：`scripts/cluster_tags.py`、`scripts/review_discard.py`、`scripts/manual_recover.py`。
 > - v1.12.0: **融合标签开放化**：融合玩法标签从"固定封闭标签"升级为"开放自由标签 + 定期聚类归类"双层架构。`analyze_mechanics.py` 允许 LLM 自由发明新标签（最多6个），新增 `cluster_tags.py` 聚类脚本将相似标签归入标准分类，新增 `tag_clusters.json` 聚类映射表。解决旧体系无法发现新兴玩法（如吃鸡、搜打撤等）的根本性局限。`precompute.py` 支持加载聚类映射，`route.ts` 新增 `llmRawMechanics` 字段。涉及文件：`scripts/analyze_mechanics.py`、`scripts/cluster_tags.py`、`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。新增数据文件：`tag_clusters.json`、`emerge_tags_log.json`。
 > - v1.11.0: **融合标签质量重构（Phase 1+2）**：第一性原理审查发现旧标签体系存在根本缺陷——66%游戏被标"探索冒险"（任何RPG标配）、52%被标"战棋策略"（核心玩法非融合玩法）、37%被标"像素风格"（美术≠机制）。重写 `analyze_mechanics.py` prompt，重新设计标签体系（丢弃探索冒险/战棋策略/像素风格，保留肉鸽融合/牌组构建/形态融合等具体机制标签），实现二次置信度验证（两模型交叉验证）。新标签体系使 B 池有效覆盖率从泛化的 66% 降至精确的 25%（肉鸽融合），真正实现了"区分融合玩法"的设计目标。涉及文件：`scripts/analyze_mechanics.py`、`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。

@@ -9,7 +9,52 @@ import re
 from pathlib import Path
 
 # ============ 标签配置 ============
+# 标签配置优先从 tag-config.json 读取（由 manage_tags.py --export-config 生成）
+# 如果配置文件不存在，使用内置默认值
 
+from pathlib import Path
+import json
+
+TAG_CONFIG_FILE = Path(__file__).parent / "tag-config.json"
+
+def load_tag_config():
+    """从 tag-config.json 加载标签配置"""
+    if TAG_CONFIG_FILE.exists():
+        try:
+            with open(TAG_CONFIG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return None
+
+TAG_CONFIG = load_tag_config()
+
+# 同义词合并映射（废弃标签 → 保留标签）
+# 来源: tag-config.json
+if TAG_CONFIG and "synonymMerge" in TAG_CONFIG:
+    SYNONYM_MERGE = TAG_CONFIG["synonymMerge"]
+else:
+    # 内置默认值
+    SYNONYM_MERGE = {
+        "案件推理": "推理探案",
+        "分支叙事": "阵营抉择",
+        "刷宝驱动": "刷宝掉落",
+        "放置挂机": "放置养成",
+        "深度构筑": "天赋树",
+        "主角尺寸切换": "体型系统",
+        "战棋怪物收集": "怪物收集",
+        "地牢运营": "养成模拟",
+        "异步对战": "异步多人",
+        "D&D规则改编": "桌游改编",
+        "程序化生成世界": "程序生成",
+        "无限构筑": "程序生成",
+        "感染模拟": "永久死亡",
+        "素材打造": "装备打造",
+        "怪物创造": "生物创造",
+        "情绪解谜": "机关解谜",
+    }
+
+# 回合制标签定义（precompute 专用，与 API 黑名单分开）
 TURN_BASED_TAGS = [
     "Turn-Based", "Turn-Based Strategy", "Turn-Based Tactics",
     "Turn-Based Combat", "Turn-Based RPG", "Turn Based",
@@ -20,9 +65,26 @@ POKEMON_LIKE_TAGS = [
     "Creature Collector", "Monster Catching", "Monster Taming", "Creature Collection",
 ]
 
-BLACKLIST_TAGS = [
+# 品类标配黑名单（precompute 专用）
+# is_blacklisted 函数使用：检查是否包含任何黑名单标签的子串
+PRECOMPUTE_BLACKLIST = [
+    # NSFW/禁止内容（独立维护）
     "Board Game", "Grand Strategy", "4X Strategy", "NSFW", "Hentai",
     "Text-Based", "Sexual Content",
+    # 品类标配标签（与 manage_tags.py BLACKLIST_TAGS 保持同步）
+    "JRPG", "RPG", "Action RPG", "Adventure", "Singleplayer",
+    "Turn-Based", "Turn-Based Combat", "Turn-Based Strategy",
+    "Roguelite", "Roguelike", "Rogue-lite", "Metroidvania",
+    "Card Game", "Deckbuilding",
+    "Simulation", "Sandbox", "Farming Sim", "Life Sim",
+    "Survival", "Survival Game", "Crafting",
+    "Open World", "Exploration", "Dungeon Crawler",
+    "Fantasy", "Anime", "2D", "3D", "Pixel Graphics",
+    "Indie", "Action", "Strategy", "MMORPG", "Auto Battler",
+    "Perma Death", "Procedural Generation", "Loot",
+    "Collectathon", "PvE", "PvP", "Co-op", "Multiplayer",
+    "回合制", "角色扮演", "宝可梦Like", "Steam 评测",
+    "怪物收集", "怪物捕捉", "养成",
 ]
 
 CORE_TAGS = [
@@ -172,23 +234,38 @@ def get_combined_mechanics():
 # ============ 聚类映射（v3 新增）============
 
 def load_tag_clusters():
-    """加载标签聚类映射表"""
+    """加载标签聚类映射表（兼容旧文件）"""
     cluster_file = Path(__file__).parent / 'tag_clusters.json'
     if not cluster_file.exists():
-        log('Warning: tag_clusters.json not found, skipping cluster mapping')
         return {}
     try:
         with open(cluster_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
-        log(f'Loaded tag cluster map: {len(data.get("clusterMap", {}))} mappings')
         return data.get('clusterMap', {})
+    except Exception:
+        return {}
+
+
+def load_tag_merge_map():
+    """加载标签合并映射表（废弃标签 -> 保留标签）"""
+    merge_file = Path(__file__).parent / 'tag_merge_map.json'
+    if not merge_file.exists():
+        log('Warning: tag_merge_map.json not found, skipping tag merging')
+        return {}
+    try:
+        with open(merge_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        merge_map = data.get('mergeMap', {})
+        log(f'Loaded tag merge map: {len(merge_map)} mappings')
+        return merge_map
     except Exception as e:
-        log(f'Warning: Failed to load tag_clusters.json: {e}')
+        log(f'Warning: Failed to load tag_merge_map.json: {e}')
         return {}
 
 
 # 模块级聚类映射缓存
 TAG_CLUSTER_MAP = None
+TAG_MERGE_MAP = None
 
 
 def get_tag_cluster_map():
@@ -197,6 +274,14 @@ def get_tag_cluster_map():
     if TAG_CLUSTER_MAP is None:
         TAG_CLUSTER_MAP = load_tag_clusters()
     return TAG_CLUSTER_MAP
+
+
+def get_tag_merge_map():
+    """获取标签合并映射表（带缓存）"""
+    global TAG_MERGE_MAP
+    if TAG_MERGE_MAP is None:
+        TAG_MERGE_MAP = load_tag_merge_map()
+    return TAG_MERGE_MAP
 
 
 def map_raw_mechanics_to_canonical(raw_mechanics, cluster_map, canonical_tags):
@@ -284,7 +369,7 @@ def check_pokemon_like(tags):
 
 def is_blacklisted(tags):
     normalized = [t.lower() for t in tags]
-    return any(bl.lower() in t for t in normalized for bl in BLACKLIST_TAGS)
+    return any(bl.lower() in t for t in normalized for bl in PRECOMPUTE_BLACKLIST)
 
 def is_turn_based(tags, genres):
     normalized_tags = [t.lower() for t in tags]
@@ -471,8 +556,27 @@ def transform_game(row, llm_mechanics=None, cluster_map=None):
     appid_str = str(appid)
     llm_data = llm_mechanics.get(appid_str) if llm_mechanics else None
     llm_mechanics_list = llm_data.get('mechanics', []) if llm_data else []
-    llm_raw_mechanics = llm_data.get('rawMechanics', []) if llm_data else []
+    llm_raw_mechanics_raw = llm_data.get('rawMechanics', []) if llm_data else []
     llm_summary = llm_data.get('summary', '') if llm_data else ''
+
+    # 通过合并映射表处理同义标签（废弃名 -> 保留名）
+    # 同时丢弃黑名单标签
+    merge_map = get_tag_merge_map()
+    merged_tags = set()
+    llm_raw_mechanics = []
+    for tag in llm_raw_mechanics_raw:
+        if tag in merge_map:
+            target = merge_map[tag]
+            if target is not None:
+                # 合并到保留标签
+                merged_tags.add(target)
+            # 如果 target 是 None，说明标签本身有价值，保留为独立标签
+            elif target is None:
+                merged_tags.add(tag)
+        else:
+            # 不在合并映射中的标签，保留为独立标签
+            merged_tags.add(tag)
+    llm_raw_mechanics = list(merged_tags)
 
     # 通过聚类映射将自由标签归类到标准分类（v3 新增）
     llm_canonical = map_raw_mechanics_to_canonical(
@@ -480,6 +584,10 @@ def transform_game(row, llm_mechanics=None, cluster_map=None):
         cluster_map,
         CANONICAL_LLM_TAGS
     )
+
+    # 合并 canonical 标签和所有 merged rawMechanics 标签
+    # 确保 featureTagOptions 筛选能匹配到所有标签
+    all_llm_tags = list(set(llm_canonical) | set(llm_raw_mechanics))
 
     return {
         'id': appid_str,
@@ -524,21 +632,54 @@ def transform_game(row, llm_mechanics=None, cluster_map=None):
         'uniqueFeatureTags': tag_weight['matchedModernTags'],
         'differentiationLabels': tag_weight['differentiationLabels'],
         # LLM 融合玩法分析（来自 combinedMechanics.json）
-        # llmMechanics: 标准标签（向后兼容，优先使用聚类归类结果）
-        'llmMechanics': llm_canonical if llm_canonical else llm_mechanics_list,
+        # llmMechanics: 包含所有标签（canonical + merged rawMechanics），用于 featureTagOptions 筛选
+        'llmMechanics': all_llm_tags if all_llm_tags else (llm_canonical if llm_canonical else llm_mechanics_list),
         # llmRawMechanics: 自由标签（v3 新增，用于展示和筛选）
         'llmRawMechanics': llm_raw_mechanics,
         'llmMechanicsSummary': llm_summary,
     }
 
 
+def load_raw_tag_stats():
+    """从 combinedMechanics.json 加载所有原始标签统计（用于动态生成 featureTagOptions）"""
+    mechanics_file = Path(r'D:\Steam全域游戏搜索\public\data\combinedMechanics.json')
+    if not mechanics_file.exists():
+        return {}
+    try:
+        with open(mechanics_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data.get('rawTagStats', {})
+    except Exception as e:
+        log(f'Warning: Failed to load rawTagStats: {e}')
+        return {}
+
+
 def calculate_feature_tag_options(games):
-    """计算特色标签选项及其统计数据（基于 LLM 融合玩法分析）"""
+    """计算特色标签选项及其统计数据（从 combinedMechanics.json 动态加载所有创新标签）"""
+    # 动态加载所有原始标签
+    raw_tag_stats = load_raw_tag_stats()
+    if not raw_tag_stats:
+        log('Warning: 无 rawTagStats 数据，featureTagOptions 为空')
+        return []
+
+    # 第一步：对原始统计应用同义词合并和黑名单过滤
+    merged_tag_counts: dict = {}
+    for tag, count in raw_tag_stats.items():
+        if count <= 0:
+            continue
+        # 黑名单过滤（只排除品类标配标签）
+        if is_blacklisted([tag]):
+            continue
+        # 同义词合并
+        merged = SYNONYM_MERGE.get(tag, tag)
+        merged_tag_counts[merged] = merged_tag_counts.get(merged, 0) + count
+
+    # 按 count 降序排列
+    sorted_tags = sorted(merged_tag_counts.items(), key=lambda x: x[1], reverse=True)
+
     feature_tag_options = []
 
-    for ft in LLM_MECHANICS_TAG_OPTIONS:
-        raw_tag = ft['tag']  # 中文标签，如 '探索冒险'
-
+    for raw_tag, tag_count in sorted_tags:
         total_count = 0
         pool_a_count = 0
         pool_b_count = 0
@@ -549,9 +690,11 @@ def calculate_feature_tag_options(games):
             if not game.get('isTurnBased') or game.get('isTestVersion'):
                 continue
 
-            # 检查 LLM 分析的融合玩法中是否包含该标签
+            # 检查 LLM 分析的融合玩法中是否包含该标签（同时匹配 llmMechanics 和 llmRawMechanics）
             llm_mechanics = game.get('llmMechanics') or []
-            has_tag = raw_tag in llm_mechanics
+            llm_raw_mechanics = game.get('llmRawMechanics') or []
+            all_mechanics = llm_mechanics + llm_raw_mechanics
+            has_tag = raw_tag in all_mechanics
 
             if not has_tag:
                 continue
@@ -564,25 +707,24 @@ def calculate_feature_tag_options(games):
                 score = reviews.get('reviewScore', 0)
                 total = reviews.get('totalReviews', 0)
                 is_pokemon = game.get('isPokemonLike', False)
-                tags = game.get('tags', [])
 
-                if not is_blacklisted(tags):
-                    if not is_pokemon and score >= 75 and total >= 50:
-                        pool_a_count += 1
-                    elif is_pokemon and score >= 75 and total >= 50:
-                        pool_b_count += 1
-                    elif is_pokemon and 40 <= score <= 74 and total >= 50:
-                        pool_c_count += 1
+                if not is_pokemon and score >= 75 and total >= 50:
+                    pool_a_count += 1
+                elif is_pokemon and score >= 75 and total >= 50:
+                    pool_b_count += 1
+                elif is_pokemon and 40 <= score <= 74 and total >= 50:
+                    pool_c_count += 1
 
             ws = game.get('wilsonScore', 0)
             if ws > 0:
                 total_wilson += ws
 
         avg_wilson = total_wilson / total_count if total_count > 0 else 0
+        key = raw_tag.lower().replace(' ', '_').replace('/', '_')
 
         feature_tag_options.append({
-            'key': ft['key'],
-            'label': ft['label'],
+            'key': key,
+            'label': raw_tag,
             'tag': raw_tag,
             'count': total_count,
             'gameCount': total_count,
@@ -595,6 +737,7 @@ def calculate_feature_tag_options(games):
             },
         })
 
+    log(f'计算了 {len(feature_tag_options)} 个特色标签（从 rawTagStats 动态生成）')
     return feature_tag_options
 
 # ============ 主程序 ============

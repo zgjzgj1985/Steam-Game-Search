@@ -1,0 +1,1679 @@
+{
+  "meta": {
+    "createdAt": "2026-04-21 15:03:04",
+    "totalUniqueTags": 207,
+    "processedTags": 207,
+    "pendingTags": 0,
+    "clusteredCanonical": 44,
+    "clusteredNew": 69,
+    "discarded": 94
+  },
+  "clusters": {
+    ":战斗策略": [
+      {
+        "tag": "仆从军团",
+        "count": 2,
+        "games": [
+          "Geneforge 1",
+          "Geneforge 3"
+        ]
+      },
+      {
+        "tag": "刷宝掉落",
+        "count": 2,
+        "games": [
+          "Siralim",
+          "Siralim 2"
+        ]
+      },
+      {
+        "tag": "装备驱动",
+        "count": 2,
+        "games": [
+          "Bit Heroes Quest",
+          "The Dragonhood"
+        ]
+      },
+      {
+        "tag": "弱点追击",
+        "count": 2,
+        "games": [
+          "Shin Megami Tensei III Nocturne HD Remaster",
+          "Shin Megami Tensei V: Vengeance"
+        ]
+      },
+      {
+        "tag": "双单位战术",
+        "count": 1,
+        "games": [
+          "Temtem"
+        ]
+      },
+      {
+        "tag": "多人竞技",
+        "count": 1,
+        "games": [
+          "FurryFury: Smash & Roll"
+        ]
+      },
+      {
+        "tag": "团队连携攻击",
+        "count": 1,
+        "games": [
+          "Fae Tactics"
+        ]
+      },
+      {
+        "tag": "领袖+召唤单位",
+        "count": 1,
+        "games": [
+          "Fae Tactics"
+        ]
+      },
+      {
+        "tag": "元素循环克制",
+        "count": 1,
+        "games": [
+          "Fae Tactics"
+        ]
+      },
+      {
+        "tag": "部位破坏",
+        "count": 1,
+        "games": [
+          "Monster Hunter Stories 2: Wings of Ruin"
+        ]
+      },
+      {
+        "tag": "猜拳克制",
+        "count": 1,
+        "games": [
+          "Monster Hunter Stories 2: Wings of Ruin"
+        ]
+      },
+      {
+        "tag": "元素反应",
+        "count": 1,
+        "games": [
+          "Cassette Beasts"
+        ]
+      },
+      {
+        "tag": "团队管理",
+        "count": 1,
+        "games": [
+          "Monster Girl Manager"
+        ]
+      },
+      {
+        "tag": "即时队伍战斗",
+        "count": 1,
+        "games": [
+          "Forgotten Realms: The Archives - Collection One"
+        ]
+      },
+      {
+        "tag": "即时战术",
+        "count": 1,
+        "games": [
+          "Zombie Party 丧尸派对"
+        ]
+      },
+      {
+        "tag": "小队RPG",
+        "count": 1,
+        "games": [
+          "Zombie Party 丧尸派对"
+        ]
+      },
+      {
+        "tag": "背包构筑",
+        "count": 1,
+        "games": [
+          "NEODUEL: Backpack Monsters"
+        ]
+      }
+    ],
+    ":叙事驱动": [
+      {
+        "tag": "阵营抉择",
+        "count": 6,
+        "games": [
+          "Geneforge 2",
+          "Geneforge 3",
+          "Geneforge 5: Overthrow"
+        ]
+      },
+      {
+        "tag": "分支叙事",
+        "count": 2,
+        "games": [
+          "Geneforge 1",
+          "Dino Hazard: Chronos Blackout"
+        ]
+      },
+      {
+        "tag": "交涉招募",
+        "count": 2,
+        "games": [
+          "Shin Megami Tensei III Nocturne HD Remaster",
+          "Shin Megami Tensei V: Vengeance"
+        ]
+      },
+      {
+        "tag": "网状叙事",
+        "count": 1,
+        "games": [
+          "Geneforge 2"
+        ]
+      },
+      {
+        "tag": "高自由度CRPG",
+        "count": 1,
+        "games": [
+          "Geneforge 1 - Mutagen"
+        ]
+      },
+      {
+        "tag": "剧情驱动",
+        "count": 1,
+        "games": [
+          "Noob - The Factionless"
+        ]
+      },
+      {
+        "tag": "多分支叙事",
+        "count": 1,
+        "games": [
+          "Athenian Rhapsody"
+        ]
+      },
+      {
+        "tag": "视觉小说",
+        "count": 1,
+        "games": [
+          "Final Stardust: Cosmic Nexus"
+        ]
+      },
+      {
+        "tag": "太空歌剧",
+        "count": 1,
+        "games": [
+          "Final Stardust: Cosmic Nexus"
+        ]
+      },
+      {
+        "tag": "心灵潜入",
+        "count": 1,
+        "games": [
+          "Bloomtown: A Different Story"
+        ]
+      },
+      {
+        "tag": "视觉小说叙事",
+        "count": 1,
+        "games": [
+          "Project Of Cooling The Earth"
+        ]
+      }
+    ],
+    "形态融合": [
+      {
+        "tag": "形态融合",
+        "count": 7,
+        "games": [
+          "WORLD OF FINAL FANTASY®",
+          "Digimon Story Cyber Sleuth: Complete Edition",
+          "The Monster Breeder"
+        ]
+      },
+      {
+        "tag": "生物创造",
+        "count": 2,
+        "games": [
+          "Geneforge 1",
+          "Geneforge 2"
+        ]
+      },
+      {
+        "tag": "怪物创造",
+        "count": 1,
+        "games": [
+          "Geneforge 3"
+        ]
+      },
+      {
+        "tag": "生物塑造",
+        "count": 1,
+        "games": [
+          "Geneforge 5: Overthrow"
+        ]
+      },
+      {
+        "tag": "怪物深度合成",
+        "count": 1,
+        "games": [
+          "Siralim"
+        ]
+      },
+      {
+        "tag": "怪物合成",
+        "count": 1,
+        "games": [
+          "Siralim 2"
+        ]
+      },
+      {
+        "tag": "特性拼装",
+        "count": 1,
+        "games": [
+          "Evolution Board Game"
+        ]
+      },
+      {
+        "tag": "体型堆叠",
+        "count": 1,
+        "games": [
+          "WORLD OF FINAL FANTASY®"
+        ]
+      },
+      {
+        "tag": "生物合成/进化",
+        "count": 1,
+        "games": [
+          "Legend Creatures(传奇生物)"
+        ]
+      },
+      {
+        "tag": "生物改造",
+        "count": 1,
+        "games": [
+          "The Monster Breeder"
+        ]
+      },
+      {
+        "tag": "怪物融合",
+        "count": 1,
+        "games": [
+          "Siralim Ultimate"
+        ]
+      },
+      {
+        "tag": "主角变身",
+        "count": 1,
+        "games": [
+          "Cassette Beasts"
+        ]
+      },
+      {
+        "tag": "精髓技能继承",
+        "count": 1,
+        "games": [
+          "Shin Megami Tensei V: Vengeance"
+        ]
+      }
+    ],
+    ":战棋策略": [
+      {
+        "tag": "战棋式战斗",
+        "count": 1,
+        "games": [
+          "Geneforge 3"
+        ]
+      }
+    ],
+    ":养成方式": [
+      {
+        "tag": "职业Build自由",
+        "count": 1,
+        "games": [
+          "Geneforge 5: Overthrow"
+        ]
+      },
+      {
+        "tag": "放置养成",
+        "count": 1,
+        "games": [
+          "Digimon Story Cyber Sleuth: Complete Edition"
+        ]
+      },
+      {
+        "tag": "好感度养成",
+        "count": 1,
+        "games": [
+          "Rainbow Billy: The Curse of the Leviathan"
+        ]
+      },
+      {
+        "tag": "勾玉养成",
+        "count": 1,
+        "games": [
+          "Shin Megami Tensei III Nocturne HD Remaster"
+        ]
+      },
+      {
+        "tag": "双线养成",
+        "count": 1,
+        "games": [
+          "Geneforge 1 - Mutagen"
+        ]
+      },
+      {
+        "tag": "天赋树",
+        "count": 1,
+        "games": [
+          "DRAGON QUEST MONSTERS: The Dark Prince"
+        ]
+      },
+      {
+        "tag": "体型系统",
+        "count": 1,
+        "games": [
+          "DRAGON QUEST MONSTERS: The Dark Prince"
+        ]
+      },
+      {
+        "tag": "技能继承",
+        "count": 1,
+        "games": [
+          "DRAGON QUEST MONSTERS: The Dark Prince"
+        ]
+      }
+    ],
+    "肉鸽融合": [
+      {
+        "tag": "肉鸽融合",
+        "count": 12,
+        "games": [
+          "Siralim",
+          "Siralim 2",
+          "The Monster Breeder"
+        ]
+      },
+      {
+        "tag": "随机地牢",
+        "count": 2,
+        "games": [
+          "Siralim",
+          "Siralim 3"
+        ]
+      },
+      {
+        "tag": "肉鸽Lite",
+        "count": 2,
+        "games": [
+          "Legend Creatures(传奇生物)",
+          "Super Bullet Break"
+        ]
+      },
+      {
+        "tag": "程序生成",
+        "count": 2,
+        "games": [
+          "Siralim Ultimate",
+          "Monster Girl Manager"
+        ]
+      },
+      {
+        "tag": "无尽爬塔",
+        "count": 1,
+        "games": [
+          "Siralim"
+        ]
+      },
+      {
+        "tag": "Rogue-lite",
+        "count": 1,
+        "games": [
+          "Dungeon Scavenger"
+        ]
+      },
+      {
+        "tag": "永久死亡",
+        "count": 1,
+        "games": [
+          "Abomi Nation"
+        ]
+      },
+      {
+        "tag": "程序化生成世界",
+        "count": 1,
+        "games": [
+          "Abomi Nation"
+        ]
+      },
+      {
+        "tag": "无限地牢",
+        "count": 1,
+        "games": [
+          "Siralim Ultimate"
+        ]
+      },
+      {
+        "tag": "轻度肉鸽",
+        "count": 1,
+        "games": [
+          "Oaken"
+        ]
+      }
+    ],
+    "生存建造": [
+      {
+        "tag": "生活模拟",
+        "count": 2,
+        "games": [
+          "Ooblets",
+          "Bloomtown: A Different Story"
+        ]
+      },
+      {
+        "tag": "装备打造",
+        "count": 1,
+        "games": [
+          "Siralim 2"
+        ]
+      },
+      {
+        "tag": "基地建设",
+        "count": 1,
+        "games": [
+          "Siralim 2"
+        ]
+      },
+      {
+        "tag": "农场经营",
+        "count": 1,
+        "games": [
+          "Ooblets"
+        ]
+      },
+      {
+        "tag": "素材打造",
+        "count": 1,
+        "games": [
+          "Monster Hunter Stories 2: Wings of Ruin"
+        ]
+      },
+      {
+        "tag": "生存管理",
+        "count": 1,
+        "games": [
+          "Dino Hazard: Chronos Blackout"
+        ]
+      },
+      {
+        "tag": "资源生存",
+        "count": 1,
+        "games": [
+          "Forgotten Realms: The Archives - Collection One"
+        ]
+      },
+      {
+        "tag": "牧场经营",
+        "count": 1,
+        "games": [
+          "Cat God Ranch"
+        ]
+      },
+      {
+        "tag": "生存建造",
+        "count": 1,
+        "games": [
+          "Project Of Cooling The Earth"
+        ]
+      }
+    ],
+    "牌组构建": [
+      {
+        "tag": "牌组构建",
+        "count": 9,
+        "games": [
+          "Ooblets",
+          "Oaken",
+          "Dragon Creek"
+        ]
+      },
+      {
+        "tag": "卡牌对战",
+        "count": 3,
+        "games": [
+          "Card of spirits",
+          "Little Inner Monsters - Card Game",
+          "Final Stardust: Cosmic Nexus"
+        ]
+      },
+      {
+        "tag": "手牌管理",
+        "count": 2,
+        "games": [
+          "Evolution Board Game",
+          "Card of spirits"
+        ]
+      },
+      {
+        "tag": "集换式卡牌",
+        "count": 2,
+        "games": [
+          "Final Stardust: Cosmic Nexus",
+          "Isle of Swaps"
+        ]
+      }
+    ],
+    ":多人社交": [
+      {
+        "tag": "异步多人",
+        "count": 1,
+        "games": [
+          "Evolution Board Game"
+        ]
+      },
+      {
+        "tag": "双人协作",
+        "count": 1,
+        "games": [
+          "Temtem"
+        ]
+      },
+      {
+        "tag": "公会经营",
+        "count": 1,
+        "games": [
+          "Noob - The Factionless"
+        ]
+      },
+      {
+        "tag": "社交羁绊",
+        "count": 1,
+        "games": [
+          "Bloomtown: A Different Story"
+        ]
+      },
+      {
+        "tag": "异步对战",
+        "count": 1,
+        "games": [
+          "NEODUEL: Backpack Monsters"
+        ]
+      }
+    ],
+    ":桌游骰牌": [
+      {
+        "tag": "桌游改编",
+        "count": 1,
+        "games": [
+          "Evolution Board Game"
+        ]
+      },
+      {
+        "tag": "骰面构筑",
+        "count": 1,
+        "games": [
+          "Dicefolk"
+        ]
+      },
+      {
+        "tag": "行动顺序操控",
+        "count": 1,
+        "games": [
+          "Dicefolk"
+        ]
+      }
+    ],
+    ":怪物收集": [
+      {
+        "tag": "怪物收集",
+        "count": 21,
+        "games": [
+          "Ooblets",
+          "Bit Heroes Quest",
+          "Ni no Kuni Wrath of the White Witch™ Remastered"
+        ]
+      },
+      {
+        "tag": "战棋怪物收集",
+        "count": 1,
+        "games": [
+          "Fae Tactics"
+        ]
+      }
+    ],
+    "MMO元素": [
+      {
+        "tag": "MMO元素",
+        "count": 2,
+        "games": [
+          "Temtem",
+          "Familiars.io"
+        ]
+      },
+      {
+        "tag": "多人协作",
+        "count": 2,
+        "games": [
+          "Monster Hunter Stories 2: Wings of Ruin",
+          "Cassette Beasts"
+        ]
+      },
+      {
+        "tag": "MMORPG",
+        "count": 1,
+        "games": [
+          "Bit Heroes Quest"
+        ]
+      }
+    ],
+    "自动战斗": [
+      {
+        "tag": "自动战斗",
+        "count": 6,
+        "games": [
+          "Legend Creatures(传奇生物)",
+          "Siralim Ultimate",
+          "Million Monster Militia"
+        ]
+      },
+      {
+        "tag": "放置挂机",
+        "count": 1,
+        "games": [
+          "Bit Heroes Quest"
+        ]
+      },
+      {
+        "tag": "团队构筑/羁绊",
+        "count": 1,
+        "games": [
+          "Legend Creatures(传奇生物)"
+        ]
+      },
+      {
+        "tag": "间接指挥",
+        "count": 1,
+        "games": [
+          "Zero Orders Tactics"
+        ]
+      }
+    ],
+    ":探索方式": [
+      {
+        "tag": "双世界穿梭",
+        "count": 1,
+        "games": [
+          "Ni no Kuni Wrath of the White Witch™ Remastered"
+        ]
+      },
+      {
+        "tag": "案件推理",
+        "count": 1,
+        "games": [
+          "Digimon Story Cyber Sleuth: Complete Edition"
+        ]
+      },
+      {
+        "tag": "非战斗解法",
+        "count": 1,
+        "games": [
+          "Geneforge 1 - Mutagen"
+        ]
+      },
+      {
+        "tag": "推理探案",
+        "count": 1,
+        "games": [
+          "Project Of Cooling The Earth"
+        ]
+      }
+    ],
+    ":回合制策略": [
+      {
+        "tag": "半即时指令战斗",
+        "count": 1,
+        "games": [
+          "Ni no Kuni Wrath of the White Witch™ Remastered"
+        ]
+      },
+      {
+        "tag": "动态回合顺序",
+        "count": 1,
+        "games": [
+          "Fae Tactics"
+        ]
+      },
+      {
+        "tag": "可预见性战斗",
+        "count": 1,
+        "games": [
+          "Zero Orders Tactics"
+        ]
+      }
+    ],
+    "银河恶魔城": [
+      {
+        "tag": "银河恶魔城",
+        "count": 1,
+        "games": [
+          "Monster Sanctuary"
+        ]
+      }
+    ],
+    ":怪物收集养成": [
+      {
+        "tag": "宝可梦Like",
+        "count": 1,
+        "games": [
+          "Dino Hazard: Chronos Blackout"
+        ]
+      }
+    ],
+    ":开放世界": [
+      {
+        "tag": "开放世界探索",
+        "count": 2,
+        "games": [
+          "Cassette Beasts",
+          "Dokimon: Quest"
+        ]
+      }
+    ],
+    ":战术战棋": [
+      {
+        "tag": "六边形战棋",
+        "count": 1,
+        "games": [
+          "Oaken"
+        ]
+      },
+      {
+        "tag": "网格战术",
+        "count": 1,
+        "games": [
+          "Geneforge 1 - Mutagen"
+        ]
+      },
+      {
+        "tag": "回合制战术",
+        "count": 1,
+        "games": [
+          "Dicefolk"
+        ]
+      },
+      {
+        "tag": "棋盘战术",
+        "count": 1,
+        "games": [
+          "Isle of Swaps"
+        ]
+      }
+    ],
+    ":模拟经营": [
+      {
+        "tag": "养成模拟",
+        "count": 1,
+        "games": [
+          "Dragon Creek"
+        ]
+      },
+      {
+        "tag": "地牢运营",
+        "count": 1,
+        "games": [
+          "Suzukuri Dungeon: Karin in the Mountain"
+        ]
+      },
+      {
+        "tag": "反向RPG经营",
+        "count": 1,
+        "games": [
+          "Suzukuri Dungeon: Karin in the Mountain"
+        ]
+      }
+    ],
+    ":玩法融合": [
+      {
+        "tag": "塔防融合",
+        "count": 1,
+        "games": [
+          "Suzukuri Dungeon: Karin in the Mountain"
+        ]
+      },
+      {
+        "tag": "解谜策略",
+        "count": 1,
+        "games": [
+          "Zero Orders Tactics"
+        ]
+      },
+      {
+        "tag": "地形改造",
+        "count": 1,
+        "games": [
+          "Zero Orders Tactics"
+        ]
+      },
+      {
+        "tag": "机关解谜",
+        "count": 1,
+        "games": [
+          "Portal Fantasy"
+        ]
+      }
+    ],
+    ":开放世界探索": [
+      {
+        "tag": "半开放世界探索",
+        "count": 1,
+        "games": [
+          "Anode Heart"
+        ]
+      },
+      {
+        "tag": "开放区域探索",
+        "count": 1,
+        "games": [
+          "Shin Megami Tensei V: Vengeance"
+        ]
+      }
+    ]
+  },
+  "clusterMap": {
+    "仆从军团": ":战斗策略",
+    "刷宝掉落": ":战斗策略",
+    "装备驱动": ":战斗策略",
+    "弱点追击": ":战斗策略",
+    "双单位战术": ":战斗策略",
+    "多人竞技": ":战斗策略",
+    "团队连携攻击": ":战斗策略",
+    "领袖+召唤单位": ":战斗策略",
+    "元素循环克制": ":战斗策略",
+    "部位破坏": ":战斗策略",
+    "猜拳克制": ":战斗策略",
+    "元素反应": ":战斗策略",
+    "团队管理": ":战斗策略",
+    "即时队伍战斗": ":战斗策略",
+    "即时战术": ":战斗策略",
+    "小队RPG": ":战斗策略",
+    "背包构筑": ":战斗策略",
+    "阵营抉择": ":叙事驱动",
+    "分支叙事": ":叙事驱动",
+    "交涉招募": ":叙事驱动",
+    "网状叙事": ":叙事驱动",
+    "高自由度CRPG": ":叙事驱动",
+    "剧情驱动": ":叙事驱动",
+    "多分支叙事": ":叙事驱动",
+    "视觉小说": ":叙事驱动",
+    "太空歌剧": ":叙事驱动",
+    "心灵潜入": ":叙事驱动",
+    "视觉小说叙事": ":叙事驱动",
+    "形态融合": "形态融合",
+    "生物创造": "形态融合",
+    "怪物创造": "形态融合",
+    "生物塑造": "形态融合",
+    "怪物深度合成": "形态融合",
+    "怪物合成": "形态融合",
+    "特性拼装": "形态融合",
+    "体型堆叠": "形态融合",
+    "生物合成/进化": "形态融合",
+    "生物改造": "形态融合",
+    "怪物融合": "形态融合",
+    "主角变身": "形态融合",
+    "精髓技能继承": "形态融合",
+    "战棋式战斗": ":战棋策略",
+    "职业Build自由": ":养成方式",
+    "放置养成": ":养成方式",
+    "好感度养成": ":养成方式",
+    "勾玉养成": ":养成方式",
+    "双线养成": ":养成方式",
+    "天赋树": ":养成方式",
+    "体型系统": ":养成方式",
+    "技能继承": ":养成方式",
+    "肉鸽融合": "肉鸽融合",
+    "随机地牢": "肉鸽融合",
+    "肉鸽Lite": "肉鸽融合",
+    "程序生成": "肉鸽融合",
+    "无尽爬塔": "肉鸽融合",
+    "Rogue-lite": "肉鸽融合",
+    "永久死亡": "肉鸽融合",
+    "程序化生成世界": "肉鸽融合",
+    "无限地牢": "肉鸽融合",
+    "轻度肉鸽": "肉鸽融合",
+    "生活模拟": "生存建造",
+    "装备打造": "生存建造",
+    "基地建设": "生存建造",
+    "农场经营": "生存建造",
+    "素材打造": "生存建造",
+    "生存管理": "生存建造",
+    "资源生存": "生存建造",
+    "牧场经营": "生存建造",
+    "生存建造": "生存建造",
+    "牌组构建": "牌组构建",
+    "卡牌对战": "牌组构建",
+    "手牌管理": "牌组构建",
+    "集换式卡牌": "牌组构建",
+    "异步多人": ":多人社交",
+    "双人协作": ":多人社交",
+    "公会经营": ":多人社交",
+    "社交羁绊": ":多人社交",
+    "异步对战": ":多人社交",
+    "桌游改编": ":桌游骰牌",
+    "骰面构筑": ":桌游骰牌",
+    "行动顺序操控": ":桌游骰牌",
+    "怪物收集": ":怪物收集",
+    "战棋怪物收集": ":怪物收集",
+    "MMO元素": "MMO元素",
+    "多人协作": "MMO元素",
+    "MMORPG": "MMO元素",
+    "自动战斗": "自动战斗",
+    "放置挂机": "自动战斗",
+    "团队构筑/羁绊": "自动战斗",
+    "间接指挥": "自动战斗",
+    "双世界穿梭": ":探索方式",
+    "案件推理": ":探索方式",
+    "非战斗解法": ":探索方式",
+    "推理探案": ":探索方式",
+    "半即时指令战斗": ":回合制策略",
+    "动态回合顺序": ":回合制策略",
+    "可预见性战斗": ":回合制策略",
+    "银河恶魔城": "银河恶魔城",
+    "宝可梦Like": ":怪物收集养成",
+    "开放世界探索": ":开放世界",
+    "六边形战棋": ":战术战棋",
+    "网格战术": ":战术战棋",
+    "回合制战术": ":战术战棋",
+    "棋盘战术": ":战术战棋",
+    "养成模拟": ":模拟经营",
+    "地牢运营": ":模拟经营",
+    "反向RPG经营": ":模拟经营",
+    "塔防融合": ":玩法融合",
+    "解谜策略": ":玩法融合",
+    "地形改造": ":玩法融合",
+    "机关解谜": ":玩法融合",
+    "半开放世界探索": ":开放世界探索",
+    "开放区域探索": ":开放世界探索"
+  },
+  "newCategories": [
+    ":养成方式",
+    ":叙事驱动",
+    ":回合制策略",
+    ":多人社交",
+    ":开放世界",
+    ":开放世界探索",
+    ":怪物收集",
+    ":怪物收集养成",
+    ":战斗策略",
+    ":战术战棋",
+    ":战棋策略",
+    ":探索方式",
+    ":桌游骰牌",
+    ":模拟经营",
+    ":玩法融合"
+  ],
+  "discarded": [
+    {
+      "tag": "派系抉择",
+      "count": 1,
+      "games": [
+        "Geneforge 1"
+      ]
+    },
+    {
+      "tag": "潜行战术",
+      "count": 1,
+      "games": [
+        "Geneforge 1"
+      ]
+    },
+    {
+      "tag": "自由角色构筑",
+      "count": 1,
+      "games": [
+        "Geneforge 3"
+      ]
+    },
+    {
+      "tag": "多分支剧情",
+      "count": 1,
+      "games": [
+        "Geneforge 3"
+      ]
+    },
+    {
+      "tag": "CRPG式叙事",
+      "count": 1,
+      "games": [
+        "Geneforge 5: Overthrow"
+      ]
+    },
+    {
+      "tag": "无限构筑",
+      "count": 1,
+      "games": [
+        "Siralim"
+      ]
+    },
+    {
+      "tag": "深度策略构筑",
+      "count": 1,
+      "games": [
+        "Siralim 2"
+      ]
+    },
+    {
+      "tag": "生存策略",
+      "count": 1,
+      "games": [
+        "Evolution Board Game"
+      ]
+    },
+    {
+      "tag": "动态生态",
+      "count": 1,
+      "games": [
+        "Evolution Board Game"
+      ]
+    },
+    {
+      "tag": "桌游机制",
+      "count": 2,
+      "games": [
+        "Card of spirits",
+        "Little Inner Monsters - Card Game"
+      ]
+    },
+    {
+      "tag": "数值博弈",
+      "count": 1,
+      "games": [
+        "Card of spirits"
+      ]
+    },
+    {
+      "tag": "网格化养成",
+      "count": 1,
+      "games": [
+        "WORLD OF FINAL FANTASY®"
+      ]
+    },
+    {
+      "tag": "主角尺寸切换",
+      "count": 1,
+      "games": [
+        "WORLD OF FINAL FANTASY®"
+      ]
+    },
+    {
+      "tag": "FF系列大乱斗",
+      "count": 1,
+      "games": [
+        "WORLD OF FINAL FANTASY®"
+      ]
+    },
+    {
+      "tag": "ATB战斗",
+      "count": 1,
+      "games": [
+        "WORLD OF FINAL FANTASY®"
+      ]
+    },
+    {
+      "tag": "地牢探索",
+      "count": 2,
+      "games": [
+        "Bit Heroes Quest",
+        "Monster Girl Manager"
+      ]
+    },
+    {
+      "tag": "确定性战斗",
+      "count": 1,
+      "games": [
+        "Temtem"
+      ]
+    },
+    {
+      "tag": "体力资源管理",
+      "count": 1,
+      "games": [
+        "Temtem"
+      ]
+    },
+    {
+      "tag": "魔法书系统",
+      "count": 1,
+      "games": [
+        "Ni no Kuni Wrath of the White Witch™ Remastered"
+      ]
+    },
+    {
+      "tag": "情绪解谜",
+      "count": 1,
+      "games": [
+        "Ni no Kuni Wrath of the White Witch™ Remastered"
+      ]
+    },
+    {
+      "tag": "即时走位",
+      "count": 1,
+      "games": [
+        "Ni no Kuni Wrath of the White Witch™ Remastered"
+      ]
+    },
+    {
+      "tag": "平台跳跃",
+      "count": 3,
+      "games": [
+        "Monster Sanctuary",
+        "Rainbow Billy: The Curse of the Leviathan",
+        "Portal Fantasy"
+      ]
+    },
+    {
+      "tag": "策略化配队",
+      "count": 1,
+      "games": [
+        "Monster Sanctuary"
+      ]
+    },
+    {
+      "tag": "回合制战斗",
+      "count": 3,
+      "games": [
+        "Monster Sanctuary",
+        "Digimon Story Cyber Sleuth: Complete Edition",
+        "Portal Fantasy"
+      ]
+    },
+    {
+      "tag": "RPG成长",
+      "count": 1,
+      "games": [
+        "Monster Sanctuary"
+      ]
+    },
+    {
+      "tag": "刷宝驱动",
+      "count": 1,
+      "games": [
+        "Siralim 3"
+      ]
+    },
+    {
+      "tag": "深度构筑",
+      "count": 1,
+      "games": [
+        "Siralim 3"
+      ]
+    },
+    {
+      "tag": "无尽进程",
+      "count": 1,
+      "games": [
+        "Siralim 3"
+      ]
+    },
+    {
+      "tag": "海量组合",
+      "count": 1,
+      "games": [
+        "Siralim 3"
+      ]
+    },
+    {
+      "tag": "物理解谜",
+      "count": 1,
+      "games": [
+        "FurryFury: Smash & Roll"
+      ]
+    },
+    {
+      "tag": "回合制策略",
+      "count": 1,
+      "games": [
+        "FurryFury: Smash & Roll"
+      ]
+    },
+    {
+      "tag": "弹射碰撞",
+      "count": 1,
+      "games": [
+        "FurryFury: Smash & Roll"
+      ]
+    },
+    {
+      "tag": "地图无缝战斗",
+      "count": 1,
+      "games": [
+        "Fae Tactics"
+      ]
+    },
+    {
+      "tag": "赛博骇客",
+      "count": 1,
+      "games": [
+        "Digimon Story Cyber Sleuth: Complete Edition"
+      ]
+    },
+    {
+      "tag": "解谜探索",
+      "count": 1,
+      "games": [
+        "Rainbow Billy: The Curse of the Leviathan"
+      ]
+    },
+    {
+      "tag": "非暴力交涉",
+      "count": 1,
+      "games": [
+        "Rainbow Billy: The Curse of the Leviathan"
+      ]
+    },
+    {
+      "tag": "收集马拉松",
+      "count": 1,
+      "games": [
+        "Rainbow Billy: The Curse of the Leviathan"
+      ]
+    },
+    {
+      "tag": "QTE机制",
+      "count": 1,
+      "games": [
+        "Rainbow Billy: The Curse of the Leviathan"
+      ]
+    },
+    {
+      "tag": "模拟经营",
+      "count": 1,
+      "games": [
+        "The Monster Breeder"
+      ]
+    },
+    {
+      "tag": "角斗场机制",
+      "count": 1,
+      "games": [
+        "The Monster Breeder"
+      ]
+    },
+    {
+      "tag": "战术RPG融合",
+      "count": 1,
+      "games": [
+        "The Monster Breeder"
+      ]
+    },
+    {
+      "tag": "队伍羁绊",
+      "count": 1,
+      "games": [
+        "Abomi Nation"
+      ]
+    },
+    {
+      "tag": "耐力资源管理",
+      "count": 1,
+      "games": [
+        "Nexomon: Extinction"
+      ]
+    },
+    {
+      "tag": "装备镶嵌",
+      "count": 1,
+      "games": [
+        "Nexomon: Extinction"
+      ]
+    },
+    {
+      "tag": "QTE捕获",
+      "count": 1,
+      "games": [
+        "Nexomon: Extinction"
+      ]
+    },
+    {
+      "tag": "动态难度平衡",
+      "count": 1,
+      "games": [
+        "Nexomon: Extinction"
+      ]
+    },
+    {
+      "tag": "海量支线任务",
+      "count": 1,
+      "games": [
+        "Nexomon: Extinction"
+      ]
+    },
+    {
+      "tag": "核心合成",
+      "count": 1,
+      "games": [
+        "Nexomon: Extinction"
+      ]
+    },
+    {
+      "tag": "骑乘探索",
+      "count": 1,
+      "games": [
+        "Monster Hunter Stories 2: Wings of Ruin"
+      ]
+    },
+    {
+      "tag": "基因拼图",
+      "count": 1,
+      "games": [
+        "Monster Hunter Stories 2: Wings of Ruin"
+      ]
+    },
+    {
+      "tag": "节奏交互",
+      "count": 1,
+      "games": [
+        "Dino Hazard: Chronos Blackout"
+      ]
+    },
+    {
+      "tag": "第一人称跑酷",
+      "count": 1,
+      "games": [
+        "Dino Hazard: Chronos Blackout"
+      ]
+    },
+    {
+      "tag": "深度BD构筑",
+      "count": 1,
+      "games": [
+        "Siralim Ultimate"
+      ]
+    },
+    {
+      "tag": "海量收集",
+      "count": 1,
+      "games": [
+        "Siralim Ultimate"
+      ]
+    },
+    {
+      "tag": "基因改造",
+      "count": 1,
+      "games": [
+        "Geneforge 1 - Mutagen"
+      ]
+    },
+    {
+      "tag": "代码生成",
+      "count": 1,
+      "games": [
+        "Dragon Creek"
+      ]
+    },
+    {
+      "tag": "时间管理",
+      "count": 3,
+      "games": [
+        "Dragon Creek",
+        "Bloomtown: A Different Story",
+        "Project Of Cooling The Earth"
+      ]
+    },
+    {
+      "tag": "数字世界观",
+      "count": 1,
+      "games": [
+        "Anode Heart"
+      ]
+    },
+    {
+      "tag": "内置卡牌",
+      "count": 1,
+      "games": [
+        "Anode Heart"
+      ]
+    },
+    {
+      "tag": "快节奏回合制",
+      "count": 1,
+      "games": [
+        "Anode Heart"
+      ]
+    },
+    {
+      "tag": "IP改编",
+      "count": 1,
+      "games": [
+        "Noob - The Factionless"
+      ]
+    },
+    {
+      "tag": "网游模拟",
+      "count": 1,
+      "games": [
+        "Noob - The Factionless"
+      ]
+    },
+    {
+      "tag": "Story Rich",
+      "count": 1,
+      "games": [
+        "Matanga 2"
+      ]
+    },
+    {
+      "tag": "流程交换",
+      "count": 1,
+      "games": [
+        "Athenian Rhapsody"
+      ]
+    },
+    {
+      "tag": "柏拉图式社交",
+      "count": 1,
+      "games": [
+        "Athenian Rhapsody"
+      ]
+    },
+    {
+      "tag": "小游戏战斗",
+      "count": 1,
+      "games": [
+        "Athenian Rhapsody"
+      ]
+    },
+    {
+      "tag": "策略战棋",
+      "count": 1,
+      "games": [
+        "Super Bullet Break"
+      ]
+    },
+    {
+      "tag": "伪Gacha",
+      "count": 1,
+      "games": [
+        "Super Bullet Break"
+      ]
+    },
+    {
+      "tag": "策略构筑",
+      "count": 1,
+      "games": [
+        "Monster Girl Manager"
+      ]
+    },
+    {
+      "tag": "数值攻占",
+      "count": 1,
+      "games": [
+        "Little Inner Monsters - Card Game"
+      ]
+    },
+    {
+      "tag": "轻度策略",
+      "count": 1,
+      "games": [
+        "Little Inner Monsters - Card Game"
+      ]
+    },
+    {
+      "tag": "纸牌接龙",
+      "count": 1,
+      "games": [
+        "Little Inner Monsters - Card Game"
+      ]
+    },
+    {
+      "tag": "环境互动解谜",
+      "count": 1,
+      "games": [
+        "Forgotten Realms: The Archives - Collection One"
+      ]
+    },
+    {
+      "tag": "队伍构建",
+      "count": 1,
+      "games": [
+        "Forgotten Realms: The Archives - Collection One"
+      ]
+    },
+    {
+      "tag": "D&D规则改编",
+      "count": 1,
+      "games": [
+        "Forgotten Realms: The Archives - Collection One"
+      ]
+    },
+    {
+      "tag": "第一人称地牢探索",
+      "count": 1,
+      "games": [
+        "Forgotten Realms: The Archives - Collection One"
+      ]
+    },
+    {
+      "tag": "肉鸽LITE",
+      "count": 1,
+      "games": [
+        "Dicefolk"
+      ]
+    },
+    {
+      "tag": "角色定制",
+      "count": 1,
+      "games": [
+        "Dokimon: Quest"
+      ]
+    },
+    {
+      "tag": "任务驱动",
+      "count": 1,
+      "games": [
+        "Dokimon: Quest"
+      ]
+    },
+    {
+      "tag": "JRPG叙事",
+      "count": 1,
+      "games": [
+        "Dokimon: Quest"
+      ]
+    },
+    {
+      "tag": "季节变化",
+      "count": 1,
+      "games": [
+        "DRAGON QUEST MONSTERS: The Dark Prince"
+      ]
+    },
+    {
+      "tag": "战棋融合",
+      "count": 1,
+      "games": [
+        "Evolings"
+      ]
+    },
+    {
+      "tag": "棋盘幸存者",
+      "count": 1,
+      "games": [
+        "Evolings"
+      ]
+    },
+    {
+      "tag": "极简主义",
+      "count": 1,
+      "games": [
+        "Evolings"
+      ]
+    },
+    {
+      "tag": "协同构筑",
+      "count": 1,
+      "games": [
+        "Million Monster Militia"
+      ]
+    },
+    {
+      "tag": "双模式探索",
+      "count": 1,
+      "games": [
+        "Portal Fantasy"
+      ]
+    },
+    {
+      "tag": "尸群控制",
+      "count": 1,
+      "games": [
+        "Zombie Party 丧尸派对"
+      ]
+    },
+    {
+      "tag": "感染模拟",
+      "count": 1,
+      "games": [
+        "Zombie Party 丧尸派对"
+      ]
+    },
+    {
+      "tag": "反英雄叙事",
+      "count": 1,
+      "games": [
+        "Zombie Party 丧尸派对"
+      ]
+    },
+    {
+      "tag": "点击放置",
+      "count": 1,
+      "games": [
+        "The Dragonhood"
+      ]
+    },
+    {
+      "tag": "轻社交",
+      "count": 1,
+      "games": [
+        "Familiars.io"
+      ]
+    },
+    {
+      "tag": "极简养成",
+      "count": 1,
+      "games": [
+        "Familiars.io"
+      ]
+    },
+    {
+      "tag": "定期纳贡",
+      "count": 1,
+      "games": [
+        "Cat God Ranch"
+      ]
+    },
+    {
+      "tag": "资源管理",
+      "count": 1,
+      "games": [
+        "Project Of Cooling The Earth"
+      ]
+    }
+  ],
+  "pending": []
+}

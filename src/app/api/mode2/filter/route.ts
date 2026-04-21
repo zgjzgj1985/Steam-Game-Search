@@ -15,6 +15,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { SYNONYM_MERGE as TAG_SYNONYM_MERGE, INNOVATION_BLACKLIST as TAG_BLACKLIST } from "@/lib/tag-config";
 import type Database from "better-sqlite3";
 
 // ============ 评价来源类型 ============
@@ -166,155 +167,14 @@ interface PriceStats {
 // 特色标签选项（动态从 combinedMechanics.json 的 tagStats 加载，移除硬编码限制）
 // 来源：B 池游戏 LLM 融合玩法分析 v2（combinedMechanics.json）
 
-// 基础标签黑名单：这些是"品类标配"标签，不是真正的创新融合
-// 来自 combinedMechanics.json rawMechanics 字段中 LLM 误标记的通用标签
-// 这些标签会在展示时被过滤掉，不作为"创新融合标签"显示
-const INNOVATION_TAG_BLACKLIST: Record<string, boolean> = {
-  // 品类标配标签
-  "怪物收集": true,
-  "怪物收集/养成": true,
-  "角色扮演": true,
-  "RPG": true,
-  "JRPG": true,
-  "RPG角色扮演": true,
-  "回合制": true,
-  "回合制战斗": true,
-  "回合制策略": true,
-  "回合制战术": true,
-  "宝可梦Like": true,
-  "Steam 评测": true,
-  "Creature Collector": true,
-  "RPG": true,
-  "JRPG": true,
-  "Turn-Based": true,
-  "Turn-Based Combat": true,
-  "Turn-Based Strategy": true,
-  "Turn-Based Tactics": true,
-  "Story Rich": true,
-  "Adventure": true,
-  "Singleplayer": true,
-  "Fantasy": true,
-  "2D": true,
-  "3D": true,
-  "Anime": true,
-  "Pixel Graphics": true,
-  "Indie": true,
-  "Action": true,
-  "Strategy": true,
-  "Casual": true,
-  "Family Friendly": true,
-  "Cute": true,
-  "Colorful": true,
-  "Funny": true,
-  "Replay Value": true,
-  "MMORPG": true,
-  "Auto Battler": true,
-  "Card Game": true,
-  "Deckbuilding": true,
-  "Roguelike Deckbuilder": true,
-  "Rogue-lite": true,
-  "Rogue-like": true,
-  "Roguelite": true,
-  "Roguelike": true,
-  "Metroidvania": true,
-  "Card Battler": true,
-  "Board Game": true,
-  "Tabletop": true,
-  "Simulation": true,
-  "Sandbox": true,
-  "Farming Sim": true,
-  "Survival": true,
-  "Survival Game": true,
-  "Crafting": true,
-  "Open World": true,
-  "Exploration": true,
-  "Collectathon": true,
-  "Dungeon Crawler": true,
-  "Dark": true,
-  "Atmospheric": true,
-  "Great Soundtrack": true,
-  "Female Protagonist": true,
-  "Multiple Endings": true,
-  "Choices Matter": true,
-  "PvE": true,
-  "PvP": true,
-  "Co-op": true,
-  "Multiplayer": true,
-  "Party-Based RPG": true,
-  "Strategy RPG": true,
-  "Tactical RPG": true,
-  "Time Management": true,
-  "Resource Management": true,
-  "Life Sim": true,
-  "Relaxing": true,
-  "Character Customization": true,
-  "Perma Death": true,
-  "Procedural Generation": true,
-  "Loot": true,
-  // 更多 LLM 误标的基础标签
-  "开放世界": true,
-  "开放世界探索": true,
-  "开放区域探索": true,
-  "剧情驱动": true,
-  "叙事丰富": true,
-  "半开放世界探索": true,
-  // 泛化的基础玩法标签（无差异化价值）
-  "双人协作": true,
-  "多人协作": true,
-  "多人竞技": true,
-  "异步对战": true,
-  "异步多人": true,
-  "时间管理": true,
-  "生活模拟": true,
-  "社交羁绊": true,
-  "好感度养成": true,
-  "快节奏回合制": true,
-  "轻度策略": true,
-  "极简养成": true,
-  "内置卡牌": true,
-  "数字世界观": true,
-  "心灵潜入": true,
-  "非暴力交涉": true,
-  "解谜探索": true,
-  "平台跳跃": true,
-  "机关解谜": true,
-  "半即时指令战斗": true,
-  "ATB战斗": true,
-  "无限地牢": true,
-  "无尽爬塔": true,
-  "无尽进程": true,
-  "无限构筑": true,
-  "海量收集": true,
-  "海量组合": true,
-  "海量支线任务": true,
-  "随机地牢": true,
-  "刷宝掉落": true,
-  "刷宝驱动": true,
-  "装备驱动": true,
-  "装备镶嵌": true,
-  "装备打造": true,
-  "素材打造": true,
-  "游戏素材": true,
-  "程序生成": true,
-  "程序化生成世界": true,
-  "双世界穿梭": true,
-  "主角变身": true,
-  "主角尺寸切换": true,
-  "季节变化": true,
-  "分支叙事": true,
-  "网状叙事": true,
-  "多分支剧情": true,
-  "多分支叙事": true,
-  "流程交换": true,
-  "角色定制": true,
-  "自由角色构筑": true,
-  "任务驱动": true,
-  "JRPG叙事": true,
-  "轻度肉鸽": true,
-  "肉鸽Lite": true,
-  "肉鸽LITE": true,
-  "非战斗解法": true,
-};
+// 品类标配黑名单（与同义词体系解耦）
+// 只包含真正无区分度的泛化标签，有意义的标签全部走同义词合并路径
+// 来源: @/lib/tag-config（由 manage_tags.py --export-config 生成）
+// 已在模块顶部通过 import 导入为 TAG_BLACKLIST
+
+// 同义词合并映射（废弃标签 → 保留标签）
+// 来源: @/lib/tag-config（由 manage_tags.py --export-config 生成）
+// 已在模块顶部通过 import 导入为 TAG_SYNONYM_MERGE
 
 // ============ 标签权重系统 ============
 
@@ -546,12 +406,9 @@ const POKEMON_LIKE_TAGS = [
 
 // 黑名单标签(这些类型的游戏不值得参考)
 const BLACKLIST_TAGS = [
-  "Board Game",
-  "Grand Strategy",
-  "4X Strategy",
+  // NSFW/成人内容（独立维护）
   "NSFW",
   "Hentai",
-  "Text-Based",
   "Sexual Content",
 ];
 
@@ -808,14 +665,15 @@ function rowToGameRecord(row: any): GameRecord {
 }
 
 // 从 combinedMechanics.json 加载 LLM 玩法分析数据并合并到游戏记录中
+// 对所有游戏尝试匹配（按 appId 和名称），即使没有匹配到数据也确保字段已初始化
 function mergeLlMechancics(games: GameRecord[]): void {
   try {
     if (!fs.existsSync(COMBINED_MECHANICS_FILE)) {
+      console.warn("[Mode2] combinedMechanics.json 不存在，跳过 LLM 数据合并");
       return;
     }
     const raw = fs.readFileSync(COMBINED_MECHANICS_FILE, "utf-8");
     const mechanicsData = JSON.parse(raw) as any;
-    // combinedMechanics.json 结构: { games: { "appId": {...} }, tagStats, rawTagStats, tagOptions }
     const gamesData = mechanicsData.games || {};
 
     // 建立 appId -> LLM 数据的映射（同时按 ID 和名称索引）
@@ -828,37 +686,45 @@ function mergeLlMechancics(games: GameRecord[]): void {
       }
     }
 
-    // 合并到每个游戏
-    let mergedCount = 0;
+    // 合并到每个游戏（即使没有匹配到也确保字段已初始化为空数组）
+    let matchedCount = 0;
+    let noMatchCount = 0;
     for (const game of games) {
       const data = mechanicsMap.get(game.id) || mechanicsMap.get(game.name);
       if (data) {
-        // 合并 llmMechanics（对应 JSON 中的 mechanics 字段）
+        // 合并 llmMechanics（同时应用同义词合并，将废弃标签替换为保留标签）
         const llmMechanics = (data as any).mechanics || [];
         const existingSet = new Set(game.llmMechanics);
         for (const m of llmMechanics) {
-          if (!existingSet.has(m)) {
-            game.llmMechanics.push(m);
+          const merged = TAG_SYNONYM_MERGE[m] || m;
+          if (!existingSet.has(merged)) {
+            game.llmMechanics.push(merged);
+            existingSet.add(merged);
           }
         }
-        // 合并 llmRawMechanics
+        // 合并 llmRawMechanics（同样应用同义词合并）
         const rawMechanics = (data as any).rawMechanics || [];
         const rawSet = new Set(game.llmRawMechanics);
         for (const m of rawMechanics) {
-          if (!rawSet.has(m)) {
-            game.llmRawMechanics.push(m);
+          const merged = TAG_SYNONYM_MERGE[m] || m;
+          if (!rawSet.has(merged)) {
+            game.llmRawMechanics.push(merged);
+            rawSet.add(merged);
           }
         }
         // 合并 llmMechanicsSummary
         if (!game.llmMechanicsSummary && (data as any).summary) {
           game.llmMechanicsSummary = (data as any).summary;
         }
-        mergedCount++;
+        matchedCount++;
+      } else {
+        // 即使没有匹配到数据，也确保字段已初始化为空数组（避免 undefined）
+        if (!game.llmMechanics.length) game.llmMechanics = [];
+        if (!game.llmRawMechanics.length) game.llmRawMechanics = [];
+        noMatchCount++;
       }
     }
-    if (mergedCount > 0) {
-      console.log(`[Mode2] 从 combinedMechanics.json 合并了 ${mergedCount} 个游戏的 LLM 玩法数据`);
-    }
+    console.log(`[Mode2] LLM 数据合并完成: 匹配 ${matchedCount} 个, 无匹配 ${noMatchCount} 个 (共 ${games.length} 个游戏)`);
   } catch (e) {
     console.warn(`[Mode2] 合并 LLM 玩法数据失败: ${e instanceof Error ? e.message : String(e)}`);
   }
@@ -1139,7 +1005,7 @@ function loadFeatureTagOptionsFromJson(): FeatureTagOption[] {
 }
 
 // 从 combinedMechanics.json 动态计算特色标签选项
-// 从 tagStats 中读取全部标签，按 count 降序排列
+// 从 rawTagStats 中读取全部标签，对废弃标签应用同义词合并后，按 count 降序排列
 function computeFeatureTagOptionsFromMechanics(): FeatureTagOption[] {
   try {
     if (!fs.existsSync(COMBINED_MECHANICS_FILE)) {
@@ -1151,14 +1017,21 @@ function computeFeatureTagOptionsFromMechanics(): FeatureTagOption[] {
 
     // 使用 rawTagStats（来自 rawMechanics 字段的原始标签统计，共207个）
     // 这是 LLM 从 B池游戏中提取的所有创新融合标签
-    const tagStats = mechanicsData.rawTagStats || mechanicsData.tagStats || {};
+    const rawTagStats = mechanicsData.rawTagStats || mechanicsData.tagStats || {};
 
-    // 从 tagStats 动态构建标签选项，排除黑名单标签
-    const options: FeatureTagOption[] = [];
-    for (const [tag, count] of Object.entries(tagStats)) {
+    // 第一步：对原始统计应用同义词合并（废弃标签 → 保留标签，累加 count）
+    const mergedTagStats: Record<string, number> = {};
+    for (const [tag, count] of Object.entries(rawTagStats)) {
       if ((count as number) <= 0) continue;
       // 排除黑名单标签
-      if (INNOVATION_TAG_BLACKLIST[tag]) continue;
+      if (TAG_BLACKLIST[tag]) continue;
+      const merged = TAG_SYNONYM_MERGE[tag] || tag;
+      mergedTagStats[merged] = (mergedTagStats[merged] || 0) + (count as number);
+    }
+
+    // 第二步：从合并后的统计构建标签选项
+    const options: FeatureTagOption[] = [];
+    for (const [tag, count] of Object.entries(mergedTagStats)) {
       const key = tag.toLowerCase().replace(/\s+/g, "_");
       options.push({
         key,
@@ -1171,7 +1044,7 @@ function computeFeatureTagOptionsFromMechanics(): FeatureTagOption[] {
     // 按 count 降序排列
     options.sort((a, b) => b.count - a.count);
 
-    console.log(`[Mode2] 从 combinedMechanics.json 加载 ${options.length} 个特色标签`);
+    console.log(`[Mode2] 从 combinedMechanics.json 加载 ${options.length} 个特色标签（含同义词合并）`);
     return options;
   } catch (e) {
     console.warn(`[Mode2] 从 combinedMechanics.json 计算动态标签失败: ${e instanceof Error ? e.message : String(e)}`);
@@ -1496,14 +1369,20 @@ function filterGames(
       if (options.modernTagFilter === "hasModern" && g.modernTagCount === 0) {
         return false;
       }
-      // 具体特色标签筛选（同时检查 llmMechanics 和 llmRawMechanics）
+      // 具体特色标签筛选（同时检查 llmMechanics 和 llmRawMechanics，并展开同义词）
       if (options.featureTagFilter) {
         const featureTag = options.featureTagOptions?.find((f) => f.key === options.featureTagFilter);
         if (featureTag) {
-          // 同时匹配 llmMechanics（权威标签）和 llmRawMechanics（原始标签）
           const llmM = (g.llmMechanics || []) as string[];
           const llmRawM = (g.llmRawMechanics || []) as string[];
-          const hasTag = llmM.includes(featureTag.tag) || llmRawM.includes(featureTag.tag);
+          // 展开保留标签对应的所有废弃同义词，一并匹配
+          const synonymsToCheck = [featureTag.tag];
+          for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
+            if (kept === featureTag.tag) {
+              synonymsToCheck.push(discarded);
+            }
+          }
+          const hasTag = synonymsToCheck.some(t => llmM.includes(t) || llmRawM.includes(t));
           if (!hasTag) return false;
         }
       }
@@ -1622,7 +1501,7 @@ function filterGames(
     })();
 
     // 构建创新融合标签：过滤 llmRawMechanics，排除基础标签和已显示的特色标签
-    const rawMechanicsBlacklist: Record<string, boolean> = INNOVATION_TAG_BLACKLIST;
+    const rawMechanicsBlacklist: Record<string, boolean> = TAG_BLACKLIST;
     const innovationTagSeen = new Set<string>();
     const innovationTags: string[] = [];
 
@@ -1731,10 +1610,16 @@ function getPoolCounts(
     if (featureTagFilter) {
       const featureTag = featureTagOptions?.find((f) => f.key === featureTagFilter);
       if (featureTag) {
-        // 同时检查 llmMechanics 和 llmRawMechanics
+        // 同时检查 llmMechanics 和 llmRawMechanics，并展开同义词
         const llmM = (game.llmMechanics || []) as string[];
         const llmRawM = (game.llmRawMechanics || []) as string[];
-        const hasTag = llmM.includes(featureTag.tag) || llmRawM.includes(featureTag.tag);
+        const synonymsToCheck = [featureTag.tag];
+        for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
+          if (kept === featureTag.tag) {
+            synonymsToCheck.push(discarded);
+          }
+        }
+        const hasTag = synonymsToCheck.some(t => llmM.includes(t) || llmRawM.includes(t));
         if (!hasTag) continue;
       }
     }

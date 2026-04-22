@@ -530,7 +530,7 @@ function getQueryCacheKey(params: {
   priceMin?: number;
   priceMax?: number;
   modernTagFilter?: string;
-  featureTagFilter?: string;
+  featureTagFilters?: string[];
   poolA_minRating?: number;
   poolA_minReviews?: number;
   poolB_minRating?: number;
@@ -554,7 +554,7 @@ function getQueryCacheKey(params: {
     params.priceMin?.toFixed(2) || "",
     params.priceMax?.toFixed(2) || "",
     params.modernTagFilter || "",
-    params.featureTagFilter || "",
+    Array.isArray(params.featureTagFilters) ? params.featureTagFilters.join(",") : (params.featureTagFilters || ""),
     params.poolA_minRating || 75,
     params.poolA_minReviews || 200,
     params.poolB_minRating || 75,
@@ -1279,7 +1279,7 @@ function filterGames(
     priceMin?: number;
     priceMax?: number;
     modernTagFilter?: "hasCore" | "hasModern";
-    featureTagFilter?: string;
+    featureTagFilters?: string[];
     featureTagOptions?: FeatureTagOption[];
     reviewSource?: ReviewSource; // 评价来源筛选
   }
@@ -1364,7 +1364,7 @@ function filterGames(
   }
 
   // 6. 特色标签筛选
-  if (options.modernTagFilter || options.featureTagFilter) {
+  if (options.modernTagFilter || options.featureTagFilters) {
     results = results.filter((g) => {
       // 核心标签筛选
       if (options.modernTagFilter === "hasCore" && g.coreTagCount === 0) {
@@ -1375,20 +1375,27 @@ function filterGames(
         return false;
       }
       // 具体特色标签筛选（同时检查 llmMechanics 和 llmRawMechanics，并展开同义词）
-      if (options.featureTagFilter) {
-        const featureTag = options.featureTagOptions?.find((f) => f.key === options.featureTagFilter);
-        if (featureTag) {
-          const llmM = (g.llmMechanics || []) as string[];
-          const llmRawM = (g.llmRawMechanics || []) as string[];
-          // 展开保留标签对应的所有废弃同义词，一并匹配
-          const synonymsToCheck = [featureTag.tag];
-          for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
-            if (kept === featureTag.tag) {
-              synonymsToCheck.push(discarded);
-            }
+      if (options.featureTagFilters && options.featureTagFilters.length > 0) {
+        // 多标签筛选：游戏必须包含所有选中的标签（AND 逻辑）
+        for (const filterKey of options.featureTagFilters) {
+          // 尝试用 key 匹配，如果找不到就用 label 或 tag（中文标签名）匹配
+          let featureTag = options.featureTagOptions?.find((f) => f.key === filterKey);
+          if (!featureTag) {
+            featureTag = options.featureTagOptions?.find((f) => f.label === filterKey || f.tag === filterKey);
           }
-          const hasTag = synonymsToCheck.some(t => llmM.includes(t) || llmRawM.includes(t));
-          if (!hasTag) return false;
+          if (featureTag) {
+            const llmM = (g.llmMechanics || []) as string[];
+            const llmRawM = (g.llmRawMechanics || []) as string[];
+            // 展开保留标签对应的所有废弃同义词，一并匹配
+            const synonymsToCheck = [featureTag.tag];
+            for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
+              if (kept === featureTag.tag) {
+                synonymsToCheck.push(discarded);
+              }
+            }
+            const hasTag = synonymsToCheck.some(t => llmM.includes(t) || llmRawM.includes(t));
+            if (!hasTag) return false; // 只要有一个标签不匹配就过滤掉
+          }
         }
       }
       return true;
@@ -1459,9 +1466,9 @@ function filterGames(
   };
   const pagedWithFeatures = paged.map((game) => {
     const tagWeight = calculateTagWeight(game.tags);
-    const featureTagOption = options.featureTagOptions?.find(
-      (f) => f.key === options.featureTagFilter
-    );
+    // 多选模式下，取第一个选中的标签用于高亮（如果有的话）
+    const firstFilterKey = Array.isArray(options.featureTagFilters) ? options.featureTagFilters[0] : options.featureTagFilters;
+    const featureTagOption = firstFilterKey ? options.featureTagOptions?.find((f) => f.key === firstFilterKey) : undefined;
     const activeTag = featureTagOption?.tag;
     const activeLabel = featureTagOption?.label;
 
@@ -1545,7 +1552,7 @@ function filterGames(
       differentiationLabels,
       matchedModernTags: tagWeight.matchedModernTags,
       modernTagCount: tagWeight.modernTagCount,
-      activeFeatureTagFilter: options.featureTagFilter,
+      activeFeatureTagFilter: options.featureTagFilters,
       activeFeatureTagLabel,
       displayModernTags,
       innovationTags,
@@ -1575,7 +1582,7 @@ function getPoolCounts(
   minReleaseDate?: string,
   maxReleaseDate?: string,
   excludeTestVersions?: boolean,
-  featureTagFilter?: string,
+  featureTagFilters?: string[],
   featureTagOptions?: FeatureTagOption[]
 ): PoolStats {
   let poolA = 0, poolB = 0, poolC = 0;
@@ -1611,22 +1618,28 @@ function getPoolCounts(
       if (releaseTime > maxTime) continue;
     }
 
-    // 特色标签筛选（和各池子数量同步）
-    if (featureTagFilter) {
-      const featureTag = featureTagOptions?.find((f) => f.key === featureTagFilter);
-      if (featureTag) {
-        // 同时检查 llmMechanics 和 llmRawMechanics，并展开同义词
-        const llmM = (game.llmMechanics || []) as string[];
-        const llmRawM = (game.llmRawMechanics || []) as string[];
-        const synonymsToCheck = [featureTag.tag];
-        for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
-          if (kept === featureTag.tag) {
-            synonymsToCheck.push(discarded);
+    // 特色标签筛选（和各池子数量同步，支持多选）
+    if (featureTagFilters && featureTagFilters.length > 0) {
+      let hasAllTags = true;
+      for (const filterKey of featureTagFilters) {
+        const featureTag = featureTagOptions?.find((f) => f.key === filterKey);
+        if (featureTag) {
+          const llmM = (game.llmMechanics || []) as string[];
+          const llmRawM = (game.llmRawMechanics || []) as string[];
+          const synonymsToCheck = [featureTag.tag];
+          for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
+            if (kept === featureTag.tag) {
+              synonymsToCheck.push(discarded);
+            }
+          }
+          const hasTag = synonymsToCheck.some(t => llmM.includes(t) || llmRawM.includes(t));
+          if (!hasTag) {
+            hasAllTags = false;
+            break;
           }
         }
-        const hasTag = synonymsToCheck.some(t => llmM.includes(t) || llmRawM.includes(t));
-        if (!hasTag) continue;
       }
+      if (!hasAllTags) continue;
     }
 
     // 统计符合条件的回合制游戏数量
@@ -1837,9 +1850,15 @@ export async function GET(request: NextRequest) {
   const priceMin = searchParams.get("priceMin") ? parseFloat(searchParams.get("priceMin")!) : undefined;
   const priceMax = searchParams.get("priceMax") ? parseFloat(searchParams.get("priceMax")!) : undefined;
 
-  // 特色标签筛选参数
+  // 特色标签筛选参数（支持多选）
   const modernTagFilter = searchParams.get("modernTagFilter") as "hasCore" | "hasModern" | undefined;
-  const featureTagFilter = searchParams.get("featureTagFilter") || undefined;
+  // 收集所有 featureTagFilter 参数（支持多个同名参数）
+  const featureTagFilters: string[] = [];
+  searchParams.forEach((value, key) => {
+    if (key === "featureTagFilter" && value) {
+      featureTagFilters.push(value);
+    }
+  });
 
   // 评价来源参数（默认全部）
   const rawReviewSource = searchParams.get("reviewSource") ?? "all";
@@ -1903,7 +1922,7 @@ export async function GET(request: NextRequest) {
     priceMin,
     priceMax,
     modernTagFilter,
-    featureTagFilter,
+    featureTagFilters,
     poolA_minRating,
     poolA_minReviews,
     poolB_minRating,
@@ -1945,7 +1964,7 @@ export async function GET(request: NextRequest) {
     const stats = getPoolCounts(
       allGames, poolConfig, pools.length > 0 ? pools : undefined,
       yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions,
-      featureTagFilter, featureTagOptions
+      featureTagFilters, featureTagOptions
     );
     return NextResponse.json({
       stats,
@@ -1970,7 +1989,7 @@ export async function GET(request: NextRequest) {
     priceMin,
     priceMax,
     modernTagFilter,
-    featureTagFilter,
+    featureTagFilters,
     featureTagOptions: dynamicFeatureTagOptions,
     reviewSource,
   });

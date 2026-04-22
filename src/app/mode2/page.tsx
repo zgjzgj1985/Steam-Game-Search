@@ -950,11 +950,25 @@ export default function Mode2Page() {
   const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
   const [priceStats, setPriceStats] = useState<PriceStats | null>(null);
 
-  // 特色标签筛选
+  // 特色标签筛选（支持多选）
   const [modernTagFilter, setModernTagFilter] = useState<"hasCore" | "hasModern" | undefined>(undefined);
-  const [featureTagFilter, setFeatureTagFilter] = useState<string | undefined>(undefined);
+  const [featureTagFilters, setFeatureTagFilters] = useState<string[]>([]);
   const [featureTagOptions, setFeatureTagOptions] = useState<FeatureTagOption[]>([]);
   const [featureTagSearch, setFeatureTagSearch] = useState("");
+
+  // 切换单个标签的选中状态
+  const toggleFeatureTag = (tagKey: string) => {
+    setFeatureTagFilters(prev =>
+      prev.includes(tagKey)
+        ? prev.filter(k => k !== tagKey)
+        : [...prev, tagKey]
+    );
+  };
+
+  // 清除所有已选标签
+  const clearAllFeatureTags = () => {
+    setFeatureTagFilters([]);
+  };
 
   // 评价来源筛选（默认全部）
   const [reviewSource, setReviewSource] = useState<ReviewSource>("all");
@@ -1019,7 +1033,7 @@ export default function Mode2Page() {
     setPriceMin(undefined);
     setPriceMax(undefined);
     setModernTagFilter(undefined);
-    setFeatureTagFilter(undefined);
+    setFeatureTagFilters([]);
     setFeatureTagOptions([]);
     setFeatureTagSearch("");
     setReviewSource("all");
@@ -1064,9 +1078,9 @@ export default function Mode2Page() {
       // 价格筛选
       if (priceMin !== undefined) params.set("priceMin", String(priceMin));
       if (priceMax !== undefined) params.set("priceMax", String(priceMax));
-      // 特色标签筛选
+      // 特色标签筛选（发送中文标签名给后端）
       if (modernTagFilter) params.set("modernTagFilter", modernTagFilter);
-      if (featureTagFilter) params.set("featureTagFilter", featureTagFilter);
+      featureTagFilters.forEach(f => params.append("featureTagFilter", f));
       // 评价来源筛选
       if (reviewSource !== "all") params.set("reviewSource", reviewSource);
 
@@ -1085,7 +1099,7 @@ export default function Mode2Page() {
     } finally {
       setIsLoadingStats(false);
     }
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter, reviewSource]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilters, reviewSource]);
 
   // 获取搜索结果
   const fetchResults = useCallback(async () => {
@@ -1129,9 +1143,9 @@ export default function Mode2Page() {
       // 价格筛选
       if (priceMin !== undefined) params.set("priceMin", String(priceMin));
       if (priceMax !== undefined) params.set("priceMax", String(priceMax));
-      // 特色标签筛选
+      // 特色标签筛选（发送中文标签名给后端）
       if (modernTagFilter) params.set("modernTagFilter", modernTagFilter);
-      if (featureTagFilter) params.set("featureTagFilter", featureTagFilter);
+      featureTagFilters.forEach(f => params.append("featureTagFilter", f));
       // 评价来源筛选
       if (reviewSource !== "all") params.set("reviewSource", reviewSource);
 
@@ -1163,14 +1177,14 @@ export default function Mode2Page() {
     } finally {
       setIsLoadingResults(false);
     }
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, page, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, page, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilters]);
 
   // 条件变化时获取统计
   useEffect(() => {
     const timer = setTimeout(fetchStats, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter, reviewSource]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilters, reviewSource]);
 
   // 获取搜索结果
   useEffect(() => {
@@ -1178,7 +1192,7 @@ export default function Mode2Page() {
     const timer = setTimeout(fetchResults, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilter, reviewSource]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilters, reviewSource]);
 
   // 页码变化时获取结果
   useEffect(() => {
@@ -1641,6 +1655,47 @@ export default function Mode2Page() {
             </div>
           </div>
 
+          {/* 已选标签展示区域 */}
+          {featureTagFilters.length > 0 && (
+            <div className="mb-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200/50 dark:border-purple-800/50">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-purple-700 dark:text-purple-300">
+                  已选标签 ({featureTagFilters.length})
+                </span>
+                <button
+                  onClick={clearAllFeatureTags}
+                  className="text-xs text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 underline"
+                >
+                  清除全部
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {featureTagFilters.map(filterKey => {
+                  const tag = featureTagOptions.find(t => t.tag === filterKey);
+                  if (!tag) return null;
+                  const dist = tag.poolDistribution;
+                  const poolParts: string[] = [];
+                  if (activePools.includes("A") && dist && dist.A > 0) poolParts.push(`A池${dist.A}款`);
+                  if (activePools.includes("B") && dist && dist.B > 0) poolParts.push(`B池${dist.B}款`);
+                  if (activePools.includes("C") && dist && dist.C > 0) poolParts.push(`C池${dist.C}款`);
+                  const poolInfo = poolParts.length > 0 ? poolParts.join(" · ") : "";
+
+                  return (
+                    <button
+                      key={filterKey}
+                      onClick={() => toggleFeatureTag(filterKey)}
+                      title={`点击取消选择`}
+                      className="flex items-center gap-1 px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium rounded-md transition-colors"
+                    >
+                      <span>{tag.label}</span>
+                      <X className="w-3 h-3" />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* 标签搜索框 */}
           <div className="relative mb-4">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -1887,11 +1942,11 @@ export default function Mode2Page() {
                                   return (
                                     <button
                                       key={tag.key}
-                                      onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
+                                      onClick={() => toggleFeatureTag(tag.tag)}
                                       title={`${tag.tag} · ${poolInfo} · 覆盖率${tag.coverage}%`}
                                       className={cn(
                                         "group px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all",
-                                        featureTagFilter === tag.key
+                                        featureTagFilters.includes(tag.tag)
                                           ? "bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50"
                                           : "bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 border border-purple-200/50 dark:border-purple-700/50"
                                       )}
@@ -1899,7 +1954,7 @@ export default function Mode2Page() {
                                       <span>{tag.label}</span>
                                       <span className={cn(
                                         "ml-1.5 text-[10px] font-normal tabular-nums",
-                                        featureTagFilter === tag.key ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
+                                        featureTagFilters.includes(tag.tag) ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
                                       )}>
                                         {tag.gameCount}
                                       </span>

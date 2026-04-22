@@ -1,1 +1,2870 @@
-{"lastUpdated": "2026-04-20 17:24:49", "totalGames": 68, "processedGames": 68, "totalTokens": 311208, "games": {"200960": {"name": "Geneforge 1", "mechanics": [], "rawMechanics": ["仆从军团", "分支叙事", "派系抉择", "潜行战术", "生物创造"], "summary": "本作融合了'生物创造'（玩家不通过捕捉，而是消耗自身资源动态制造并定制专属的怪物军队）与'潜行战术'（敌人具有巡逻、追踪和呼救的复杂AI，玩家需要利用视野和走位进行战术规避或伏击）机制。 [验证修正: 分析虽准确但不完整。作为一款经典的CRPG，Geneforge融合了以下重要玩法：\n1.  补充“分支叙事”：游戏拥有巨大且开放的故事情节，玩家的选择会对世界和结局产生深远影响，这是其作为CRPG的核心特征。\n2.  补充“仆从军团”：与宝可梦式的少数精英伙伴不同，玩家可以创造一支“军队”，强调的是数量和自定义组合带来的战术规模感。\n3.  补充“派系抉择”：游戏中有多个意识形态对立的派系，玩家可以自由选择加入或对抗，这深刻影响游戏进程和故事走向，是其开放性的重要体现。]", "status": "verified", "steamTags": ["RPG", "Indie", "Isometric", "Strategy", "Turn-Based Combat", "Fantasy", "Turn-Based", "Old School", "Story Rich", "Singleplayer", "CRPG", "Creature Collector", "Classic", "Exploration"]}, "200980": {"name": "Geneforge 2", "mechanics": [], "rawMechanics": ["生物创造", "阵营抉择", "网状叙事"], "summary": "融合了传统CRPG的阵营抉择与网状叙事机制，玩家通过消耗资源的生物创造（而非野外捕捉）来定制变异怪物军团，加入不同派系会导向数十种截然不同的游戏结局。 [验证修正: 无。第一阶段的分析准确抓住了游戏玩法的精髓，无需修正。]", "status": "verified", "steamTags": ["RPG", "Indie", "Strategy", "Isometric", "Turn-Based Combat", "Turn-Based", "Creature Collector", "Fantasy", "CRPG", "Singleplayer", "Story Rich"]}, "200990": {"name": "Geneforge 3", "mechanics": [], "rawMechanics": ["战棋式战斗", "仆从军团", "自由角色构筑", "阵营抉择", "怪物创造", "多分支剧情"], "summary": "游戏将传统的怪物捕捉替换为消耗资源定制的“怪物创造”玩法，并融合了CRPG中深刻的“阵营抉择”机制来决定剧情走向与结盟关系。 [验证修正: 分析虽准确但不够完整，遗漏了几个关键标签，使得游戏作为一款深度CRPG的特质未能充分展现：\n1. 补充'多分支剧情'：游戏的阵营抉择会导向截然不同的故事线和结局，这是其CRPG深度的核心体现。\n2. 补充'自由角色构筑'：与怪物创造并行的，是玩家自身的成长。游戏提供了无职业限制、高度自由的技能加点体系，玩家可以专精于战斗、魔法或创造，玩法差异巨大。\n3. 发明并补充'仆从军团'：用此标签来强调玩家与创造物之间的“工具”关系。这些怪物是可随时制造、可消耗的战斗单位，而非宝可梦式的“伙伴”，这在主题和策略上都是关键区别。\n4. 补充'战棋式战斗'：游戏的战斗是在等轴视角网格地图上进行的，强调站位、消耗和行动点管理，'战棋式战斗'比'回合制'更精确地描述了其战术性。]", "status": "verified", "steamTags": ["RPG", "Indie", "Strategy", "Turn-Based Combat", "Isometric", "Turn-Based", "Creature Collector", "CRPG", "Old School", "Female Protagonist"]}, "201010": {"name": "Geneforge 5: Overthrow", "mechanics": [], "rawMechanics": ["生物塑造", "阵营抉择", "CRPG式叙事", "职业Build自由"], "summary": "本作将经典美式CRPG机制与怪物收集相融合，核心在于‘生物塑造’（消耗资源自主创造、定制和变异怪物军队，而非传统的野外捕捉）以及‘阵营抉择’（玩家选择加入的不同势力将实质性改变游戏世界的状态、剧情走向及可解锁的能力）。 [验证修正: 分析虽准确但不够完整。为更全面地反映其融合设计，补充以下标签：\n1. 'CRPG式叙事'：游戏的阵营抉择是建立在庞大、深刻且充满文本选择的经典CRPG叙事框架之上的。玩家的选择有实际且长远的后果，这与单纯的怪物收集游戏有显著区别。\n2. '职业Build自由'：玩家角色的成长路径非常开放。你可以选择成为一个完全依赖创造物的“塑造者”（Shaper），也可以成为一个亲自上阵的“守护者”（Guardian），或者将两者结合。这种角色构建的自由度与“生物塑造”系统深度融合，形成了多样的策略玩法。]", "status": "verified", "steamTags": ["RPG", "Indie", "Strategy", "Turn-Based Combat", "Isometric", "Old School", "Turn-Based", "Story Rich", "CRPG", "Creature Collector"]}, "362090": {"name": "Siralim", "mechanics": ["肉鸽融合"], "rawMechanics": ["怪物深度合成", "无尽爬塔", "随机地牢", "刷宝掉落", "肉鸽融合", "无限构筑"], "summary": "游戏在怪物收集对战的基础上加入了肉鸽融合机制，玩家需要在每次生成的随机地牢中探索，并通过刷宝掉落系统获取战利品，以支撑深度的怪物定制与养成循环。 [验证修正: 第一阶段分析遗漏了Siralim系列最核心和最深度的玩法系统。补充以下标签以完整描述其独特性：\n1. **怪物深度合成**：游戏的核心远超“收集”，玩家需要通过繁殖、融合、献祭等方式深度定制和创造怪物。\n2. **无限构筑**：数百种怪物特性、装备、法术和天赋之间可以组合出近乎无限的战斗流派（Build），是游戏策略深度的体现。\n3. **无尽爬塔**：游戏以无尽的、难度不断提升的随机地牢为主要内容，强调长期的角色和队伍养成，而非线性故事体验。]", "status": "verified", "steamTags": ["Creature Collector", "Collectathon", "Procedural Generation", "Dungeon Crawler", "RPG", "Character Customization", "Turn-Based", "Fantasy", "Retro", "2D", "Pixel Graphics", "Turn-Based Combat", "Singleplayer", "Party-Based RPG", "Tactical RPG"]}, "432350": {"name": "Epic Battle Fantasy 5", "mechanics": [], "rawMechanics": [], "summary": "本作是一款传统的队伍制回合制RPG，主要特色为将捕获的怪物作为技能召唤，除基础的怪物收集与回合制战斗外，无其他跨品类的核心机制融合。", "status": "v1_no_mechanics", "steamTags": ["JRPG", "Funny", "Turn-Based", "Indie", "Adventure", "Creature Collector", "Comedy", "RPG", "Turn-Based Combat", "Strategy", "Singleplayer", "2D", "Fantasy", "Parody ", "Anime"]}, "464620": {"name": "Siralim 2", "mechanics": ["肉鸽融合"], "rawMechanics": ["装备打造", "刷宝掉落", "怪物合成", "深度策略构筑", "基地建设", "肉鸽融合"], "summary": "游戏将怪物收集与肉鸽融合（随机生成的无限地牢探索）相结合，并引入了刷宝掉落（以获取随机词条战利品为核心驱动）、装备打造（收集素材制作和强化神器）以及基地建设（消耗资源升级城堡以解锁新功能）机制，构建了极具深度的无限养成循环。 [验证修正: 补充了'怪物合成'和'深度策略构筑'两个遗漏的关键标签，以更完整地描述游戏的核心玩法循环和长期吸引力。]", "status": "verified", "steamTags": ["Creature Collector", "Collectathon", "Dungeon Crawler", "RPG", "Pixel Graphics", "Turn-Based", "2D", "Procedural Generation", "Fantasy", "Retro", "Singleplayer", "Turn-Based Combat", "Top-Down", "Party-Based RPG", "Strategy RPG"]}, "469800": {"name": "Evolution Board Game", "mechanics": ["牌组构建"], "rawMechanics": ["手牌管理", "特性拼装", "异步多人", "桌游改编", "生存策略", "动态生态"], "summary": "本作将桌游机制与牌组构建相融合，玩家通过“特性拼装”（打出卡牌为物种自由组合不同的生存特征）来创造和进化生物，并在“动态生态”（公共食物池与捕食者/猎物关系实时变动）中竞争存活，同时支持异步多人联机对战。 [验证修正: 1. **核心定位修正**：将游戏类比为“宝可梦Like”是错误的。宝可梦的核心是“收集、养成、交换”，强调长期拥有的伙伴；而《Evolution》的核心是“适应、演化、淘汰”，物种仅在单局游戏中存在，是围绕环境和对手进行动态调整的策略工具。游戏本质更接近于一个物竞天择的“演化模拟器”。\n2. **标签修正**：'牌组构建' (Deckbuilding) 标签不准确。该游戏机制并非像《杀戮尖塔》或《领土》那样在游戏过程中不断扩充和优化个人牌库。玩家每回合是从公共牌堆获得手牌，然后打出。这应被修正为更精确的'手牌管理' (Hand Management)。\n3. **标签优化与补充**：'桌游机制'标签虽然正确但过于宽泛，优化为'桌游改编'能更精确地说明它的出身。同时，分析遗漏了游戏中最核心的冲突来源，即所有玩家对有限资源的争夺，因此补充'生存策略'标签来强调这一零和博弈的特点。]", "status": "corrected", "steamTags": ["Board Game", "Tabletop", "Card Game", "Turn-Based Strategy", "Asynchronous Multiplayer", "Local Multiplayer", "Deckbuilding", "Strategy", "Science", "Education", "Casual", "Simulation", "4 Player Local", "Dinosaurs", "Multiplayer"]}, "486850": {"name": "Card of spirits", "mechanics": [], "rawMechanics": ["卡牌对战", "桌游机制", "手牌管理", "数值博弈"], "summary": "融合了桌游机制与卡牌对战，玩家通过特定的12张卡牌进行回合制数值比拼。 [验证修正: 第一阶段分析的根本性错误在于定性。该游戏并非“宝可梦Like”的融合变体，而是一个纯粹的、规则简单的卡牌/桌游。因此，标签不应被视为在“宝可梦Like”基础上的“融合”，而是对游戏本身核心机制的直接描述。原标签“卡牌对战”和“桌游机制”本身是正确的，但遗漏了更关键的玩法核心。修正如下：\n1. 指出“数值博弈”是其比大小玩法的核心，比“卡牌对战”更具体。\n2. 补充“手牌管理”，因为在仅有12张牌（含4张特殊牌）的对局中，如何出牌是策略关键。]", "status": "corrected", "steamTags": ["Strategy", "Casual", "Card Game", "Anime", "Board Game", "Card Battler", "Cute", "2D", "Cartoon", "Hand-drawn", "Comedy", "Artificial Intelligence", "Singleplayer", "Creature Collector", "Controller"]}, "552700": {"name": "WORLD OF FINAL FANTASY®", "mechanics": ["形态融合"], "rawMechanics": ["网格化养成", "主角尺寸切换", "形态融合", "FF系列大乱斗", "体型堆叠", "ATB战斗"], "summary": "游戏在怪物收集的基础上创新了'体型堆叠'机制，玩家需根据大、中、小体型将角色与怪物像叠罗汉一样组合，实现形态融合并解锁组合技能与属性变化。 [验证修正: 分析准确，无方向性错误，但遗漏了其他几个定义游戏体验的重要融合玩法，已在标签中补充。]", "status": "verified", "steamTags": ["RPG", "JRPG", "Creature Collector", "Turn-Based Combat", "Anime", "Fantasy", "Cute", "Singleplayer", "Open World", "Adventure", "Turn-Based", "Great Soundtrack", "Strategy", "Multiplayer", "Female Protagonist"]}, "562250": {"name": "Beastmancer", "mechanics": [], "rawMechanics": [], "summary": "本作是一款传统的怪物收集与回合制战棋游戏，根据提供的信息，没有包含其他明显的融合玩法机制。", "status": "v1_no_mechanics", "steamTags": ["RPG", "Indie", "Strategy", "Creature Collector", "Turn-Based", "Turn-Based Combat", "Turn-Based Tactics", "Singleplayer", "Tactical RPG", "Fantasy", "Tactical"]}, "593150": {"name": "Ooblets", "mechanics": ["牌组构建"], "rawMechanics": ["生活模拟", "牌组构建", "农场经营", "怪物收集"], "summary": "游戏将传统的怪物收集与农场经营（通过种田来获取和培养怪物）深度结合，并创新性地使用牌组构建机制来进行非暴力的舞蹈对战。 [验证修正: 分析虽然准确，但遗漏了一个与农场经营同等重要的核心玩法支柱。因此补充了以下标签：\n1.  **怪物收集**: 这是“宝可梦Like”的基础，应明确标出。\n2.  **生活模拟**: 游戏拥有非常强的“城镇生活”元素（town life），玩家需要与各式各样的NPC互动、完成任务、自定义角色和房屋、参与城镇活动等。这一玩法与农场经营相结合，共同构成了游戏轻松、休闲的社交养成体验，是游戏吸引力的关键部分。]", "status": "verified", "steamTags": ["Casual", "RPG", "Farming Sim", "Creature Collector", "Cute", "Card Battler", "Party-Based RPG", "Exploration", "3D", "Colorful", "Family Friendly", "Cooking", "Crafting", "Agriculture", "Relaxing"]}, "666860": {"name": "Bit Heroes Quest", "mechanics": ["MMO元素"], "rawMechanics": ["地牢探索", "MMORPG", "放置挂机", "怪物收集", "装备驱动"], "summary": "本作在怪物收集回合制的基础上，融合了MMO元素（多人团本与PvP竞技场）、放置挂机（Idler机制提供自动化或离线收益）以及装备驱动（通过刷地牢收集与打造海量装备来提升战力）玩法。 [验证修正: 无重大修正，第一阶段的标签均正确。为更清晰地描述游戏，建议将'MMO元素'明确为'MMORPG'以增强准确性，并补充核心玩法'怪物收集'，使标签组能更完整地概括游戏全貌。]", "status": "verified", "steamTags": ["Free to Play", "Pixel Graphics", "RPG", "Adventure", "MMORPG", "Massively Multiplayer", "Turn-Based", "2D", "Multiplayer", "Dungeon Crawler", "Casual", "Loot", "Action", "Idler", "Online Co-Op"]}, "745920": {"name": "Temtem", "mechanics": ["MMO元素"], "rawMechanics": ["确定性战斗", "双人协作", "MMO元素", "双单位战术", "体力资源管理"], "summary": "本作在传统宝可梦框架上融合了MMO元素，并创新引入了双人协作（支持全程组队通关）、体力资源管理（技能消耗体力而非次数，透支会扣除生命值）以及确定性战斗（完全移除命中率和暴击等随机数）机制。 [验证修正: 第一阶段分析准确，但遗漏了其战斗系统的基本构成。补充标签'双单位战术'，用以强调游戏所有战斗（包括单人游玩时）均默认为2v2形式，这深刻影响了队伍构建、技能设计和战斗策略，是其与同类游戏的一个关键结构性区别。]", "status": "verified", "steamTags": ["Co-op", "Multiplayer", "Creature Collector", "RPG", "Turn-Based Combat", "Story Rich", "Adventure", "PvE", "PvP", "Turn-Based Tactics", "MMORPG", "Character Customization", "Collectathon", "Anime", "Cartoony"]}, "798460": {"name": "Ni no Kuni Wrath of the White Witch™ Remastered", "mechanics": [], "rawMechanics": ["怪物收集", "魔法书系统", "双世界穿梭", "情绪解谜", "即时走位", "半即时指令战斗"], "summary": "游戏在传统怪物收集基础上，融合了'即时走位'（战斗中玩家需实时移动角色躲避攻击并拾取掉落的增益光球）与'情绪解谜'（在地图探索中收集并转移NPC的特定情感以修复他人心灵、推进流程）的创新机制。 [验证修正: 分析准确但不够全面，遗漏了几个同样重要的核心玩法。补充标签如下：\n1. **怪物收集**：这是游戏“宝可梦Like”属性的基础，玩家可以捕获、培养并进化数百种“幻兽”（Familiars）进行战斗。\n2. **魔法书系统**：主角奥利佛的核心能力，玩家通过收集魔法书页学习新法术，用于战斗、解谜和世界互动，是独立于幻兽系统的重要玩法。\n3. **双世界穿梭**：游戏的世界观和关卡设计基础，玩家需在现实世界与异世界之间来回穿梭，解决相互关联的谜题。\n4. **半即时指令战斗**：用于更精确地描述战斗系统。它并非纯粹的回合制，而是结合了角色自由移动（即时）与带有冷却时间的菜单指令（指令战斗），形成独特的战斗节奏。]", "status": "verified", "steamTags": ["RPG", "Adventure", "JRPG", "Action", "Anime", "Creature Collector", "Great Soundtrack", "Singleplayer", "Story Rich", "Fantasy", "Open World", "Cute", "Turn-Based Combat", "Magic", "Turn-Based"]}, "814370": {"name": "Monster Sanctuary", "mechanics": ["银河恶魔城"], "rawMechanics": ["银河恶魔城", "平台跳跃", "怪物收集", "策略化配队", "回合制战斗", "RPG成长"], "summary": "将怪物收集与银河恶魔城式的非线性地图探索以及2D平台跳跃机制深度结合，玩家需要利用不同怪物的特殊能力（如飞行、破坏）来解谜并解锁新区域。 [验证修正: 分析结论准确，无需修正。补充了'RPG成长'和'策略化配队'标签，以更完整地体现游戏在怪物养成（技能树、装备）和战斗策略（3v3协同）上的深度。]", "status": "verified", "steamTags": ["Creature Collector", "Pixel Graphics", "Metroidvania", "Turn-Based Tactics", "Singleplayer", "Turn-Based Combat", "Exploration", "Fantasy", "Adventure", "JRPG", "RPG", "2D", "Strategy", "PvP", "Difficult"]}, "841770": {"name": "Siralim 3", "mechanics": [], "rawMechanics": ["刷宝驱动", "深度构筑", "随机地牢", "无尽进程", "海量组合"], "summary": "游戏将传统的怪物收集与暗黑式的刷宝驱动（Loot）和随机地牢探索相结合，玩家需要在程序化生成的无限地牢中不断获取战利品、打造装备，从而为多达700种怪物进行极具策略性的深度构筑（Build）。 [验证修正: 分析准确，无需修正。但可补充以下标签以更全面地描述其特点：\n1. **无尽进程 (Endless Progression)**：游戏的设计核心之一是无限深入的地牢和无上限的角色成长，这与传统RPG的固定终点截然不同，是其超高重玩价值的关键。\n2. **海量组合 (Massive Combinations)**：超过700种怪物，每种都有独特特性，怪物之间可以融合继承特性，这种海量的组合可能性是'深度构筑'玩法的基石，值得单独强调。]", "status": "verified", "steamTags": ["Creature Collector", "Collectathon", "Dungeon Crawler", "Procedural Generation", "RPG", "Turn-Based", "Fantasy", "Retro", "Pixel Graphics", "2D", "Turn-Based Combat", "Replay Value", "Character Customization", "Party-Based RPG", "Strategy RPG"]}, "906870": {"name": "FurryFury: Smash & Roll", "mechanics": [], "rawMechanics": ["怪物收集", "多人竞技", "物理解谜", "回合制策略", "弹射碰撞"], "summary": "游戏将怪物收集与'弹射碰撞'（基于物理引擎的滚动撞击与反弹机制）结合，并融入了物理解谜与多人在线竞技元素。 [验证修正: 第一阶段的分析方向正确，但标签可以更完整。已补充“怪物收集”和“回合制策略”这两个标签，以明确其“宝可梦Like”的底层框架，使玩法描述更全面。]", "status": "verified", "steamTags": ["Online Co-Op", "Multiplayer", "Turn-Based", "Funny", "PvP", "Casual", "Top-Down", "Co-op", "Turn-Based Strategy", "2D", "Singleplayer", "Tactical", "2D Fighter", "Hand-drawn", "Comedy"]}, "968800": {"name": "Necro Story", "mechanics": [], "rawMechanics": [], "summary": "游戏本质为传统的怪物收集与回合制RPG，主要特色在于死灵法师的喜剧主题以及将击败敌人的灵魂转化为随从的包装，未展现出明显的跨品类核心机制融合。", "status": "v1_no_mechanics", "steamTags": ["Creature Collector", "Party-Based RPG", "RPG", "Collectathon", "Comedy", "JRPG", "Turn-Based Combat", "Story Rich", "Management", "Fantasy", "Cute", "Colorful", "Stylized", "Magic", "Zombies"]}, "984560": {"name": "HEARTBEAT", "mechanics": [], "rawMechanics": [], "summary": "本作是一款传统的RPGMaker风格怪物收集与回合制RPG，包含钓鱼和卡牌收集等常规JRPG附属小游戏，无明显的跨品类核心机制融合。", "status": "v1_no_mechanics", "steamTags": ["RPG", "Indie", "RPGMaker", "Pixel Graphics", "Female Protagonist", "Cute", "Anime", "Adventure", "Great Soundtrack", "JRPG", "Singleplayer", "Story Rich", "Turn-Based Combat", "Turn-Based", "Creature Collector"]}, "995980": {"name": "Fae Tactics", "mechanics": [], "rawMechanics": ["动态回合顺序", "团队连携攻击", "领袖+召唤单位", "地图无缝战斗", "元素循环克制", "战棋怪物收集"], "summary": "游戏在怪物收集的基础上，创新性地引入了“无菜单战斗”（摒弃传统指令菜单，通过直接点击目标或空地触发攻击、协助等动作）和“法术卡牌”（收集并配置卡牌作为释放魔法的手段）机制，大幅提升了战局的流畅度。 [验证修正: 1. “无菜单战斗”标签不准确。游戏在战斗中需要通过菜单选择移动、攻击、技能等指令，并非无菜单。但战斗确实是直接在探索地图上无缝展开，没有切换独立的战斗场景，因此修正为“地图无缝战斗”更贴切。\n2. “法术卡牌”标签不准确。主角的法术系统是基于传统的法术书和法力值，从一个固定列表中选择施放，并不涉及卡牌抽取、牌组构建等随机性或策略性元素。]", "status": "corrected", "steamTags": ["RPG", "Strategy", "Turn-Based Tactics", "Pixel Graphics", "Tactical", "Turn-Based", "Female Protagonist", "Indie", "Isometric", "Creature Collector", "Strategy RPG", "Tactical RPG", "Fantasy", "JRPG", "Cute"]}, "1042550": {"name": "Digimon Story Cyber Sleuth: Complete Edition", "mechanics": ["形态融合"], "rawMechanics": ["案件推理", "怪物收集", "赛博骇客", "放置养成", "形态融合", "回合制战斗"], "summary": "在传统怪物收集基础上，核心采用了网状退化与合体的形态融合机制，并加入了数码农场的放置养成玩法（挂机训练/开发道具），以及收集关键词与NPC交互的案件推理元素。 [验证修正: 分析准确，但可以补充一个标签以更完整地描述其独特性。\n\n**补充标签：**\n*   **赛博骇客 (Cyber Hacking)**: “案件推理”描述了“做什么”，而“赛博骇客”描述了“怎么做”。玩家的核心能力是利用“连接跳跃”（Connect Jump）等骇客技能，在物理世界和数字世界之间穿梭，侵入服务器、破解安防，这是游戏玩法和世界观设定的关键支柱，也是其赛博朋克风格的核心体现。]", "status": "verified", "steamTags": ["Creature Collector", "JRPG", "Anime", "Turn-Based Combat", "Turn-Based", "RPG", "Turn-Based Strategy", "Visual Novel", "PvP", "Story Rich", "Strategy", "Cute", "Action", "Cyberpunk", "Fantasy"]}, "1065880": {"name": "Dungeon Scavenger", "mechanics": ["肉鸽融合"], "rawMechanics": ["Rogue-lite"], "summary": "将老派的第一人称地牢探索（DRPG）与肉鸽元素融入怪物收集玩法中，玩家需要在充满挑战的迷宫中进行回合制战斗与探索。 [验证修正: 分析准确，无需修正，但可以补充和细化标签以获得更完整的画像：\n1. **补充核心玩法**: 将“宝可梦Like”这个概念拆解为更明确的“Creature Collector”标签。\n2. **细化战斗标签**: 游戏标签中包含“Tactical RPG”和“Turn-Based Tactics”，表明其战斗系统比简单的回合制更强调策略和站位，因此补充“Tactical RPG”标签。\n3. **补充RPG系统**: “Character Customization”是游戏的一个重要标签和特色，对于RPG玩家吸引力巨大，应当补充。]", "status": "verified", "steamTags": ["Exploration", "Tactical RPG", "Turn-Based Tactics", "CRPG", "Dungeon Crawler", "Rogue-lite", "Creature Collector", "Hunting", "Turn-Based", "Strategy RPG", "Turn-Based Strategy", "Action RPG", "Rogue-like", "Character Customization", "RPG"]}, "1083190": {"name": "Disc Creatures", "mechanics": [], "rawMechanics": [], "summary": "本作是一款纯粹致敬复古掌机时代的传统怪物收集与回合制RPG，核心玩法围绕基础的捕捉（复制）与战斗，没有明显的跨品类机制融合。", "status": "v1_no_mechanics", "steamTags": ["RPG", "Creature Collector", "JRPG", "Turn-Based Combat", "Indie", "Pixel Graphics", "2D", "Retro", "Anime", "Singleplayer", "Modern", "RPGMaker", "Collectathon", "Cute", "Family Friendly"]}, "1106830": {"name": "Rainbow Billy: The Curse of the Leviathan", "mechanics": [], "rawMechanics": ["解谜探索", "平台跳跃", "非暴力交涉", "收集马拉松", "QTE机制", "好感度养成"], "summary": "游戏将平台跳跃与收集马拉松融入地图探索，战斗系统创新性地采用非暴力交涉（通过QTE机制完成颜色匹配与情感安抚来收服怪物而非击败它们），并结合了好感度养成系统来强化伙伴关系。 [验证修正: 分析基本准确，标签质量很高。补充了一个标签“解谜探索”来更全面地描述游戏在非战斗状态下的核心玩法循环，因为它不仅仅是跳跃，还包含了大量的环境解谜元素。]", "status": "verified", "steamTags": ["Emotional", "Indie", "Creature Collector", "RPG", "Story Rich", "Puzzle-Platformer", "Fishing", "LGBTQ+", "Turn-Based Combat", "Cute", "Cartoon", "Party-Based RPG", "Dating Sim", "Puzzle", "Colorful"]}, "1191580": {"name": "Nexomon", "mechanics": [], "rawMechanics": [], "summary": "本作是一款非常传统的类宝可梦游戏，核心玩法为标准的怪物收集与回合制战斗，没有明显的跨品类机制融合。", "status": "v1_no_mechanics", "steamTags": ["Creature Collector", "RPG", "Adventure", "Indie", "Casual", "Simulation", "Turn-Based Combat", "Singleplayer", "Turn-Based", "Anime", "2D", "Cute", "Exploration", "Colorful", "JRPG"]}, "1191840": {"name": "Legend Creatures(传奇生物)", "mechanics": ["自动战斗"], "rawMechanics": ["肉鸽Lite", "怪物收集", "生物合成/进化", "自动战斗", "团队构筑/羁绊"], "summary": "游戏将传统的怪物收集进化与自走棋（自动战斗）机制相结合，并引入了包含随机生成与重玩价值的肉鸽循环体验。 [验证修正: 1. 核心玩法修正：游戏的战斗模式并非“回合制”，而是“自动战斗/自走棋”。因此“宝可梦Like”的标签具有误导性，应明确其战斗类型。\n2. 标签补充：\n   - '怪物收集'：这是游戏的基础，应作为独立标签，而非包含在“宝可梦Like”的模糊概念中。\n   - '生物合成/进化'：生物的进化和合成是游戏角色养成的核心途径，是驱动玩家收集和探索的关键系统。\n   - '团队构筑/羁绊'：作为自走棋玩法的延伸，生物之间的“羁绊”和协同效应是战斗策略的重中之重，是区别于简单数值堆砌的重要标签。]", "status": "corrected", "steamTags": ["Exploration", "Indie", "Rogue-lite", "Rogue-like", "Auto Battler", "Strategy", "Replay Value", "Singleplayer", "2D", "Fantasy", "Pixel Graphics", "Creature Collector", "RPG", "Adventure", "Turn-Based Strategy"]}, "1192440": {"name": "The Monster Breeder", "mechanics": ["形态融合", "肉鸽融合"], "rawMechanics": ["模拟经营", "形态融合", "生物改造", "角斗场机制", "肉鸽融合", "战术RPG融合"], "summary": "本作融合了肉鸽机制与模拟经营，核心特色在于通过异种交配（形态融合）与手术炼金等手段对怪物进行深度的定制化培育（生物改造），并以此参与残酷的竞技场战斗（角斗场机制）。 [验证修正: 分析已相当准确，但遗漏了一个关键的战斗系统细节。Steam标签中多次出现`Tactical RPG`和`Turn-Based Strategy`，这表明其回合制战斗并非简单的宝可梦式对战，而是包含了走位、战场布局等元素的战棋玩法。因此，补充一个标签 **'战术RPG融合'** 能更精确地描述其战斗系统的深度。]", "status": "verified", "steamTags": ["Strategy RPG", "Turn-Based", "Management", "Sandbox", "Creature Collector", "Simulation", "Strategy", "RPG", "Turn-Based Combat", "Turn-Based Strategy", "3D", "Indie", "Medieval", "Perma Death", "Fantasy"]}, "1193590": {"name": "Abomi Nation", "mechanics": ["肉鸽融合"], "rawMechanics": ["肉鸽融合", "永久死亡", "程序化生成世界", "队伍羁绊"], "summary": "本作将肉鸽元素与怪物收集深度结合，引入了程序化生成的地图和硬核的‘永久死亡’机制，并加入了‘队伍羁绊’（怪物伙伴之间可建立关系并影响冒险进程）的特色系统。 [验证修正: 补充了一个标签：'程序化生成世界'。虽然它通常被包含在'肉鸽融合'的定义内，但对于一个以探索和收集为核心的“宝可梦Like”游戏而言，每次游戏世界地图、怪物分布都完全重塑，这是一个极其重要的融合特征，值得单独强调。]", "status": "verified", "steamTags": ["Indie", "Creature Collector", "RPG", "Rogue-like", "Turn-Based Combat", "Singleplayer", "Party-Based RPG", "Rogue-lite", "Cute", "Cartoony", "Family Friendly", "Perma Death", "Procedural Generation", "Replay Value", "Turn-Based"]}, "1196630": {"name": "Nexomon: Extinction", "mechanics": [], "rawMechanics": ["耐力资源管理", "装备镶嵌", "QTE捕获", "动态难度平衡", "海量支线任务", "核心合成"], "summary": "在经典怪兽对战基础上融合了随剧情进度的动态等级缩放、全局耐力资源系统、捕获时的按键QTE以及类似RPG的内核装备镶嵌机制。 [验证修正: 初版分析准确，但遗漏了两个定义游戏体验的重要系统。补充'核心合成'，因为这是获取镶嵌物品的主要玩法循环；补充'海量支线任务'，因为它构成了游戏探索和世界互动的主要内容，是区别于同类游戏的一大特色。]", "status": "verified", "steamTags": ["Creature Collector", "Turn-Based Combat", "RPG", "Casual", "Top-Down", "Funny", "Singleplayer", "Adventure", "Colorful", "Family Friendly", "Simulation", "Indie", "Action", "Exploration", "Anime"]}, "1218210": {"name": "Coromon", "mechanics": [], "rawMechanics": [], "summary": "本作是一款非常传统的复古类宝可梦游戏，核心玩法为标准的怪物收集与回合制战斗，主要通过体力系统、内置硬核规则（Nuzlocke）和地牢解谜进行体验优化，并未融合其他改变核心循环的跨界玩法机制。", "status": "v1_no_mechanics", "steamTags": ["Creature Collector", "Exploration", "JRPG", "Collectathon", "Turn-Based", "Turn-Based Combat", "PvP", "Character Customization", "Strategy", "2D", "Pixel Graphics", "RPG", "Story Rich", "Adventure", "Cute"]}, "1277400": {"name": "Monster Hunter Stories 2: Wings of Ruin", "mechanics": [], "rawMechanics": ["部位破坏", "猜拳克制", "多人协作", "骑乘探索", "素材打造", "基因拼图"], "summary": "将《怪物猎人》特色的部位破坏（针对特定部位打击以限制敌人或获取额外掉落）与素材打造机制融入回合制战斗，并独创了基因拼图系统（在3x3网格中凑齐同色或同类型基因连线以获得质变加成）进行怪物深度养成，同时结合了力量/速度/技巧的猜拳克制战斗与多人协作共斗副本。 [验证修正: 第一阶段的分析已非常出色，但遗漏了一个连接“怪物收集”与“世界探索”的重要玩法。因此补充一个标签：【骑乘探索】。玩家可以骑乘不同的随行兽，并利用它们独特的地图技能（如飞行、游泳、碎岩）来探索世界、发现新的区域和巢穴，这是游戏冒险体验中不可或缺的一环。]", "status": "verified", "steamTags": ["RPG", "Adventure", "JRPG", "Exploration", "Creature Collector", "Cartoony", "3D", "Dragons", "Third Person", "Fantasy", "Loot", "Turn-Based", "Character Customization", "PvE", "Emotional"]}, "1287540": {"name": "Dino Hazard: Chronos Blackout", "mechanics": [], "rawMechanics": ["分支叙事", "生存管理", "节奏交互", "第一人称跑酷", "宝可梦Like"], "summary": "游戏在传统的怪物收集与回合制战斗中融合了'节奏交互'机制（玩家需要根据音乐或节拍进行精准按键判定，以此影响战斗效果或游戏进程）。 [验证修正: 分析遗漏了几个同样重要的融合玩法。1. **分支叙事**：游戏强调“故事丰富”、“多结局”和“艰难抉择”，叙事选择对游戏进程和结局有重大影响。2. **第一人称跑酷**：游戏在2D JRPG的框架中，插入了完全不同玩法的第一人称视角跑酷关卡，这是一个非常显著的玩法融合。3. **生存管理**：在探索过程中，玩家需要管理角色的食物、水和精力等生存资源，这为传统的JRPG探索增加了生存游戏的维度。]", "status": "verified", "steamTags": ["Story Rich", "Emotional", "Cute", "Dark Humor", "Multiple Endings", "Pixel Graphics", "RPG", "Retro", "Exploration", "Turn-Based Combat", "Hand-drawn", "Strategy", "JRPG", "2D", "Action"]}, "1289810": {"name": "Siralim Ultimate", "mechanics": ["自动战斗"], "rawMechanics": ["自动战斗", "深度BD构筑", "无限地牢", "程序生成", "怪物融合", "海量收集"], "summary": "游戏以程序化生成的地牢探索为核心循环，主打极具深度的刷宝BD（通过战利品与词缀搭配构建流派）与形态融合（组合不同怪物的被动特性），并允许玩家通过深度的宏指令系统设置自动战斗来应对海量的刷图需求。 [验证修正: 分析准确但遗漏了两个同样关键的标签，现已补充：\n1. **补充 '海量收集'**: 游戏拥有超过1200种怪物可供收集，这个“量级”本身已经成为一个核心特征和卖点，远超“宝可梦Like”的范畴，值得单独标记。\n2. **补充 '程序生成'**: 这是驱动“地牢探索”和“刷宝BD”循环的底层技术。无论是地牢的结构、敌人配置、战利品，还是任务，都由程序生成，确保了游戏近乎无限的可重玩性。因此，这是一个不可或缺的基础标签。\n\n(注：为更精确描述，已将'形态融合'微调为'怪物融合'，'地牢探索'扩展为'无限地牢'，'刷宝BD'深化为'深度BD构筑'，以更好地体现游戏特色。)]", "status": "verified", "steamTags": ["Collectathon", "Creature Collector", "Dungeon Crawler", "Party-Based RPG", "Strategy RPG", "Character Customization", "RPG", "Strategy", "2D", "Isometric", "Procedural Generation", "Turn-Based Combat", "Pixel Graphics", "Fantasy", "Loot"]}, "1321440": {"name": "Cassette Beasts", "mechanics": ["形态融合"], "rawMechanics": ["开放世界探索", "多人协作", "形态融合", "元素反应", "主角变身"], "summary": "游戏在传统的怪物收集基础上，主打任意两只怪物皆可合体的“形态融合”机制，并引入了允许玩家共同探索和战斗的“多人协作”（支持本地/在线双人联机游玩）玩法。 [验证修正: 补充标签说明：\n1. **开放世界探索**：游戏将怪物收集玩法与无缝的开放世界结构相结合，鼓励自由探索而非线性路线，这与传统宝可梦Like游戏的关卡/道路制设计有显著区别。\n2. **主角变身**：与传统训练师在场外指挥不同，本作主角使用“卡带”录制怪物并亲自“变身”为怪物形态进行战斗，这是对该品类核心交互模式的颠覆性融合。\n3. **元素反应**：战斗系统引入了动态的类型变化机制，攻击不仅造成伤害，还可能通过施加debuff来改变敌人的元素属性，从而创造出新的克制关系，衍生出丰富的策略深度，类似于《原神》的元素反应系统。]", "status": "verified", "steamTags": ["Controller", "Comedy", "Creature Collector", "Local Co-Op", "Turn-Based Combat", "PvP", "Co-op", "3D", "Relaxing", "Collectathon", "Sandbox", "Cartoony", "RPG", "JRPG", "Open World"]}, "1348690": {"name": "Oaken", "mechanics": ["牌组构建"], "rawMechanics": ["轻度肉鸽", "六边形战棋", "牌组构建"], "summary": "本作在怪物收集的基础上融合了肉鸽循环与牌组构建机制，并引入了强调六边形网格空间布局的“棋盘走位”策略。 [验证修正: 1. 核心定位修正：游戏并非“宝可梦Like”，其基础是“战术卡牌”或“战棋”。所谓的“怪物收集”应修正为“单位召唤”或“盟友卡牌”，它是牌组构建玩法的一部分。\n2. 标签精炼：第一阶段的标签可以进一步精确化。\n   - '肉鸽融合' -> '轻度肉鸽' (Rogue-lite)：游戏拥有局外成长，更符合Rogue-lite的定义。\n   - '棋盘走位' -> '六边形战棋' (Hex-Grid Tactics)：明确指出其战斗地图的形态（六边形网格），并强调其战术深度，比“棋盘走位”更具体。]", "status": "corrected", "steamTags": ["Turn-Based Tactics", "Card Battler", "Singleplayer", "Rogue-lite", "Fantasy", "Hex Grid", "Turn-Based Strategy", "Board Game", "Turn-Based", "Creature Collector", "Colorful", "RPG", "Atmospheric", "Tabletop", "Strategy"]}, "1413480": {"name": "Shin Megami Tensei III Nocturne HD Remaster", "mechanics": ["形态融合"], "rawMechanics": ["弱点追击", "形态融合", "交涉招募", "勾玉养成", "阵营抉择"], "summary": "本作融合了形态融合（核心的恶魔合成系统），并引入了交涉招募（通过对话选项与恶魔交涉来获取同伴）、弱点追击（攻击弱点可获得额外行动回合的追击回合系统）以及阵营抉择（玩家的理念选择决定世界重构规则与结局走向）等创新机制。 [验证修正: 分析准确，但遗漏了一个关于主角自身成长的重要系统。补充标签'勾玉养成'（Magatama System）。主角并非通过职业，而是通过装备不同的'勾玉'来获得属性、抗性并学习技能。这个系统与恶魔的培养线相互独立又紧密配合，是游戏角色构建（Build）的另一大核心，值得单独标记。]", "status": "verified", "steamTags": ["JRPG", "RPG", "Creature Collector", "Party-Based RPG", "Demons", "Atmospheric", "Dark", "Post-apocalyptic", "Turn-Based Strategy", "Anime", "Strategy RPG", "Mythology", "Dystopian ", "Choices Matter", "Fantasy"]}, "1424710": {"name": "Geneforge 1 - Mutagen", "mechanics": [], "rawMechanics": ["双线养成", "基因改造", "非战斗解法", "高自由度CRPG", "阵营抉择", "网格战术"], "summary": "游戏将传统的怪物收集替换为消耗资源自定义属性的'基因改造'创造生物，并深度融合了CRPG的'网格战术'走位、影响世界格局的'阵营抉择'，以及允许通过潜行或交涉避开战斗的'非战斗解法'。 [验证修正: 分析准确，但遗漏了两个关键的宏观标签，补充如下：\n1. 补充'高自由度CRPG'：将游戏定性为'宝可梦Like'过于简化。其本质是一款具有极高自由度的经典CRPG（CRPG, Story Rich, Open-ended），怪物创造是其核心系统，但整个游戏框架、任务结构和世界互动方式都是CRPG式的。\n2. 补充'双线养成'：玩家不仅要创造和强化怪物军队，玩家扮演的主角'Shaper'本身也有一套独立的技能和成长体系。这种主角与创造物共同成长的“双线养成”模式是游戏的一个重要特征，区别于许多主角本身不直接参与战斗的怪物收集游戏。]", "status": "verified", "steamTags": ["CRPG", "RPG", "Dungeon Crawler", "Turn-Based", "Party-Based RPG", "Strategy", "Turn-Based Strategy", "2D", "Isometric", "Story Rich", "Adventure", "Turn-Based Combat", "Fantasy", "Grid-Based Movement", "Old School"]}, "1495420": {"name": "Dragon Creek", "mechanics": ["牌组构建"], "rawMechanics": ["怪物收集", "代码生成", "时间管理", "养成模拟", "牌组构建"], "summary": "游戏在怪物收集的基础上，融合了类似《怪物农场》的通过输入代码程序化获取专属怪物的机制（代码生成），结合了包含时间管理与日常训练照顾的宠物养成模拟玩法（养成模拟），并将回合制战斗与牌组构建机制相结合。 [验证修正: 分析结论准确，但标签列表遗漏了最基础的品类标签。为使描述更完整，补充'怪物收集'作为核心玩法之一，以明确游戏的基本盘。]", "status": "verified", "steamTags": ["Card Battler", "Side Scroller", "Time Management", "Turn-Based Tactics", "Immersive Sim", "Creature Collector", "PvE", "Card Game", "Life Sim", "RPG", "Strategy RPG", "Turn-Based Strategy", "Character Customization", "2D", "Relaxing"]}, "1552140": {"name": "Suzukuri Dungeon: Karin in the Mountain", "mechanics": [], "rawMechanics": ["塔防融合", "地牢运营", "反向RPG经营", "怪物收集"], "summary": "游戏融合了塔防机制与地牢运营，玩家不仅需要收集和培养怪物来防御迷宫（塔防融合），还要建设和扩张迷宫内的各种设施，以此来榨取入侵勇者的金钱（地牢运营）。 [验证修正: 分析准确，但可以补充标签以更全面地描述其特色。补充【怪物收集】标签，以明确‘宝可梦Like’中的收集要素。此外，游戏独特的经济循环——通过建造设施从入侵者身上赚钱（‘shake intruders down for cash’），非常符合【反向RPG经营】这一标签，它精准地描述了玩家作为‘反派’，将英雄的冒险行为商业化的核心体验。]", "status": "verified", "steamTags": ["Creature Collector", "Tower Defense", "Management", "Strategy", "Strategy RPG", "Dungeon Crawler", "Cartoon", "Tactical RPG", "Casual", "Anime", "Turn-Based Strategy", "Cute", "Isometric", "Fantasy", "Building"]}, "1592750": {"name": "Anode Heart", "mechanics": [], "rawMechanics": ["数字世界观", "内置卡牌", "快节奏回合制", "半开放世界探索"], "summary": "游戏在传统的怪物收集机制上，融合了独立的卡牌对战迷你游戏（内置卡牌），并允许玩家在半开放世界中自由选择探索与攻略顺序（非线性流程）。 [验证修正: 在确认原分析准确的基础上，进行如下补充和优化：\n1. **补充标签'快节奏回合制'**：游戏简介提到“fast-paced combat”（快节奏战斗），而标签又是“Turn-Based Combat”（回合制战斗）。这说明它在传统回合制的基础上做了加速或简化设计，形成了独特的战斗体验，这是一个重要的融合点。\n2. **补充标签'数字世界观'**：游戏简介的“digital, futuristic environment”和标签中的“Futuristic”、“Transhumanism”表明，其赛博/数字化的世界观不仅是美术风格，更是与怪物设定、故事深度绑定的核心设定，是与传统宝可梦Like游戏在题材上的关键差异点。\n3. **优化标签'非线性流程'**：将其优化为更具体的'半开放世界探索'。这更精确地描述了游戏“semi-open world”和“focus on exploration”的特点，强调了其在世界结构和探索驱动力上的融合设计。]", "status": "verified", "steamTags": ["Adventure", "RPG", "Creature Collector", "JRPG", "Card Battler", "2D", "Pixel Graphics", "Top-Down", "Collectathon", "Colorful", "Cute", "Nonlinear", "Retro", "Futuristic", "Transhumanism"]}, "1623880": {"name": "Noob - The Factionless", "mechanics": [], "rawMechanics": ["IP改编", "公会经营", "怪物收集", "网游模拟", "剧情驱动"], "summary": "游戏在回合制战斗基础上，融合了“网游模拟”（在单机环境下模拟MMORPG的职业机制与玩家生态）与“公会经营”（通过收集资源、招募成员来升级公会设施与排名）的特色机制。 [验证修正: 分析准确，但不够完整。我们补充了以下标签以更全面地描述游戏：\n1. **怪物收集**: 这是其“宝可梦Like”属性的核心，玩家需要收集和培养各种怪物进行回合制战斗，是游戏的基础玩法之一。\n2. **IP改编**: 游戏基于一个已有的成功IP，其世界观、角色和幽默风格都源于此，这是理解游戏背景和调性的关键标签。\n3. **剧情驱动**: Steam标签中的“Story Rich”和游戏本身源于叙事性剧集的特性，都表明了本作有大量对话和故事内容，剧情是推动游戏进程的主要动力。]", "status": "verified", "steamTags": ["RPG", "Adventure", "Turn-Based Combat", "Story Rich", "Strategy RPG", "Retro", "CRPG", "Magic", "Turn-Based Strategy", "Creature Collector", "3D", "Turn-Based Tactics", "Cartoony", "Hand-drawn", "Family Friendly"]}, "1630360": {"name": "Matanga 2", "mechanics": [], "rawMechanics": ["Story Rich"], "summary": "在怪物收集玩法中融合了“恐怖生存”（引入资源限制、生存压力与恐怖威胁应对机制）以及“多线结局”（玩家的探索与决策会触发不同的剧情分支与最终结局）。 [验证修正: 分析已相当准确，可补充'Story Rich'（故事丰富）和'Exploration'（探索）两个标签以获得更完整的画像。游戏简介和标签都强调了其“精彩情节”，而“冒险”类型本身就意味着探索是连接怪物收集、战斗和生存等核心机制的重要一环。]", "status": "verified", "steamTags": ["Adventure", "Action", "Action-Adventure", "Exploration", "Creature Collector", "3D", "Horror", "Vampire", "Survival", "Story Rich", "Indie", "PvE", "Multiple Endings", "Singleplayer", "Turn-Based Tactics"]}, "1671720": {"name": "Athenian Rhapsody", "mechanics": [], "rawMechanics": ["流程交换", "怪物收集", "柏拉图式社交", "小游戏战斗", "多分支叙事"], "summary": "游戏将怪物收集与《瓦里奥制造》风格的“小游戏战斗”（通过微型游戏进行战斗判定）结合，融入了“恋爱模拟”和“多分支叙事”元素，并首创了允许玩家之间进行“流程交换”（将自己独一无二的完整通关流程/存档作为物品与好友交易）的独特社交机制。 [验证修正: 修正“恋爱模拟”为“柏拉图式社交”以更精确地反映游戏描述中“platonic dating simulator”的特点，强调其非浪漫的社交关系构建。同时，补充了作为核心玩法的“怪物收集”标签，使标签组更完整地描述游戏体验。]", "status": "verified", "steamTags": ["Action RPG", "Choose Your Own Adventure", "Creature Collector", "Exploration", "RPG", "Interactive Fiction", "Party-Based RPG", "Dating Sim", "JRPG", "Character Customization", "Funny", "Cute", "Choices Matter", "Multiple Endings", "Story Rich"]}, "1767170": {"name": "Super Bullet Break", "mechanics": ["牌组构建"], "rawMechanics": ["策略战棋", "肉鸽Lite", "怪物收集", "伪Gacha", "牌组构建"], "summary": "一款将肉鸽元素与牌组构建机制深度结合的怪物收集游戏，玩家在每次随机生成的地图中收集不同能力的角色（子弹）来构筑专属卡组进行闯关。 [验证修正: 虽然第一阶段分析准确，但标签可以更精确并补充遗漏的关键点：\n1. **补充 '策略战棋'**: 游戏的回合制战斗并非简单的菜单式对战，而是包含了站位和移动的战棋（Tactical RPG / Hex Grid）玩法，策略深度更高。\n2. **补充 '伪Gacha'**: 游戏内获取新角色的方式（在Roguelite的单次流程中）高度模拟了Gacha（抽卡）游戏的随机获取体验，但并不涉及真实货币交易。这个机制是驱动玩家收集和构筑多样性的核心，值得单独标记。]", "status": "verified", "steamTags": ["Anime", "Turn-Based Tactics", "Card Battler", "Cute", "Deckbuilding", "Adventure", "Card Game", "Turn-Based Combat", "Creature Collector", "Fantasy", "Female Protagonist", "Strategy", "Tactical RPG", "Tactical", "Turn-Based Strategy"]}, "1806700": {"name": "Monster Girl Manager", "mechanics": ["肉鸽融合"], "rawMechanics": ["地牢探索", "程序生成", "肉鸽融合", "团队管理", "策略构筑"], "summary": "本作是一款融合了肉鸽地牢探索的怪物收集游戏，其核心创新在于“程序生成”（即魔物娘的种类、属性和特征由系统随机生成而非固定图鉴），结合遗物收集构建了完整的Roguelite循环。 [验证修正: 修正说明：第一阶段分析准确，但可以进一步补充。游戏标题中的'Manager'以及简介中的'consult, and train'（咨询和训练）表明，游戏存在超出常规怪物收集的'团队管理'元素。结合Roguelite玩法，玩家需要在每次冒险前进行深度的'策略构筑'，这构成了游戏的核心循环，因此补充这两个标签能更完整地描绘游戏体验。]", "status": "verified", "steamTags": ["Creature Collector", "RPG", "Rogue-lite", "Dungeon Crawler", "Turn-Based Combat", "2D", "Anime", "Cute", "Character Customization", "Singleplayer", "Strategy", "Tutorial", "Casual", "Moddable", "PvE"]}, "1813190": {"name": "Little Inner Monsters - Card Game", "mechanics": ["牌组构建"], "rawMechanics": ["数值攻占", "怪物收集", "卡牌对战", "轻度策略", "桌游机制", "纸牌接龙"], "summary": "融合了牌组构建、桌游机制与纸牌接龙（Solitaire）规则的休闲怪物收集卡牌对战游戏。 [验证修正: 分析存在明显误标和遗漏：\n1. **误标**: '牌组构建' (Deckbuilding) 是一个误标。该游戏的核心不是在对局中动态地构建、循环、扩充牌库（如《杀戮尖塔》），而是更接近于赛前选择出战阵容的“团队构建”(Team Building)。这是一个关键的机制区别。\n2. **遗漏**: 分析遗漏了两个关键标签。首先是作为“宝可梦Like”根基的'怪物收集' (Creature Collector)。其次，'卡牌对战' (Card Battler) 比'回合制'更能精确概括其核心对抗形式。\n3. **修正与发明**: 为了更精确地描述玩法，做出以下修正：\n    - 使用新标签'数值攻占' (Value Conquest) 来替代模糊的'解谜元素'。这个标签能清晰地描述游戏的核心机制：在网格版图上，通过比对卡牌边缘的数值来“翻转”或“占领”相邻的对手卡牌，类似于《最终幻想VIII》中的“Triple Triad”玩法。\n    - 补充'轻度策略' (Light Strategy) 标签，以准确反映游戏'Casual', 'Relaxing', 'Family Friendly'的定位，将其与更硬核的策略游戏区分开。]", "status": "corrected", "steamTags": ["Card Battler", "Turn-Based Tactics", "Card Game", "Board Game", "Creature Collector", "Solitaire", "PvP", "Puzzle", "Multiplayer", "Tabletop", "Turn-Based Strategy", "Strategy", "Cute", "Relaxing", "Casual"]}, "1875830": {"name": "Shin Megami Tensei V: Vengeance", "mechanics": ["形态融合"], "rawMechanics": ["开放区域探索", "弱点追击", "形态融合", "交涉招募", "精髓技能继承", "阵营抉择"], "summary": "游戏在怪物收集基础上引入了“交涉招募”（通过对话与资源交换获取怪物）和“形态融合”（恶魔合成产生质变），并在战斗与剧情中分别融入了“弱点追击”（击中弱点增加行动回合的追击系统）与“阵营抉择”（决定世界命运与多结局的道德分支选择）。 [验证修正: 分析准确，无根本性错误，但可补充两个重要标签以更全面地反映《真·女神转生V》的现代设计特色：\n1. 补充'开放区域探索'，因为游戏拥有广阔、高自由度且注重纵向探索的大地图，这是其核心乐趣与玩法循环的重要组成部分。\n2. 补充'精髓技能继承'，以描述主角可以通过'恶魔精髓'自由学习和更换海量技能的深度角色构筑（Build）系统，这是养成玩法的关键一环。]", "status": "verified", "steamTags": ["JRPG", "RPG", "Story Rich", "Demons", "Adventure", "Choices Matter", "Exploration", "Anime", "Turn-Based Strategy", "Creature Collector", "Third Person", "Atmospheric", "3D", "Turn-Based", "Dark"]}, "1877650": {"name": "Zero Orders Tactics", "mechanics": ["肉鸽融合"], "rawMechanics": ["间接指挥", "怪物收集", "解谜策略", "地形改造", "可预见性战斗", "肉鸽融合"], "summary": "结合了肉鸽元素的策略游戏，创新性地引入了“地形改造”（玩家通过改变战场地形网格来影响战局）和“解谜策略”（类似《陷阵之志》的高度确定性逻辑推演）机制，玩家无法直接向怪物下达指令，而是通过改变地形来间接引导其进行自动战斗。 [验证修正: 1. **移除'自动战斗'**：该标签完全错误。游戏的核心是玩家每回合主动“塑造战场”，这是策略解谜的一部分，而非观看单位自动作战。游戏更接近《陷阵之志》（Into The Breach），强调玩家通过精准操作改变环境来解决眼前的战术难题。\n2. **修正核心玩法描述**：游戏并非传统的“怪物收集+回合制战斗”，而更应该被描述为“环境操纵下的战术解谜”。\n3. **补充标签'间接指挥'**：为了描述“不直接指挥单位，但通过改变环境影响其行为”这一独特机制，创造此标签。玩家的行动（改造地形）是因，单位的行动是果，这是一种高阶的策略玩法。\n4. **补充标签'可预见性战斗'**：游戏简介强调“一切皆可预测”，这是区别于传统RPG的重要特征，也是其“解谜”属性的核心。玩家需要在信息完全透明的情况下，计算出最优解，而非依赖随机性。]", "status": "corrected", "steamTags": ["Strategy", "Turn-Based Strategy", "Pixel Graphics", "Replay Value", "Turn-Based Tactics", "Rogue-like", "Puzzle", "Rogue-lite", "Singleplayer", "Tactical", "Turn-Based", "Turn-Based Combat", "2D", "RPG", "Procedural Generation"]}, "1882240": {"name": "Forgotten Realms: The Archives - Collection One", "mechanics": [], "rawMechanics": ["环境互动解谜", "资源生存", "队伍构建", "D&D规则改编", "即时队伍战斗", "第一人称地牢探索"], "summary": "该系列将D&D规则与即时制网格战斗融合，并加入了需管理饥饿度的生存机制与基于第一人称视角的环境解谜要素。 [验证修正: 1. **核心玩法错误**：游戏不是“回合制”，而是“即时制”战斗。它也不是“怪物收集”，而是“队伍构建与管理”。因此“宝可梦Like”的定性是错误的。\n2. **标签修正与补充**：\n   - “即时网格战斗”描述不精确，战斗是发生在网格地图上的即时战斗，修正为“即时队伍战斗”更贴切，强调了队伍和小队战术。\n   - “伙伴招募”过于片面，游戏核心是开局创建整个队伍（种族、职业、属性），修正为“队伍构建”更准确。\n   - 遗漏了最关键的标签：“D&D规则改编”。整个游戏的数值、职业、法术和判定系统都基于龙与地下城规则，这是其核心机制的基石。\n   - 将“生存管理”和“第一人称解谜”进一步精确化为“资源生存”（强调食物、水源、光照等）和“环境互动解谜”（强调与地牢环境的互动，如按钮、踏板、暗门）。\n   - 补充了定义游戏类型的核心标签：“第一人称地牢探索”。]", "status": "corrected", "steamTags": ["Dungeon Crawler", "Retro", "Dungeons & Dragons", "Choose Your Own Adventure", "RPG", "Fantasy", "Party-Based RPG", "Creature Collector", "Tabletop", "Old School", "Action RPG", "Puzzle", "Action-Adventure", "Singleplayer", "First-Person"]}, "1896570": {"name": "Final Stardust: Cosmic Nexus", "mechanics": ["牌组构建"], "rawMechanics": ["集换式卡牌", "怪物收集", "视觉小说", "太空歌剧", "卡牌对战", "牌组构建"], "summary": "本作将怪物收集与集换卡牌（CCG/TCG收集与对战）和牌组构建机制深度融合，并采用视觉小说（通过立绘和文本框进行大量剧情交互）的叙事方式，主打快节奏的休闲卡牌对战体验。 [验证修正: 修正说明：分析虽准确但不够完整，未能全面概括游戏体验。建议进行如下补充和优化：\n1. **补充核心标签**：'怪物收集'是游戏循环的根本，应明确列为核心标签，而非仅作为'宝可梦Like'的背景描述。同时，游戏名和'Space'标签暗示了宏大的世界观，补充'太空歌剧'标签可以有效传达其主题氛围。\n2. **优化描述精度**：使用'卡牌对战'（Card Battler）标签，比笼统的'回合制'更能精确地描述其通过卡牌驱动的战斗机制。]", "status": "verified", "steamTags": ["Adventure", "Strategy", "Creature Collector", "PvE", "Card Game", "Turn-Based Tactics", "Simulation", "Casual", "Deckbuilding", "RPG", "Card Battler", "Anime", "Trading Card Game", "2D", "Visual Novel"]}, "1961970": {"name": "Akumi Wars", "mechanics": [], "rawMechanics": [], "summary": "该游戏主要为标准的回合制小队RPG与怪物收集玩法，以喜剧和科幻奇幻题材为包装，未体现出符合标准的机制融合创新。", "status": "v1_no_mechanics", "steamTags": ["RPG", "Anime", "Turn-Based Combat", "Adventure", "Action-Adventure", "Party-Based RPG", "Turn-Based Strategy", "Creature Collector", "CRPG", "Sci-fi", "2D", "Tactical RPG", "Strategy RPG", "Fantasy", "Cartoon"]}, "1965190": {"name": "Dragon Spirits 2", "mechanics": [], "rawMechanics": [], "summary": "该游戏为标准的怪物收集与回合制策略RPG，主要特色在于现代都市科幻背景与视觉小说叙事，未展现出明显的机制融合玩法。", "status": "v1_no_mechanics", "steamTags": ["Strategy", "Creature Collector", "RPG", "Story Rich", "Tactical", "Adventure", "Dragons", "Collectathon", "Exploration", "Turn-Based Combat", "Anime", "Turn-Based Tactics", "Sci-fi", "Female Protagonist", "Visual Novel"]}, "1996430": {"name": "Dicefolk", "mechanics": ["肉鸽融合", "牌组构建"], "rawMechanics": ["骰面构筑", "怪物收集", "回合制战术", "肉鸽LITE", "行动顺序操控"], "summary": "本作在怪物收集的基础上融合了肉鸽循环与牌组构建，并创新性地引入了“骰子驱动”（通过投掷、收集和配置魔法骰子来决定和指挥双方的战斗行动）作为核心策略机制。 [验证修正: 分析中的标签可以进一步精确化：1. '牌组构建'（Deckbuilding）标签有误导性。游戏中玩家并非构筑一副卡牌，而是自定义“骰子”的“骰面”。因此，使用'骰面构筑'（Dice-face Building）更为精准。2. '骰子驱动'标签虽然正确，但未能完全体现其核心机制。游戏的一大特色是玩家可以操控骰子，从而决定敌我双方的行动顺序，这是一种深度的战术决策。因此补充'行动顺序操控'（Action Order Manipulation）标签来描述这一独特玩法。]", "status": "verified", "steamTags": ["Roguelike Deckbuilder", "Turn-Based Combat", "Rogue-like", "Turn-Based Strategy", "Rogue-lite", "Strategy", "Creature Collector", "Strategy RPG", "Singleplayer", "Casual", "2D", "Deckbuilding", "Cute", "Procedural Generation", "Cartoony"]}, "2019300": {"name": "Dokimon: Quest", "mechanics": ["自动战斗"], "rawMechanics": ["角色定制", "任务驱动", "开放世界探索", "JRPG叙事"], "summary": "该作将传统怪物收集与“自动战斗”结合以简化练级过程，并采用“任务驱动”机制，用西式RPG的任务系统取代了传统的道馆挑战式线性进度。 [验证修正: 1. 误标：'自动战斗'不是该游戏的核心融合玩法，其核心是'回合制策略'。2. 遗漏：分析未能识别出'开放世界探索'、'JRPG叙事'和'角色定制'等关键的融合标签，这些标签共同定义了该游戏与传统宝可梦Like游戏的差异化体验。]", "status": "corrected", "steamTags": ["Creature Collector", "Exploration", "Party-Based RPG", "Turn-Based Strategy", "JRPG", "Character Customization", "Female Protagonist", "RPG", "Strategy", "2D", "Cute", "Funny", "Open World", "Story Rich", "Team-Based"]}, "2175540": {"name": "DRAGON QUEST MONSTERS: The Dark Prince", "mechanics": ["形态融合"], "rawMechanics": ["天赋树", "形态融合", "体型系统", "技能继承", "季节变化"], "summary": "游戏的核心机制在于形态融合（怪物合成），玩家通过不断将收集到的怪物进行合体繁育，创造出能力质变且继承特定技能树的新物种，以此构筑理想的战斗队伍。 [验证修正: 分析准确，但有重要遗漏。已补充【技能继承】、【天赋树】、【季节变化】、【体型系统】四个标签，以更完整地描述其在“形态融合”之外的核心玩法机制。]", "status": "verified", "steamTags": ["RPG", "JRPG", "Creature Collector", "Party-Based RPG", "3D", "Anime", "Villain Protagonist", "Turn-Based Combat", "Silent Protagonist", "Fantasy", "Singleplayer", "Story Rich", "Cute", "Dragons", "Turn-Based"]}, "2281820": {"name": "Evolings", "mechanics": ["肉鸽融合"], "rawMechanics": ["肉鸽融合", "战棋融合", "棋盘幸存者", "极简主义"], "summary": "将怪物收集与Roguelike机制深度结合，玩家在每次独立的随机轮回中招募并培养不同的怪物小队进行回合制战斗。 [验证修正: 分析虽然准确但不够完整，遗漏了几个定义游戏体验的关键融合点：\n1. **补充'战棋融合'**：游戏的战斗并非传统宝可梦式的1v1或小队对战，而是在网格棋盘上进行的。玩家需要考虑单位的站位、攻击范围和移动，这使其核心战斗更接近《火焰纹章》或《Into the Breach》等战棋游戏（SRPG/Tactical RPG），而非传统JRPG。\n2. **补充'棋盘幸存者'**：游戏描述中“face hordes of evil monsters”（面对成群的邪恶怪物）是其核心特征。这借鉴了类幸存者（Survivor-like）游戏“对抗海量敌人”的设计，但将其创新地移植到了回合制战棋的框架下。我们发明'棋盘幸存者'这个标签来精确描述这种“在棋盘上通过策略走位和范围攻击来应对潮水般敌人的回合制玩法”。\n3. **补充'极简主义'**：开发者在简介中特意强调了“minimalistic”（极简主义）。这不仅体现在其简洁可爱的美术风格上，也贯穿于其玩法设计，旨在提供一个清晰、专注的策略体验。这是一个重要的设计理念标签。]", "status": "verified", "steamTags": ["Creature Collector", "Action Roguelike", "RPG", "Turn-Based Tactics", "Action", "PvE", "Strategy RPG", "Turn-Based Strategy", "Cute", "Strategy", "Turn-Based Combat", "Indie", "Fantasy", "Magic", "Tactical"]}, "2294160": {"name": "Isle of Swaps", "mechanics": ["肉鸽融合", "牌组构建"], "rawMechanics": ["肉鸽融合", "集换式卡牌", "棋盘战术", "牌组构建"], "summary": "本作将怪物收集与肉鸽卡牌玩法结合，并引入了“集换式卡牌”机制（玩家通过撕开补充包抽取盲盒卡牌以及战胜对手后进行卡牌交易来完善牌组）。 [验证修正: 修正说明：第一阶段分析准确，但遗漏了对具体战斗形式的描述。Steam标签中的“Turn-Based Tactics”和“Board Game”强烈暗示了战斗发生在具有空间策略的棋盘上，而非简单的卡牌对撞。因此补充“棋盘战术”标签，以体现其战斗系统的空间策略维度，使玩法描述更完整。]", "status": "verified", "steamTags": ["Creature Collector", "Roguelike Deckbuilder", "Deckbuilding", "Trading Card Game", "Card Battler", "Turn-Based Strategy", "Rogue-lite", "Turn-Based Tactics", "Perma Death", "Turn-Based Combat", "Card Game", "Tabletop", "Strategy", "Board Game", "RPG"]}, "2358770": {"name": "Million Monster Militia", "mechanics": ["自动战斗", "牌组构建", "肉鸽融合"], "rawMechanics": ["怪物收集", "自动战斗", "协同构筑", "牌组构建", "肉鸽融合"], "summary": "结合了肉鸽元素的卡牌构建与自动战斗机制，玩家通过招募各种奇葩生物组建牌组，利用羁绊协同进行自动对战。 [验证修正: 分析基本准确，无需修正。补充了两个标签以更完整地描述核心体验：'怪物收集'明确了'牌组'由怪物/单位构成，这是'宝可梦Like'的核心；'协同构筑'则强调了游戏策略的深度，即围绕单位间的“synergies”（协同效应）来构建队伍，这是此类游戏后期乐趣的关键。]", "status": "verified", "steamTags": ["Roguelike Deckbuilder", "Deckbuilding", "Auto Battler", "Strategy", "Rogue-lite", "Rogue-like", "Procedural Generation", "Creature Collector", "Turn-Based Strategy", "Turn-Based Combat", "Turn-Based Tactics", "Choices Matter", "2.5D", "Isometric", "Pixel Graphics"]}, "2445990": {"name": "Bloomtown: A Different Story", "mechanics": [], "rawMechanics": ["时间管理", "生活模拟", "社交羁绊", "心灵潜入"], "summary": "游戏在怪物收集基础上深度融合了类似《女神异闻录》的机制：包含规划日常打工/活动的“时间管理”与“生活模拟”，通过与NPC建立关系来强化队伍的“社交羁绊”，以及进入居民内心世界驱除恶魔的“心灵潜入”特色设定。", "status": "verified", "steamTags": ["RPG", "Adventure", "Pixel Graphics", "JRPG", "Party-Based RPG", "Cute", "Female Protagonist", "Exploration", "Story Rich", "Turn-Based Tactics", "Creature Collector", "Atmospheric", "Comedy", "Lore-Rich", "Singleplayer"]}, "2464460": {"name": "Portal Fantasy", "mechanics": [], "rawMechanics": ["平台跳跃", "怪物收集", "双模式探索", "机关解谜", "回合制战斗"], "summary": "游戏在传统的怪物收集与回合制战斗基础上，融入了“平台跳跃”（Platformer）与“机关解谜”（躲避陷阱与破解谜题）机制，使大地图探索具有更强的动作性与互动深度。 [验证修正: 分析遗漏了游戏的核心机制：玩家可以在“英雄”和“传送门法师”两种角色模式之间切换。英雄负责探索、战斗和解谜，而法师则专注于与怪物互动和收集。这是一个贯穿探索和收集循环的核心玩法。因此，补充新标签‘双模式探索’来描述这一关键融合设计。]", "status": "corrected", "steamTags": ["Turn-Based Tactics", "Character Customization", "Creature Collector", "RPG", "Platformer", "Pixel Graphics", "Adventure", "Fantasy", "Strategy", "Exploration", "PvE", "PvP", "Retro", "Casual", "JRPG"]}, "2507630": {"name": "Zombie Party 丧尸派对", "mechanics": [], "rawMechanics": ["怪物收集", "尸群控制", "即时战术", "小队RPG", "感染模拟", "反英雄叙事"], "summary": "游戏打破了传统回合制，融合了即时战术（RTS）玩法，并引入'感染模拟'（通过感染敌人动态扩充己方队伍的爆发模拟）与'尸群控制'（实时指挥大规模丧尸军团而非单体怪物作战）的创新机制。 [验证修正: 1. 核心玩法修正：将隐含“回合制”的“宝可梦Like”框架修正为更中性的“怪物收集”+“即时战术”。游戏的核心循环是收集/召唤不同种类的僵尸（怪物收集），并在即时战斗中指挥它们（即时战术）。\n2. 标签修正与补充：保留了准确的'即时战术', '感染模拟', '尸群控制'。将“宝可梦Like”的核心吸引力——收集与养成本身——提炼为'怪物收集'标签。补充了'小队RPG' (Party-Based RPG) 以强调玩家围绕僵尸军队进行构建和成长的玩法。同时，根据游戏简介“扮演混乱能力者……摧毁既定秩序”，加入了'反英雄叙事'这一重要标签，它定义了游戏的动机和背景基调。]", "status": "corrected", "steamTags": ["Pixel Graphics", "Zombies", "Adventure", "Strategy", "RPG", "Action-Adventure", "Action RPG", "RTS", "Party-Based RPG", "Strategy RPG", "Action RTS", "Real Time Tactics", "Tactical RPG", "Creature Collector", "CRPG"]}, "2598630": {"name": "The Dragonhood", "mechanics": ["自动战斗", "牌组构建", "肉鸽融合"], "rawMechanics": ["点击放置", "怪物收集", "自动战斗", "装备驱动", "牌组构建", "肉鸽融合"], "summary": "本作将点击放置（Clicker）与自动战斗机制融入怪物收集，并结合了肉鸽循环、装备驱动（Loot刷宝）与牌组构建元素来深度定制龙兽的进化与战斗流派。 [验证修正: 第一阶段的分析准确识别了各项融合玩法，但其标签列表遗漏了游戏最核心的机制：“怪物收集”。虽然背景描述中提到了“宝可梦Like”，但作为核心玩法，应在标签中明确体现。游戏简介的核心循环是“Collect eggs, hatch dragons”（收集蛋，孵化龙），Steam标签也包含“Creature Collector”。因此，补充“怪物收集”标签，使玩法画像更完整。]", "status": "verified", "steamTags": ["RPG", "Loot", "Clicker", "Auto Battler", "Singleplayer", "Replay Value", "Creature Collector", "Rogue-lite", "Tactical RPG", "2D", "Dragons", "Dark Fantasy", "Deckbuilding", "Strategy RPG", "Turn-Based"]}, "2619250": {"name": "Familiars.io", "mechanics": ["MMO元素"], "rawMechanics": ["轻社交", "MMO元素", "极简养成"], "summary": "在传统的怪物收集对战基础上融入了MMO多人社交与PvP系统，并加入了主打快速满级的‘极简养成’机制以大幅降低玩家的肝度。 [验证修正: 分析准确，但遗漏了一个重要标签。游戏简介中特意提到'just press the 'Howdy' button to greet them!'（或者只是按下'Howdy'按钮和他们打个招呼），这表明游戏的多人交互设计刻意向轻度、友好、无压力的方向引导，与传统MMO复杂的公会、团队、对抗系统不同。因此补充'轻社交'标签，可以更精确地描述这种独特的、作为核心吸引力之一的融合玩法。]", "status": "verified", "steamTags": ["Creature Collector", "MMORPG", "Turn-Based Combat", "Turn-Based Strategy", "Turn-Based Tactics", "Atmospheric", "Exploration", "RPG", "Minimalist", "Casual", "Cute", "PvE", "PvP", "Pixel Graphics", "2D"]}, "2693940": {"name": "NEODUEL: Backpack Monsters", "mechanics": ["自动战斗"], "rawMechanics": ["异步对战", "自动战斗", "背包构筑", "怪物收集"], "summary": "游戏创新性地将怪物收集与空间网格化的“背包管理”机制结合，玩家通过在有限的背包空间内策略性地拼图摆放怪物与道具来构筑连携Combo，并与其他玩家的阵容进行“异步对战”式的“自动战斗”。 [验证修正: 分析虽准确但有遗漏和可优化之处：\n1. **补充核心标签**：分析的前提是“宝可梦Like”，但最终标签列表里遗漏了最基础的“怪物收集”标签，应予以补充。\n2. **优化标签描述**：标签“背包管理”虽然正确，但未能精确体现其核心策略性。根据游戏描述“strategically manage your backpack to create unbeatable combos”以及Steam的“Deckbuilding”标签，此玩法更接近于通过物品摆放来构筑战斗策略。因此，使用新标签“背包构筑” (Backpack Building) 能更精准地描述这种将背包空间作为策略构筑核心的玩法，它融合了库存管理和卡组构筑的思路。]", "status": "verified", "steamTags": ["Resource Management", "Retro", "RPG", "1990's", "Party-Based RPG", "Board Game", "Auto Battler", "Inventory Management", "Strategy", "Turn-Based Tactics", "Asynchronous Multiplayer", "Turn-Based Strategy", "PvP", "Deckbuilding", "Colorful"]}, "2696050": {"name": "Yarimono", "mechanics": [], "rawMechanics": [], "summary": "本作是一款带有成人内容的传统怪物收集与回合制RPG，核心玩法并未脱离常规的宝可梦框架，主要以剧情和成人元素为卖点，无明显的机制融合创新。", "status": "v1_no_mechanics", "steamTags": ["Sexual Content", "Hentai", "Mature", "Nudity", "Creature Collector", "RPG", "JRPG", "Turn-Based Strategy", "Anime", "Cute", "Turn-Based Combat", "Adventure", "NSFW", "Story Rich", "Lore-Rich"]}, "2797340": {"name": "Cat God Ranch", "mechanics": ["自动战斗", "牌组构建", "肉鸽融合"], "rawMechanics": ["牧场经营", "定期纳贡", "自动战斗", "牌组构建", "肉鸽融合"], "summary": "游戏将怪物收集与肉鸽卡牌、自动战斗机制相结合，并引入了“定期纳贡”（玩家必须在规定回合内利用动物羁绊组合产出足够的资源上交，未达标则游戏失败）的生存压力机制。 [验证修正: 分析遗漏了一个重要标签。游戏名称《Cat God Ranch》（猫神牧场）以及类型标签中的'Farming', 'Simulation'表明，游戏在战斗循环之外存在一个核心的经营养成层。因此补充'牧场经营'标签，以更完整地描述玩家管理和培育动物的模拟经营玩法。]", "status": "verified", "steamTags": ["Card Battler", "Roguelike Deckbuilder", "Deckbuilding", "Casual", "Rogue-like", "Replay Value", "Rogue-lite", "Farming", "Turn-Based Tactics", "Strategy", "Turn-Based Combat", "Auto Battler", "Creature Collector", "Cats", "Card Game"]}, "2903460": {"name": "Project Of Cooling The Earth", "mechanics": ["生存建造", "肉鸽融合"], "rawMechanics": ["资源管理", "生存建造", "时间管理", "推理探案", "肉鸽融合", "视觉小说叙事"], "summary": "本作在怪物收集的基础上，深度融合了搜集水粮与建设庇护所的生存建造机制、带有随机元素的肉鸽融合玩法，并结合了末日背景下的资源分配、时间日程管理以及推理探案等多重系统。 [验证修正: 分析遗漏了一个重要标签：【视觉小说叙事】。游戏的'Visual Novel'、'Story Rich'、'Multiple Endings'标签表明，游戏拥有极强的叙事驱动力，并且故事的呈现方式和分支选择是其核心体验的重要组成部分，而非简单的点缀。将其补充，能更完整地描绘游戏的全貌。]", "status": "verified", "steamTags": ["Post-apocalyptic", "Resource Management", "Visual Novel", "Multiple Endings", "Life Sim", "War", "Creature Collector", "Time Management", "Rogue-lite", "Base-Building", "Turn-Based Combat", "Survival", "Sandbox", "Building", "Detective"]}}, "tagStats": {"肉鸽融合": 14, "牌组构建": 12, "形态融合": 7, "MMO元素": 3, "银河恶魔城": 1, "自动战斗": 7, "生存建造": 1}, "rawTagStats": {"仆从军团": 2, "分支叙事": 2, "派系抉择": 1, "潜行战术": 1, "生物创造": 2, "阵营抉择": 6, "网状叙事": 1, "战棋式战斗": 1, "自由角色构筑": 1, "怪物创造": 1, "多分支剧情": 1, "生物塑造": 1, "CRPG式叙事": 1, "职业Build自由": 1, "怪物深度合成": 1, "无尽爬塔": 1, "随机地牢": 2, "刷宝掉落": 2, "肉鸽融合": 12, "无限构筑": 1, "装备打造": 1, "怪物合成": 1, "深度策略构筑": 1, "基地建设": 1, "手牌管理": 2, "特性拼装": 1, "异步多人": 1, "桌游改编": 1, "生存策略": 1, "动态生态": 1, "卡牌对战": 3, "桌游机制": 2, "数值博弈": 1, "网格化养成": 1, "主角尺寸切换": 1, "形态融合": 7, "FF系列大乱斗": 1, "体型堆叠": 1, "ATB战斗": 1, "生活模拟": 2, "牌组构建": 9, "农场经营": 1, "怪物收集": 21, "地牢探索": 2, "MMORPG": 1, "放置挂机": 1, "装备驱动": 2, "确定性战斗": 1, "双人协作": 1, "MMO元素": 2, "双单位战术": 1, "体力资源管理": 1, "魔法书系统": 1, "双世界穿梭": 1, "情绪解谜": 1, "即时走位": 1, "半即时指令战斗": 1, "银河恶魔城": 1, "平台跳跃": 3, "策略化配队": 1, "回合制战斗": 3, "RPG成长": 1, "刷宝驱动": 1, "深度构筑": 1, "无尽进程": 1, "海量组合": 1, "多人竞技": 1, "物理解谜": 1, "回合制策略": 1, "弹射碰撞": 1, "动态回合顺序": 1, "团队连携攻击": 1, "领袖+召唤单位": 1, "地图无缝战斗": 1, "元素循环克制": 1, "战棋怪物收集": 1, "案件推理": 1, "赛博骇客": 1, "放置养成": 1, "Rogue-lite": 1, "解谜探索": 1, "非暴力交涉": 1, "收集马拉松": 1, "QTE机制": 1, "好感度养成": 1, "肉鸽Lite": 2, "生物合成/进化": 1, "自动战斗": 6, "团队构筑/羁绊": 1, "模拟经营": 1, "生物改造": 1, "角斗场机制": 1, "战术RPG融合": 1, "永久死亡": 1, "程序化生成世界": 1, "队伍羁绊": 1, "耐力资源管理": 1, "装备镶嵌": 1, "QTE捕获": 1, "动态难度平衡": 1, "海量支线任务": 1, "核心合成": 1, "部位破坏": 1, "猜拳克制": 1, "多人协作": 2, "骑乘探索": 1, "素材打造": 1, "基因拼图": 1, "生存管理": 1, "节奏交互": 1, "第一人称跑酷": 1, "宝可梦Like": 1, "深度BD构筑": 1, "无限地牢": 1, "程序生成": 2, "怪物融合": 1, "海量收集": 1, "开放世界探索": 2, "元素反应": 1, "主角变身": 1, "轻度肉鸽": 1, "六边形战棋": 1, "弱点追击": 2, "交涉招募": 2, "勾玉养成": 1, "双线养成": 1, "基因改造": 1, "非战斗解法": 1, "高自由度CRPG": 1, "网格战术": 1, "代码生成": 1, "时间管理": 3, "养成模拟": 1, "塔防融合": 1, "地牢运营": 1, "反向RPG经营": 1, "数字世界观": 1, "内置卡牌": 1, "快节奏回合制": 1, "半开放世界探索": 1, "IP改编": 1, "公会经营": 1, "网游模拟": 1, "剧情驱动": 1, "Story Rich": 1, "流程交换": 1, "柏拉图式社交": 1, "小游戏战斗": 1, "多分支叙事": 1, "策略战棋": 1, "伪Gacha": 1, "团队管理": 1, "策略构筑": 1, "数值攻占": 1, "轻度策略": 1, "纸牌接龙": 1, "开放区域探索": 1, "精髓技能继承": 1, "间接指挥": 1, "解谜策略": 1, "地形改造": 1, "可预见性战斗": 1, "环境互动解谜": 1, "资源生存": 1, "队伍构建": 1, "D&D规则改编": 1, "即时队伍战斗": 1, "第一人称地牢探索": 1, "集换式卡牌": 2, "视觉小说": 1, "太空歌剧": 1, "骰面构筑": 1, "回合制战术": 1, "肉鸽LITE": 1, "行动顺序操控": 1, "角色定制": 1, "任务驱动": 1, "JRPG叙事": 1, "天赋树": 1, "体型系统": 1, "技能继承": 1, "季节变化": 1, "战棋融合": 1, "棋盘幸存者": 1, "极简主义": 1, "棋盘战术": 1, "协同构筑": 1, "社交羁绊": 1, "心灵潜入": 1, "双模式探索": 1, "机关解谜": 1, "尸群控制": 1, "即时战术": 1, "小队RPG": 1, "感染模拟": 1, "反英雄叙事": 1, "点击放置": 1, "轻社交": 1, "极简养成": 1, "异步对战": 1, "背包构筑": 1, "牧场经营": 1, "定期纳贡": 1, "资源管理": 1, "生存建造": 1, "推理探案": 1, "视觉小说叙事": 1}, "tagOptions": [{"key": "roguelite", "label": "肉鸽融合", "tag": "肉鸽融合"}, {"key": "deckbuilding", "label": "牌组构建", "tag": "牌组构建"}, {"key": "morphing", "label": "形态融合", "tag": "形态融合"}, {"key": "survival", "label": "生存建造", "tag": "生存建造"}, {"key": "mmo", "label": "MMO元素", "tag": "MMO元素"}, {"key": "autobattle", "label": "自动战斗", "tag": "自动战斗"}, {"key": "bullet", "label": "弹幕射击", "tag": "弹幕射击"}, {"key": "timetravel", "label": "时间旅行", "tag": "时间旅行"}, {"key": "metroidvania", "label": "银河恶魔城", "tag": "银河恶魔城"}, {"key": "sandbox", "label": "沙盒建造", "tag": "沙盒建造"}]}
+{
+  "lastUpdated": "2026-04-22 06:47:35",
+  "totalGames": 82,
+  "processedGames": 68,
+  "totalTokens": 311208,
+  "games": {
+    "200960": {
+      "name": "Geneforge 1",
+      "mechanics": [],
+      "rawMechanics": [
+        "仆从军团",
+        "分支叙事",
+        "派系抉择",
+        "潜行战术",
+        "生物创造"
+      ],
+      "summary": "本作融合了'生物创造'（玩家不通过捕捉，而是消耗自身资源动态制造并定制专属的怪物军队）与'潜行战术'（敌人具有巡逻、追踪和呼救的复杂AI，玩家需要利用视野和走位进行战术规避或伏击）机制。 [验证修正: 分析虽准确但不完整。作为一款经典的CRPG，Geneforge融合了以下重要玩法：\n1.  补充“分支叙事”：游戏拥有巨大且开放的故事情节，玩家的选择会对世界和结局产生深远影响，这是其作为CRPG的核心特征。\n2.  补充“仆从军团”：与宝可梦式的少数精英伙伴不同，玩家可以创造一支“军队”，强调的是数量和自定义组合带来的战术规模感。\n3.  补充“派系抉择”：游戏中有多个意识形态对立的派系，玩家可以自由选择加入或对抗，这深刻影响游戏进程和故事走向，是其开放性的重要体现。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "Indie",
+        "Isometric",
+        "Strategy",
+        "Turn-Based Combat",
+        "Fantasy",
+        "Turn-Based",
+        "Old School",
+        "Story Rich",
+        "Singleplayer",
+        "CRPG",
+        "Creature Collector",
+        "Classic",
+        "Exploration"
+      ]
+    },
+    "200980": {
+      "name": "Geneforge 2",
+      "mechanics": [],
+      "rawMechanics": [
+        "生物创造",
+        "阵营抉择",
+        "网状叙事"
+      ],
+      "summary": "融合了传统CRPG的阵营抉择与网状叙事机制，玩家通过消耗资源的生物创造（而非野外捕捉）来定制变异怪物军团，加入不同派系会导向数十种截然不同的游戏结局。 [验证修正: 无。第一阶段的分析准确抓住了游戏玩法的精髓，无需修正。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "Indie",
+        "Strategy",
+        "Isometric",
+        "Turn-Based Combat",
+        "Turn-Based",
+        "Creature Collector",
+        "Fantasy",
+        "CRPG",
+        "Singleplayer",
+        "Story Rich"
+      ]
+    },
+    "200990": {
+      "name": "Geneforge 3",
+      "mechanics": [],
+      "rawMechanics": [
+        "战棋式战斗",
+        "仆从军团",
+        "自由角色构筑",
+        "阵营抉择",
+        "怪物创造",
+        "多分支剧情"
+      ],
+      "summary": "游戏将传统的怪物捕捉替换为消耗资源定制的“怪物创造”玩法，并融合了CRPG中深刻的“阵营抉择”机制来决定剧情走向与结盟关系。 [验证修正: 分析虽准确但不够完整，遗漏了几个关键标签，使得游戏作为一款深度CRPG的特质未能充分展现：\n1. 补充'多分支剧情'：游戏的阵营抉择会导向截然不同的故事线和结局，这是其CRPG深度的核心体现。\n2. 补充'自由角色构筑'：与怪物创造并行的，是玩家自身的成长。游戏提供了无职业限制、高度自由的技能加点体系，玩家可以专精于战斗、魔法或创造，玩法差异巨大。\n3. 发明并补充'仆从军团'：用此标签来强调玩家与创造物之间的“工具”关系。这些怪物是可随时制造、可消耗的战斗单位，而非宝可梦式的“伙伴”，这在主题和策略上都是关键区别。\n4. 补充'战棋式战斗'：游戏的战斗是在等轴视角网格地图上进行的，强调站位、消耗和行动点管理，'战棋式战斗'比'回合制'更精确地描述了其战术性。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "Indie",
+        "Strategy",
+        "Turn-Based Combat",
+        "Isometric",
+        "Turn-Based",
+        "Creature Collector",
+        "CRPG",
+        "Old School",
+        "Female Protagonist"
+      ]
+    },
+    "201010": {
+      "name": "Geneforge 5: Overthrow",
+      "mechanics": [],
+      "rawMechanics": [
+        "生物塑造",
+        "阵营抉择",
+        "CRPG式叙事",
+        "职业Build自由"
+      ],
+      "summary": "本作将经典美式CRPG机制与怪物收集相融合，核心在于‘生物塑造’（消耗资源自主创造、定制和变异怪物军队，而非传统的野外捕捉）以及‘阵营抉择’（玩家选择加入的不同势力将实质性改变游戏世界的状态、剧情走向及可解锁的能力）。 [验证修正: 分析虽准确但不够完整。为更全面地反映其融合设计，补充以下标签：\n1. 'CRPG式叙事'：游戏的阵营抉择是建立在庞大、深刻且充满文本选择的经典CRPG叙事框架之上的。玩家的选择有实际且长远的后果，这与单纯的怪物收集游戏有显著区别。\n2. '职业Build自由'：玩家角色的成长路径非常开放。你可以选择成为一个完全依赖创造物的“塑造者”（Shaper），也可以成为一个亲自上阵的“守护者”（Guardian），或者将两者结合。这种角色构建的自由度与“生物塑造”系统深度融合，形成了多样的策略玩法。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "Indie",
+        "Strategy",
+        "Turn-Based Combat",
+        "Isometric",
+        "Old School",
+        "Turn-Based",
+        "Story Rich",
+        "CRPG",
+        "Creature Collector"
+      ]
+    },
+    "362090": {
+      "name": "Siralim",
+      "mechanics": [
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "怪物深度合成",
+        "无尽爬塔",
+        "随机地牢",
+        "刷宝掉落",
+        "肉鸽融合",
+        "无限构筑"
+      ],
+      "summary": "游戏在怪物收集对战的基础上加入了肉鸽融合机制，玩家需要在每次生成的随机地牢中探索，并通过刷宝掉落系统获取战利品，以支撑深度的怪物定制与养成循环。 [验证修正: 第一阶段分析遗漏了Siralim系列最核心和最深度的玩法系统。补充以下标签以完整描述其独特性：\n1. **怪物深度合成**：游戏的核心远超“收集”，玩家需要通过繁殖、融合、献祭等方式深度定制和创造怪物。\n2. **无限构筑**：数百种怪物特性、装备、法术和天赋之间可以组合出近乎无限的战斗流派（Build），是游戏策略深度的体现。\n3. **无尽爬塔**：游戏以无尽的、难度不断提升的随机地牢为主要内容，强调长期的角色和队伍养成，而非线性故事体验。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "Collectathon",
+        "Procedural Generation",
+        "Dungeon Crawler",
+        "RPG",
+        "Character Customization",
+        "Turn-Based",
+        "Fantasy",
+        "Retro",
+        "2D",
+        "Pixel Graphics",
+        "Turn-Based Combat",
+        "Singleplayer",
+        "Party-Based RPG",
+        "Tactical RPG"
+      ]
+    },
+    "432350": {
+      "name": "Epic Battle Fantasy 5",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "本作是一款传统的队伍制回合制RPG，主要特色为将捕获的怪物作为技能召唤，除基础的怪物收集与回合制战斗外，无其他跨品类的核心机制融合。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "JRPG",
+        "Funny",
+        "Turn-Based",
+        "Indie",
+        "Adventure",
+        "Creature Collector",
+        "Comedy",
+        "RPG",
+        "Turn-Based Combat",
+        "Strategy",
+        "Singleplayer",
+        "2D",
+        "Fantasy",
+        "Parody ",
+        "Anime"
+      ]
+    },
+    "464620": {
+      "name": "Siralim 2",
+      "mechanics": [
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "装备打造",
+        "刷宝掉落",
+        "怪物合成",
+        "深度策略构筑",
+        "基地建设",
+        "肉鸽融合"
+      ],
+      "summary": "游戏将怪物收集与肉鸽融合（随机生成的无限地牢探索）相结合，并引入了刷宝掉落（以获取随机词条战利品为核心驱动）、装备打造（收集素材制作和强化神器）以及基地建设（消耗资源升级城堡以解锁新功能）机制，构建了极具深度的无限养成循环。 [验证修正: 补充了'怪物合成'和'深度策略构筑'两个遗漏的关键标签，以更完整地描述游戏的核心玩法循环和长期吸引力。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "Collectathon",
+        "Dungeon Crawler",
+        "RPG",
+        "Pixel Graphics",
+        "Turn-Based",
+        "2D",
+        "Procedural Generation",
+        "Fantasy",
+        "Retro",
+        "Singleplayer",
+        "Turn-Based Combat",
+        "Top-Down",
+        "Party-Based RPG",
+        "Strategy RPG"
+      ]
+    },
+    "469800": {
+      "name": "Evolution Board Game",
+      "mechanics": [
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "手牌管理",
+        "特性拼装",
+        "异步多人",
+        "桌游改编",
+        "生存策略",
+        "动态生态"
+      ],
+      "summary": "本作将桌游机制与牌组构建相融合，玩家通过“特性拼装”（打出卡牌为物种自由组合不同的生存特征）来创造和进化生物，并在“动态生态”（公共食物池与捕食者/猎物关系实时变动）中竞争存活，同时支持异步多人联机对战。 [验证修正: 1. **核心定位修正**：将游戏类比为“宝可梦Like”是错误的。宝可梦的核心是“收集、养成、交换”，强调长期拥有的伙伴；而《Evolution》的核心是“适应、演化、淘汰”，物种仅在单局游戏中存在，是围绕环境和对手进行动态调整的策略工具。游戏本质更接近于一个物竞天择的“演化模拟器”。\n2. **标签修正**：'牌组构建' (Deckbuilding) 标签不准确。该游戏机制并非像《杀戮尖塔》或《领土》那样在游戏过程中不断扩充和优化个人牌库。玩家每回合是从公共牌堆获得手牌，然后打出。这应被修正为更精确的'手牌管理' (Hand Management)。\n3. **标签优化与补充**：'桌游机制'标签虽然正确但过于宽泛，优化为'桌游改编'能更精确地说明它的出身。同时，分析遗漏了游戏中最核心的冲突来源，即所有玩家对有限资源的争夺，因此补充'生存策略'标签来强调这一零和博弈的特点。]",
+      "status": "corrected",
+      "steamTags": [
+        "Board Game",
+        "Tabletop",
+        "Card Game",
+        "Turn-Based Strategy",
+        "Asynchronous Multiplayer",
+        "Local Multiplayer",
+        "Deckbuilding",
+        "Strategy",
+        "Science",
+        "Education",
+        "Casual",
+        "Simulation",
+        "4 Player Local",
+        "Dinosaurs",
+        "Multiplayer"
+      ]
+    },
+    "486850": {
+      "name": "Card of spirits",
+      "mechanics": [],
+      "rawMechanics": [
+        "卡牌对战",
+        "桌游机制",
+        "手牌管理",
+        "数值博弈"
+      ],
+      "summary": "融合了桌游机制与卡牌对战，玩家通过特定的12张卡牌进行回合制数值比拼。 [验证修正: 第一阶段分析的根本性错误在于定性。该游戏并非“宝可梦Like”的融合变体，而是一个纯粹的、规则简单的卡牌/桌游。因此，标签不应被视为在“宝可梦Like”基础上的“融合”，而是对游戏本身核心机制的直接描述。原标签“卡牌对战”和“桌游机制”本身是正确的，但遗漏了更关键的玩法核心。修正如下：\n1. 指出“数值博弈”是其比大小玩法的核心，比“卡牌对战”更具体。\n2. 补充“手牌管理”，因为在仅有12张牌（含4张特殊牌）的对局中，如何出牌是策略关键。]",
+      "status": "corrected",
+      "steamTags": [
+        "Strategy",
+        "Casual",
+        "Card Game",
+        "Anime",
+        "Board Game",
+        "Card Battler",
+        "Cute",
+        "2D",
+        "Cartoon",
+        "Hand-drawn",
+        "Comedy",
+        "Artificial Intelligence",
+        "Singleplayer",
+        "Creature Collector",
+        "Controller"
+      ]
+    },
+    "552700": {
+      "name": "WORLD OF FINAL FANTASY®",
+      "mechanics": [
+        "形态融合"
+      ],
+      "rawMechanics": [
+        "网格化养成",
+        "主角尺寸切换",
+        "形态融合",
+        "FF系列大乱斗",
+        "体型堆叠",
+        "ATB战斗"
+      ],
+      "summary": "游戏在怪物收集的基础上创新了'体型堆叠'机制，玩家需根据大、中、小体型将角色与怪物像叠罗汉一样组合，实现形态融合并解锁组合技能与属性变化。 [验证修正: 分析准确，无方向性错误，但遗漏了其他几个定义游戏体验的重要融合玩法，已在标签中补充。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "JRPG",
+        "Creature Collector",
+        "Turn-Based Combat",
+        "Anime",
+        "Fantasy",
+        "Cute",
+        "Singleplayer",
+        "Open World",
+        "Adventure",
+        "Turn-Based",
+        "Great Soundtrack",
+        "Strategy",
+        "Multiplayer",
+        "Female Protagonist"
+      ]
+    },
+    "562250": {
+      "name": "Beastmancer",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "本作是一款传统的怪物收集与回合制战棋游戏，根据提供的信息，没有包含其他明显的融合玩法机制。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "RPG",
+        "Indie",
+        "Strategy",
+        "Creature Collector",
+        "Turn-Based",
+        "Turn-Based Combat",
+        "Turn-Based Tactics",
+        "Singleplayer",
+        "Tactical RPG",
+        "Fantasy",
+        "Tactical"
+      ]
+    },
+    "593150": {
+      "name": "Ooblets",
+      "mechanics": [
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "生活模拟",
+        "牌组构建",
+        "农场经营",
+        "怪物收集"
+      ],
+      "summary": "游戏将传统的怪物收集与农场经营（通过种田来获取和培养怪物）深度结合，并创新性地使用牌组构建机制来进行非暴力的舞蹈对战。 [验证修正: 分析虽然准确，但遗漏了一个与农场经营同等重要的核心玩法支柱。因此补充了以下标签：\n1.  **怪物收集**: 这是“宝可梦Like”的基础，应明确标出。\n2.  **生活模拟**: 游戏拥有非常强的“城镇生活”元素（town life），玩家需要与各式各样的NPC互动、完成任务、自定义角色和房屋、参与城镇活动等。这一玩法与农场经营相结合，共同构成了游戏轻松、休闲的社交养成体验，是游戏吸引力的关键部分。]",
+      "status": "verified",
+      "steamTags": [
+        "Casual",
+        "RPG",
+        "Farming Sim",
+        "Creature Collector",
+        "Cute",
+        "Card Battler",
+        "Party-Based RPG",
+        "Exploration",
+        "3D",
+        "Colorful",
+        "Family Friendly",
+        "Cooking",
+        "Crafting",
+        "Agriculture",
+        "Relaxing"
+      ]
+    },
+    "666860": {
+      "name": "Bit Heroes Quest",
+      "mechanics": [
+        "MMO元素"
+      ],
+      "rawMechanics": [
+        "地牢探索",
+        "MMORPG",
+        "放置挂机",
+        "怪物收集",
+        "装备驱动"
+      ],
+      "summary": "本作在怪物收集回合制的基础上，融合了MMO元素（多人团本与PvP竞技场）、放置挂机（Idler机制提供自动化或离线收益）以及装备驱动（通过刷地牢收集与打造海量装备来提升战力）玩法。 [验证修正: 无重大修正，第一阶段的标签均正确。为更清晰地描述游戏，建议将'MMO元素'明确为'MMORPG'以增强准确性，并补充核心玩法'怪物收集'，使标签组能更完整地概括游戏全貌。]",
+      "status": "verified",
+      "steamTags": [
+        "Free to Play",
+        "Pixel Graphics",
+        "RPG",
+        "Adventure",
+        "MMORPG",
+        "Massively Multiplayer",
+        "Turn-Based",
+        "2D",
+        "Multiplayer",
+        "Dungeon Crawler",
+        "Casual",
+        "Loot",
+        "Action",
+        "Idler",
+        "Online Co-Op"
+      ]
+    },
+    "745920": {
+      "name": "Temtem",
+      "mechanics": [
+        "MMO元素"
+      ],
+      "rawMechanics": [
+        "确定性战斗",
+        "双人协作",
+        "MMO元素",
+        "双单位战术",
+        "体力资源管理"
+      ],
+      "summary": "本作在传统宝可梦框架上融合了MMO元素，并创新引入了双人协作（支持全程组队通关）、体力资源管理（技能消耗体力而非次数，透支会扣除生命值）以及确定性战斗（完全移除命中率和暴击等随机数）机制。 [验证修正: 第一阶段分析准确，但遗漏了其战斗系统的基本构成。补充标签'双单位战术'，用以强调游戏所有战斗（包括单人游玩时）均默认为2v2形式，这深刻影响了队伍构建、技能设计和战斗策略，是其与同类游戏的一个关键结构性区别。]",
+      "status": "verified",
+      "steamTags": [
+        "Co-op",
+        "Multiplayer",
+        "Creature Collector",
+        "RPG",
+        "Turn-Based Combat",
+        "Story Rich",
+        "Adventure",
+        "PvE",
+        "PvP",
+        "Turn-Based Tactics",
+        "MMORPG",
+        "Character Customization",
+        "Collectathon",
+        "Anime",
+        "Cartoony"
+      ]
+    },
+    "798460": {
+      "name": "Ni no Kuni Wrath of the White Witch™ Remastered",
+      "mechanics": [],
+      "rawMechanics": [
+        "怪物收集",
+        "魔法书系统",
+        "双世界穿梭",
+        "情绪解谜",
+        "即时走位",
+        "半即时指令战斗"
+      ],
+      "summary": "游戏在传统怪物收集基础上，融合了'即时走位'（战斗中玩家需实时移动角色躲避攻击并拾取掉落的增益光球）与'情绪解谜'（在地图探索中收集并转移NPC的特定情感以修复他人心灵、推进流程）的创新机制。 [验证修正: 分析准确但不够全面，遗漏了几个同样重要的核心玩法。补充标签如下：\n1. **怪物收集**：这是游戏“宝可梦Like”属性的基础，玩家可以捕获、培养并进化数百种“幻兽”（Familiars）进行战斗。\n2. **魔法书系统**：主角奥利佛的核心能力，玩家通过收集魔法书页学习新法术，用于战斗、解谜和世界互动，是独立于幻兽系统的重要玩法。\n3. **双世界穿梭**：游戏的世界观和关卡设计基础，玩家需在现实世界与异世界之间来回穿梭，解决相互关联的谜题。\n4. **半即时指令战斗**：用于更精确地描述战斗系统。它并非纯粹的回合制，而是结合了角色自由移动（即时）与带有冷却时间的菜单指令（指令战斗），形成独特的战斗节奏。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "Adventure",
+        "JRPG",
+        "Action",
+        "Anime",
+        "Creature Collector",
+        "Great Soundtrack",
+        "Singleplayer",
+        "Story Rich",
+        "Fantasy",
+        "Open World",
+        "Cute",
+        "Turn-Based Combat",
+        "Magic",
+        "Turn-Based"
+      ]
+    },
+    "814370": {
+      "name": "Monster Sanctuary",
+      "mechanics": [
+        "银河恶魔城"
+      ],
+      "rawMechanics": [
+        "银河恶魔城",
+        "平台跳跃",
+        "怪物收集",
+        "策略化配队",
+        "回合制战斗",
+        "RPG成长"
+      ],
+      "summary": "将怪物收集与银河恶魔城式的非线性地图探索以及2D平台跳跃机制深度结合，玩家需要利用不同怪物的特殊能力（如飞行、破坏）来解谜并解锁新区域。 [验证修正: 分析结论准确，无需修正。补充了'RPG成长'和'策略化配队'标签，以更完整地体现游戏在怪物养成（技能树、装备）和战斗策略（3v3协同）上的深度。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "Pixel Graphics",
+        "Metroidvania",
+        "Turn-Based Tactics",
+        "Singleplayer",
+        "Turn-Based Combat",
+        "Exploration",
+        "Fantasy",
+        "Adventure",
+        "JRPG",
+        "RPG",
+        "2D",
+        "Strategy",
+        "PvP",
+        "Difficult"
+      ]
+    },
+    "830370": {
+      "name": "Monster Crown",
+      "mechanics": [
+        "形态融合"
+      ],
+      "rawMechanics": [
+        "无限杂交繁育",
+        "基因换色系统",
+        "黑深残叙事",
+        "契约驯服机制"
+      ],
+      "summary": "《怪物皇冠》是一款主打“黑暗风剧情”与“形态融合”的宝可梦Like游戏。其核心玩法创新在于无限制的“杂交繁育”系统，玩家可通过不同怪物交配创造出融合父母属性、技能和外观的全新后代。然而该作评价褒贬不一，主要败因在于融合玩法的落地效果极差：所谓的“形态融合”大多只是粗暴的换色（Palette Swap），缺乏独立设计的美感；同时，繁育系统数值极度失衡，玩家极易在前期培育出破坏体验的超模怪物。此外，强行“黑深残”的剧情以及海量未修复的恶性Bug，让这个极具野心的繁育融合玩法最终沦为避坑反面教材。",
+      "status": "corrected",
+      "steamTags": [
+        "Turn-Based Combat",
+        "JRPG",
+        "Collectathon",
+        "Exploration",
+        "RPG",
+        "Creature Collector",
+        "Fantasy",
+        "Story Rich",
+        "Open World",
+        "PvP",
+        "Colorful",
+        "Adventure",
+        "Dark",
+        "Singleplayer",
+        "Top-Down",
+        "LGBTQ+",
+        "Atmospheric",
+        "2D",
+        "Retro",
+        "Pixel Graphics"
+      ]
+    },
+    "841770": {
+      "name": "Siralim 3",
+      "mechanics": [],
+      "rawMechanics": [
+        "刷宝驱动",
+        "深度构筑",
+        "随机地牢",
+        "无尽进程",
+        "海量组合"
+      ],
+      "summary": "游戏将传统的怪物收集与暗黑式的刷宝驱动（Loot）和随机地牢探索相结合，玩家需要在程序化生成的无限地牢中不断获取战利品、打造装备，从而为多达700种怪物进行极具策略性的深度构筑（Build）。 [验证修正: 分析准确，无需修正。但可补充以下标签以更全面地描述其特点：\n1. **无尽进程 (Endless Progression)**：游戏的设计核心之一是无限深入的地牢和无上限的角色成长，这与传统RPG的固定终点截然不同，是其超高重玩价值的关键。\n2. **海量组合 (Massive Combinations)**：超过700种怪物，每种都有独特特性，怪物之间可以融合继承特性，这种海量的组合可能性是'深度构筑'玩法的基石，值得单独强调。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "Collectathon",
+        "Dungeon Crawler",
+        "Procedural Generation",
+        "RPG",
+        "Turn-Based",
+        "Fantasy",
+        "Retro",
+        "Pixel Graphics",
+        "2D",
+        "Turn-Based Combat",
+        "Replay Value",
+        "Character Customization",
+        "Party-Based RPG",
+        "Strategy RPG"
+      ]
+    },
+    "906870": {
+      "name": "FurryFury: Smash & Roll",
+      "mechanics": [],
+      "rawMechanics": [
+        "怪物收集",
+        "多人竞技",
+        "物理解谜",
+        "回合制策略",
+        "弹射碰撞"
+      ],
+      "summary": "游戏将怪物收集与'弹射碰撞'（基于物理引擎的滚动撞击与反弹机制）结合，并融入了物理解谜与多人在线竞技元素。 [验证修正: 第一阶段的分析方向正确，但标签可以更完整。已补充“怪物收集”和“回合制策略”这两个标签，以明确其“宝可梦Like”的底层框架，使玩法描述更全面。]",
+      "status": "verified",
+      "steamTags": [
+        "Online Co-Op",
+        "Multiplayer",
+        "Turn-Based",
+        "Funny",
+        "PvP",
+        "Casual",
+        "Top-Down",
+        "Co-op",
+        "Turn-Based Strategy",
+        "2D",
+        "Singleplayer",
+        "Tactical",
+        "2D Fighter",
+        "Hand-drawn",
+        "Comedy"
+      ]
+    },
+    "968800": {
+      "name": "Necro Story",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "游戏本质为传统的怪物收集与回合制RPG，主要特色在于死灵法师的喜剧主题以及将击败敌人的灵魂转化为随从的包装，未展现出明显的跨品类核心机制融合。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "Creature Collector",
+        "Party-Based RPG",
+        "RPG",
+        "Collectathon",
+        "Comedy",
+        "JRPG",
+        "Turn-Based Combat",
+        "Story Rich",
+        "Management",
+        "Fantasy",
+        "Cute",
+        "Colorful",
+        "Stylized",
+        "Magic",
+        "Zombies"
+      ]
+    },
+    "984560": {
+      "name": "HEARTBEAT",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "本作是一款传统的RPGMaker风格怪物收集与回合制RPG，包含钓鱼和卡牌收集等常规JRPG附属小游戏，无明显的跨品类核心机制融合。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "RPG",
+        "Indie",
+        "RPGMaker",
+        "Pixel Graphics",
+        "Female Protagonist",
+        "Cute",
+        "Anime",
+        "Adventure",
+        "Great Soundtrack",
+        "JRPG",
+        "Singleplayer",
+        "Story Rich",
+        "Turn-Based Combat",
+        "Turn-Based",
+        "Creature Collector"
+      ]
+    },
+    "995980": {
+      "name": "Fae Tactics",
+      "mechanics": [],
+      "rawMechanics": [
+        "动态回合顺序",
+        "团队连携攻击",
+        "领袖+召唤单位",
+        "地图无缝战斗",
+        "元素循环克制",
+        "战棋怪物收集"
+      ],
+      "summary": "游戏在怪物收集的基础上，创新性地引入了“无菜单战斗”（摒弃传统指令菜单，通过直接点击目标或空地触发攻击、协助等动作）和“法术卡牌”（收集并配置卡牌作为释放魔法的手段）机制，大幅提升了战局的流畅度。 [验证修正: 1. “无菜单战斗”标签不准确。游戏在战斗中需要通过菜单选择移动、攻击、技能等指令，并非无菜单。但战斗确实是直接在探索地图上无缝展开，没有切换独立的战斗场景，因此修正为“地图无缝战斗”更贴切。\n2. “法术卡牌”标签不准确。主角的法术系统是基于传统的法术书和法力值，从一个固定列表中选择施放，并不涉及卡牌抽取、牌组构建等随机性或策略性元素。]",
+      "status": "corrected",
+      "steamTags": [
+        "RPG",
+        "Strategy",
+        "Turn-Based Tactics",
+        "Pixel Graphics",
+        "Tactical",
+        "Turn-Based",
+        "Female Protagonist",
+        "Indie",
+        "Isometric",
+        "Creature Collector",
+        "Strategy RPG",
+        "Tactical RPG",
+        "Fantasy",
+        "JRPG",
+        "Cute"
+      ]
+    },
+    "1042550": {
+      "name": "Digimon Story Cyber Sleuth: Complete Edition",
+      "mechanics": [
+        "形态融合"
+      ],
+      "rawMechanics": [
+        "案件推理",
+        "怪物收集",
+        "赛博骇客",
+        "放置养成",
+        "形态融合",
+        "回合制战斗"
+      ],
+      "summary": "在传统怪物收集基础上，核心采用了网状退化与合体的形态融合机制，并加入了数码农场的放置养成玩法（挂机训练/开发道具），以及收集关键词与NPC交互的案件推理元素。 [验证修正: 分析准确，但可以补充一个标签以更完整地描述其独特性。\n\n**补充标签：**\n*   **赛博骇客 (Cyber Hacking)**: “案件推理”描述了“做什么”，而“赛博骇客”描述了“怎么做”。玩家的核心能力是利用“连接跳跃”（Connect Jump）等骇客技能，在物理世界和数字世界之间穿梭，侵入服务器、破解安防，这是游戏玩法和世界观设定的关键支柱，也是其赛博朋克风格的核心体现。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "JRPG",
+        "Anime",
+        "Turn-Based Combat",
+        "Turn-Based",
+        "RPG",
+        "Turn-Based Strategy",
+        "Visual Novel",
+        "PvP",
+        "Story Rich",
+        "Strategy",
+        "Cute",
+        "Action",
+        "Cyberpunk",
+        "Fantasy"
+      ]
+    },
+    "1065880": {
+      "name": "Dungeon Scavenger",
+      "mechanics": [
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "Rogue-lite"
+      ],
+      "summary": "将老派的第一人称地牢探索（DRPG）与肉鸽元素融入怪物收集玩法中，玩家需要在充满挑战的迷宫中进行回合制战斗与探索。 [验证修正: 分析准确，无需修正，但可以补充和细化标签以获得更完整的画像：\n1. **补充核心玩法**: 将“宝可梦Like”这个概念拆解为更明确的“Creature Collector”标签。\n2. **细化战斗标签**: 游戏标签中包含“Tactical RPG”和“Turn-Based Tactics”，表明其战斗系统比简单的回合制更强调策略和站位，因此补充“Tactical RPG”标签。\n3. **补充RPG系统**: “Character Customization”是游戏的一个重要标签和特色，对于RPG玩家吸引力巨大，应当补充。]",
+      "status": "verified",
+      "steamTags": [
+        "Exploration",
+        "Tactical RPG",
+        "Turn-Based Tactics",
+        "CRPG",
+        "Dungeon Crawler",
+        "Rogue-lite",
+        "Creature Collector",
+        "Hunting",
+        "Turn-Based",
+        "Strategy RPG",
+        "Turn-Based Strategy",
+        "Action RPG",
+        "Rogue-like",
+        "Character Customization",
+        "RPG"
+      ]
+    },
+    "1083190": {
+      "name": "Disc Creatures",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "本作是一款纯粹致敬复古掌机时代的传统怪物收集与回合制RPG，核心玩法围绕基础的捕捉（复制）与战斗，没有明显的跨品类机制融合。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "RPG",
+        "Creature Collector",
+        "JRPG",
+        "Turn-Based Combat",
+        "Indie",
+        "Pixel Graphics",
+        "2D",
+        "Retro",
+        "Anime",
+        "Singleplayer",
+        "Modern",
+        "RPGMaker",
+        "Collectathon",
+        "Cute",
+        "Family Friendly"
+      ]
+    },
+    "1106830": {
+      "name": "Rainbow Billy: The Curse of the Leviathan",
+      "mechanics": [],
+      "rawMechanics": [
+        "解谜探索",
+        "平台跳跃",
+        "非暴力交涉",
+        "收集马拉松",
+        "QTE机制",
+        "好感度养成"
+      ],
+      "summary": "游戏将平台跳跃与收集马拉松融入地图探索，战斗系统创新性地采用非暴力交涉（通过QTE机制完成颜色匹配与情感安抚来收服怪物而非击败它们），并结合了好感度养成系统来强化伙伴关系。 [验证修正: 分析基本准确，标签质量很高。补充了一个标签“解谜探索”来更全面地描述游戏在非战斗状态下的核心玩法循环，因为它不仅仅是跳跃，还包含了大量的环境解谜元素。]",
+      "status": "verified",
+      "steamTags": [
+        "Emotional",
+        "Indie",
+        "Creature Collector",
+        "RPG",
+        "Story Rich",
+        "Puzzle-Platformer",
+        "Fishing",
+        "LGBTQ+",
+        "Turn-Based Combat",
+        "Cute",
+        "Cartoon",
+        "Party-Based RPG",
+        "Dating Sim",
+        "Puzzle",
+        "Colorful"
+      ]
+    },
+    "1191580": {
+      "name": "Nexomon",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "本作是一款非常传统的类宝可梦游戏，核心玩法为标准的怪物收集与回合制战斗，没有明显的跨品类机制融合。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "Creature Collector",
+        "RPG",
+        "Adventure",
+        "Indie",
+        "Casual",
+        "Simulation",
+        "Turn-Based Combat",
+        "Singleplayer",
+        "Turn-Based",
+        "Anime",
+        "2D",
+        "Cute",
+        "Exploration",
+        "Colorful",
+        "JRPG"
+      ]
+    },
+    "1191840": {
+      "name": "Legend Creatures(传奇生物)",
+      "mechanics": [
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "肉鸽Lite",
+        "怪物收集",
+        "生物合成/进化",
+        "自动战斗",
+        "团队构筑/羁绊"
+      ],
+      "summary": "游戏将传统的怪物收集进化与自走棋（自动战斗）机制相结合，并引入了包含随机生成与重玩价值的肉鸽循环体验。 [验证修正: 1. 核心玩法修正：游戏的战斗模式并非“回合制”，而是“自动战斗/自走棋”。因此“宝可梦Like”的标签具有误导性，应明确其战斗类型。\n2. 标签补充：\n   - '怪物收集'：这是游戏的基础，应作为独立标签，而非包含在“宝可梦Like”的模糊概念中。\n   - '生物合成/进化'：生物的进化和合成是游戏角色养成的核心途径，是驱动玩家收集和探索的关键系统。\n   - '团队构筑/羁绊'：作为自走棋玩法的延伸，生物之间的“羁绊”和协同效应是战斗策略的重中之重，是区别于简单数值堆砌的重要标签。]",
+      "status": "corrected",
+      "steamTags": [
+        "Exploration",
+        "Indie",
+        "Rogue-lite",
+        "Rogue-like",
+        "Auto Battler",
+        "Strategy",
+        "Replay Value",
+        "Singleplayer",
+        "2D",
+        "Fantasy",
+        "Pixel Graphics",
+        "Creature Collector",
+        "RPG",
+        "Adventure",
+        "Turn-Based Strategy"
+      ]
+    },
+    "1192440": {
+      "name": "The Monster Breeder",
+      "mechanics": [
+        "形态融合",
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "模拟经营",
+        "形态融合",
+        "生物改造",
+        "角斗场机制",
+        "肉鸽融合",
+        "战术RPG融合"
+      ],
+      "summary": "本作融合了肉鸽机制与模拟经营，核心特色在于通过异种交配（形态融合）与手术炼金等手段对怪物进行深度的定制化培育（生物改造），并以此参与残酷的竞技场战斗（角斗场机制）。 [验证修正: 分析已相当准确，但遗漏了一个关键的战斗系统细节。Steam标签中多次出现`Tactical RPG`和`Turn-Based Strategy`，这表明其回合制战斗并非简单的宝可梦式对战，而是包含了走位、战场布局等元素的战棋玩法。因此，补充一个标签 **'战术RPG融合'** 能更精确地描述其战斗系统的深度。]",
+      "status": "verified",
+      "steamTags": [
+        "Strategy RPG",
+        "Turn-Based",
+        "Management",
+        "Sandbox",
+        "Creature Collector",
+        "Simulation",
+        "Strategy",
+        "RPG",
+        "Turn-Based Combat",
+        "Turn-Based Strategy",
+        "3D",
+        "Indie",
+        "Medieval",
+        "Perma Death",
+        "Fantasy"
+      ]
+    },
+    "1193590": {
+      "name": "Abomi Nation",
+      "mechanics": [
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "肉鸽融合",
+        "永久死亡",
+        "程序化生成世界",
+        "队伍羁绊"
+      ],
+      "summary": "本作将肉鸽元素与怪物收集深度结合，引入了程序化生成的地图和硬核的‘永久死亡’机制，并加入了‘队伍羁绊’（怪物伙伴之间可建立关系并影响冒险进程）的特色系统。 [验证修正: 补充了一个标签：'程序化生成世界'。虽然它通常被包含在'肉鸽融合'的定义内，但对于一个以探索和收集为核心的“宝可梦Like”游戏而言，每次游戏世界地图、怪物分布都完全重塑，这是一个极其重要的融合特征，值得单独强调。]",
+      "status": "verified",
+      "steamTags": [
+        "Indie",
+        "Creature Collector",
+        "RPG",
+        "Rogue-like",
+        "Turn-Based Combat",
+        "Singleplayer",
+        "Party-Based RPG",
+        "Rogue-lite",
+        "Cute",
+        "Cartoony",
+        "Family Friendly",
+        "Perma Death",
+        "Procedural Generation",
+        "Replay Value",
+        "Turn-Based"
+      ]
+    },
+    "1196630": {
+      "name": "Nexomon: Extinction",
+      "mechanics": [],
+      "rawMechanics": [
+        "耐力资源管理",
+        "装备镶嵌",
+        "QTE捕获",
+        "动态难度平衡",
+        "海量支线任务",
+        "核心合成"
+      ],
+      "summary": "在经典怪兽对战基础上融合了随剧情进度的动态等级缩放、全局耐力资源系统、捕获时的按键QTE以及类似RPG的内核装备镶嵌机制。 [验证修正: 初版分析准确，但遗漏了两个定义游戏体验的重要系统。补充'核心合成'，因为这是获取镶嵌物品的主要玩法循环；补充'海量支线任务'，因为它构成了游戏探索和世界互动的主要内容，是区别于同类游戏的一大特色。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "Turn-Based Combat",
+        "RPG",
+        "Casual",
+        "Top-Down",
+        "Funny",
+        "Singleplayer",
+        "Adventure",
+        "Colorful",
+        "Family Friendly",
+        "Simulation",
+        "Indie",
+        "Action",
+        "Exploration",
+        "Anime"
+      ]
+    },
+    "1218210": {
+      "name": "Coromon",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "本作是一款非常传统的复古类宝可梦游戏，核心玩法为标准的怪物收集与回合制战斗，主要通过体力系统、内置硬核规则（Nuzlocke）和地牢解谜进行体验优化，并未融合其他改变核心循环的跨界玩法机制。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "Creature Collector",
+        "Exploration",
+        "JRPG",
+        "Collectathon",
+        "Turn-Based",
+        "Turn-Based Combat",
+        "PvP",
+        "Character Customization",
+        "Strategy",
+        "2D",
+        "Pixel Graphics",
+        "RPG",
+        "Story Rich",
+        "Adventure",
+        "Cute"
+      ]
+    },
+    "1277400": {
+      "name": "Monster Hunter Stories 2: Wings of Ruin",
+      "mechanics": [],
+      "rawMechanics": [
+        "部位破坏",
+        "猜拳克制",
+        "多人协作",
+        "骑乘探索",
+        "素材打造",
+        "基因拼图"
+      ],
+      "summary": "将《怪物猎人》特色的部位破坏（针对特定部位打击以限制敌人或获取额外掉落）与素材打造机制融入回合制战斗，并独创了基因拼图系统（在3x3网格中凑齐同色或同类型基因连线以获得质变加成）进行怪物深度养成，同时结合了力量/速度/技巧的猜拳克制战斗与多人协作共斗副本。 [验证修正: 第一阶段的分析已非常出色，但遗漏了一个连接“怪物收集”与“世界探索”的重要玩法。因此补充一个标签：【骑乘探索】。玩家可以骑乘不同的随行兽，并利用它们独特的地图技能（如飞行、游泳、碎岩）来探索世界、发现新的区域和巢穴，这是游戏冒险体验中不可或缺的一环。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "Adventure",
+        "JRPG",
+        "Exploration",
+        "Creature Collector",
+        "Cartoony",
+        "3D",
+        "Dragons",
+        "Third Person",
+        "Fantasy",
+        "Loot",
+        "Turn-Based",
+        "Character Customization",
+        "PvE",
+        "Emotional"
+      ]
+    },
+    "1287540": {
+      "name": "Dino Hazard: Chronos Blackout",
+      "mechanics": [],
+      "rawMechanics": [
+        "分支叙事",
+        "生存管理",
+        "节奏交互",
+        "第一人称跑酷",
+        "宝可梦Like"
+      ],
+      "summary": "游戏在传统的怪物收集与回合制战斗中融合了'节奏交互'机制（玩家需要根据音乐或节拍进行精准按键判定，以此影响战斗效果或游戏进程）。 [验证修正: 分析遗漏了几个同样重要的融合玩法。1. **分支叙事**：游戏强调“故事丰富”、“多结局”和“艰难抉择”，叙事选择对游戏进程和结局有重大影响。2. **第一人称跑酷**：游戏在2D JRPG的框架中，插入了完全不同玩法的第一人称视角跑酷关卡，这是一个非常显著的玩法融合。3. **生存管理**：在探索过程中，玩家需要管理角色的食物、水和精力等生存资源，这为传统的JRPG探索增加了生存游戏的维度。]",
+      "status": "verified",
+      "steamTags": [
+        "Story Rich",
+        "Emotional",
+        "Cute",
+        "Dark Humor",
+        "Multiple Endings",
+        "Pixel Graphics",
+        "RPG",
+        "Retro",
+        "Exploration",
+        "Turn-Based Combat",
+        "Hand-drawn",
+        "Strategy",
+        "JRPG",
+        "2D",
+        "Action"
+      ]
+    },
+    "1289810": {
+      "name": "Siralim Ultimate",
+      "mechanics": [
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "自动战斗",
+        "深度BD构筑",
+        "无限地牢",
+        "程序生成",
+        "怪物融合",
+        "海量收集"
+      ],
+      "summary": "游戏以程序化生成的地牢探索为核心循环，主打极具深度的刷宝BD（通过战利品与词缀搭配构建流派）与形态融合（组合不同怪物的被动特性），并允许玩家通过深度的宏指令系统设置自动战斗来应对海量的刷图需求。 [验证修正: 分析准确但遗漏了两个同样关键的标签，现已补充：\n1. **补充 '海量收集'**: 游戏拥有超过1200种怪物可供收集，这个“量级”本身已经成为一个核心特征和卖点，远超“宝可梦Like”的范畴，值得单独标记。\n2. **补充 '程序生成'**: 这是驱动“地牢探索”和“刷宝BD”循环的底层技术。无论是地牢的结构、敌人配置、战利品，还是任务，都由程序生成，确保了游戏近乎无限的可重玩性。因此，这是一个不可或缺的基础标签。\n\n(注：为更精确描述，已将'形态融合'微调为'怪物融合'，'地牢探索'扩展为'无限地牢'，'刷宝BD'深化为'深度BD构筑'，以更好地体现游戏特色。)]",
+      "status": "verified",
+      "steamTags": [
+        "Collectathon",
+        "Creature Collector",
+        "Dungeon Crawler",
+        "Party-Based RPG",
+        "Strategy RPG",
+        "Character Customization",
+        "RPG",
+        "Strategy",
+        "2D",
+        "Isometric",
+        "Procedural Generation",
+        "Turn-Based Combat",
+        "Pixel Graphics",
+        "Fantasy",
+        "Loot"
+      ]
+    },
+    "1321440": {
+      "name": "Cassette Beasts",
+      "mechanics": [
+        "形态融合"
+      ],
+      "rawMechanics": [
+        "开放世界探索",
+        "多人协作",
+        "形态融合",
+        "元素反应",
+        "主角变身"
+      ],
+      "summary": "游戏在传统的怪物收集基础上，主打任意两只怪物皆可合体的“形态融合”机制，并引入了允许玩家共同探索和战斗的“多人协作”（支持本地/在线双人联机游玩）玩法。 [验证修正: 补充标签说明：\n1. **开放世界探索**：游戏将怪物收集玩法与无缝的开放世界结构相结合，鼓励自由探索而非线性路线，这与传统宝可梦Like游戏的关卡/道路制设计有显著区别。\n2. **主角变身**：与传统训练师在场外指挥不同，本作主角使用“卡带”录制怪物并亲自“变身”为怪物形态进行战斗，这是对该品类核心交互模式的颠覆性融合。\n3. **元素反应**：战斗系统引入了动态的类型变化机制，攻击不仅造成伤害，还可能通过施加debuff来改变敌人的元素属性，从而创造出新的克制关系，衍生出丰富的策略深度，类似于《原神》的元素反应系统。]",
+      "status": "verified",
+      "steamTags": [
+        "Controller",
+        "Comedy",
+        "Creature Collector",
+        "Local Co-Op",
+        "Turn-Based Combat",
+        "PvP",
+        "Co-op",
+        "3D",
+        "Relaxing",
+        "Collectathon",
+        "Sandbox",
+        "Cartoony",
+        "RPG",
+        "JRPG",
+        "Open World"
+      ]
+    },
+    "1348690": {
+      "name": "Oaken",
+      "mechanics": [
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "轻度肉鸽",
+        "六边形战棋",
+        "牌组构建"
+      ],
+      "summary": "本作在怪物收集的基础上融合了肉鸽循环与牌组构建机制，并引入了强调六边形网格空间布局的“棋盘走位”策略。 [验证修正: 1. 核心定位修正：游戏并非“宝可梦Like”，其基础是“战术卡牌”或“战棋”。所谓的“怪物收集”应修正为“单位召唤”或“盟友卡牌”，它是牌组构建玩法的一部分。\n2. 标签精炼：第一阶段的标签可以进一步精确化。\n   - '肉鸽融合' -> '轻度肉鸽' (Rogue-lite)：游戏拥有局外成长，更符合Rogue-lite的定义。\n   - '棋盘走位' -> '六边形战棋' (Hex-Grid Tactics)：明确指出其战斗地图的形态（六边形网格），并强调其战术深度，比“棋盘走位”更具体。]",
+      "status": "corrected",
+      "steamTags": [
+        "Turn-Based Tactics",
+        "Card Battler",
+        "Singleplayer",
+        "Rogue-lite",
+        "Fantasy",
+        "Hex Grid",
+        "Turn-Based Strategy",
+        "Board Game",
+        "Turn-Based",
+        "Creature Collector",
+        "Colorful",
+        "RPG",
+        "Atmospheric",
+        "Tabletop",
+        "Strategy"
+      ]
+    },
+    "1413480": {
+      "name": "Shin Megami Tensei III Nocturne HD Remaster",
+      "mechanics": [
+        "形态融合"
+      ],
+      "rawMechanics": [
+        "弱点追击",
+        "形态融合",
+        "交涉招募",
+        "勾玉养成",
+        "阵营抉择"
+      ],
+      "summary": "本作融合了形态融合（核心的恶魔合成系统），并引入了交涉招募（通过对话选项与恶魔交涉来获取同伴）、弱点追击（攻击弱点可获得额外行动回合的追击回合系统）以及阵营抉择（玩家的理念选择决定世界重构规则与结局走向）等创新机制。 [验证修正: 分析准确，但遗漏了一个关于主角自身成长的重要系统。补充标签'勾玉养成'（Magatama System）。主角并非通过职业，而是通过装备不同的'勾玉'来获得属性、抗性并学习技能。这个系统与恶魔的培养线相互独立又紧密配合，是游戏角色构建（Build）的另一大核心，值得单独标记。]",
+      "status": "verified",
+      "steamTags": [
+        "JRPG",
+        "RPG",
+        "Creature Collector",
+        "Party-Based RPG",
+        "Demons",
+        "Atmospheric",
+        "Dark",
+        "Post-apocalyptic",
+        "Turn-Based Strategy",
+        "Anime",
+        "Strategy RPG",
+        "Mythology",
+        "Dystopian ",
+        "Choices Matter",
+        "Fantasy"
+      ]
+    },
+    "1424710": {
+      "name": "Geneforge 1 - Mutagen",
+      "mechanics": [],
+      "rawMechanics": [
+        "双线养成",
+        "基因改造",
+        "非战斗解法",
+        "高自由度CRPG",
+        "阵营抉择",
+        "网格战术"
+      ],
+      "summary": "游戏将传统的怪物收集替换为消耗资源自定义属性的'基因改造'创造生物，并深度融合了CRPG的'网格战术'走位、影响世界格局的'阵营抉择'，以及允许通过潜行或交涉避开战斗的'非战斗解法'。 [验证修正: 分析准确，但遗漏了两个关键的宏观标签，补充如下：\n1. 补充'高自由度CRPG'：将游戏定性为'宝可梦Like'过于简化。其本质是一款具有极高自由度的经典CRPG（CRPG, Story Rich, Open-ended），怪物创造是其核心系统，但整个游戏框架、任务结构和世界互动方式都是CRPG式的。\n2. 补充'双线养成'：玩家不仅要创造和强化怪物军队，玩家扮演的主角'Shaper'本身也有一套独立的技能和成长体系。这种主角与创造物共同成长的“双线养成”模式是游戏的一个重要特征，区别于许多主角本身不直接参与战斗的怪物收集游戏。]",
+      "status": "verified",
+      "steamTags": [
+        "CRPG",
+        "RPG",
+        "Dungeon Crawler",
+        "Turn-Based",
+        "Party-Based RPG",
+        "Strategy",
+        "Turn-Based Strategy",
+        "2D",
+        "Isometric",
+        "Story Rich",
+        "Adventure",
+        "Turn-Based Combat",
+        "Fantasy",
+        "Grid-Based Movement",
+        "Old School"
+      ]
+    },
+    "1495420": {
+      "name": "Dragon Creek",
+      "mechanics": [
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "怪物收集",
+        "代码生成",
+        "时间管理",
+        "养成模拟",
+        "牌组构建"
+      ],
+      "summary": "游戏在怪物收集的基础上，融合了类似《怪物农场》的通过输入代码程序化获取专属怪物的机制（代码生成），结合了包含时间管理与日常训练照顾的宠物养成模拟玩法（养成模拟），并将回合制战斗与牌组构建机制相结合。 [验证修正: 分析结论准确，但标签列表遗漏了最基础的品类标签。为使描述更完整，补充'怪物收集'作为核心玩法之一，以明确游戏的基本盘。]",
+      "status": "verified",
+      "steamTags": [
+        "Card Battler",
+        "Side Scroller",
+        "Time Management",
+        "Turn-Based Tactics",
+        "Immersive Sim",
+        "Creature Collector",
+        "PvE",
+        "Card Game",
+        "Life Sim",
+        "RPG",
+        "Strategy RPG",
+        "Turn-Based Strategy",
+        "Character Customization",
+        "2D",
+        "Relaxing"
+      ]
+    },
+    "1515330": {
+      "name": "Monster Tribe",
+      "mechanics": [],
+      "rawMechanics": [
+        "网格战棋战斗",
+        "环境机关解谜",
+        "多端队伍协同"
+      ],
+      "summary": "《Monster Tribe》试图将怪物收集与“网格战棋”及环境解谜相融合，但表现并不理想。主要避坑点在于：战棋机制大幅拖慢了对战节奏，且棋盘策略深度不足，导致频繁的遭遇战沦为枯燥的折磨；其次，游戏存在UI交互笨重、恶性Bug频发及数值崩坏等致命问题。解谜元素也未能与开放世界有机结合，反而割裂了跑图流畅度。本作证明了若无扎实的底层打磨，盲目叠加战棋与解谜只会反噬核心的收集养成乐趣。",
+      "status": "corrected",
+      "steamTags": [
+        "Exploration",
+        "Creature Collector",
+        "Tactical RPG",
+        "Turn-Based Tactics",
+        "PvE",
+        "PvP",
+        "Puzzle",
+        "Strategy RPG",
+        "RPG",
+        "2D",
+        "Top-Down",
+        "Strategy",
+        "Lore-Rich",
+        "Choices Matter",
+        "Open World",
+        "Story Rich",
+        "Team-Based",
+        "Turn-Based Combat",
+        "Pixel Graphics",
+        "JRPG"
+      ]
+    },
+    "1552140": {
+      "name": "Suzukuri Dungeon: Karin in the Mountain",
+      "mechanics": [],
+      "rawMechanics": [
+        "塔防融合",
+        "地牢运营",
+        "反向RPG经营",
+        "怪物收集"
+      ],
+      "summary": "游戏融合了塔防机制与地牢运营，玩家不仅需要收集和培养怪物来防御迷宫（塔防融合），还要建设和扩张迷宫内的各种设施，以此来榨取入侵勇者的金钱（地牢运营）。 [验证修正: 分析准确，但可以补充标签以更全面地描述其特色。补充【怪物收集】标签，以明确‘宝可梦Like’中的收集要素。此外，游戏独特的经济循环——通过建造设施从入侵者身上赚钱（‘shake intruders down for cash’），非常符合【反向RPG经营】这一标签，它精准地描述了玩家作为‘反派’，将英雄的冒险行为商业化的核心体验。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "Tower Defense",
+        "Management",
+        "Strategy",
+        "Strategy RPG",
+        "Dungeon Crawler",
+        "Cartoon",
+        "Tactical RPG",
+        "Casual",
+        "Anime",
+        "Turn-Based Strategy",
+        "Cute",
+        "Isometric",
+        "Fantasy",
+        "Building"
+      ]
+    },
+    "1592600": {
+      "name": "Beasties - Monster Trainer Puzzle RPG",
+      "mechanics": [],
+      "rawMechanics": [
+        "三消战斗",
+        "农场种植",
+        "回合制解谜"
+      ],
+      "summary": "《Beasties》尝试将“宝可梦式收集养成”与“三消战斗”及“农场种植”进行跨品类融合，玩家需通过消除方块来驱动怪兽进行回合制战斗。然而该融合设计并不成功，好评率仅46%。其核心失败原因在于：三消玩法的强随机性严重削弱了怪兽对战应有的属性克制与策略深度，且繁琐的消除过程大幅拖慢了战斗节奏，导致体验极其重复枯燥。此外，农场种植等休闲元素未能与怪兽养成形成紧密的玩法闭环，整体设计犹如生硬缝合的廉价手游，缺乏长线游玩价值。",
+      "status": "corrected",
+      "steamTags": [
+        "Indie",
+        "Creature Collector",
+        "Turn-Based Combat",
+        "Singleplayer",
+        "Strategy",
+        "Exploration",
+        "Board Game",
+        "2D",
+        "Loot",
+        "Puzzle",
+        "Anime",
+        "Relaxing",
+        "Controller",
+        "Casual",
+        "Match 3",
+        "Adventure",
+        "Agriculture",
+        "Colorful",
+        "Family Friendly",
+        "Cute"
+      ]
+    },
+    "1592750": {
+      "name": "Anode Heart",
+      "mechanics": [],
+      "rawMechanics": [
+        "数字世界观",
+        "内置卡牌",
+        "快节奏回合制",
+        "半开放世界探索"
+      ],
+      "summary": "游戏在传统的怪物收集机制上，融合了独立的卡牌对战迷你游戏（内置卡牌），并允许玩家在半开放世界中自由选择探索与攻略顺序（非线性流程）。 [验证修正: 在确认原分析准确的基础上，进行如下补充和优化：\n1. **补充标签'快节奏回合制'**：游戏简介提到“fast-paced combat”（快节奏战斗），而标签又是“Turn-Based Combat”（回合制战斗）。这说明它在传统回合制的基础上做了加速或简化设计，形成了独特的战斗体验，这是一个重要的融合点。\n2. **补充标签'数字世界观'**：游戏简介的“digital, futuristic environment”和标签中的“Futuristic”、“Transhumanism”表明，其赛博/数字化的世界观不仅是美术风格，更是与怪物设定、故事深度绑定的核心设定，是与传统宝可梦Like游戏在题材上的关键差异点。\n3. **优化标签'非线性流程'**：将其优化为更具体的'半开放世界探索'。这更精确地描述了游戏“semi-open world”和“focus on exploration”的特点，强调了其在世界结构和探索驱动力上的融合设计。]",
+      "status": "verified",
+      "steamTags": [
+        "Adventure",
+        "RPG",
+        "Creature Collector",
+        "JRPG",
+        "Card Battler",
+        "2D",
+        "Pixel Graphics",
+        "Top-Down",
+        "Collectathon",
+        "Colorful",
+        "Cute",
+        "Nonlinear",
+        "Retro",
+        "Futuristic",
+        "Transhumanism"
+      ]
+    },
+    "1623880": {
+      "name": "Noob - The Factionless",
+      "mechanics": [],
+      "rawMechanics": [
+        "IP改编",
+        "公会经营",
+        "怪物收集",
+        "网游模拟",
+        "剧情驱动"
+      ],
+      "summary": "游戏在回合制战斗基础上，融合了“网游模拟”（在单机环境下模拟MMORPG的职业机制与玩家生态）与“公会经营”（通过收集资源、招募成员来升级公会设施与排名）的特色机制。 [验证修正: 分析准确，但不够完整。我们补充了以下标签以更全面地描述游戏：\n1. **怪物收集**: 这是其“宝可梦Like”属性的核心，玩家需要收集和培养各种怪物进行回合制战斗，是游戏的基础玩法之一。\n2. **IP改编**: 游戏基于一个已有的成功IP，其世界观、角色和幽默风格都源于此，这是理解游戏背景和调性的关键标签。\n3. **剧情驱动**: Steam标签中的“Story Rich”和游戏本身源于叙事性剧集的特性，都表明了本作有大量对话和故事内容，剧情是推动游戏进程的主要动力。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "Adventure",
+        "Turn-Based Combat",
+        "Story Rich",
+        "Strategy RPG",
+        "Retro",
+        "CRPG",
+        "Magic",
+        "Turn-Based Strategy",
+        "Creature Collector",
+        "3D",
+        "Turn-Based Tactics",
+        "Cartoony",
+        "Hand-drawn",
+        "Family Friendly"
+      ]
+    },
+    "1630360": {
+      "name": "Matanga 2",
+      "mechanics": [],
+      "rawMechanics": [
+        "Story Rich"
+      ],
+      "summary": "在怪物收集玩法中融合了“恐怖生存”（引入资源限制、生存压力与恐怖威胁应对机制）以及“多线结局”（玩家的探索与决策会触发不同的剧情分支与最终结局）。 [验证修正: 分析已相当准确，可补充'Story Rich'（故事丰富）和'Exploration'（探索）两个标签以获得更完整的画像。游戏简介和标签都强调了其“精彩情节”，而“冒险”类型本身就意味着探索是连接怪物收集、战斗和生存等核心机制的重要一环。]",
+      "status": "verified",
+      "steamTags": [
+        "Adventure",
+        "Action",
+        "Action-Adventure",
+        "Exploration",
+        "Creature Collector",
+        "3D",
+        "Horror",
+        "Vampire",
+        "Survival",
+        "Story Rich",
+        "Indie",
+        "PvE",
+        "Multiple Endings",
+        "Singleplayer",
+        "Turn-Based Tactics"
+      ]
+    },
+    "1671720": {
+      "name": "Athenian Rhapsody",
+      "mechanics": [],
+      "rawMechanics": [
+        "流程交换",
+        "怪物收集",
+        "柏拉图式社交",
+        "小游戏战斗",
+        "多分支叙事"
+      ],
+      "summary": "游戏将怪物收集与《瓦里奥制造》风格的“小游戏战斗”（通过微型游戏进行战斗判定）结合，融入了“恋爱模拟”和“多分支叙事”元素，并首创了允许玩家之间进行“流程交换”（将自己独一无二的完整通关流程/存档作为物品与好友交易）的独特社交机制。 [验证修正: 修正“恋爱模拟”为“柏拉图式社交”以更精确地反映游戏描述中“platonic dating simulator”的特点，强调其非浪漫的社交关系构建。同时，补充了作为核心玩法的“怪物收集”标签，使标签组更完整地描述游戏体验。]",
+      "status": "verified",
+      "steamTags": [
+        "Action RPG",
+        "Choose Your Own Adventure",
+        "Creature Collector",
+        "Exploration",
+        "RPG",
+        "Interactive Fiction",
+        "Party-Based RPG",
+        "Dating Sim",
+        "JRPG",
+        "Character Customization",
+        "Funny",
+        "Cute",
+        "Choices Matter",
+        "Multiple Endings",
+        "Story Rich"
+      ]
+    },
+    "1767170": {
+      "name": "Super Bullet Break",
+      "mechanics": [
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "策略战棋",
+        "肉鸽Lite",
+        "怪物收集",
+        "伪Gacha",
+        "牌组构建"
+      ],
+      "summary": "一款将肉鸽元素与牌组构建机制深度结合的怪物收集游戏，玩家在每次随机生成的地图中收集不同能力的角色（子弹）来构筑专属卡组进行闯关。 [验证修正: 虽然第一阶段分析准确，但标签可以更精确并补充遗漏的关键点：\n1. **补充 '策略战棋'**: 游戏的回合制战斗并非简单的菜单式对战，而是包含了站位和移动的战棋（Tactical RPG / Hex Grid）玩法，策略深度更高。\n2. **补充 '伪Gacha'**: 游戏内获取新角色的方式（在Roguelite的单次流程中）高度模拟了Gacha（抽卡）游戏的随机获取体验，但并不涉及真实货币交易。这个机制是驱动玩家收集和构筑多样性的核心，值得单独标记。]",
+      "status": "verified",
+      "steamTags": [
+        "Anime",
+        "Turn-Based Tactics",
+        "Card Battler",
+        "Cute",
+        "Deckbuilding",
+        "Adventure",
+        "Card Game",
+        "Turn-Based Combat",
+        "Creature Collector",
+        "Fantasy",
+        "Female Protagonist",
+        "Strategy",
+        "Tactical RPG",
+        "Tactical",
+        "Turn-Based Strategy"
+      ]
+    },
+    "1777620": {
+      "name": "Soul Hackers 2",
+      "mechanics": [
+        "形态融合"
+      ],
+      "rawMechanics": [
+        "恶魔合成",
+        "弱点追击",
+        "好感度迷宫",
+        "视觉小说叙事",
+        "随机招募"
+      ],
+      "summary": "《灵魂骇客2》在“宝可梦Like”的仲魔收集基础上，融合了视觉小说叙事与好感度迷宫玩法。其核心争议在于对经典机制的过度简化与粗糙的关卡设计。传统的“恶魔交涉”被改为迷宫探索时的随机触发，大幅削弱了收集怪物的互动乐趣；战斗系统将硬核的弱点机制简化为“魔宴”追击，导致策略深度不足。此外，与角色好感度绑定的“灵魂矩阵”迷宫设计极其重复枯燥，导致这款试图向轻度化靠拢的融合之作最终评价两极分化。",
+      "status": "corrected",
+      "steamTags": [
+        "RPG",
+        "JRPG",
+        "Turn-Based Combat",
+        "Female Protagonist",
+        "Cyberpunk",
+        "Demons",
+        "Futuristic",
+        "Anime",
+        "Singleplayer",
+        "Story Rich",
+        "Noir",
+        "Mystery",
+        "Violent",
+        "Creature Collector",
+        "Great Soundtrack",
+        "Turn-Based",
+        "Character Customization",
+        "3D",
+        "Atmospheric",
+        "Visual Novel"
+      ]
+    },
+    "1806700": {
+      "name": "Monster Girl Manager",
+      "mechanics": [
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "地牢探索",
+        "程序生成",
+        "肉鸽融合",
+        "团队管理",
+        "策略构筑"
+      ],
+      "summary": "本作是一款融合了肉鸽地牢探索的怪物收集游戏，其核心创新在于“程序生成”（即魔物娘的种类、属性和特征由系统随机生成而非固定图鉴），结合遗物收集构建了完整的Roguelite循环。 [验证修正: 修正说明：第一阶段分析准确，但可以进一步补充。游戏标题中的'Manager'以及简介中的'consult, and train'（咨询和训练）表明，游戏存在超出常规怪物收集的'团队管理'元素。结合Roguelite玩法，玩家需要在每次冒险前进行深度的'策略构筑'，这构成了游戏的核心循环，因此补充这两个标签能更完整地描绘游戏体验。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "RPG",
+        "Rogue-lite",
+        "Dungeon Crawler",
+        "Turn-Based Combat",
+        "2D",
+        "Anime",
+        "Cute",
+        "Character Customization",
+        "Singleplayer",
+        "Strategy",
+        "Tutorial",
+        "Casual",
+        "Moddable",
+        "PvE"
+      ]
+    },
+    "1813190": {
+      "name": "Little Inner Monsters - Card Game",
+      "mechanics": [
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "数值攻占",
+        "怪物收集",
+        "卡牌对战",
+        "轻度策略",
+        "桌游机制",
+        "纸牌接龙"
+      ],
+      "summary": "融合了牌组构建、桌游机制与纸牌接龙（Solitaire）规则的休闲怪物收集卡牌对战游戏。 [验证修正: 分析存在明显误标和遗漏：\n1. **误标**: '牌组构建' (Deckbuilding) 是一个误标。该游戏的核心不是在对局中动态地构建、循环、扩充牌库（如《杀戮尖塔》），而是更接近于赛前选择出战阵容的“团队构建”(Team Building)。这是一个关键的机制区别。\n2. **遗漏**: 分析遗漏了两个关键标签。首先是作为“宝可梦Like”根基的'怪物收集' (Creature Collector)。其次，'卡牌对战' (Card Battler) 比'回合制'更能精确概括其核心对抗形式。\n3. **修正与发明**: 为了更精确地描述玩法，做出以下修正：\n    - 使用新标签'数值攻占' (Value Conquest) 来替代模糊的'解谜元素'。这个标签能清晰地描述游戏的核心机制：在网格版图上，通过比对卡牌边缘的数值来“翻转”或“占领”相邻的对手卡牌，类似于《最终幻想VIII》中的“Triple Triad”玩法。\n    - 补充'轻度策略' (Light Strategy) 标签，以准确反映游戏'Casual', 'Relaxing', 'Family Friendly'的定位，将其与更硬核的策略游戏区分开。]",
+      "status": "corrected",
+      "steamTags": [
+        "Card Battler",
+        "Turn-Based Tactics",
+        "Card Game",
+        "Board Game",
+        "Creature Collector",
+        "Solitaire",
+        "PvP",
+        "Puzzle",
+        "Multiplayer",
+        "Tabletop",
+        "Turn-Based Strategy",
+        "Strategy",
+        "Cute",
+        "Relaxing",
+        "Casual"
+      ]
+    },
+    "1848130": {
+      "name": "无限投影",
+      "mechanics": [
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "放置挂机",
+        "多宇宙角色收集",
+        "抽卡养成",
+        "数值比拼"
+      ],
+      "summary": "《无限投影》尝试将“生物收集”与“放置挂机（Idler）”及“自动战斗”玩法相融合，背景设定在杂糅了各类动漫与小说设定的多元宇宙。游戏将宝可梦式的“探索捕捉”粗暴地替换为二次元抽卡，玩家主要通过挂机获取资源来提升角色数值并组建阵容。这种融合之所以评价平庸（59%好评），是因为它完全剥离了类宝可梦游戏核心的互动感与策略深度，将收集变成了枯燥的氪金/爆肝抽卡，战斗沦为纯粹的数值自动比拼。大杂烩式的多元宇宙设定也导致了严重的代入感缺失，这种重度放置与抽卡养成的设计，完全无法满足玩家对正统怪物收集RPG的期待，是典型的“披着收集皮的挂机数值游戏”反面教材。",
+      "status": "corrected",
+      "steamTags": [
+        "Simulation",
+        "Indie",
+        "Idler",
+        "Singleplayer",
+        "Creature Collector",
+        "Strategy",
+        "Management",
+        "Sci-fi",
+        "Martial Arts",
+        "2D",
+        "Anime",
+        "Cute",
+        "Turn-Based Strategy",
+        "Strategy RPG",
+        "Fantasy",
+        "Futuristic",
+        "Magic",
+        "Mystery",
+        "Naval",
+        "Ninja"
+      ]
+    },
+    "1875830": {
+      "name": "Shin Megami Tensei V: Vengeance",
+      "mechanics": [
+        "形态融合"
+      ],
+      "rawMechanics": [
+        "开放区域探索",
+        "弱点追击",
+        "形态融合",
+        "交涉招募",
+        "精髓技能继承",
+        "阵营抉择"
+      ],
+      "summary": "游戏在怪物收集基础上引入了“交涉招募”（通过对话与资源交换获取怪物）和“形态融合”（恶魔合成产生质变），并在战斗与剧情中分别融入了“弱点追击”（击中弱点增加行动回合的追击系统）与“阵营抉择”（决定世界命运与多结局的道德分支选择）。 [验证修正: 分析准确，无根本性错误，但可补充两个重要标签以更全面地反映《真·女神转生V》的现代设计特色：\n1. 补充'开放区域探索'，因为游戏拥有广阔、高自由度且注重纵向探索的大地图，这是其核心乐趣与玩法循环的重要组成部分。\n2. 补充'精髓技能继承'，以描述主角可以通过'恶魔精髓'自由学习和更换海量技能的深度角色构筑（Build）系统，这是养成玩法的关键一环。]",
+      "status": "verified",
+      "steamTags": [
+        "JRPG",
+        "RPG",
+        "Story Rich",
+        "Demons",
+        "Adventure",
+        "Choices Matter",
+        "Exploration",
+        "Anime",
+        "Turn-Based Strategy",
+        "Creature Collector",
+        "Third Person",
+        "Atmospheric",
+        "3D",
+        "Turn-Based",
+        "Dark"
+      ]
+    },
+    "1877650": {
+      "name": "Zero Orders Tactics",
+      "mechanics": [
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "间接指挥",
+        "怪物收集",
+        "解谜策略",
+        "地形改造",
+        "可预见性战斗",
+        "肉鸽融合"
+      ],
+      "summary": "结合了肉鸽元素的策略游戏，创新性地引入了“地形改造”（玩家通过改变战场地形网格来影响战局）和“解谜策略”（类似《陷阵之志》的高度确定性逻辑推演）机制，玩家无法直接向怪物下达指令，而是通过改变地形来间接引导其进行自动战斗。 [验证修正: 1. **移除'自动战斗'**：该标签完全错误。游戏的核心是玩家每回合主动“塑造战场”，这是策略解谜的一部分，而非观看单位自动作战。游戏更接近《陷阵之志》（Into The Breach），强调玩家通过精准操作改变环境来解决眼前的战术难题。\n2. **修正核心玩法描述**：游戏并非传统的“怪物收集+回合制战斗”，而更应该被描述为“环境操纵下的战术解谜”。\n3. **补充标签'间接指挥'**：为了描述“不直接指挥单位，但通过改变环境影响其行为”这一独特机制，创造此标签。玩家的行动（改造地形）是因，单位的行动是果，这是一种高阶的策略玩法。\n4. **补充标签'可预见性战斗'**：游戏简介强调“一切皆可预测”，这是区别于传统RPG的重要特征，也是其“解谜”属性的核心。玩家需要在信息完全透明的情况下，计算出最优解，而非依赖随机性。]",
+      "status": "corrected",
+      "steamTags": [
+        "Strategy",
+        "Turn-Based Strategy",
+        "Pixel Graphics",
+        "Replay Value",
+        "Turn-Based Tactics",
+        "Rogue-like",
+        "Puzzle",
+        "Rogue-lite",
+        "Singleplayer",
+        "Tactical",
+        "Turn-Based",
+        "Turn-Based Combat",
+        "2D",
+        "RPG",
+        "Procedural Generation"
+      ]
+    },
+    "1882240": {
+      "name": "Forgotten Realms: The Archives - Collection One",
+      "mechanics": [],
+      "rawMechanics": [
+        "环境互动解谜",
+        "资源生存",
+        "队伍构建",
+        "D&D规则改编",
+        "即时队伍战斗",
+        "第一人称地牢探索"
+      ],
+      "summary": "该系列将D&D规则与即时制网格战斗融合，并加入了需管理饥饿度的生存机制与基于第一人称视角的环境解谜要素。 [验证修正: 1. **核心玩法错误**：游戏不是“回合制”，而是“即时制”战斗。它也不是“怪物收集”，而是“队伍构建与管理”。因此“宝可梦Like”的定性是错误的。\n2. **标签修正与补充**：\n   - “即时网格战斗”描述不精确，战斗是发生在网格地图上的即时战斗，修正为“即时队伍战斗”更贴切，强调了队伍和小队战术。\n   - “伙伴招募”过于片面，游戏核心是开局创建整个队伍（种族、职业、属性），修正为“队伍构建”更准确。\n   - 遗漏了最关键的标签：“D&D规则改编”。整个游戏的数值、职业、法术和判定系统都基于龙与地下城规则，这是其核心机制的基石。\n   - 将“生存管理”和“第一人称解谜”进一步精确化为“资源生存”（强调食物、水源、光照等）和“环境互动解谜”（强调与地牢环境的互动，如按钮、踏板、暗门）。\n   - 补充了定义游戏类型的核心标签：“第一人称地牢探索”。]",
+      "status": "corrected",
+      "steamTags": [
+        "Dungeon Crawler",
+        "Retro",
+        "Dungeons & Dragons",
+        "Choose Your Own Adventure",
+        "RPG",
+        "Fantasy",
+        "Party-Based RPG",
+        "Creature Collector",
+        "Tabletop",
+        "Old School",
+        "Action RPG",
+        "Puzzle",
+        "Action-Adventure",
+        "Singleplayer",
+        "First-Person"
+      ]
+    },
+    "1896570": {
+      "name": "Final Stardust: Cosmic Nexus",
+      "mechanics": [
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "集换式卡牌",
+        "怪物收集",
+        "视觉小说",
+        "太空歌剧",
+        "卡牌对战",
+        "牌组构建"
+      ],
+      "summary": "本作将怪物收集与集换卡牌（CCG/TCG收集与对战）和牌组构建机制深度融合，并采用视觉小说（通过立绘和文本框进行大量剧情交互）的叙事方式，主打快节奏的休闲卡牌对战体验。 [验证修正: 修正说明：分析虽准确但不够完整，未能全面概括游戏体验。建议进行如下补充和优化：\n1. **补充核心标签**：'怪物收集'是游戏循环的根本，应明确列为核心标签，而非仅作为'宝可梦Like'的背景描述。同时，游戏名和'Space'标签暗示了宏大的世界观，补充'太空歌剧'标签可以有效传达其主题氛围。\n2. **优化描述精度**：使用'卡牌对战'（Card Battler）标签，比笼统的'回合制'更能精确地描述其通过卡牌驱动的战斗机制。]",
+      "status": "verified",
+      "steamTags": [
+        "Adventure",
+        "Strategy",
+        "Creature Collector",
+        "PvE",
+        "Card Game",
+        "Turn-Based Tactics",
+        "Simulation",
+        "Casual",
+        "Deckbuilding",
+        "RPG",
+        "Card Battler",
+        "Anime",
+        "Trading Card Game",
+        "2D",
+        "Visual Novel"
+      ]
+    },
+    "1961970": {
+      "name": "Akumi Wars",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "该游戏主要为标准的回合制小队RPG与怪物收集玩法，以喜剧和科幻奇幻题材为包装，未体现出符合标准的机制融合创新。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "RPG",
+        "Anime",
+        "Turn-Based Combat",
+        "Adventure",
+        "Action-Adventure",
+        "Party-Based RPG",
+        "Turn-Based Strategy",
+        "Creature Collector",
+        "CRPG",
+        "Sci-fi",
+        "2D",
+        "Tactical RPG",
+        "Strategy RPG",
+        "Fantasy",
+        "Cartoon"
+      ]
+    },
+    "1965190": {
+      "name": "Dragon Spirits 2",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "该游戏为标准的怪物收集与回合制策略RPG，主要特色在于现代都市科幻背景与视觉小说叙事，未展现出明显的机制融合玩法。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "Strategy",
+        "Creature Collector",
+        "RPG",
+        "Story Rich",
+        "Tactical",
+        "Adventure",
+        "Dragons",
+        "Collectathon",
+        "Exploration",
+        "Turn-Based Combat",
+        "Anime",
+        "Turn-Based Tactics",
+        "Sci-fi",
+        "Female Protagonist",
+        "Visual Novel"
+      ]
+    },
+    "1979570": {
+      "name": "Tomomon",
+      "mechanics": [
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "3v3战术小队",
+        "轻度肉鸽循环",
+        "赛博朋克探索"
+      ],
+      "summary": "《Tomomon》试图将经典宝可梦收集与肉鸽元素、3v3回合制战术战斗相结合。然而，游戏极低廉的定价暴露了其粗糙的半成品本质。其差评主要源于肉鸽玩法的生硬融合：缺乏有意义的局外成长与优质的随机性设计，导致“困难”标签沦为枯燥的数值碾压与重复刷取。此外，3v3战术战斗受限于简陋的UI交互和糟糕的数值平衡，缺乏实际策略深度。这种为了融合而融合的粗糙设计，使其未能实现创新，反而成为避坑反面教材。",
+      "status": "corrected",
+      "steamTags": [
+        "Creature Collector",
+        "Collectathon",
+        "Indie",
+        "Pixel Graphics",
+        "Strategy RPG",
+        "Turn-Based Strategy",
+        "Turn-Based",
+        "Turn-Based Tactics",
+        "Party-Based RPG",
+        "Turn-Based Combat",
+        "2D",
+        "Rogue-lite",
+        "Difficult",
+        "RPG",
+        "Strategy",
+        "Cute",
+        "Top-Down",
+        "Cyberpunk",
+        "Relaxing",
+        "Open World"
+      ]
+    },
+    "1996430": {
+      "name": "Dicefolk",
+      "mechanics": [
+        "肉鸽融合",
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "骰面构筑",
+        "怪物收集",
+        "回合制战术",
+        "肉鸽LITE",
+        "行动顺序操控"
+      ],
+      "summary": "本作在怪物收集的基础上融合了肉鸽循环与牌组构建，并创新性地引入了“骰子驱动”（通过投掷、收集和配置魔法骰子来决定和指挥双方的战斗行动）作为核心策略机制。 [验证修正: 分析中的标签可以进一步精确化：1. '牌组构建'（Deckbuilding）标签有误导性。游戏中玩家并非构筑一副卡牌，而是自定义“骰子”的“骰面”。因此，使用'骰面构筑'（Dice-face Building）更为精准。2. '骰子驱动'标签虽然正确，但未能完全体现其核心机制。游戏的一大特色是玩家可以操控骰子，从而决定敌我双方的行动顺序，这是一种深度的战术决策。因此补充'行动顺序操控'（Action Order Manipulation）标签来描述这一独特玩法。]",
+      "status": "verified",
+      "steamTags": [
+        "Roguelike Deckbuilder",
+        "Turn-Based Combat",
+        "Rogue-like",
+        "Turn-Based Strategy",
+        "Rogue-lite",
+        "Strategy",
+        "Creature Collector",
+        "Strategy RPG",
+        "Singleplayer",
+        "Casual",
+        "2D",
+        "Deckbuilding",
+        "Cute",
+        "Procedural Generation",
+        "Cartoony"
+      ]
+    },
+    "2019300": {
+      "name": "Dokimon: Quest",
+      "mechanics": [
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "角色定制",
+        "任务驱动",
+        "开放世界探索",
+        "JRPG叙事"
+      ],
+      "summary": "该作将传统怪物收集与“自动战斗”结合以简化练级过程，并采用“任务驱动”机制，用西式RPG的任务系统取代了传统的道馆挑战式线性进度。 [验证修正: 1. 误标：'自动战斗'不是该游戏的核心融合玩法，其核心是'回合制策略'。2. 遗漏：分析未能识别出'开放世界探索'、'JRPG叙事'和'角色定制'等关键的融合标签，这些标签共同定义了该游戏与传统宝可梦Like游戏的差异化体验。]",
+      "status": "corrected",
+      "steamTags": [
+        "Creature Collector",
+        "Exploration",
+        "Party-Based RPG",
+        "Turn-Based Strategy",
+        "JRPG",
+        "Character Customization",
+        "Female Protagonist",
+        "RPG",
+        "Strategy",
+        "2D",
+        "Cute",
+        "Funny",
+        "Open World",
+        "Story Rich",
+        "Team-Based"
+      ]
+    },
+    "2125540": {
+      "name": "Kādomon: Hyper Auto Battlers",
+      "mechanics": [
+        "肉鸽融合",
+        "自动战斗",
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "阵容羁绊协同",
+        "局内升级进化",
+        "随机路线推图",
+        "站位策略"
+      ],
+      "summary": "本作尝试将宝可梦的“收集与进化”与“肉鸽自动战斗”融合，玩家需在随机路线中组建怪物阵容并触发羁绊。其67%的评价暴露了融合设计的致命缺陷：高达200只的怪物导致肉鸽卡池极度臃肿，玩家在单局中极难凑齐特定羁绊或完成进化。这种“重度随机性”与“特定阵容养成”的冲突，加上自动战斗缺乏操作补救空间，使游戏沦为纯粹的运气比拼。数值平衡的缺失进一步放大了挫败感，是“卡池膨胀反噬策略深度”的典型避坑案例。",
+      "status": "corrected",
+      "steamTags": [
+        "Creature Collector",
+        "Cartoony",
+        "Rogue-like",
+        "Auto Battler",
+        "Card Battler",
+        "PvE",
+        "Turn-Based Tactics",
+        "Trading Card Game",
+        "Real Time Tactics",
+        "Rogue-lite",
+        "Card Game",
+        "Party-Based RPG",
+        "Strategy RPG",
+        "Strategy",
+        "RPG",
+        "2D",
+        "Traditional Roguelike",
+        "Cute",
+        "Funny",
+        "Procedural Generation"
+      ]
+    },
+    "2175540": {
+      "name": "DRAGON QUEST MONSTERS: The Dark Prince",
+      "mechanics": [
+        "形态融合"
+      ],
+      "rawMechanics": [
+        "天赋树",
+        "形态融合",
+        "体型系统",
+        "技能继承",
+        "季节变化"
+      ],
+      "summary": "游戏的核心机制在于形态融合（怪物合成），玩家通过不断将收集到的怪物进行合体繁育，创造出能力质变且继承特定技能树的新物种，以此构筑理想的战斗队伍。 [验证修正: 分析准确，但有重要遗漏。已补充【技能继承】、【天赋树】、【季节变化】、【体型系统】四个标签，以更完整地描述其在“形态融合”之外的核心玩法机制。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "JRPG",
+        "Creature Collector",
+        "Party-Based RPG",
+        "3D",
+        "Anime",
+        "Villain Protagonist",
+        "Turn-Based Combat",
+        "Silent Protagonist",
+        "Fantasy",
+        "Singleplayer",
+        "Story Rich",
+        "Cute",
+        "Dragons",
+        "Turn-Based"
+      ]
+    },
+    "2265120": {
+      "name": "无限投影2",
+      "mechanics": [
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "放置挂机",
+        "视觉小说叙事",
+        "背包管理",
+        "二次元角色收集"
+      ],
+      "summary": "《无限投影2》尝试将“宝可梦式”的生物收集（使徒收集）与放置挂机、自动战斗以及视觉小说叙事相融合。玩家在多重二次元宇宙中收集角色并组建自动战斗阵容。然而，该融合设计遭遇了明显的失败（好评率仅43%）。首先，放置与自动战斗的结合极大地削弱了传统宝可梦Like游戏中核心的策略性与养成反馈，导致战斗沦为枯燥的数值比拼；其次，视觉小说元素与背包管理、战术RPG等繁杂标签的堆砌，暴露出游戏定位模糊、系统臃肿的问题。极低的发售价格也侧面反映了其粗糙的制作质量，缺乏深度的数值设计和空洞的跨界收集玩法最终让这款缝合游戏沦为缺乏可玩性的劣质挂机模拟器，是开发者在做玩法加法时忽视核心循环打磨的典型避坑案例。",
+      "status": "corrected",
+      "steamTags": [
+        "Simulation",
+        "Idler",
+        "Creature Collector",
+        "Strategy",
+        "Team-Based",
+        "Auto Battler",
+        "2D",
+        "Martial Arts",
+        "Magic",
+        "Fantasy",
+        "Inventory Management",
+        "Cute",
+        "Anime",
+        "Visual Novel",
+        "Management",
+        "Turn-Based Tactics",
+        "Tactical RPG",
+        "Ninja",
+        "Mystery",
+        "Mythology"
+      ]
+    },
+    "2281820": {
+      "name": "Evolings",
+      "mechanics": [
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "肉鸽融合",
+        "战棋融合",
+        "棋盘幸存者",
+        "极简主义"
+      ],
+      "summary": "将怪物收集与Roguelike机制深度结合，玩家在每次独立的随机轮回中招募并培养不同的怪物小队进行回合制战斗。 [验证修正: 分析虽然准确但不够完整，遗漏了几个定义游戏体验的关键融合点：\n1. **补充'战棋融合'**：游戏的战斗并非传统宝可梦式的1v1或小队对战，而是在网格棋盘上进行的。玩家需要考虑单位的站位、攻击范围和移动，这使其核心战斗更接近《火焰纹章》或《Into the Breach》等战棋游戏（SRPG/Tactical RPG），而非传统JRPG。\n2. **补充'棋盘幸存者'**：游戏描述中“face hordes of evil monsters”（面对成群的邪恶怪物）是其核心特征。这借鉴了类幸存者（Survivor-like）游戏“对抗海量敌人”的设计，但将其创新地移植到了回合制战棋的框架下。我们发明'棋盘幸存者'这个标签来精确描述这种“在棋盘上通过策略走位和范围攻击来应对潮水般敌人的回合制玩法”。\n3. **补充'极简主义'**：开发者在简介中特意强调了“minimalistic”（极简主义）。这不仅体现在其简洁可爱的美术风格上，也贯穿于其玩法设计，旨在提供一个清晰、专注的策略体验。这是一个重要的设计理念标签。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "Action Roguelike",
+        "RPG",
+        "Turn-Based Tactics",
+        "Action",
+        "PvE",
+        "Strategy RPG",
+        "Turn-Based Strategy",
+        "Cute",
+        "Strategy",
+        "Turn-Based Combat",
+        "Indie",
+        "Fantasy",
+        "Magic",
+        "Tactical"
+      ]
+    },
+    "2294160": {
+      "name": "Isle of Swaps",
+      "mechanics": [
+        "肉鸽融合",
+        "牌组构建"
+      ],
+      "rawMechanics": [
+        "肉鸽融合",
+        "集换式卡牌",
+        "棋盘战术",
+        "牌组构建"
+      ],
+      "summary": "本作将怪物收集与肉鸽卡牌玩法结合，并引入了“集换式卡牌”机制（玩家通过撕开补充包抽取盲盒卡牌以及战胜对手后进行卡牌交易来完善牌组）。 [验证修正: 修正说明：第一阶段分析准确，但遗漏了对具体战斗形式的描述。Steam标签中的“Turn-Based Tactics”和“Board Game”强烈暗示了战斗发生在具有空间策略的棋盘上，而非简单的卡牌对撞。因此补充“棋盘战术”标签，以体现其战斗系统的空间策略维度，使玩法描述更完整。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "Roguelike Deckbuilder",
+        "Deckbuilding",
+        "Trading Card Game",
+        "Card Battler",
+        "Turn-Based Strategy",
+        "Rogue-lite",
+        "Turn-Based Tactics",
+        "Perma Death",
+        "Turn-Based Combat",
+        "Card Game",
+        "Tabletop",
+        "Strategy",
+        "Board Game",
+        "RPG"
+      ]
+    },
+    "2358770": {
+      "name": "Million Monster Militia",
+      "mechanics": [
+        "自动战斗",
+        "牌组构建",
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "怪物收集",
+        "自动战斗",
+        "协同构筑",
+        "牌组构建",
+        "肉鸽融合"
+      ],
+      "summary": "结合了肉鸽元素的卡牌构建与自动战斗机制，玩家通过招募各种奇葩生物组建牌组，利用羁绊协同进行自动对战。 [验证修正: 分析基本准确，无需修正。补充了两个标签以更完整地描述核心体验：'怪物收集'明确了'牌组'由怪物/单位构成，这是'宝可梦Like'的核心；'协同构筑'则强调了游戏策略的深度，即围绕单位间的“synergies”（协同效应）来构建队伍，这是此类游戏后期乐趣的关键。]",
+      "status": "verified",
+      "steamTags": [
+        "Roguelike Deckbuilder",
+        "Deckbuilding",
+        "Auto Battler",
+        "Strategy",
+        "Rogue-lite",
+        "Rogue-like",
+        "Procedural Generation",
+        "Creature Collector",
+        "Turn-Based Strategy",
+        "Turn-Based Combat",
+        "Turn-Based Tactics",
+        "Choices Matter",
+        "2.5D",
+        "Isometric",
+        "Pixel Graphics"
+      ]
+    },
+    "2377230": {
+      "name": "Claws & Chaos",
+      "mechanics": [
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "自走棋羁绊构筑",
+        "动物收集养成",
+        "PvP天梯对战",
+        "剧情闯关"
+      ],
+      "summary": "《Claws & Chaos》尝试将“宝可梦式生物收集”与“自走棋（自动战斗）”玩法相融合，玩家需收集各种奇葩动物组成阵容，在剧情和PvP中进行对战。该作的争议主要源于融合深度的不足与数值平衡的崩坏。首先，自走棋玩法高度依赖随机性与羁绊平衡，而本作数值打磨欠佳，导致对战策略单一；其次，作为主打PvP的游戏，由于体量小导致匹配困难，玩家流失严重；最后，生物收集要素被自走棋的“商店购买升星”机制稀释，缺乏传统宝可梦Like中探索与捕捉的情感建立。这种生硬的融合最终沦为缺乏深度的快餐体验。",
+      "status": "corrected",
+      "steamTags": [
+        "PvP",
+        "Auto Battler",
+        "Cute",
+        "Casual",
+        "Strategy",
+        "Action-Adventure",
+        "Turn-Based Strategy",
+        "2D",
+        "Cartoon",
+        "Colorful",
+        "Isometric",
+        "Comedy",
+        "Dark Humor",
+        "Cats",
+        "Multiplayer",
+        "Dog",
+        "Creature Collector",
+        "Fantasy",
+        "Singleplayer",
+        "Action"
+      ]
+    },
+    "2432380": {
+      "name": "Claws & Chaos Playtest",
+      "mechanics": [
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "PvP自走棋",
+        "动物收集",
+        "回合制布阵"
+      ],
+      "summary": "《Claws & Chaos》尝试将宝可梦式的生物收集与PvP自动战斗（自走棋）相融合，玩家需要收集各种猫狗等动物并进行回合制布阵对战。该融合设计的争议主要在于PvP环境下的数值平衡与随机性控制。在自动战斗机制下，如果缺乏深度的羁绊或技能克制设计，战斗极易沦为纯粹的数值比拼或运气游戏（RNG过高），导致策略性大幅下降。此外，作为主打PvP的测试版游戏，匹配机制与网络稳定性问题也容易放大玩家的挫败感，使得收集养成的乐趣被糟糕的对战体验所掩盖。",
+      "status": "corrected",
+      "steamTags": [
+        "PvP",
+        "Auto Battler",
+        "Cute",
+        "Casual",
+        "Strategy",
+        "Action-Adventure",
+        "Turn-Based Strategy",
+        "2D",
+        "Cartoon",
+        "Colorful",
+        "Isometric",
+        "Comedy",
+        "Dark Humor",
+        "Cats",
+        "Multiplayer",
+        "Dog",
+        "Creature Collector",
+        "Fantasy",
+        "Singleplayer",
+        "Action"
+      ]
+    },
+    "2445990": {
+      "name": "Bloomtown: A Different Story",
+      "mechanics": [],
+      "rawMechanics": [
+        "时间管理",
+        "生活模拟",
+        "社交羁绊",
+        "心灵潜入"
+      ],
+      "summary": "游戏在怪物收集基础上深度融合了类似《女神异闻录》的机制：包含规划日常打工/活动的“时间管理”与“生活模拟”，通过与NPC建立关系来强化队伍的“社交羁绊”，以及进入居民内心世界驱除恶魔的“心灵潜入”特色设定。",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "Adventure",
+        "Pixel Graphics",
+        "JRPG",
+        "Party-Based RPG",
+        "Cute",
+        "Female Protagonist",
+        "Exploration",
+        "Story Rich",
+        "Turn-Based Tactics",
+        "Creature Collector",
+        "Atmospheric",
+        "Comedy",
+        "Lore-Rich",
+        "Singleplayer"
+      ]
+    },
+    "2464460": {
+      "name": "Portal Fantasy",
+      "mechanics": [],
+      "rawMechanics": [
+        "平台跳跃",
+        "怪物收集",
+        "双模式探索",
+        "机关解谜",
+        "回合制战斗"
+      ],
+      "summary": "游戏在传统的怪物收集与回合制战斗基础上，融入了“平台跳跃”（Platformer）与“机关解谜”（躲避陷阱与破解谜题）机制，使大地图探索具有更强的动作性与互动深度。 [验证修正: 分析遗漏了游戏的核心机制：玩家可以在“英雄”和“传送门法师”两种角色模式之间切换。英雄负责探索、战斗和解谜，而法师则专注于与怪物互动和收集。这是一个贯穿探索和收集循环的核心玩法。因此，补充新标签‘双模式探索’来描述这一关键融合设计。]",
+      "status": "corrected",
+      "steamTags": [
+        "Turn-Based Tactics",
+        "Character Customization",
+        "Creature Collector",
+        "RPG",
+        "Platformer",
+        "Pixel Graphics",
+        "Adventure",
+        "Fantasy",
+        "Strategy",
+        "Exploration",
+        "PvE",
+        "PvP",
+        "Retro",
+        "Casual",
+        "JRPG"
+      ]
+    },
+    "2507630": {
+      "name": "Zombie Party 丧尸派对",
+      "mechanics": [],
+      "rawMechanics": [
+        "怪物收集",
+        "尸群控制",
+        "即时战术",
+        "小队RPG",
+        "感染模拟",
+        "反英雄叙事"
+      ],
+      "summary": "游戏打破了传统回合制，融合了即时战术（RTS）玩法，并引入'感染模拟'（通过感染敌人动态扩充己方队伍的爆发模拟）与'尸群控制'（实时指挥大规模丧尸军团而非单体怪物作战）的创新机制。 [验证修正: 1. 核心玩法修正：将隐含“回合制”的“宝可梦Like”框架修正为更中性的“怪物收集”+“即时战术”。游戏的核心循环是收集/召唤不同种类的僵尸（怪物收集），并在即时战斗中指挥它们（即时战术）。\n2. 标签修正与补充：保留了准确的'即时战术', '感染模拟', '尸群控制'。将“宝可梦Like”的核心吸引力——收集与养成本身——提炼为'怪物收集'标签。补充了'小队RPG' (Party-Based RPG) 以强调玩家围绕僵尸军队进行构建和成长的玩法。同时，根据游戏简介“扮演混乱能力者……摧毁既定秩序”，加入了'反英雄叙事'这一重要标签，它定义了游戏的动机和背景基调。]",
+      "status": "corrected",
+      "steamTags": [
+        "Pixel Graphics",
+        "Zombies",
+        "Adventure",
+        "Strategy",
+        "RPG",
+        "Action-Adventure",
+        "Action RPG",
+        "RTS",
+        "Party-Based RPG",
+        "Strategy RPG",
+        "Action RTS",
+        "Real Time Tactics",
+        "Tactical RPG",
+        "Creature Collector",
+        "CRPG"
+      ]
+    },
+    "2598630": {
+      "name": "The Dragonhood",
+      "mechanics": [
+        "自动战斗",
+        "牌组构建",
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "点击放置",
+        "怪物收集",
+        "自动战斗",
+        "装备驱动",
+        "牌组构建",
+        "肉鸽融合"
+      ],
+      "summary": "本作将点击放置（Clicker）与自动战斗机制融入怪物收集，并结合了肉鸽循环、装备驱动（Loot刷宝）与牌组构建元素来深度定制龙兽的进化与战斗流派。 [验证修正: 第一阶段的分析准确识别了各项融合玩法，但其标签列表遗漏了游戏最核心的机制：“怪物收集”。虽然背景描述中提到了“宝可梦Like”，但作为核心玩法，应在标签中明确体现。游戏简介的核心循环是“Collect eggs, hatch dragons”（收集蛋，孵化龙），Steam标签也包含“Creature Collector”。因此，补充“怪物收集”标签，使玩法画像更完整。]",
+      "status": "verified",
+      "steamTags": [
+        "RPG",
+        "Loot",
+        "Clicker",
+        "Auto Battler",
+        "Singleplayer",
+        "Replay Value",
+        "Creature Collector",
+        "Rogue-lite",
+        "Tactical RPG",
+        "2D",
+        "Dragons",
+        "Dark Fantasy",
+        "Deckbuilding",
+        "Strategy RPG",
+        "Turn-Based"
+      ]
+    },
+    "2619250": {
+      "name": "Familiars.io",
+      "mechanics": [
+        "MMO元素"
+      ],
+      "rawMechanics": [
+        "轻社交",
+        "MMO元素",
+        "极简养成"
+      ],
+      "summary": "在传统的怪物收集对战基础上融入了MMO多人社交与PvP系统，并加入了主打快速满级的‘极简养成’机制以大幅降低玩家的肝度。 [验证修正: 分析准确，但遗漏了一个重要标签。游戏简介中特意提到'just press the 'Howdy' button to greet them!'（或者只是按下'Howdy'按钮和他们打个招呼），这表明游戏的多人交互设计刻意向轻度、友好、无压力的方向引导，与传统MMO复杂的公会、团队、对抗系统不同。因此补充'轻社交'标签，可以更精确地描述这种独特的、作为核心吸引力之一的融合玩法。]",
+      "status": "verified",
+      "steamTags": [
+        "Creature Collector",
+        "MMORPG",
+        "Turn-Based Combat",
+        "Turn-Based Strategy",
+        "Turn-Based Tactics",
+        "Atmospheric",
+        "Exploration",
+        "RPG",
+        "Minimalist",
+        "Casual",
+        "Cute",
+        "PvE",
+        "PvP",
+        "Pixel Graphics",
+        "2D"
+      ]
+    },
+    "2626860": {
+      "name": "Dragon Eclipse",
+      "mechanics": [
+        "肉鸽融合",
+        "牌组构建",
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "卡牌驱动自走棋",
+        "局内宠物进化",
+        "驯兽师卡牌协同"
+      ],
+      "summary": "《Dragon Eclipse》尝试将“宝可梦式宠物收集进化”与“肉鸽卡牌构筑”及“自动战斗”进行多重融合。其争议与失败的核心在于玩法底层逻辑的严重冲突：卡牌构筑极度依赖玩家的主动策略与精准控制，而自动战斗机制却剥夺了局内操作感，导致战斗反馈割裂且玩家缺乏掌控力。同时，肉鸽玩法的频繁死亡重置与宠物养成所需的长期情感羁绊相悖。这种“既要又要”的缝合设计使得游戏在策略深度和养成体验上两头不讨好，是开发者在进行跨品类融合时需警惕“核心体验互斥”的典型避坑案例。",
+      "status": "corrected",
+      "steamTags": [
+        "Roguelike Deckbuilder",
+        "Card Game",
+        "Card Battler",
+        "Rogue-like",
+        "Strategy",
+        "Deckbuilding",
+        "Turn-Based",
+        "Indie",
+        "Singleplayer",
+        "Rogue-lite",
+        "Difficult",
+        "Creature Collector",
+        "Replay Value",
+        "2D",
+        "Anime",
+        "Colorful",
+        "Cute",
+        "Fantasy",
+        "Casual",
+        "Procedural Generation"
+      ]
+    },
+    "2693940": {
+      "name": "NEODUEL: Backpack Monsters",
+      "mechanics": [
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "异步对战",
+        "自动战斗",
+        "背包构筑",
+        "怪物收集"
+      ],
+      "summary": "游戏创新性地将怪物收集与空间网格化的“背包管理”机制结合，玩家通过在有限的背包空间内策略性地拼图摆放怪物与道具来构筑连携Combo，并与其他玩家的阵容进行“异步对战”式的“自动战斗”。 [验证修正: 分析虽准确但有遗漏和可优化之处：\n1. **补充核心标签**：分析的前提是“宝可梦Like”，但最终标签列表里遗漏了最基础的“怪物收集”标签，应予以补充。\n2. **优化标签描述**：标签“背包管理”虽然正确，但未能精确体现其核心策略性。根据游戏描述“strategically manage your backpack to create unbeatable combos”以及Steam的“Deckbuilding”标签，此玩法更接近于通过物品摆放来构筑战斗策略。因此，使用新标签“背包构筑” (Backpack Building) 能更精准地描述这种将背包空间作为策略构筑核心的玩法，它融合了库存管理和卡组构筑的思路。]",
+      "status": "verified",
+      "steamTags": [
+        "Resource Management",
+        "Retro",
+        "RPG",
+        "1990's",
+        "Party-Based RPG",
+        "Board Game",
+        "Auto Battler",
+        "Inventory Management",
+        "Strategy",
+        "Turn-Based Tactics",
+        "Asynchronous Multiplayer",
+        "Turn-Based Strategy",
+        "PvP",
+        "Deckbuilding",
+        "Colorful"
+      ]
+    },
+    "2696050": {
+      "name": "Yarimono",
+      "mechanics": [],
+      "rawMechanics": [],
+      "summary": "本作是一款带有成人内容的传统怪物收集与回合制RPG，核心玩法并未脱离常规的宝可梦框架，主要以剧情和成人元素为卖点，无明显的机制融合创新。",
+      "status": "v1_no_mechanics",
+      "steamTags": [
+        "Sexual Content",
+        "Hentai",
+        "Mature",
+        "Nudity",
+        "Creature Collector",
+        "RPG",
+        "JRPG",
+        "Turn-Based Strategy",
+        "Anime",
+        "Cute",
+        "Turn-Based Combat",
+        "Adventure",
+        "NSFW",
+        "Story Rich",
+        "Lore-Rich"
+      ]
+    },
+    "2749350": {
+      "name": "Random Legion",
+      "mechanics": [
+        "肉鸽融合",
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "自走棋构筑",
+        "兵种进阶转化",
+        "装备强化系统",
+        "随机关卡生成",
+        "局外天赋养成"
+      ],
+      "summary": "《Random Legion》尝试将类宝可梦的“收集与进化（兵种招募与进阶）”与自走棋、肉鸽玩法相融合。玩家通过收集不同兵种、强化装备并搭配阵容来挑战随机关卡。其核心缺陷在于融合玩法的深度严重不足与数值平衡崩坏：自走棋应有的羁绊策略被过于随机的肉鸽元素稀释，而兵种的“收集与转化”仅停留在粗暴的数值堆砌层面，缺乏独特的技能机制差异。此外，粗糙的UI交互和后期极度重复的自动战斗体验，使得这种“收集+自走棋+肉鸽”的框架流于表面。对于开发者而言，本作警示了在做轻量化玩法融合时，若收集要素缺乏差异化设计，极易让游戏沦为枯燥的数值模拟器。",
+      "status": "corrected",
+      "steamTags": [
+        "Rogue-like",
+        "Strategy",
+        "Auto Battler",
+        "Rogue-lite",
+        "Creature Collector",
+        "Pixel Graphics",
+        "Simulation",
+        "Wargame",
+        "Turn-Based Tactics",
+        "God Game",
+        "Medieval",
+        "Top-Down",
+        "Fantasy",
+        "Combat",
+        "Magic",
+        "Tactical",
+        "2D",
+        "Singleplayer",
+        "Turn-Based Combat",
+        "Procedural Generation"
+      ]
+    },
+    "2797340": {
+      "name": "Cat God Ranch",
+      "mechanics": [
+        "自动战斗",
+        "牌组构建",
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "牧场经营",
+        "定期纳贡",
+        "自动战斗",
+        "牌组构建",
+        "肉鸽融合"
+      ],
+      "summary": "游戏将怪物收集与肉鸽卡牌、自动战斗机制相结合，并引入了“定期纳贡”（玩家必须在规定回合内利用动物羁绊组合产出足够的资源上交，未达标则游戏失败）的生存压力机制。 [验证修正: 分析遗漏了一个重要标签。游戏名称《Cat God Ranch》（猫神牧场）以及类型标签中的'Farming', 'Simulation'表明，游戏在战斗循环之外存在一个核心的经营养成层。因此补充'牧场经营'标签，以更完整地描述玩家管理和培育动物的模拟经营玩法。]",
+      "status": "verified",
+      "steamTags": [
+        "Card Battler",
+        "Roguelike Deckbuilder",
+        "Deckbuilding",
+        "Casual",
+        "Rogue-like",
+        "Replay Value",
+        "Rogue-lite",
+        "Farming",
+        "Turn-Based Tactics",
+        "Strategy",
+        "Turn-Based Combat",
+        "Auto Battler",
+        "Creature Collector",
+        "Cats",
+        "Card Game"
+      ]
+    },
+    "2903460": {
+      "name": "Project Of Cooling The Earth",
+      "mechanics": [
+        "生存建造",
+        "肉鸽融合"
+      ],
+      "rawMechanics": [
+        "资源管理",
+        "生存建造",
+        "时间管理",
+        "推理探案",
+        "肉鸽融合",
+        "视觉小说叙事"
+      ],
+      "summary": "本作在怪物收集的基础上，深度融合了搜集水粮与建设庇护所的生存建造机制、带有随机元素的肉鸽融合玩法，并结合了末日背景下的资源分配、时间日程管理以及推理探案等多重系统。 [验证修正: 分析遗漏了一个重要标签：【视觉小说叙事】。游戏的'Visual Novel'、'Story Rich'、'Multiple Endings'标签表明，游戏拥有极强的叙事驱动力，并且故事的呈现方式和分支选择是其核心体验的重要组成部分，而非简单的点缀。将其补充，能更完整地描绘游戏的全貌。]",
+      "status": "verified",
+      "steamTags": [
+        "Post-apocalyptic",
+        "Resource Management",
+        "Visual Novel",
+        "Multiple Endings",
+        "Life Sim",
+        "War",
+        "Creature Collector",
+        "Time Management",
+        "Rogue-lite",
+        "Base-Building",
+        "Turn-Based Combat",
+        "Survival",
+        "Sandbox",
+        "Building",
+        "Detective"
+      ]
+    },
+    "2940990": {
+      "name": "Maze Keeper",
+      "mechanics": [
+        "肉鸽融合",
+        "牌组构建",
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "反向塔防",
+        "怪物放置",
+        "动态难度成长",
+        "反派视角防守"
+      ],
+      "summary": "《Maze Keeper》尝试将怪物收集与反向塔防、肉鸽卡牌及自动战斗相融合，玩家扮演迷宫之主放置怪物，阻挡不断复活变强的勇者。这种“反派视角+动态难度”的创意虽好，但游戏评价不佳。其失败核心在于极低定价（$0.09）背后的粗糙打磨：自动战斗机制缺乏策略深度，肉鸽卡牌的随机性与塔防的严谨性产生冲突；同时，勇者不断升级的数值膨胀曲线设计失衡，导致玩家后期面临无法逾越的数值高墙，沦为枯燥的数值堆砌，未能发挥出怪物收集与阵容搭配的应有乐趣。",
+      "status": "corrected",
+      "steamTags": [
+        "Strategy",
+        "Tower Defense",
+        "Auto Battler",
+        "Rogue-like",
+        "Roguelike Deckbuilder",
+        "Card Battler",
+        "Creature Collector",
+        "Stylized",
+        "Fantasy",
+        "Turn-Based Strategy",
+        "Combat",
+        "Grid-Based Movement",
+        "Procedural Generation",
+        "Perma Death",
+        "Singleplayer",
+        "2D",
+        "3D",
+        "Replay Value",
+        "Difficult",
+        "Rogue-lite"
+      ]
+    },
+    "3515510": {
+      "name": "Maze Keeper Playtest",
+      "mechanics": [
+        "肉鸽融合",
+        "牌组构建",
+        "自动战斗"
+      ],
+      "rawMechanics": [
+        "塔防布阵",
+        "网格战棋",
+        "永久死亡",
+        "卡牌召唤"
+      ],
+      "summary": "《Maze Keeper Playtest》试图将生物收集与塔防、自动战斗及肉鸽卡牌构建进行多重融合。玩家需通过抽卡获取生物，在网格地图上布阵并进行自动战斗。这种重度缝合的失败主要源于机制冲突：肉鸽卡牌的随机性与塔防对精确布阵的严苛要求产生矛盾，结合“永久死亡”机制，极大放大了运气不佳时的挫败感。同时，自动战斗剥夺了局内微操空间，导致玩家在阵型被破后缺乏补救手段。该作是典型的“玩法堆砌导致核心体验失焦”的避坑案例。",
+      "status": "corrected",
+      "steamTags": [
+        "Strategy",
+        "Tower Defense",
+        "Auto Battler",
+        "Rogue-like",
+        "Roguelike Deckbuilder",
+        "Card Battler",
+        "Creature Collector",
+        "Stylized",
+        "Fantasy",
+        "Turn-Based Strategy",
+        "Combat",
+        "Grid-Based Movement",
+        "Procedural Generation",
+        "Perma Death",
+        "Singleplayer",
+        "2D",
+        "3D",
+        "Replay Value",
+        "Difficult",
+        "Rogue-lite"
+      ]
+    }
+  },
+  "tagStats": {
+    "肉鸽融合": 20,
+    "牌组构建": 16,
+    "形态融合": 9,
+    "MMO元素": 3,
+    "银河恶魔城": 1,
+    "自动战斗": 16,
+    "生存建造": 1
+  },
+  "rawTagStats": {
+    "仆从军团": 2,
+    "分支叙事": 2,
+    "派系抉择": 1,
+    "潜行战术": 1,
+    "生物创造": 2,
+    "阵营抉择": 6,
+    "网状叙事": 1,
+    "战棋式战斗": 1,
+    "自由角色构筑": 1,
+    "怪物创造": 1,
+    "多分支剧情": 1,
+    "生物塑造": 1,
+    "CRPG式叙事": 1,
+    "职业Build自由": 1,
+    "怪物深度合成": 1,
+    "无尽爬塔": 1,
+    "随机地牢": 2,
+    "刷宝掉落": 2,
+    "肉鸽融合": 12,
+    "无限构筑": 1,
+    "装备打造": 1,
+    "怪物合成": 1,
+    "深度策略构筑": 1,
+    "基地建设": 1,
+    "手牌管理": 2,
+    "特性拼装": 1,
+    "异步多人": 1,
+    "桌游改编": 1,
+    "生存策略": 1,
+    "动态生态": 1,
+    "卡牌对战": 3,
+    "桌游机制": 2,
+    "数值博弈": 1,
+    "网格化养成": 1,
+    "主角尺寸切换": 1,
+    "形态融合": 7,
+    "FF系列大乱斗": 1,
+    "体型堆叠": 1,
+    "ATB战斗": 1,
+    "生活模拟": 2,
+    "牌组构建": 9,
+    "农场经营": 1,
+    "怪物收集": 21,
+    "地牢探索": 2,
+    "MMORPG": 1,
+    "放置挂机": 3,
+    "装备驱动": 2,
+    "确定性战斗": 1,
+    "双人协作": 1,
+    "MMO元素": 2,
+    "双单位战术": 1,
+    "体力资源管理": 1,
+    "魔法书系统": 1,
+    "双世界穿梭": 1,
+    "情绪解谜": 1,
+    "即时走位": 1,
+    "半即时指令战斗": 1,
+    "银河恶魔城": 1,
+    "平台跳跃": 3,
+    "策略化配队": 1,
+    "回合制战斗": 3,
+    "RPG成长": 1,
+    "无限杂交繁育": 1,
+    "基因换色系统": 1,
+    "黑深残叙事": 1,
+    "契约驯服机制": 1,
+    "刷宝驱动": 1,
+    "深度构筑": 1,
+    "无尽进程": 1,
+    "海量组合": 1,
+    "多人竞技": 1,
+    "物理解谜": 1,
+    "回合制策略": 1,
+    "弹射碰撞": 1,
+    "动态回合顺序": 1,
+    "团队连携攻击": 1,
+    "领袖+召唤单位": 1,
+    "地图无缝战斗": 1,
+    "元素循环克制": 1,
+    "战棋怪物收集": 1,
+    "案件推理": 1,
+    "赛博骇客": 1,
+    "放置养成": 1,
+    "Rogue-lite": 1,
+    "解谜探索": 1,
+    "非暴力交涉": 1,
+    "收集马拉松": 1,
+    "QTE机制": 1,
+    "好感度养成": 1,
+    "肉鸽Lite": 2,
+    "生物合成/进化": 1,
+    "自动战斗": 6,
+    "团队构筑/羁绊": 1,
+    "模拟经营": 1,
+    "生物改造": 1,
+    "角斗场机制": 1,
+    "战术RPG融合": 1,
+    "永久死亡": 2,
+    "程序化生成世界": 1,
+    "队伍羁绊": 1,
+    "耐力资源管理": 1,
+    "装备镶嵌": 1,
+    "QTE捕获": 1,
+    "动态难度平衡": 1,
+    "海量支线任务": 1,
+    "核心合成": 1,
+    "部位破坏": 1,
+    "猜拳克制": 1,
+    "多人协作": 2,
+    "骑乘探索": 1,
+    "素材打造": 1,
+    "基因拼图": 1,
+    "生存管理": 1,
+    "节奏交互": 1,
+    "第一人称跑酷": 1,
+    "宝可梦Like": 1,
+    "深度BD构筑": 1,
+    "无限地牢": 1,
+    "程序生成": 2,
+    "怪物融合": 1,
+    "海量收集": 1,
+    "开放世界探索": 2,
+    "元素反应": 1,
+    "主角变身": 1,
+    "轻度肉鸽": 1,
+    "六边形战棋": 1,
+    "弱点追击": 3,
+    "交涉招募": 2,
+    "勾玉养成": 1,
+    "双线养成": 1,
+    "基因改造": 1,
+    "非战斗解法": 1,
+    "高自由度CRPG": 1,
+    "网格战术": 1,
+    "代码生成": 1,
+    "时间管理": 3,
+    "养成模拟": 1,
+    "网格战棋战斗": 1,
+    "环境机关解谜": 1,
+    "多端队伍协同": 1,
+    "塔防融合": 1,
+    "地牢运营": 1,
+    "反向RPG经营": 1,
+    "三消战斗": 1,
+    "农场种植": 1,
+    "回合制解谜": 1,
+    "数字世界观": 1,
+    "内置卡牌": 1,
+    "快节奏回合制": 1,
+    "半开放世界探索": 1,
+    "IP改编": 1,
+    "公会经营": 1,
+    "网游模拟": 1,
+    "剧情驱动": 1,
+    "Story Rich": 1,
+    "流程交换": 1,
+    "柏拉图式社交": 1,
+    "小游戏战斗": 1,
+    "多分支叙事": 1,
+    "策略战棋": 1,
+    "伪Gacha": 1,
+    "恶魔合成": 1,
+    "好感度迷宫": 1,
+    "视觉小说叙事": 3,
+    "随机招募": 1,
+    "团队管理": 1,
+    "策略构筑": 1,
+    "数值攻占": 1,
+    "轻度策略": 1,
+    "纸牌接龙": 1,
+    "多宇宙角色收集": 1,
+    "抽卡养成": 1,
+    "数值比拼": 1,
+    "开放区域探索": 1,
+    "精髓技能继承": 1,
+    "间接指挥": 1,
+    "解谜策略": 1,
+    "地形改造": 1,
+    "可预见性战斗": 1,
+    "环境互动解谜": 1,
+    "资源生存": 1,
+    "队伍构建": 1,
+    "D&D规则改编": 1,
+    "即时队伍战斗": 1,
+    "第一人称地牢探索": 1,
+    "集换式卡牌": 2,
+    "视觉小说": 1,
+    "太空歌剧": 1,
+    "3v3战术小队": 1,
+    "轻度肉鸽循环": 1,
+    "赛博朋克探索": 1,
+    "骰面构筑": 1,
+    "回合制战术": 1,
+    "肉鸽LITE": 1,
+    "行动顺序操控": 1,
+    "角色定制": 1,
+    "任务驱动": 1,
+    "JRPG叙事": 1,
+    "阵容羁绊协同": 1,
+    "局内升级进化": 1,
+    "随机路线推图": 1,
+    "站位策略": 1,
+    "天赋树": 1,
+    "体型系统": 1,
+    "技能继承": 1,
+    "季节变化": 1,
+    "背包管理": 1,
+    "二次元角色收集": 1,
+    "战棋融合": 1,
+    "棋盘幸存者": 1,
+    "极简主义": 1,
+    "棋盘战术": 1,
+    "协同构筑": 1,
+    "自走棋羁绊构筑": 1,
+    "动物收集养成": 1,
+    "PvP天梯对战": 1,
+    "剧情闯关": 1,
+    "PvP自走棋": 1,
+    "动物收集": 1,
+    "回合制布阵": 1,
+    "社交羁绊": 1,
+    "心灵潜入": 1,
+    "双模式探索": 1,
+    "机关解谜": 1,
+    "尸群控制": 1,
+    "即时战术": 1,
+    "小队RPG": 1,
+    "感染模拟": 1,
+    "反英雄叙事": 1,
+    "点击放置": 1,
+    "轻社交": 1,
+    "极简养成": 1,
+    "卡牌驱动自走棋": 1,
+    "局内宠物进化": 1,
+    "驯兽师卡牌协同": 1,
+    "异步对战": 1,
+    "背包构筑": 1,
+    "自走棋构筑": 1,
+    "兵种进阶转化": 1,
+    "装备强化系统": 1,
+    "随机关卡生成": 1,
+    "局外天赋养成": 1,
+    "牧场经营": 1,
+    "定期纳贡": 1,
+    "资源管理": 1,
+    "生存建造": 1,
+    "推理探案": 1,
+    "反向塔防": 1,
+    "怪物放置": 1,
+    "动态难度成长": 1,
+    "反派视角防守": 1,
+    "塔防布阵": 1,
+    "网格战棋": 1,
+    "卡牌召唤": 1
+  },
+  "tagOptions": [
+    {
+      "key": "roguelite",
+      "label": "肉鸽融合",
+      "tag": "肉鸽融合"
+    },
+    {
+      "key": "deckbuilding",
+      "label": "牌组构建",
+      "tag": "牌组构建"
+    },
+    {
+      "key": "morphing",
+      "label": "形态融合",
+      "tag": "形态融合"
+    },
+    {
+      "key": "survival",
+      "label": "生存建造",
+      "tag": "生存建造"
+    },
+    {
+      "key": "mmo",
+      "label": "MMO元素",
+      "tag": "MMO元素"
+    },
+    {
+      "key": "autobattle",
+      "label": "自动战斗",
+      "tag": "自动战斗"
+    },
+    {
+      "key": "bullet",
+      "label": "弹幕射击",
+      "tag": "弹幕射击"
+    },
+    {
+      "key": "timetravel",
+      "label": "时间旅行",
+      "tag": "时间旅行"
+    },
+    {
+      "key": "metroidvania",
+      "label": "银河恶魔城",
+      "tag": "银河恶魔城"
+    },
+    {
+      "key": "sandbox",
+      "label": "沙盒建造",
+      "tag": "沙盒建造"
+    }
+  ]
+}

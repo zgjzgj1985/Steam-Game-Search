@@ -661,6 +661,7 @@ function rowToGameRecord(row: any): GameRecord {
     llmMechanicsSummary: row.llm_mechanics_summary || "",
     // llmRawMechanics 字段仅在 JSON 缓存中可用，SQLite 路径下为空数组
     llmRawMechanics: [],
+    innovationTags: [],
   };
 }
 
@@ -945,6 +946,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     llmMechanics: [],
     llmMechanicsSummary: "",
     llmRawMechanics: [],
+    innovationTags: [],
   };
 }
 
@@ -1038,6 +1040,9 @@ function computeFeatureTagOptionsFromMechanics(): FeatureTagOption[] {
         label: tag,
         tag,
         count: count as number,
+        gameCount: count as number,
+        coverage: 0,
+        avgWilson: 0,
       });
     }
 

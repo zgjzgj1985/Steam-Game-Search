@@ -1731,6 +1731,40 @@ export default function Mode2Page() {
                   )
                 : featureTagOptions;
 
+              // ============ 根据激活的池子过滤标签 ============
+              // 只显示在至少一个激活池子中有分布的标签
+              const visibleTagOptions = filteredOptions
+                .map(tag => {
+                  if (!tag.poolDistribution) return tag;
+                  const { A, B, C } = tag.poolDistribution;
+                  // 计算激活池子中的总数量
+                  const activeCount =
+                    (activePools.includes("A") ? A : 0) +
+                    (activePools.includes("B") ? B : 0) +
+                    (activePools.includes("C") ? C : 0);
+                  // 返回更新后的标签（只显示激活池子的分布）
+                  return {
+                    ...tag,
+                    gameCount: activeCount,
+                    count: activeCount,
+                    poolDistribution: {
+                      A: activePools.includes("A") ? A : 0,
+                      B: activePools.includes("B") ? B : 0,
+                      C: activePools.includes("C") ? C : 0,
+                    },
+                  };
+                })
+                .filter(tag => {
+                  // 过滤掉没有任何激活池子分布的标签
+                  if (!tag.poolDistribution) return true;
+                  const { A, B, C } = tag.poolDistribution;
+                  return (
+                    (activePools.includes("A") && A > 0) ||
+                    (activePools.includes("B") && B > 0) ||
+                    (activePools.includes("C") && C > 0)
+                  );
+                });
+
               // 同义词合并映射（废弃标签 → 保留标签）
               // 来源: @/lib/tag-config（由 manage_tags.py --export-config 生成）
               // 已通过 import 导入，直接使用 SYNONYM_MERGE 常量
@@ -1740,7 +1774,7 @@ export default function Mode2Page() {
               const grouped: Record<string, typeof featureTagOptions> = {};
               const uncategorized: typeof featureTagOptions = [];
 
-              for (const tag of filteredOptions) {
+              for (const tag of visibleTagOptions) {
                 let matched = false;
                 for (const group of TAG_GROUPS) {
                   if (group.key === 'other') continue;
@@ -1785,80 +1819,99 @@ export default function Mode2Page() {
                 grouped['other'] = uncategorized;
               }
 
-              const hasResults = filteredOptions.length > 0;
+              const hasResults = visibleTagOptions.length > 0;
+
+              // 计算隐藏了多少标签
+              const hiddenCount = filteredOptions.length - visibleTagOptions.length;
 
               return (
                 <>
                   {!hasResults ? (
                     <div className="text-center py-6 text-sm text-muted-foreground">
-                      {featureTagSearch ? `未找到包含"${featureTagSearch}"的标签` : '加载中...'}
+                      {activePools.length === 0
+                        ? '请至少选择一个池子以查看标签'
+                        : featureTagSearch
+                          ? `未找到包含"${featureTagSearch}"的标签`
+                          : '加载中...'}
                     </div>
                   ) : (
-                    TAG_GROUPS.map(group => {
-                      const tags = grouped[group.key] || [];
-                      if (tags.length === 0 && searchLower) return null;
-
-                      const totalCount = tags.reduce((sum, t) => sum + (t.gameCount || 0), 0);
-
-                      return (
-                        <div key={group.key} className="border rounded-lg overflow-hidden">
-                          {/* 分组标题 */}
-                          <button
-                            onClick={() => {
-                              const el = document.getElementById(`tag-group-${group.key}`);
-                              if (el) {
-                                el.classList.toggle('hidden');
-                              }
-                            }}
-                            className="w-full flex items-center justify-between px-3 py-2 hover:bg-muted/50 transition-colors"
-                          >
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium text-sm">{group.name}</span>
-                              <span className="text-xs text-muted-foreground">({tags.length}个标签, {totalCount}款游戏)</span>
-                            </div>
-                            <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                          </button>
-
-                          {/* 标签列表 */}
-                          <div id={`tag-group-${group.key}`} className="px-3 pb-3 flex flex-wrap gap-2">
-                            {tags.length === 0 ? (
-                              <span className="text-xs text-muted-foreground/50 py-2">无</span>
-                            ) : (
-                              tags.map((tag) => {
-                                const dist = tag.poolDistribution;
-                                const poolParts: string[] = [];
-                                if (dist && dist.A > 0) poolParts.push(`A池${dist.A}款`);
-                                if (dist && dist.B > 0) poolParts.push(`B池${dist.B}款`);
-                                if (dist && dist.C > 0) poolParts.push(`C池${dist.C}款`);
-                                const poolInfo = poolParts.length > 0 ? poolParts.join(" · ") : "暂无分布";
-
-                                return (
-                                  <button
-                                    key={tag.key}
-                                    onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
-                                    title={`${tag.tag} · ${poolInfo} · 覆盖率${tag.coverage}%`}
-                                    className={cn(
-                                      "group px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all",
-                                      featureTagFilter === tag.key
-                                        ? "bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50"
-                                        : "bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 border border-purple-200/50 dark:border-purple-700/50"
-                                    )}
-                                  >
-                                    <span>{tag.label}</span>
-                                    <span className={cn(
-                                      "ml-1.5 text-[10px] font-normal tabular-nums",
-                                      featureTagFilter === tag.key ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
-                                    )}>
-                                      {tag.gameCount}
-                                    </span>
-                                  </button>
-                                );
-                              })
-                            )}
-                          </div>
+                    <>
+                      {/* 隐藏标签提示 */}
+                      {hiddenCount > 0 && (
+                        <div className="mb-3 px-3 py-2 bg-muted/50 rounded-lg text-xs text-muted-foreground">
+                          <span className="inline-flex items-center gap-1.5">
+                            <EyeOff className="w-3.5 h-3.5" />
+                            隐藏了 {hiddenCount} 个不在当前选中池子中的标签
+                          </span>
                         </div>
-                      );
-                    })
+                      )}
+                      {TAG_GROUPS.map(group => {
+                        const tags = grouped[group.key] || [];
+                        if (tags.length === 0 && searchLower) return null;
+
+                        const totalCount = tags.reduce((sum, t) => sum + (t.gameCount || 0), 0);
+
+                        return (
+                          <div key={group.key} className="border rounded-lg overflow-hidden">
+                            {/* 分组标题 */}
+                            <button
+                              onClick={() => {
+                                const el = document.getElementById(`tag-group-${group.key}`);
+                                if (el) {
+                                  el.classList.toggle('hidden');
+                                }
+                              }}
+                              className="w-full flex items-center justify-between px-3 py-2 hover:bg-muted/50 transition-colors"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium text-sm">{group.name}</span>
+                                <span className="text-xs text-muted-foreground">({tags.length}个标签, {totalCount}款游戏)</span>
+                              </div>
+                              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                            </button>
+
+                            {/* 标签列表 */}
+                            <div id={`tag-group-${group.key}`} className="px-3 pb-3 flex flex-wrap gap-2">
+                              {tags.length === 0 ? (
+                                <span className="text-xs text-muted-foreground/50 py-2">无</span>
+                              ) : (
+                                tags.map((tag) => {
+                                  const dist = tag.poolDistribution;
+                                  const poolParts: string[] = [];
+                                  // 只显示激活池子的分布
+                                  if (activePools.includes("A") && dist && dist.A > 0) poolParts.push(`A池${dist.A}款`);
+                                  if (activePools.includes("B") && dist && dist.B > 0) poolParts.push(`B池${dist.B}款`);
+                                  if (activePools.includes("C") && dist && dist.C > 0) poolParts.push(`C池${dist.C}款`);
+                                  const poolInfo = poolParts.length > 0 ? poolParts.join(" · ") : "暂无分布";
+
+                                  return (
+                                    <button
+                                      key={tag.key}
+                                      onClick={() => setFeatureTagFilter(featureTagFilter === tag.key ? undefined : tag.key)}
+                                      title={`${tag.tag} · ${poolInfo} · 覆盖率${tag.coverage}%`}
+                                      className={cn(
+                                        "group px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all",
+                                        featureTagFilter === tag.key
+                                          ? "bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50"
+                                          : "bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 border border-purple-200/50 dark:border-purple-700/50"
+                                      )}
+                                    >
+                                      <span>{tag.label}</span>
+                                      <span className={cn(
+                                        "ml-1.5 text-[10px] font-normal tabular-nums",
+                                        featureTagFilter === tag.key ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
+                                      )}>
+                                        {tag.gameCount}
+                                      </span>
+                                    </button>
+                                  );
+                                })
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </>
                   )}
                 </>
               );

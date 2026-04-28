@@ -37,7 +37,7 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { format, subYears } from "date-fns";
 import { zhCN } from "date-fns/locale";
-import { SYNONYM_MERGE as TAG_SYNONYM_MERGE } from "@/lib/tag-config";
+import { SYNONYM_MERGE as TAG_SYNONYM_MERGE, INNOVATION_THRESHOLDS } from "@/lib/tag-config";
 
 // ============ 类型定义 ============
 
@@ -161,6 +161,11 @@ interface FeatureTagOption {
     B: number;
     C: number;
   };
+  // 小众创新标签新增字段
+  positiveRate?: number;
+  totalPositive?: number;
+  totalNegative?: number;
+  innovationScore?: number;
 }
 
 interface FilterResponse {
@@ -189,7 +194,7 @@ const POOL_CONFIG = {
     borderColor: "border-amber-500/30",
     textColor: "text-amber-500",
     hoverBg: "hover:bg-amber-500/5",
-    description: "普通回合制游戏，学习优秀UI和战斗机制",
+    description: "2024年后上线 · 好评率≥85% · 评论数>1000",
   },
   B: {
     label: "B池",
@@ -234,21 +239,16 @@ const QUICK_DATE_RANGES = [
 
 // ============ 工具函数 ============
 
-// 宝可梦标签中文映射
-const POKEMON_TAG_LABELS: Record<string, string> = {
+// PokemonLike标签翻译（只有4个固定标签）
+const POKEMON_LIKE_TRANSLATIONS: Record<string, string> = {
   "Creature Collector": "生物收集",
   "Monster Catching": "怪物捕捉",
   "Monster Taming": "怪物养成",
   "Creature Collection": "生物收集",
 };
 
-// 翻译标签为中文（如果存在映射则使用映射值，否则保留原标签）
-function translateTag(tag: string): string {
-  return POKEMON_TAG_LABELS[tag] || tag;
-}
-
-function translateTags(tags: string[]): string[] {
-  return tags.map(translateTag);
+function translatePokemonLikeTag(tag: string): string {
+  return POKEMON_LIKE_TRANSLATIONS[tag] || tag;
 }
 
 function formatWan(n: number): string {
@@ -401,7 +401,7 @@ function GameCard({ game, reviewSource }: { game: GameRecord; reviewSource?: Rev
               {/* 宝可梦标签 */}
               {game.isPokemonLike && game.pokemonLikeTags.length > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-background/80 backdrop-blur-sm rounded">
-                  {translateTags(game.pokemonLikeTags)[0]}
+                  {translatePokemonLikeTag(game.pokemonLikeTags[0])}
                 </span>
               )}
               {/* 标签权重徽章 */}
@@ -917,10 +917,13 @@ export default function Mode2Page() {
   // 池子开关状态
   const [activePools, setActivePools] = useState<("A" | "B" | "C")[]>(["A", "B", "C"]);
 
-  // 各池子的筛选条件
-  const [poolAConditions, setPoolAConditions] = useState<PoolConditions>({ minRating: 75, minReviews: 200 });
-  const [poolBConditions, setPoolBConditions] = useState<PoolConditions>({ minRating: 75, minReviews: 50 });
-  const [poolCConditions, setPoolCConditions] = useState<PoolConditions>({ minRating: 40, maxRating: 74, minReviews: 50 });
+  // 各池子的筛选条件（与 route.ts 中的默认值保持一致）
+  // A池：好评率>=85%，评论数>=1000，年份>=2024
+  // B池：好评率>=75%，评论数>=200
+  // C池：好评率40-74%，评论数>=100
+  const [poolAConditions, setPoolAConditions] = useState<PoolConditions>({ minRating: 85, minReviews: 1000 });
+  const [poolBConditions, setPoolBConditions] = useState<PoolConditions>({ minRating: 75, minReviews: 200 });
+  const [poolCConditions, setPoolCConditions] = useState<PoolConditions>({ minRating: 40, maxRating: 74, minReviews: 100 });
 
   // 统计信息
   const [stats, setStats] = useState<PoolStats | null>(null);
@@ -954,6 +957,7 @@ export default function Mode2Page() {
   const [modernTagFilter, setModernTagFilter] = useState<"hasCore" | "hasModern" | undefined>(undefined);
   const [featureTagFilters, setFeatureTagFilters] = useState<string[]>([]);
   const [featureTagOptions, setFeatureTagOptions] = useState<FeatureTagOption[]>([]);
+  const [tagSortMode, setTagSortMode] = useState<"count" | "innovation">("count");
   const [featureTagSearch, setFeatureTagSearch] = useState("");
 
   // 切换单个标签的选中状态
@@ -1020,11 +1024,11 @@ export default function Mode2Page() {
     );
   };
 
-  // 重置条件
+  // 重置条件（与 route.ts 中的默认值保持一致）
   const resetConditions = () => {
-    setPoolAConditions({ minRating: 75, minReviews: 200 });
-    setPoolBConditions({ minRating: 75, minReviews: 50 });
-    setPoolCConditions({ minRating: 40, maxRating: 74, minReviews: 50 });
+    setPoolAConditions({ minRating: 85, minReviews: 1000 });
+    setPoolBConditions({ minRating: 75, minReviews: 200 });
+    setPoolCConditions({ minRating: 40, maxRating: 74, minReviews: 100 });
     setActivePools(["A", "B", "C"]);
     setYearsFilter(0);
     setMinReleaseDate(undefined);
@@ -1080,6 +1084,7 @@ export default function Mode2Page() {
       if (priceMax !== undefined) params.set("priceMax", String(priceMax));
       // 特色标签筛选（发送中文标签名给后端）
       if (modernTagFilter) params.set("modernTagFilter", modernTagFilter);
+      if (tagSortMode === "innovation") params.set("tagSortBy", "innovation");
       featureTagFilters.forEach(f => params.append("featureTagFilter", f));
       // 评价来源筛选
       if (reviewSource !== "all") params.set("reviewSource", reviewSource);
@@ -1099,7 +1104,7 @@ export default function Mode2Page() {
     } finally {
       setIsLoadingStats(false);
     }
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilters, reviewSource]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, tagSortMode, featureTagFilters, reviewSource]);
 
   // 获取搜索结果
   const fetchResults = useCallback(async () => {
@@ -1145,6 +1150,7 @@ export default function Mode2Page() {
       if (priceMax !== undefined) params.set("priceMax", String(priceMax));
       // 特色标签筛选（发送中文标签名给后端）
       if (modernTagFilter) params.set("modernTagFilter", modernTagFilter);
+      if (tagSortMode === "innovation") params.set("tagSortBy", "innovation");
       featureTagFilters.forEach(f => params.append("featureTagFilter", f));
       // 评价来源筛选
       if (reviewSource !== "all") params.set("reviewSource", reviewSource);
@@ -1167,8 +1173,9 @@ export default function Mode2Page() {
       if (data.priceStats) {
         setPriceStats(data.priceStats);
       }
-      // 更新动态标签选项（只在第一页时更新）
-      if (data.featureTagOptions && page === 1) {
+      // 更新动态标签选项：当标签为空或第一页时更新
+      // 注意：不能依赖 page 值，因为 useCallback 闭包捕获的是旧值
+      if (data.featureTagOptions && data.results && data.results.length > 0) {
         setFeatureTagOptions(data.featureTagOptions);
       }
     } catch (err) {
@@ -1177,14 +1184,14 @@ export default function Mode2Page() {
     } finally {
       setIsLoadingResults(false);
     }
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, page, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilters]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, page, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, tagSortMode, featureTagFilters, reviewSource]);
 
   // 条件变化时获取统计
   useEffect(() => {
     const timer = setTimeout(fetchStats, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilters, reviewSource]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, tagSortMode, featureTagFilters, reviewSource]);
 
   // 获取搜索结果
   useEffect(() => {
@@ -1192,7 +1199,7 @@ export default function Mode2Page() {
     const timer = setTimeout(fetchResults, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, featureTagFilters, reviewSource]);
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, query, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, priceMin, priceMax, modernTagFilter, tagSortMode, featureTagFilters, reviewSource]);
 
   // 页码变化时获取结果
   useEffect(() => {
@@ -1617,6 +1624,30 @@ export default function Mode2Page() {
               (从B池成功游戏中自动提取，按玩法类型分组)
             </span>
 
+            {/* 小众创新模式切换按钮 */}
+            <button
+              onClick={() => setTagSortMode(tagSortMode === "count" ? "innovation" : "count")}
+              className={cn(
+                "ml-auto px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
+                tagSortMode === "innovation"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
+                  : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+              )}
+              title={tagSortMode === "innovation" ? "点击切换为按数量排序" : "点击切换为小众创新模式（好评率高+小众优先）"}
+            >
+              {tagSortMode === "innovation" ? (
+                <span className="flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  小众创新模式
+                </span>
+              ) : (
+                <span className="flex items-center gap-1.5">
+                  <BarChart3 className="w-3.5 h-3.5" />
+                  按数量排序
+                </span>
+              )}
+            </button>
+
             {/* 特色标签快捷筛选 */}
             <div className="flex flex-wrap gap-1.5">
               <button
@@ -1653,6 +1684,26 @@ export default function Mode2Page() {
                 有创新融合
               </button>
             </div>
+
+            {/* 标签总数统计 */}
+            {featureTagOptions.length > 0 && (
+              <span className="ml-auto text-xs text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-md">
+                当前池子共有 <span className="font-medium text-foreground">{(() => {
+                  // 计算激活池子中的总标签数
+                  let totalTags = 0;
+                  for (const tag of featureTagOptions) {
+                    if (!tag.poolDistribution) continue;
+                    const { A, B, C } = tag.poolDistribution;
+                    const activeCount =
+                      (activePools.includes("A") ? A : 0) +
+                      (activePools.includes("B") ? B : 0) +
+                      (activePools.includes("C") ? C : 0);
+                    if (activeCount > 0) totalTags++;
+                  }
+                  return totalTags;
+                })()}</span> 个特色标签
+              </span>
+            )}
           </div>
 
           {/* 已选标签展示区域 */}
@@ -1845,7 +1896,7 @@ export default function Mode2Page() {
                 }
               }
 
-              // 对每个分组内的标签做同义词合并（废弃标签合并到保留标签，累加 count）
+              // 对每个分组内的标签做同义词合并（废弃标签合并到保留标签，累加 count 和创新指数）
               for (const groupKey of Object.keys(grouped)) {
                 const tags = grouped[groupKey];
                 const merged: Record<string, typeof featureTagOptions[0]> = {};
@@ -1856,6 +1907,18 @@ export default function Mode2Page() {
                   if (merged[key]) {
                     merged[key].count += t.count;
                     merged[key].gameCount += t.gameCount || 0;
+                    // 合并创新指数（取加权平均值）
+                    const totalGames = (merged[key].totalPositive ?? 0) + (t.totalPositive ?? 0);
+                    if (totalGames > 0) {
+                      merged[key].totalPositive = (merged[key].totalPositive ?? 0) + (t.totalPositive ?? 0);
+                      merged[key].totalNegative = (merged[key].totalNegative ?? 0) + (t.totalNegative ?? 0);
+                      const mergedRate = merged[key].totalPositive! / (merged[key].totalPositive! + merged[key].totalNegative!);
+                      const tRate = (t.totalPositive ?? 0) / ((t.totalPositive ?? 0) + (t.totalNegative ?? 0) || 1);
+                      // 简化：直接使用加权好评率
+                      const coverage = merged[key].coverage ?? 1;
+                      merged[key].positiveRate = Math.round(mergedRate * 100);
+                      merged[key].innovationScore = Math.round(((merged[key].positiveRate ?? 0) / 100) * (1 / Math.log(coverage + 2)) * 10000) / 100;
+                    }
                   } else {
                     merged[key] = {
                       ...t,
@@ -1865,13 +1928,27 @@ export default function Mode2Page() {
                     };
                   }
                 }
-                grouped[groupKey] = Object.values(merged).sort((a, b) => b.count - a.count);
+                // 根据 tagSortMode 排序
+                if (tagSortMode === "innovation") {
+                  grouped[groupKey] = Object.values(merged).sort((a, b) => (b.innovationScore ?? 0) - (a.innovationScore ?? 0));
+                } else {
+                  grouped[groupKey] = Object.values(merged).sort((a, b) => b.count - a.count);
+                }
               }
 
               if (grouped['other']) {
-                grouped['other'] = [...(grouped['other'] || []), ...uncategorized];
+                // uncategorized 也按当前排序模式排序
+                if (tagSortMode === "innovation") {
+                  grouped['other'] = [...(grouped['other'] || []), ...uncategorized].sort((a, b) => (b.innovationScore ?? 0) - (a.innovationScore ?? 0));
+                } else {
+                  grouped['other'] = [...(grouped['other'] || []), ...uncategorized].sort((a, b) => b.count - a.count);
+                }
               } else if (uncategorized.length > 0) {
-                grouped['other'] = uncategorized;
+                if (tagSortMode === "innovation") {
+                  grouped['other'] = uncategorized.sort((a, b) => (b.innovationScore ?? 0) - (a.innovationScore ?? 0));
+                } else {
+                  grouped['other'] = uncategorized.sort((a, b) => b.count - a.count);
+                }
               }
 
               const hasResults = visibleTagOptions.length > 0;
@@ -1939,25 +2016,55 @@ export default function Mode2Page() {
                                   if (activePools.includes("C") && dist && dist.C > 0) poolParts.push(`C池${dist.C}款`);
                                   const poolInfo = poolParts.length > 0 ? poolParts.join(" · ") : "暂无分布";
 
+                                  // 小众创新模式下的额外信息
+                                  const showInnovation = tagSortMode === "innovation" && tag.innovationScore !== undefined;
+                                  const positiveRate = tag.positiveRate;
+                                  const innovationScore = tag.innovationScore;
+
                                   return (
                                     <button
                                       key={tag.key}
                                       onClick={() => toggleFeatureTag(tag.tag)}
-                                      title={`${tag.tag} · ${poolInfo} · 覆盖率${tag.coverage}%`}
+                                      title={`${tag.tag} · ${poolInfo} · 覆盖率${tag.coverage}%${positiveRate !== undefined ? ` · 好评率${positiveRate}%` : ''}${innovationScore !== undefined ? ` · 创新指数${innovationScore}` : ''}`}
                                       className={cn(
-                                        "group px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all",
+                                        "group px-2.5 py-1.5 rounded-lg text-sm font-medium transition-all flex flex-col items-start",
                                         featureTagFilters.includes(tag.tag)
                                           ? "bg-purple-600 text-white shadow-md ring-2 ring-purple-400/50"
                                           : "bg-purple-50 hover:bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 border border-purple-200/50 dark:border-purple-700/50"
                                       )}
                                     >
-                                      <span>{tag.label}</span>
-                                      <span className={cn(
-                                        "ml-1.5 text-[10px] font-normal tabular-nums",
-                                        featureTagFilters.includes(tag.tag) ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
-                                      )}>
-                                        {tag.gameCount}
-                                      </span>
+                                      <div className="flex items-center gap-1.5">
+                                        <span>{tag.label}</span>
+                                        <span className={cn(
+                                          "text-[10px] font-normal tabular-nums",
+                                          featureTagFilters.includes(tag.tag) ? "text-purple-200" : "text-purple-400 group-hover:text-purple-500 dark:text-purple-500"
+                                        )}>
+                                          {tag.gameCount}款
+                                        </span>
+                                        {/* 小众创新模式下的创新标签标识 */}
+                                        {showInnovation && (innovationScore ?? 0) > INNOVATION_THRESHOLDS.minInnovationScore && (
+                                          <span className="ml-1 px-1.5 py-0.5 text-[10px] bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-full font-medium">
+                                            创新
+                                          </span>
+                                        )}
+                                      </div>
+                                      {/* 小众创新模式：显示好评率和创新指数 */}
+                                      {showInnovation && positiveRate !== undefined && (
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                          <span className={cn(
+                                            "text-[10px]",
+                                            featureTagFilters.includes(tag.tag) ? "text-purple-200" : "text-emerald-600 dark:text-emerald-400"
+                                          )}>
+                                            好评{positiveRate}%
+                                          </span>
+                                          <span className={cn(
+                                            "text-[10px]",
+                                            featureTagFilters.includes(tag.tag) ? "text-purple-200" : "text-amber-600 dark:text-amber-400"
+                                          )}>
+                                            指数{innovationScore?.toFixed(2)}
+                                          </span>
+                                        </div>
+                                      )}
                                     </button>
                                   );
                                 })
@@ -2121,7 +2228,7 @@ export default function Mode2Page() {
                 <h3 className="font-medium text-amber-500">A池 - 神作参考池</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                普通回合制游戏，学习它们的优秀UI设计、战斗表现力和数值循环。调整好评率和评价数门槛来控制结果范围。
+                2024年后上线的高分回合制游戏，好评率≥85%，评论数&gt;1000。调整好评率和评价数门槛来控制结果范围。
               </p>
             </div>
             <div>

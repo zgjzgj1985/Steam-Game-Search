@@ -19,6 +19,9 @@ export const SYNONYM_MERGE: Record<string, string> = {
   "派系抉择": "阵营抉择",
   "多分支剧情": "阵营抉择",
   "CRPG式叙事": "阵营抉择",
+  "Story Rich": "剧情驱动",
+  "StoryRich": "剧情驱动",
+  "JRPG叙事": "剧情驱动",
   "视觉小说叙事": "视觉小说",
   "网状叙事": "太空歌剧",
   "非暴力交涉": "心灵潜入",
@@ -32,6 +35,8 @@ export const SYNONYM_MERGE: Record<string, string> = {
   "即时队伍战斗": "即时战术",
   "小队RPG": "即时战术",
   "仆从军团": "领袖+召唤单位",
+  "网格战棋": "网格战术",
+  "即时战略": "即时战术",
   // 养成方式类
   "放置挂机": "放置养成",
   "点击放置": "放置养成",
@@ -54,9 +59,13 @@ export const SYNONYM_MERGE: Record<string, string> = {
   "反向RPG经营": "养成模拟",
   // 多人社交类
   "异步对战": "异步多人",
+  "MMO": "MMO元素",
   // 桌游骰牌类
   "D&D规则改编": "桌游改编",
   "IP改编": "桌游改编",
+  "Board Game": "桌游改编",
+  "Tabletop": "桌游改编",
+  "Roguelike Deckbuilder": "牌组构建",
   "肉鸽LITE": "肉鸽Lite",
   // 肉鸽融合类
   "程序化生成世界": "程序生成",
@@ -78,6 +87,8 @@ export const SYNONYM_MERGE: Record<string, string> = {
   "双世界穿梭": "开放世界探索",
   "情绪解谜": "机关解谜",
   "物理解谜": "机关解谜",
+  "环境机关解谜": "机关解谜",
+  "动物收集": "怪物收集",
   // 玩法融合类
   "弹射碰撞": "即时走位",
   "地图无缝战斗": "非战斗解法",
@@ -86,6 +97,15 @@ export const SYNONYM_MERGE: Record<string, string> = {
   "棋盘战术": "六边形战棋",
   "半开放世界探索": "开放世界探索",
   "开放区域探索": "开放世界探索",
+  "Base Building": "基地建设",
+  "Open World Survival Craft / Base Building": "基地建设",
+  "Survival / Base Building": "基地建设",
+  "Base Building / Crafting / Survival": "基地建设",
+  "City Builder / Base Building": "基地建设",
+  "Base Building/Town Restoration": "基地建设",
+  "Base Building/Customization": "基地建设",
+  "Survival/Base Building": "基地建设",
+  "Empire Expansion/Base Building": "基地建设",
 };
 
 // 品类标配黑名单（仅用于过滤 featureTagOptions）
@@ -109,12 +129,9 @@ export const INNOVATION_BLACKLIST: Record<string, boolean> = {
   "Rogue-lite": true,
   "Rogue-like": true,
   "Metroidvania": true,
-  "Roguelike Deckbuilder": true,
   "Card Game": true,
   "Card Battler": true,
   "Deckbuilding": true,
-  "Board Game": true,
-  "Tabletop": true,
   "Simulation": true,
   "Sandbox": true,
   "Farming Sim": true,
@@ -130,7 +147,6 @@ export const INNOVATION_BLACKLIST: Record<string, boolean> = {
   "Auto Battler": true,
   "Singleplayer": true,
   // Steam 评价/属性标签
-  "Story Rich": true,
   "Multiple Endings": true,
   "Choices Matter": true,
   "Perma Death": true,
@@ -170,4 +186,16 @@ export const INNOVATION_BLACKLIST: Record<string, boolean> = {
   "宝可梦Like": true,
   "Steam 评测": true,
   "回合制": true,
+  // 泛化品类词（补充）
+  "怪物收集": true,
+  "恋爱模拟": true,
+  "生物收集": true,
+};
+
+// 小众创新标签阈值配置
+export const INNOVATION_THRESHOLDS = {
+  minGames: 2,           // 最少2款游戏才展示
+  maxCoverage: 30,        // 覆盖率超过30%不展示（太常见）
+  minPositiveRate: 70,    // 好评率低于70%不展示
+  minInnovationScore: 0.5, // 创新指数低于0.5不展示"创新"标识
 };

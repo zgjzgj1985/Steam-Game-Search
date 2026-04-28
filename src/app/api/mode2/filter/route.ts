@@ -216,6 +216,8 @@ const DIFFERENTIATION_LABELS: Record<string, string> = {
   "Deckbuilding": "牌组构建",
   "Card Battler": "牌组构建",
   "Card Game": "卡牌游戏",
+  "Deckbuilder": "牌组构建",
+  "build your deck": "牌组构建",
   // 像素风格
   "Pixel Graphics": "像素风格",
   // 探索冒险
@@ -228,6 +230,8 @@ const DIFFERENTIATION_LABELS: Record<string, string> = {
   "Roguelite": "肉鸽融合",
   "Roguelike": "肉鸽融合",
   "类肉鸽": "肉鸽融合",
+  "Rogue-lite / Procedural Generation": "肉鸽融合",
+  "Procedural Generation": "程序生成",
   // 开放世界
   "开放世界": "开放世界",
   "Open World": "开放世界",
@@ -237,59 +241,67 @@ const DIFFERENTIATION_LABELS: Record<string, string> = {
   "Crafting": "合成系统",
   "生存": "生存建造",
   "建造": "建造系统",
+  "Base Building": "基地建造",
+  "Building": "建造",
+  "Sandbox": "沙盒",
   // 形态融合
   "形态融合": "形态融合",
   // 时间旅行
   "Time Travel": "时间旅行",
   "时间旅行": "时间旅行",
+  // 塔防
+  "Tower Defense": "塔防",
+  // 上帝模拟
+  "God Game": "上帝模拟",
+  // 解谜
+  "Puzzle": "解谜",
+  "Puzzle-Platformer": "解谜平台",
+  // 宠物
+  "Magic Pets": "宠物伴游",
+  "Pets": "宠物",
+  // 地牢探索
+  "Dungeon Exploration": "地牢探索",
+  "Dungeon Exploration / Mining": "地牢探索",
+  "Mining": "采矿",
+  // 农场模拟
+  "Farming Sim": "农场模拟",
+  "Farming Sim / Life Sim": "农场模拟",
+  "Life Sim": "生活模拟",
+  "Crafting / Building / Sandbox": "合成建造",
+  // 战术解谜
+  "Tactical / Puzzle": "战术解谜",
+  "Tactical Puzzle": "战术解谜",
+  // 网格移动
+  "Grid-Based Movement": "网格移动",
+  "Grid Movement": "网格移动",
+  // 博弈
+  "Gambling": "博弈",
+  "Slot Machine": "老虎机",
+  // 迷宫建造
+  "Maze Building": "迷宫建造",
+  "Labyrinth Building": "迷宫建造",
+  // 肉鸽+牌组组合
+  "Roguelike Deckbuilder": "牌组构建",
+  "Deckbuilding / Roguelike Deckbuilder": "牌组构建",
+  // 网格相关
+  "Grid-Based Tactics": "网格战术",
+  "Grid-based Tactics": "网格战术",
+  "Grid-Based Combat": "网格战斗",
+  "Grid-free Placement": "自由布局",
+  "Grid-based maps": "网格地图",
+  "Grid-based Deduction": "网格推理",
+  "Grid-based Strategy / Placement": "网格策略",
+  "Block-dropping": "方块消除",
+  "Three-tiered vertical gameplay": "三层垂直玩法",
+  "Falling Block Puzzle": "下落方块解谜",
+  "Real-Time mechanics": "即时机制",
+  "Real-time mechanics": "即时机制",
 };
 
-// 标签中文名称映射
-const TAG_CHINESE_NAMES: Record<string, string> = {
-  // 核心标签
-  "Creature Collector": "生物收集",
-  "Monster Catching": "怪物捕捉",
-  "Monster Tamer": "怪物养成",
-  "Collectathon": "收集冒险",
-  "生物收集": "生物收集",
-  "怪物捕捉": "怪物捕捉",
-  "怪物养成": "怪物养成",
-  // 次级标签
-  "JRPG": "JRPG",
-  "Party-Based RPG": "队伍RPG",
-  "Tactical RPG": "战术RPG",
-  "Turn-Based Tactics": "回合制战术",
-  "Turn-Based Strategy": "回合制策略",
-  "回合制策略": "回合制策略",
-  "角色扮演": "角色扮演",
-  "RPG": "RPG",
-  // 现代融合标签
-  "Survival": "生存建造",
-  "Survival Game": "生存建造",
-  "Crafting": "合成系统",
-  "Roguelite": "肉鸽融合",
-  "Roguelike": "类肉鸽",
-  "Deckbuilding": "牌组构建",
-  "Open World": "开放世界",
-  "开放世界": "开放世界",
-  "Metroidvania": "银河恶魔城",
-  "银河恶魔城": "银河恶魔城",
-  "卡牌构建": "牌组构建",
-  "牌组构建": "牌组构建",
-  "形态融合": "形态融合",
-  // 其他常见标签
-  "2D": "2D",
-  "3D": "3D",
-  "Pixel Graphics": "像素风格",
-  "Anime": "动漫风格",
-  "Fantasy": "奇幻",
-  "Magic": "魔法",
-  "Adventure": "冒险",
-  "Story Rich": "剧情丰富",
-  "Multiple Endings": "多结局",
-  "Singleplayer": "单人",
-  "Indie": "独立游戏",
-};
+// 简化翻译函数（复用DIFFERENTIATION_LABELS）
+function translateTag(tag: string): string {
+  return DIFFERENTIATION_LABELS[tag] || tag;
+}
 
 // 计算标签权重
 interface TagWeight {
@@ -340,10 +352,9 @@ function calculateTagWeight(tags: string[]): TagWeight {
       // 添加到特色标签
       if (!uniqueFeatureTags.includes(tag)) {
         uniqueFeatureTags.push(tag);
-        // 添加展示用标签（若转换后与 matchedModernTags 中文名重复则跳过，避免卡片标签重复）
-        const label = DIFFERENTIATION_LABELS[tag] || DIFFERENTIATION_LABELS[tag.charAt(0).toUpperCase() + tag.slice(1)] || tag;
-        const labelInChinese = TAG_CHINESE_NAMES[tag] || tag;
-        if (!differentiationLabels.includes(label) && label !== labelInChinese) {
+        // 添加展示用标签
+        const label = translateTag(tag);
+        if (!differentiationLabels.includes(label)) {
           differentiationLabels.push(label);
         }
       }
@@ -362,19 +373,14 @@ function calculateTagWeight(tags: string[]): TagWeight {
   // 计算权重分：核心*3 + 次级*2 + 现代*1
   const tagWeight = matchedCoreTags.length * 3 + matchedSecondaryTags.length * 2 + matchedModernTags.length * 1;
 
-  // 转换为中文标签名
-  const toChinese = (tags: string[]): string[] => {
-    return tags.map((t) => TAG_CHINESE_NAMES[t] || t);
-  };
-
   return {
     coreTagCount: matchedCoreTags.length,
     secondaryTagCount: matchedSecondaryTags.length,
     modernTagCount: matchedModernTags.length,
     tagWeight,
-    matchedCoreTags: toChinese(matchedCoreTags),
-    matchedSecondaryTags: toChinese(matchedSecondaryTags),
-    matchedModernTags: toChinese(matchedModernTags),
+    matchedCoreTags: matchedCoreTags.map(translateTag),
+    matchedSecondaryTags: matchedSecondaryTags.map(translateTag),
+    matchedModernTags: matchedModernTags.map(translateTag),
     uniqueFeatureTags,
     differentiationLabels,
   };
@@ -503,7 +509,7 @@ const dbCache: {
 
 // ============ LRU 查询结果缓存 ============
 
-const CACHE_VERSION = "v3"; // 每次修改去重逻辑需要递增以清除旧缓存
+const CACHE_VERSION = "v4"; // v4: 添加 reviewSource 到缓存键
 const MAX_QUERY_CACHE_SIZE = 50; // 最多缓存 50 个查询结果（内存友好）
 type QueryCacheKey = string;
 interface QueryCacheEntry {
@@ -521,6 +527,7 @@ function getQueryCacheKey(params: {
   query?: string;
   sortBy?: string;
   sortOrder?: string;
+  tagSortBy?: string;
   page?: number;
   pageSize?: number;
   yearsFilter?: number;
@@ -533,11 +540,13 @@ function getQueryCacheKey(params: {
   featureTagFilters?: string[];
   poolA_minRating?: number;
   poolA_minReviews?: number;
+  poolA_minYear?: number;
   poolB_minRating?: number;
   poolB_minReviews?: number;
   poolC_minRating?: number;
   poolC_maxRating?: number;
   poolC_minReviews?: number;
+  reviewSource?: string;
 }): QueryCacheKey {
   const parts = [
     CACHE_VERSION,
@@ -545,6 +554,7 @@ function getQueryCacheKey(params: {
     params.query?.toLowerCase().trim() || "",
     params.sortBy || "wilson",
     params.sortOrder || "desc",
+    params.tagSortBy || "count",
     params.page || 1,
     params.pageSize || 20,
     params.yearsFilter || 0,
@@ -555,13 +565,15 @@ function getQueryCacheKey(params: {
     params.priceMax?.toFixed(2) || "",
     params.modernTagFilter || "",
     Array.isArray(params.featureTagFilters) ? params.featureTagFilters.join(",") : (params.featureTagFilters || ""),
-    params.poolA_minRating || 75,
-    params.poolA_minReviews || 200,
+    params.poolA_minRating || 85,
+    params.poolA_minReviews || 1000,
+    params.poolA_minYear || 2024,
     params.poolB_minRating || 75,
-    params.poolB_minReviews || 50,
+    params.poolB_minReviews || 200,
     params.poolC_minRating || 40,
     params.poolC_maxRating || 74,
-    params.poolC_minReviews || 50,
+    params.poolC_minReviews || 100,
+    params.reviewSource || "all",
   ];
   return parts.join("|");
 }
@@ -587,6 +599,7 @@ const CACHE_FILE = path.join(process.cwd(), "public", "data", "games-cache.json"
 const DB_FILE = path.join(process.cwd(), "public", "data", "games-index.json");
 const CACHE_DB_FILE = path.join(process.cwd(), "public", "data", "games-cache.db");
 const COMBINED_MECHANICS_FILE = path.join(process.cwd(), "public", "data", "combinedMechanics.json");
+const REGIONAL_REVIEWS_FILE = path.join(process.cwd(), "public", "data", "regional-reviews.json");
 
 // SQLite 数据库连接（延迟初始化，避免构建时加载）
 let sqliteDb: any = null;
@@ -731,6 +744,64 @@ function mergeLlMechancics(games: GameRecord[]): void {
   }
 }
 
+// 加载区域评价数据并合并到游戏记录中
+interface RegionalReviewData {
+  cn: { positive: number; negative: number; total: number; review_score: number };
+  overseas: { positive: number; negative: number; total: number; review_score: number };
+}
+
+function mergeRegionalReviews(games: GameRecord[]): void {
+  try {
+    if (!fs.existsSync(REGIONAL_REVIEWS_FILE)) {
+      console.warn("[Mode2] regional-reviews.json 不存在，跳过区域评价数据合并");
+      return;
+    }
+    const raw = fs.readFileSync(REGIONAL_REVIEWS_FILE, "utf-8");
+    const regionalData = JSON.parse(raw) as Record<string, RegionalReviewData>;
+
+    // 建立 appId -> 区域评价数据的映射
+    const regionalMap = new Map<string, RegionalReviewData>();
+    for (const [appId, data] of Object.entries(regionalData)) {
+      regionalMap.set(appId, data);
+    }
+
+    // 合并到每个游戏
+    let matchedCount = 0;
+    for (const game of games) {
+      const data = regionalMap.get(game.id);
+      if (data && data.cn && data.overseas) {
+        // 计算好评率百分比（0-100）
+        const cnScore = data.cn.total > 0
+          ? Math.round((data.cn.positive / data.cn.total) * 100)
+          : 0;
+        const overseasScore = data.overseas.total > 0
+          ? Math.round((data.overseas.positive / data.overseas.total) * 100)
+          : 0;
+        // 更新 cnReviews
+        game.cnReviews = {
+          totalPositive: data.cn.positive,
+          totalNegative: data.cn.negative,
+          totalReviews: data.cn.total,
+          reviewScore: cnScore,
+          reviewScoreDescription: getReviewScoreDesc(cnScore),
+        };
+        // 更新 overseasReviews
+        game.overseasReviews = {
+          totalPositive: data.overseas.positive,
+          totalNegative: data.overseas.negative,
+          totalReviews: data.overseas.total,
+          reviewScore: overseasScore,
+          reviewScoreDescription: getReviewScoreDesc(overseasScore),
+        };
+        matchedCount++;
+      }
+    }
+    console.log(`[Mode2] 区域评价数据合并完成: 匹配 ${matchedCount} 个游戏 (共 ${games.length} 个)`);
+  } catch (e) {
+    console.warn(`[Mode2] 合并区域评价数据失败: ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
 // 池子分布类型
 export interface PoolDistribution {
   A: number;
@@ -748,6 +819,11 @@ export interface FeatureTagOption {
   coverage: number;
   avgWilson: number;
   poolDistribution?: PoolDistribution;
+  // 小众创新标签新增字段
+  positiveRate?: number;    // 好评率 0-100
+  totalPositive?: number;  // 好评数合计
+  totalNegative?: number;   // 差评数合计
+  innovationScore?: number;  // 创新指数
 }
 
 interface CacheData {
@@ -1120,6 +1196,8 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
       dbCache.games = games;
       // 从 combinedMechanics.json 合并 LLM 玩法分析数据到每个游戏
       mergeLlMechancics(games);
+      // 合并区域评价数据
+      mergeRegionalReviews(games);
       dbCache.featureTagOptions = loadFeatureTagOptionsFromJson();
       dbCache.loadedAt = now;
       dbCache.loadError = null;
@@ -1140,6 +1218,8 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
       dbCache.games = cache.games;
       // 从 combinedMechanics.json 合并 LLM 玩法分析数据到每个游戏
       mergeLlMechancics(cache.games);
+      // 合并区域评价数据
+      mergeRegionalReviews(cache.games);
       dbCache.featureTagOptions = loadFeatureTagOptionsFromJson();
       dbCache.loadedAt = now;
       dbCache.loadError = null;
@@ -1176,6 +1256,8 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
     dbCache.games = deduped;
     // 从 combinedMechanics.json 合并 LLM 玩法分析数据到每个游戏
     mergeLlMechancics(deduped);
+    // 合并区域评价数据
+    mergeRegionalReviews(deduped);
     dbCache.featureTagOptions = loadFeatureTagOptionsFromJson();
     dbCache.loadedAt = now;
     dbCache.loadError = null;
@@ -1197,6 +1279,7 @@ interface PoolConfig {
     minRating: number;
     minReviews: number;
     excludePokemonLike: boolean;
+    minYear?: number;
   };
   poolB: {
     minRating: number;
@@ -1237,17 +1320,21 @@ function calculatePool(
     return null;
   }
 
-  // A池: 普通回合制游戏（不是宝可梦Like）
+  // A池: 2024年之后上线 + 非宝可梦Like + 好评率>=85% + 评论数>1000
   if (!game.isPokemonLike && reviewScore >= config.poolA.minRating && totalReviews >= config.poolA.minReviews) {
-    return "A";
+    if (game.releaseDate) {
+      const year = new Date(game.releaseDate).getFullYear();
+      const minYear = config.poolA.minYear || 0;
+      if (year >= minYear) return "A";
+    }
   }
 
-  // B池: 宝可梦Like + 高好评率
+  // B池: 宝可梦Like + 好评率>=75% + 评论数>200
   if (game.isPokemonLike && reviewScore >= config.poolB.minRating && totalReviews >= config.poolB.minReviews) {
     return "B";
   }
 
-  // C池: 宝可梦Like + 中等好评率
+  // C池: 宝可梦Like + 中等好评率 + 评论数>100
   if (
     game.isPokemonLike &&
     reviewScore >= config.poolC.minRating &&
@@ -1375,6 +1462,7 @@ function filterGames(
         return false;
       }
       // 具体特色标签筛选（同时检查 llmMechanics 和 llmRawMechanics，并展开同义词）
+      // 使用模糊匹配：标签是 mechanics 的子串则匹配
       if (options.featureTagFilters && options.featureTagFilters.length > 0) {
         // 多标签筛选：游戏必须包含所有选中的标签（AND 逻辑）
         for (const filterKey of options.featureTagFilters) {
@@ -1393,7 +1481,11 @@ function filterGames(
                 synonymsToCheck.push(discarded);
               }
             }
-            const hasTag = synonymsToCheck.some(t => llmM.includes(t) || llmRawM.includes(t));
+            // 模糊匹配：检查标签是否是任意 mechanics 的子串
+            const hasTag = synonymsToCheck.some(tag =>
+              llmM.some(mech => mech.includes(tag) || mech === tag) ||
+              llmRawM.some(mech => mech.includes(tag) || mech === tag)
+            );
             if (!hasTag) return false; // 只要有一个标签不匹配就过滤掉
           }
         }
@@ -1459,11 +1551,7 @@ function filterGames(
   const paged = results.slice(offset, offset + pageSize);
 
   // 8. 动态计算特色标签（基于当前 MODERN_TAGS 配置）
-  // 特色标签中文名映射（合并两个映射表）
-  const ALL_TAG_LABELS: Record<string, string> = {
-    ...DIFFERENTIATION_LABELS,
-    ...TAG_CHINESE_NAMES,
-  };
+  // 使用动态加载的标签翻译映射表（translateTag函数内部缓存）
   const pagedWithFeatures = paged.map((game) => {
     const tagWeight = calculateTagWeight(game.tags);
     // 多选模式下，取第一个选中的标签用于高亮（如果有的话）
@@ -1477,7 +1565,7 @@ function filterGames(
     const seenLabels = new Set<string>();
     const differentiationLabels: string[] = [];
     for (const t of tagWeight.uniqueFeatureTags) {
-      const label = ALL_TAG_LABELS[t] || t;
+      const label = translateTag(t);
       if (!seenLabels.has(label)) {
         seenLabels.add(label);
         differentiationLabels.push(label);
@@ -1488,12 +1576,12 @@ function filterGames(
     // 只对 displayModernTags 排重（matchedModernTags 是英文预计算数据）
     const excludedRawTag = activeTag ? activeTag.toLowerCase() : "";
     // 用中文标签做排重检查（因为 differentiationLabels 已转换为中文）
-    const excludedLabelInChinese = activeTag ? (ALL_TAG_LABELS[activeTag] || activeTag) : "";
+    const excludedLabelInChinese = activeTag ? translateTag(activeTag) : "";
     // matchedModernTags 转中文后也需要去重（不同英文标签可能映射到同一中文标签）
     const displaySeen = new Set<string>();
     const displayModernTags: string[] = [];
     for (const t of tagWeight.matchedModernTags) {
-      const label = ALL_TAG_LABELS[t] || t;
+      const label = translateTag(t);
       // 排除原始标签匹配 AND 中文标签匹配（避免与已选的特色标签重复）
       const isExcludedByRaw = t.toLowerCase() === excludedRawTag;
       const isExcludedByChinese = label === excludedLabelInChinese;
@@ -1513,37 +1601,54 @@ function filterGames(
     })();
 
     // 构建创新融合标签：过滤 llmRawMechanics，排除基础标签和已显示的特色标签
+    // 所有标签必须翻译成中文
     const rawMechanicsBlacklist: Record<string, boolean> = TAG_BLACKLIST;
-    const innovationTagSeen = new Set<string>();
+    const innovationTagSeen = new Set<string>(); // 用于英文原名去重
+    const innovationTagSeenCN = new Set<string>(); // 用于中文标签去重
     const innovationTags: string[] = [];
 
     // 先加入 activeFeatureTagLabel（用户筛选的标签）
     if (activeFeatureTagLabel) {
-      innovationTagSeen.add(activeFeatureTagLabel.toLowerCase());
+      innovationTagSeenCN.add(activeFeatureTagLabel);
     }
     // 加入 differentiationLabels 中已有的标签（避免重复）
     for (const l of differentiationLabels) {
-      innovationTagSeen.add(l.toLowerCase());
+      innovationTagSeenCN.add(l);
     }
-    // 过滤 llmRawMechanics：排除黑名单标签和已显示的标签
+
+    // 过滤 llmRawMechanics：排除黑名单标签和已显示的标签，翻译成中文
     for (const tag of (game.llmRawMechanics || [])) {
       const lower = tag.toLowerCase();
       // 跳过黑名单（品类标配）和已显示的标签
-      if (rawMechanicsBlacklist[tag] || rawMechanicsBlacklist[lower] || innovationTagSeen.has(lower)) {
+      if (rawMechanicsBlacklist[tag] || rawMechanicsBlacklist[lower]) {
+        continue;
+      }
+      // 翻译成中文
+      const cnLabel = translateTag(tag);
+      // 中文标签去重
+      if (innovationTagSeenCN.has(cnLabel)) {
         continue;
       }
       innovationTagSeen.add(lower);
-      innovationTags.push(tag);
+      innovationTagSeenCN.add(cnLabel);
+      innovationTags.push(cnLabel);
     }
 
     // 同时将 llmMechanics 中非黑名单的标签也加入（作为权威补充）
     for (const tag of (game.llmMechanics || [])) {
       const lower = tag.toLowerCase();
-      if (rawMechanicsBlacklist[tag] || rawMechanicsBlacklist[lower] || innovationTagSeen.has(lower)) {
+      if (rawMechanicsBlacklist[tag] || rawMechanicsBlacklist[lower]) {
+        continue;
+      }
+      // 翻译成中文
+      const cnLabel = translateTag(tag);
+      // 中文标签去重
+      if (innovationTagSeenCN.has(cnLabel)) {
         continue;
       }
       innovationTagSeen.add(lower);
-      innovationTags.push(tag);
+      innovationTagSeenCN.add(cnLabel);
+      innovationTags.push(cnLabel);
     }
 
     return {
@@ -1552,7 +1657,7 @@ function filterGames(
       differentiationLabels,
       matchedModernTags: tagWeight.matchedModernTags,
       modernTagCount: tagWeight.modernTagCount,
-      activeFeatureTagFilter: options.featureTagFilters,
+      activeFeatureTagFilter: options.featureTagFilters?.[0],
       activeFeatureTagLabel,
       displayModernTags,
       innovationTags,
@@ -1583,7 +1688,8 @@ function getPoolCounts(
   maxReleaseDate?: string,
   excludeTestVersions?: boolean,
   featureTagFilters?: string[],
-  featureTagOptions?: FeatureTagOption[]
+  featureTagOptions?: FeatureTagOption[],
+  reviewSource: ReviewSource = "all"
 ): PoolStats {
   let poolA = 0, poolB = 0, poolC = 0;
   let totalTurnBased = 0;
@@ -1597,7 +1703,7 @@ function getPoolCounts(
   const turnBasedGames = filteredGames;
 
   for (const game of turnBasedGames) {
-    const pool = calculatePool(game, poolConfig);
+    const pool = calculatePool(game, poolConfig, reviewSource);
 
     // 时间过滤
     if (!game.releaseDate) continue;
@@ -1619,6 +1725,7 @@ function getPoolCounts(
     }
 
     // 特色标签筛选（和各池子数量同步，支持多选）
+    // 使用模糊匹配：标签是 mechanics 的子串则匹配
     if (featureTagFilters && featureTagFilters.length > 0) {
       let hasAllTags = true;
       for (const filterKey of featureTagFilters) {
@@ -1632,7 +1739,11 @@ function getPoolCounts(
               synonymsToCheck.push(discarded);
             }
           }
-          const hasTag = synonymsToCheck.some(t => llmM.includes(t) || llmRawM.includes(t));
+          // 模糊匹配：检查标签是否是任意 mechanics 的子串
+          const hasTag = synonymsToCheck.some(tag =>
+            llmM.some(mech => mech.includes(tag) || mech === tag) ||
+            llmRawM.some(mech => mech.includes(tag) || mech === tag)
+          );
           if (!hasTag) {
             hasAllTags = false;
             break;
@@ -1673,7 +1784,8 @@ function calculateFeatureTagCounts(
   yearsFilter?: number,
   minReleaseDate?: string,
   maxReleaseDate?: string,
-  excludeTestVersions?: boolean
+  excludeTestVersions?: boolean,
+  reviewSource: ReviewSource = "all"
 ): FeatureTagOption[] {
   const excludeTest = excludeTestVersions !== false;
 
@@ -1711,7 +1823,7 @@ function calculateFeatureTagCounts(
   // 计算每个游戏属于哪个池子
   const gamesWithPools = filteredGames.map((g) => ({
     ...g,
-    pool: calculatePool(g, poolConfig),
+    pool: calculatePool(g, poolConfig, reviewSource),
   }));
 
   // 根据用户勾选的池子筛选游戏
@@ -1731,32 +1843,56 @@ function calculateFeatureTagCounts(
   const poolCDist = gamesWithPools.filter((g) => g.pool === "C");
 
   // 动态计算每个标签在用户勾选的池子中的总数量
-  // 同时检查 llmMechanics（权威标签，7个）和 llmRawMechanics（原始标签，207个）
+  // 使用模糊匹配：标签是 mechanics 的子串则匹配
   const result: FeatureTagOption[] = presetOptions.map((option) => {
     const tagLower = option.tag.toLowerCase();
 
-    // 检查游戏是否有该标签（同时匹配 llmMechanics 和 llmRawMechanics）
+    // 检查游戏是否有该标签（使用模糊匹配：标签是 mechanics 的子串则匹配）
     const hasTag = (g: GameRecord) => {
       const llmM = (g.llmMechanics || []).map((m: string) => m.toLowerCase());
       const llmRawM = (g.llmRawMechanics || []).map((m: string) => m.toLowerCase());
-      return llmM.includes(tagLower) || llmRawM.includes(tagLower);
+      // 模糊匹配：检查标签是否是任意 mechanics 的子串
+      return llmM.some(mech => mech.includes(tagLower) || mech === tagLower) ||
+             llmRawM.some(mech => mech.includes(tagLower) || mech === tagLower);
     };
 
-    const totalCount = filteredByPool.filter(hasTag).length;
+    const matchedGames = filteredByPool.filter(hasTag);
+    const totalCount = matchedGames.length;
     const poolACount = poolADist.filter(hasTag).length;
     const poolBCount = poolBDist.filter(hasTag).length;
     const poolCCount = poolCDist.filter(hasTag).length;
+
+    // 计算好评率统计
+    let totalPositive = 0;
+    let totalNegative = 0;
+    for (const game of matchedGames) {
+      totalPositive += game.steamReviews?.totalPositive ?? 0;
+      totalNegative += game.steamReviews?.totalNegative ?? 0;
+    }
+    const totalReviews = totalPositive + totalNegative;
+    const positiveRate = totalReviews > 0 ? Math.round((totalPositive / totalReviews) * 100) : 0;
+
+    // 计算创新指数 = 好评率 × 小众系数
+    // 覆盖率越低，小众系数越高
+    const coverage = filteredByPool.length > 0 ? Math.round((totalCount / filteredByPool.length) * 100) : 0;
+    const rarity = 1 / Math.log(coverage + 2);  // 覆盖率越低，小众系数越高
+    const innovationScore = (positiveRate / 100) * rarity * 100;
 
     return {
       ...option,
       gameCount: totalCount,
       count: totalCount,
-      coverage: filteredByPool.length > 0 ? Math.round((totalCount / filteredByPool.length) * 100) : 0,
+      coverage,
       poolDistribution: {
         A: poolACount,
         B: poolBCount,
         C: poolCCount,
       },
+      // 小众创新标签新增字段
+      positiveRate,
+      totalPositive,
+      totalNegative,
+      innovationScore: Math.round(innovationScore * 100) / 100,
     };
   });
 
@@ -1815,15 +1951,16 @@ export async function GET(request: NextRequest) {
   // 获取池子参数
   const pools = searchParams.getAll("pool").filter((p) => ["A", "B", "C"].includes(p)) as ("A" | "B" | "C")[];
 
-  // A池配置
-  const poolA_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolA_minRating") || "75", 10) || 75));
-  const poolA_minReviews = Math.max(0, parseInt(searchParams.get("poolA_minReviews") || "200", 10) || 200);
+  // A池配置: 上线时间24年之后，非宝可梦Like，评论数>=50，好评率>=40%
+  const poolA_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolA_minRating") || "40", 10) || 40));
+  const poolA_minReviews = Math.max(0, parseInt(searchParams.get("poolA_minReviews") || "50", 10) || 50);
+  const poolA_minYear = Math.max(2020, parseInt(searchParams.get("poolA_minYear") || "2024", 10) || 2024);
 
-  // B池配置
-  const poolB_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolB_minRating") || "75", 10) || 75));
+  // B池配置: 宝可梦Like，评论数>=50，好评率>=40%
+  const poolB_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolB_minRating") || "40", 10) || 40));
   const poolB_minReviews = Math.max(0, parseInt(searchParams.get("poolB_minReviews") || "50", 10) || 50);
 
-  // C池配置
+  // C池配置: 宝可梦Like，好评率40%-74%，评论数>=50
   const poolC_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolC_minRating") || "40", 10) || 40));
   const poolC_maxRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolC_maxRating") || "74", 10) || 74));
   const poolC_minReviews = Math.max(0, parseInt(searchParams.get("poolC_minReviews") || "50", 10) || 50);
@@ -1837,6 +1974,9 @@ export async function GET(request: NextRequest) {
   const sortOrder = searchParams.get("sortOrder") === "asc" ? "asc" : "desc";
   const page = Math.max(1, Math.min(parseInt(searchParams.get("page") || "1", 10) || 1, 1000));
   const pageSize = Math.min(50, Math.max(1, parseInt(searchParams.get("pageSize") || "24", 10) || 24));
+
+  // 特色标签排序方式：count=按数量, innovation=按创新指数
+  const tagSortBy = searchParams.get("tagSortBy") === "innovation" ? "innovation" : "count";
 
   // 时间过滤：只显示最近N年内上线的游戏
   const yearsFilter = Math.max(0, Math.min(100, parseInt(searchParams.get("yearsFilter") || "0", 10) || 0));
@@ -1890,22 +2030,34 @@ export async function GET(request: NextRequest) {
 
   // 池子配置
   const poolConfig: PoolConfig = {
-    poolA: { minRating: poolA_minRating, minReviews: poolA_minReviews, excludePokemonLike: true },
+    poolA: { minRating: poolA_minRating, minReviews: poolA_minReviews, excludePokemonLike: true, minYear: poolA_minYear },
     poolB: { minRating: poolB_minRating, minReviews: poolB_minReviews, requirePokemonLike: true },
     poolC: { minRating: poolC_minRating, maxRating: poolC_maxRating, minReviews: poolC_minReviews, requirePokemonLike: true },
   };
 
   // 动态计算每个特色标签的实际数量（根据当前筛选条件）
   // 这样标签显示的数量会和各池子实际筛选结果一致
-  const dynamicFeatureTagOptions = calculateFeatureTagCounts(
+  let dynamicFeatureTagOptions = calculateFeatureTagCounts(
     allGames,
     poolConfig,
     pools.length > 0 ? pools : ["A", "B", "C"],
     yearsFilter,
     minReleaseDate,
     maxReleaseDate,
-    excludeTestVersions
+    excludeTestVersions,
+    reviewSource
   );
+
+  // 根据 tagSortBy 排序特色标签列表
+  if (tagSortBy === "innovation") {
+    // 按创新指数降序排序
+    dynamicFeatureTagOptions = dynamicFeatureTagOptions.sort((a, b) =>
+      (b.innovationScore ?? 0) - (a.innovationScore ?? 0)
+    );
+  } else {
+    // 默认按数量降序排序
+    dynamicFeatureTagOptions = dynamicFeatureTagOptions.sort((a, b) => b.count - a.count);
+  }
 
   // 生成查询缓存键（第一页才缓存）
   const cacheKey = getQueryCacheKey({
@@ -1913,6 +2065,7 @@ export async function GET(request: NextRequest) {
     query,
     sortBy,
     sortOrder,
+    tagSortBy,
     page,
     pageSize,
     yearsFilter,
@@ -1925,11 +2078,13 @@ export async function GET(request: NextRequest) {
     featureTagFilters,
     poolA_minRating,
     poolA_minReviews,
+    poolA_minYear,
     poolB_minRating,
     poolB_minReviews,
     poolC_minRating,
     poolC_maxRating,
     poolC_minReviews,
+    reviewSource,
   });
 
   // 尝试从查询缓存获取
@@ -1949,9 +2104,9 @@ export async function GET(request: NextRequest) {
         query,
         poolFilters: pools.length > 0 ? pools : ["A", "B", "C"],
         description: {
-          A: "神作参考池 - 普通回合制游戏，优秀UI和战斗机制参考",
-          B: "核心竞品池 - 宝可梦Like成功案例，学习成功要素",
-          C: "避坑指南池 - 宝可梦Like争议/失败案例，避开玩家痛点",
+          A: "神作参考池 - 2024年后上线 · 好评率≥40% · 评论数≥50",
+          B: "核心竞品池 - 宝可梦Like · 好评率≥40% · 评论数≥50",
+          C: "避坑指南池 - 宝可梦Like争议/失败案例 · 好评率40%-74% · 评论数≥50",
         },
         featureTagOptions: dynamicFeatureTagOptions,
         cached: true,
@@ -1964,7 +2119,7 @@ export async function GET(request: NextRequest) {
     const stats = getPoolCounts(
       allGames, poolConfig, pools.length > 0 ? pools : undefined,
       yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions,
-      featureTagFilters, featureTagOptions
+      featureTagFilters, featureTagOptions, reviewSource
     );
     return NextResponse.json({
       stats,
@@ -2014,9 +2169,9 @@ export async function GET(request: NextRequest) {
     poolFilters: pools.length > 0 ? pools : ["A", "B", "C"],
     reviewSource, // 当前评价来源
     description: {
-      A: "神作参考池 - 普通回合制游戏，优秀UI和战斗机制参考",
-      B: "核心竞品池 - 宝可梦Like成功案例，学习成功要素",
-      C: "避坑指南池 - 宝可梦Like争议/失败案例，避开玩家痛点",
+      A: "神作参考池 - 2024年后上线 · 好评率≥40% · 评论数≥50",
+      B: "核心竞品池 - 宝可梦Like · 好评率≥40% · 评论数≥50",
+      C: "避坑指南池 - 宝可梦Like争议/失败案例 · 好评率40%-74% · 评论数≥50",
     },
     featureTagOptions: dynamicFeatureTagOptions,
   }, {

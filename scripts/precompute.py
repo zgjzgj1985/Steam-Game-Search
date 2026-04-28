@@ -2,6 +2,11 @@
 预计算缓存生成脚本
 从SQLite数据库生成优化的JSON缓存
 """
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
 import json
 import sqlite3
 import time
@@ -30,29 +35,12 @@ def load_tag_config():
 TAG_CONFIG = load_tag_config()
 
 # 同义词合并映射（废弃标签 → 保留标签）
-# 来源: tag-config.json
+# 来源: tag-config.json（由 manage_tags.py --export-config 生成）
+# 必须从配置文件读取，不再使用内置默认值
 if TAG_CONFIG and "synonymMerge" in TAG_CONFIG:
     SYNONYM_MERGE = TAG_CONFIG["synonymMerge"]
 else:
-    # 内置默认值
-    SYNONYM_MERGE = {
-        "案件推理": "推理探案",
-        "分支叙事": "阵营抉择",
-        "刷宝驱动": "刷宝掉落",
-        "放置挂机": "放置养成",
-        "深度构筑": "天赋树",
-        "主角尺寸切换": "体型系统",
-        "战棋怪物收集": "怪物收集",
-        "地牢运营": "养成模拟",
-        "异步对战": "异步多人",
-        "D&D规则改编": "桌游改编",
-        "程序化生成世界": "程序生成",
-        "无限构筑": "程序生成",
-        "感染模拟": "永久死亡",
-        "素材打造": "装备打造",
-        "怪物创造": "生物创造",
-        "情绪解谜": "机关解谜",
-    }
+    raise RuntimeError("tag-config.json 不存在或缺少 synonymMerge 配置，请先运行 manage_tags.py --export-config")
 
 # 回合制标签定义（precompute 专用，与 API 黑名单分开）
 TURN_BASED_TAGS = [
@@ -65,27 +53,14 @@ POKEMON_LIKE_TAGS = [
     "Creature Collector", "Monster Catching", "Monster Taming", "Creature Collection",
 ]
 
-# 品类标配黑名单（precompute 专用）
-# is_blacklisted 函数使用：检查是否包含任何黑名单标签的子串
-PRECOMPUTE_BLACKLIST = [
-    # NSFW/禁止内容（独立维护）
-    "Board Game", "Grand Strategy", "4X Strategy", "NSFW", "Hentai",
-    "Text-Based", "Sexual Content",
-    # 品类标配标签（与 manage_tags.py BLACKLIST_TAGS 保持同步）
-    "JRPG", "RPG", "Action RPG", "Adventure", "Singleplayer",
-    "Turn-Based", "Turn-Based Combat", "Turn-Based Strategy",
-    "Roguelite", "Roguelike", "Rogue-lite", "Metroidvania",
-    "Card Game", "Deckbuilding",
-    "Simulation", "Sandbox", "Farming Sim", "Life Sim",
-    "Survival", "Survival Game", "Crafting",
-    "Open World", "Exploration", "Dungeon Crawler",
-    "Fantasy", "Anime", "2D", "3D", "Pixel Graphics",
-    "Indie", "Action", "Strategy", "MMORPG", "Auto Battler",
-    "Perma Death", "Procedural Generation", "Loot",
-    "Collectathon", "PvE", "PvP", "Co-op", "Multiplayer",
-    "回合制", "角色扮演", "宝可梦Like", "Steam 评测",
-    "怪物收集", "怪物捕捉", "养成",
-]
+# 品类标配黑名单
+# 来源: tag-config.json（由 manage_tags.py --export-config 生成）
+# is_blacklisted 函数使用此黑名单过滤无区分度标签
+TAG_BLACKLIST = set()
+if TAG_CONFIG and "blacklist" in TAG_CONFIG:
+    TAG_BLACKLIST = set(TAG_CONFIG["blacklist"])
+else:
+    raise RuntimeError("tag-config.json 不存在或缺少 blacklist 配置，请先运行 manage_tags.py --export-config")
 
 CORE_TAGS = [
     "Creature Collector", "Monster Catching", "Monster Taming", "Creature Collection",
@@ -171,8 +146,9 @@ TEST_VERSION_KEYWORDS = [
 ]
 
 POOL_CONFIG = {
-    'poolA': {'minRating': 75, 'minReviews': 50},
-    'poolB': {'minRating': 75, 'minReviews': 50},
+    # 新配置（放宽条件，扩大池子规模）
+    'poolA': {'minRating': 40, 'minReviews': 50, 'minYear': 2024},
+    'poolB': {'minRating': 40, 'minReviews': 50},
     'poolC': {'minRating': 40, 'maxRating': 74, 'minReviews': 50},
 }
 
@@ -368,8 +344,9 @@ def check_pokemon_like(tags):
     return [tag for tag in POKEMON_LIKE_TAGS if any(tag.lower() in t for t in normalized)]
 
 def is_blacklisted(tags):
+    """检查标签是否在黑名单中（精确匹配 tag-config.json 的 blacklist）"""
     normalized = [t.lower() for t in tags]
-    return any(bl.lower() in t for t in normalized for bl in PRECOMPUTE_BLACKLIST)
+    return any(t in TAG_BLACKLIST for t in normalized)
 
 def is_turn_based(tags, genres):
     normalized_tags = [t.lower() for t in tags]
@@ -429,21 +406,46 @@ def calculate_tag_weight(tags):
         'differentiationLabels': list(dict.fromkeys(differentiation)),
     }
 
-def calculate_pool(reviews, is_pokemon_like, tags):
-    if not reviews or reviews['totalReviews'] == 0:
+def calculate_pool(reviews, is_pokemon_like, tags, release_year=None, is_turn_based=False):
+    """
+    计算游戏所属池子
+    与 route.ts 的池子计算逻辑保持一致
+    注意：此函数不检查黑名单，因为黑名单用于标签分析而非池子分类
+    """
+    if not reviews or reviews.get('totalReviews', 0) == 0:
         return None
-    if is_blacklisted(tags):
+
+    score = reviews.get('reviewScore', 0)
+    total = reviews.get('totalReviews', 0)
+
+    # 非回合制游戏不进入任何池子
+    if not is_turn_based:
         return None
-    
-    score = reviews['reviewScore']
-    total = reviews['totalReviews']
-    
-    if not is_pokemon_like and score >= 75 and total >= 50:
-        return 'A'
-    if is_pokemon_like and score >= 75 and total >= 50:
+
+    # A池: 非宝可梦Like, 好评率>=85%, 评论数>=1000, 年份>=2024
+    if not is_pokemon_like:
+        min_rating = POOL_CONFIG['poolA']['minRating']
+        min_reviews = POOL_CONFIG['poolA']['minReviews']
+        min_year = POOL_CONFIG['poolA'].get('minYear', 0)
+        if score >= min_rating and total >= min_reviews:
+            if release_year is not None and release_year >= min_year:
+                return 'A'
+            elif release_year is None:
+                # 没有年份数据时，使用旧的宽松条件
+                if score >= 75 and total >= 50:
+                    return 'A'
+            elif min_year == 0:
+                return 'A'
+    # B池: 宝可梦Like, 好评率>=75%, 评论数>=200
+    elif is_pokemon_like and score >= POOL_CONFIG['poolB']['minRating'] and total >= POOL_CONFIG['poolB']['minReviews']:
         return 'B'
-    if is_pokemon_like and 40 <= score <= 74 and total >= 50:
-        return 'C'
+    # C池: 宝可梦Like, 好评率40%-74%, 评论数>=100
+    elif is_pokemon_like:
+        min_rating = POOL_CONFIG['poolC']['minRating']
+        max_rating = POOL_CONFIG['poolC']['maxRating']
+        min_reviews = POOL_CONFIG['poolC']['minReviews']
+        if min_rating <= score <= max_rating and total >= min_reviews:
+            return 'C'
     return None
 
 def safe_json_parse(value, default=None):
@@ -499,6 +501,15 @@ def transform_game(row, llm_mechanics=None, cluster_map=None):
             'reviewScore': review_score,
             'reviewScoreDescription': get_review_score_desc(review_score)
         }
+
+    # 计算游戏所属池子
+    release_year = None
+    if row.get('release_date'):
+        try:
+            release_year = int(str(row.get('release_date'))[:4])
+        except:
+            pass
+    game_pool = calculate_pool(reviews, is_pokemon_like, tags, release_year, turn_based)
 
     # 处理国内评价数据（国内/海外评价筛选功能）
     cn_reviews_raw = row.get('cn_reviews')
@@ -631,9 +642,12 @@ def transform_game(row, llm_mechanics=None, cluster_map=None):
         'matchedModernTags': tag_weight['matchedModernTags'],
         'uniqueFeatureTags': tag_weight['matchedModernTags'],
         'differentiationLabels': tag_weight['differentiationLabels'],
+        # 池子标识
+        'pool': game_pool,
         # LLM 融合玩法分析（来自 combinedMechanics.json）
-        # llmMechanics: 包含所有标签（canonical + merged rawMechanics），用于 featureTagOptions 筛选
-        'llmMechanics': all_llm_tags if all_llm_tags else (llm_canonical if llm_canonical else llm_mechanics_list),
+        # 优先使用 mechanics，如果为空则直接使用 rawMechanics
+        # 注意：不再强制聚类，因为 tag_clusters.json 缺失会导致标签丢失
+        'llmMechanics': llm_mechanics_list if llm_mechanics_list else llm_raw_mechanics,
         # llmRawMechanics: 自由标签（v3 新增，用于展示和筛选）
         'llmRawMechanics': llm_raw_mechanics,
         'llmMechanicsSummary': llm_summary,
@@ -655,19 +669,83 @@ def load_raw_tag_stats():
 
 
 def calculate_feature_tag_options(games):
-    """计算特色标签选项及其统计数据（从 combinedMechanics.json 动态加载所有创新标签）"""
+    """
+    计算特色标签选项及其统计数据
+    
+    直接基于 combinedMechanics.json 的 rawTagStats 生成 featureTagOptions
+    不依赖 isTurnBased 字段，因为 combinedMechanics.json 的游戏没有评论数据
+    
+    统计逻辑：
+    - count/gameCount: 标签出现次数（来自 rawTagStats，经过同义词合并和黑名单过滤）
+    - poolDistribution: 基于 games 参数中的游戏匹配计算
+    """
     # 动态加载所有原始标签
     raw_tag_stats = load_raw_tag_stats()
     if not raw_tag_stats:
         log('Warning: 无 rawTagStats 数据，featureTagOptions 为空')
         return []
 
+    # 加载 combinedMechanics.json 获取游戏数据
+    mechanics_file = Path(r'D:\Steam全域游戏搜索\public\data\combinedMechanics.json')
+    mechanics_games = {}
+    if mechanics_file.exists():
+        try:
+            with open(mechanics_file, 'r', encoding='utf-8') as f:
+                mechanics_data = json.load(f)
+            mechanics_games = mechanics_data.get('games', {})
+        except Exception as e:
+            log(f'Warning: 加载 combinedMechanics.json 失败: {e}')
+
+    # 建立游戏名称到池子的映射
+    game_pool_map: dict = {}  # game_name_lower -> pool
+
+    for game in games:
+        if game.get('isTestVersion'):
+            continue
+        if not game.get('isTurnBased'):
+            continue
+
+        pool = None
+        reviews = game.get('steamReviews')
+        if reviews and reviews.get('totalReviews', 0) > 0:
+            score = reviews.get('reviewScore', 0)
+            total = reviews.get('totalReviews', 0)
+            is_pokemon = game.get('isPokemonLike', False)
+
+            # A池: 非宝可梦Like, 好评率>=85%, 评论数>=1000, 年份>=2024
+            if not is_pokemon:
+                min_rating = POOL_CONFIG['poolA']['minRating']
+                min_reviews = POOL_CONFIG['poolA']['minReviews']
+                min_year = POOL_CONFIG['poolA'].get('minYear', 0)
+                if score >= min_rating and total >= min_reviews:
+                    release_year = None
+                    if game.get('releaseDate'):
+                        try:
+                            release_year = int(game['releaseDate'][:4])
+                        except:
+                            pass
+                    if release_year is not None and release_year >= min_year:
+                        pool = 'A'
+            # B池: 宝可梦Like, 好评率>=75%, 评论数>=200
+            elif is_pokemon and score >= POOL_CONFIG['poolB']['minRating'] and total >= POOL_CONFIG['poolB']['minReviews']:
+                pool = 'B'
+            # C池: 宝可梦Like, 好评率40%-74%, 评论数>=100
+            elif is_pokemon:
+                min_rating = POOL_CONFIG['poolC']['minRating']
+                max_rating = POOL_CONFIG['poolC']['maxRating']
+                min_reviews = POOL_CONFIG['poolC']['minReviews']
+                if min_rating <= score <= max_rating and total >= min_reviews:
+                    pool = 'C'
+
+        if pool:
+            game_pool_map[game.get('name', '').lower()] = pool
+
     # 第一步：对原始统计应用同义词合并和黑名单过滤
     merged_tag_counts: dict = {}
     for tag, count in raw_tag_stats.items():
         if count <= 0:
             continue
-        # 黑名单过滤（只排除品类标配标签）
+        # 黑名单过滤
         if is_blacklisted([tag]):
             continue
         # 同义词合并
@@ -680,56 +758,44 @@ def calculate_feature_tag_options(games):
     feature_tag_options = []
 
     for raw_tag, tag_count in sorted_tags:
-        total_count = 0
+        # 计算池子分布
         pool_a_count = 0
         pool_b_count = 0
         pool_c_count = 0
         total_wilson = 0
-
-        for game in games:
-            if not game.get('isTurnBased') or game.get('isTestVersion'):
+        matched_games = 0
+        
+        # 遍历 combinedMechanics 中的游戏，检查是否有该标签
+        for game_name_lower, game_data in mechanics_games.items():
+            raw_mechanics = game_data.get('rawMechanics', [])
+            merged_mechanics = game_data.get('mechanics', [])
+            all_mechanics = raw_mechanics + merged_mechanics
+            
+            if raw_tag not in all_mechanics:
                 continue
+            
+            matched_games += 1
+            
+            # 检查该游戏在 games-cache 中的池子归属
+            pool = game_pool_map.get(game_name_lower)
+            if pool == 'A':
+                pool_a_count += 1
+            elif pool == 'B':
+                pool_b_count += 1
+            elif pool == 'C':
+                pool_c_count += 1
 
-            # 检查 LLM 分析的融合玩法中是否包含该标签（同时匹配 llmMechanics 和 llmRawMechanics）
-            llm_mechanics = game.get('llmMechanics') or []
-            llm_raw_mechanics = game.get('llmRawMechanics') or []
-            all_mechanics = llm_mechanics + llm_raw_mechanics
-            has_tag = raw_tag in all_mechanics
-
-            if not has_tag:
-                continue
-
-            total_count += 1
-
-            # 计算池子归属
-            reviews = game.get('steamReviews')
-            if reviews and reviews.get('totalReviews', 0) > 0:
-                score = reviews.get('reviewScore', 0)
-                total = reviews.get('totalReviews', 0)
-                is_pokemon = game.get('isPokemonLike', False)
-
-                if not is_pokemon and score >= 75 and total >= 50:
-                    pool_a_count += 1
-                elif is_pokemon and score >= 75 and total >= 50:
-                    pool_b_count += 1
-                elif is_pokemon and 40 <= score <= 74 and total >= 50:
-                    pool_c_count += 1
-
-            ws = game.get('wilsonScore', 0)
-            if ws > 0:
-                total_wilson += ws
-
-        avg_wilson = total_wilson / total_count if total_count > 0 else 0
+        avg_wilson = 0
         key = raw_tag.lower().replace(' ', '_').replace('/', '_')
 
         feature_tag_options.append({
             'key': key,
             'label': raw_tag,
             'tag': raw_tag,
-            'count': total_count,
-            'gameCount': total_count,
+            'count': tag_count,  # 直接使用 rawTagStats 中的统计（标签出现次数）
+            'gameCount': matched_games,  # 匹配到的游戏数
             'coverage': 0,
-            'avgWilson': round(avg_wilson, 4),
+            'avgWilson': avg_wilson,
             'poolDistribution': {
                 'A': pool_a_count,
                 'B': pool_b_count,
@@ -913,7 +979,15 @@ def main():
         if game['isTestVersion']:
             test_version_count += 1
 
-        pool = calculate_pool(game['steamReviews'], game['isPokemonLike'], game['tags'])
+        # 提取发布年份
+        release_year = None
+        if game.get('releaseDate'):
+            try:
+                release_year = int(game['releaseDate'][:4])
+            except:
+                pass
+
+        pool = calculate_pool(game['steamReviews'], game['isPokemonLike'], game['tags'], release_year, game.get('isTurnBased', False))
         if pool:
             pools[pool] += 1
 

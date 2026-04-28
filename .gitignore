@@ -71,3 +71,6 @@ temp_*
 
 # Documentation
 数据采集维护文档.md
+
+# AI Task State (不要提交到 Git)
+.cursor/tasks/

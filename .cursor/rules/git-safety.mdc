@@ -1,6 +1,8 @@
 ---
 description: 强制 AI 在执行 git 操作前必须征得明确许可
 alwaysApply: true
+version: v1.0.0
+lastUpdated: 2026-04-28
 ---
 
 # Git 操作安全规范

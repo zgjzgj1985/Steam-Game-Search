@@ -1,9 +1,12 @@
 # Steam 全域游戏搜索
 
-> **版本**: v1.13.2
-> **更新日期**: 2026-04-21
+> **版本**: v1.18.0
+> **更新日期**: 2026-04-28
 
 > **版本历史**:
+> - v1.18.0: **LLM标签全量采集完成 + 质量复审通过**：A池633款+B池94款全部完成，零失败。模式2标签质量复审综合评分8/10。详见《池子创新标签质量审核报告 v2.0.0》。同时修复批量采集脚本日志输出 UnicodeEncodeError 崩溃问题。：池子条件大幅放宽后重新采集标签。A池(633款)：好评率>=40%、评论数>=50、上线>=2024；B池(94款)：好评率>=40%、评论数>=50；C池(0款，因条件放宽被B池覆盖)。涉及文件：`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。
+> - v1.16.0: **翻译层彻底简化**：删除 `tag-translator.ts`（整个文件），删除 `page.tsx` 中200+行的 `TAG_TRANSLATIONS`，删除 `route.ts` 中60+行的 `TAG_CHINESE_NAMES`，合并翻译表为单一源。Python端：删除200+行的 `COMMON_TAG_TRANSLATIONS`，翻译完全交给LLM，Python只做验证（是否包含中文字符）。`mode2` 页面 JS 从 17.3kB 降至 15.4kB。
+> - v1.14.0: **模式2英文标签翻译改进**：扩展 `tag-translator.ts` 的 `essentialTranslations` 翻译映射表（约200+个标签），新增 `cleanTag` 函数处理复杂格式标签（移除括号内容、中英混合标签）。扩展 `route.ts` 的 `TAG_CHINESE_NAMES` 映射表。扩展前端 `page.tsx` 的 `TAG_TRANSLATIONS` 映射表（约150+个标签），支持大小写不敏感匹配。涉及文件：`src/lib/tag-translator.ts`、`src/app/api/mode2/filter/route.ts`、`src/app/mode2/page.tsx`。
 > - v1.13.2: **Bug修复：BLACKLIST_TAGS 过于严格导致游戏被误排除**：修复 B 池游戏数量为0的根本原因。问题：BLACKLIST_TAGS 包含 "Board Game"，使用子串匹配（`includes`），导致所有包含 "board game" 的游戏（如 Evolution Board Game）被排除在所有池子之外。修复：清理 BLACKLIST_TAGS，只保留 NSFW/Hentai 等真正有问题的标签，移除 Board Game / Grand Strategy / 4X Strategy / Text-Based 等过于宽泛的标签。涉及文件：`src/app/api/mode2/filter/route.ts`。
 > - v1.13.1: **Bug修复：创新标签数量异常**：修复 featureTagOptions 只有10个标签的问题。根本原因：① INNOVATION_BLACKLIST 包含了大量创新玩法标签（如阵营抉择、程序生成、刷宝掉落等），② `precompute.py` 的 `calculate_feature_tag_options()` 使用硬编码的10个标签。修复：① 清理 INNOVATION_BLACKLIST，只保留品类标配标签；② 重写 `calculate_feature_tag_options()` 从 `combinedMechanics.json` 的 rawTagStats 动态加载所有标签；③ 重新运行预计算生成108个标签。涉及文件：`src/lib/tag-config.ts`、`scripts/precompute.py`、`public/data/games-cache.json`。
 > - v1.13.0: **标签体系三端统一重构**：构建单一配置源 `manage_tags.py --export-config` 生成 `tag-config.json`，统一管理同义词映射（92条）、黑名单（87个）、核心标签（10个）、分组分类（22个）。消除 `manage_tags.py`、`precompute.py`、`route.ts` 三处重复定义。黑名单重新设计为只包含品类标配标签，同义词合并的目标端标签不再进入黑名单。`mergeLlMechancics()` 合并时应用同义词合并。`computeFeatureTagOptionsFromMechanics()` 从 rawTagStats 加载时应用同义词合并，解决统计口径不一致导致 count=0 的问题。涉及文件：`scripts/manage_tags.py`、`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`、`src/lib/tag-config.ts`。

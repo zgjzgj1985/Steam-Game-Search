@@ -253,7 +253,7 @@ export function GameCard({ game, className }: GameCardProps) {
           </div>
 
           <div className="mt-auto flex items-center text-sm text-primary font-medium pt-3 border-t border-border/40 mt-3">
-            <span>查看分析</span>
+            <span>LLM分析</span>
             <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
           </div>
         </div>

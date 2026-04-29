@@ -1,18 +1,58 @@
 "use client";
 
-import { Star, TrendingUp } from "lucide-react";
+import { Star, TrendingUp, Target, ChevronDown } from "lucide-react";
 import { DifferentiationResult } from "@/types/game";
 import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
+import { RichText } from "@/components/ui/rich-text";
+import { ContentBlock } from "@/components/ui/expandable-section";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface DifferentiationViewProps {
   differentiation: DifferentiationResult;
   className?: string;
 }
 
-/**
- * 差异化创新展示
- * 极简风格
- */
+interface CollapsibleItemProps {
+  title: string;
+  content: string;
+  color: string;
+}
+
+function CollapsibleItem({ title, content, color }: CollapsibleItemProps) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="rounded-xl bg-white/[0.02] overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center gap-3 p-4 hover:bg-white/[0.02] transition-colors"
+      >
+        <div className={cn("w-2 h-2 rounded-full shrink-0", color)} />
+        <span className="flex-1 text-left text-sm font-medium text-white/80">{title}</span>
+        <ChevronDown
+          className={cn(
+            "w-4 h-4 text-white/40 transition-transform duration-200",
+            expanded && "rotate-180"
+          )}
+        />
+      </button>
+
+      <div
+        className={cn(
+          "overflow-hidden transition-all duration-300",
+          expanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+        )}
+      >
+        <div className="px-4 pb-4">
+          <RichText text={content} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function DifferentiationView({ differentiation, className }: DifferentiationViewProps) {
   return (
     <div className={className}>
@@ -41,46 +81,57 @@ export function DifferentiationView({ differentiation, className }: Differentiat
       )}
 
       {/* 核心标签 */}
-      <div className="p-4 rounded-2xl bg-amber-500/5 mb-5">
-        <span className="text-xs text-amber-400/60">核心定位</span>
-        <p className="text-base font-semibold text-white mt-1">{differentiation.coreTag}</p>
-      </div>
+      <ContentBlock variant="highlight" padding="relaxed" className="mb-5">
+        <div className="flex items-center gap-2 mb-2">
+          <Target className="w-4 h-4 text-amber-400" />
+          <span className="text-xs text-amber-400/60 uppercase tracking-wider">核心定位</span>
+        </div>
+        <p className="text-base font-semibold text-white">{differentiation.coreTag}</p>
+      </ContentBlock>
 
-      {/* 描述 */}
-      <p className="text-sm text-white/50 mb-5 leading-relaxed">
-        {differentiation.innovationDescription}
-      </p>
+      {/* 描述 - 使用智能段落渲染 */}
+      {differentiation.innovationDescription && (
+        <ContentBlock variant="default" padding="relaxed" className="mb-5">
+          <RichText text={differentiation.innovationDescription} />
+        </ContentBlock>
+      )}
 
-      {/* 融合玩法 */}
+      {/* 融合玩法 - 可折叠卡片 */}
       {differentiation.combinedMechanics.length > 0 && (
         <div className="mb-5">
-          <span className="text-xs text-white/30 mb-3 block">融合玩法</span>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex items-center gap-2 mb-3">
+            <Star className="w-4 h-4 text-violet-400" />
+            <span className="text-xs text-white/40 uppercase tracking-wider">融合玩法</span>
+          </div>
+          <div className="space-y-3">
             {differentiation.combinedMechanics.map((mech, i) => (
-              <span key={i} className="px-3 py-1.5 rounded-full bg-violet-400/10 text-violet-300 text-xs">
-                {mech}
-              </span>
+              <CollapsibleItem
+                key={i}
+                title={mech.substring(0, 30) + "..."}
+                content={mech}
+                color="bg-violet-400"
+              />
             ))}
           </div>
         </div>
       )}
 
-      {/* 成功原因 & 市场定位 */}
+      {/* 成功原因 & 市场定位 - 双列布局 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div className="p-4 rounded-2xl bg-white/[0.03]">
-          <div className="flex items-center gap-2 mb-2">
+        <ContentBlock variant="default" padding="normal">
+          <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs text-white/30">成功原因</span>
+            <span className="text-xs text-white/40 uppercase tracking-wider">成功原因</span>
           </div>
-          <p className="text-sm text-white/60">{differentiation.whySuccessful}</p>
-        </div>
-        <div className="p-4 rounded-2xl bg-white/[0.03]">
-          <div className="flex items-center gap-2 mb-2">
+          <RichText text={differentiation.whySuccessful} />
+        </ContentBlock>
+        <ContentBlock variant="default" padding="normal">
+          <div className="flex items-center gap-2 mb-3">
             <Star className="w-4 h-4 text-[#66c0f4]" />
-            <span className="text-xs text-white/30">市场定位</span>
+            <span className="text-xs text-white/40 uppercase tracking-wider">市场定位</span>
           </div>
-          <p className="text-sm text-white/60">{differentiation.marketPosition}</p>
-        </div>
+          <RichText text={differentiation.marketPosition} />
+        </ContentBlock>
       </div>
     </div>
   );

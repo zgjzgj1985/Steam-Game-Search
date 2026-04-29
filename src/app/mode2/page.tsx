@@ -576,14 +576,14 @@ function GameCard({ game, reviewSource }: { game: GameRecord; reviewSource?: Rev
                 <AlertTriangle className="w-3.5 h-3.5 text-rose-500 mt-0.5 shrink-0" />
                 <div className="text-[10px] text-rose-700 dark:text-rose-300">
                   <span className="font-medium">避坑重点：</span>
-                  <span>点击上方&quot;查看分析&quot;，在LLM分析中查看差评关键词汇总，了解玩家主要抱怨方向</span>
+                  <span>点击上方&quot;LLM分析&quot;，在LLM分析中查看差评关键词汇总，了解玩家主要抱怨方向</span>
                 </div>
               </div>
             </div>
           )}
 
           <div className="mt-auto flex items-center text-sm text-primary font-medium pt-3 border-t border-border/40">
-            <span>查看分析</span>
+            <span>LLM分析</span>
             <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
           </div>
         </div>

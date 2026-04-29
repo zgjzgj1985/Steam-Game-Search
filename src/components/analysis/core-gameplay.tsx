@@ -1,25 +1,70 @@
 "use client";
 
-import { Gamepad2, Sparkles, Puzzle, ListChecks, Clock } from "lucide-react";
+import { Gamepad2, Sparkles, Puzzle, ListChecks, Clock, Sparkle, ChevronDown } from "lucide-react";
 import { CoreGameplayResult } from "@/types/game";
 import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
+import { RichText } from "@/components/ui/rich-text";
+import { ContentBlock } from "@/components/ui/expandable-section";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface CoreGameplayViewProps {
   coreGameplay: CoreGameplayResult;
   className?: string;
 }
 
-/**
- * 核心玩法分析展示
- * 极简高级风格
- */
+interface SystemBlockProps {
+  icon: React.ElementType;
+  label: string;
+  value: string;
+  color: string;
+  defaultExpanded?: boolean;
+}
+
+function SystemBlock({ icon: Icon, label, value, color, defaultExpanded = false }: SystemBlockProps) {
+  const [expanded, setExpanded] = useState(defaultExpanded);
+
+  return (
+    <div className="rounded-xl bg-white/[0.02] overflow-hidden">
+      {/* 标题栏 */}
+      <button
+        type="button"
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center gap-3 p-4 hover:bg-white/[0.02] transition-colors"
+      >
+        <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center shrink-0", color, "/10")}>
+          <Icon className={cn("w-4 h-4", color.replace("bg-", "text-"))} />
+        </div>
+        <span className="flex-1 text-left text-sm font-medium text-white/80">{label}</span>
+        <ChevronDown
+          className={cn(
+            "w-4 h-4 text-white/40 transition-transform duration-200",
+            expanded && "rotate-180"
+          )}
+        />
+      </button>
+
+      {/* 内容区 */}
+      <div
+        className={cn(
+          "overflow-hidden transition-all duration-300",
+          expanded ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+        )}
+      >
+        <div className="px-4 pb-4">
+          <RichText text={value} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function CoreGameplayView({ coreGameplay, className }: CoreGameplayViewProps) {
   const systems = [
-    { icon: Sparkles, label: "生物收集", value: coreGameplay.creatureCount, has: coreGameplay.creatureCollection, color: "text-emerald-400", bg: "bg-emerald-400" },
-    { icon: Puzzle, label: "获得方式", value: coreGameplay.captureSystem, color: "text-amber-400", bg: "bg-amber-400" },
-    { icon: Sparkles, label: "进化系统", value: coreGameplay.evolutionSystem, color: "text-violet-400", bg: "bg-violet-400" },
-    { icon: ListChecks, label: "队伍构建", value: coreGameplay.teamBuilding, color: "text-cyan-400", bg: "bg-cyan-400" },
+    { icon: Sparkles, label: "生物收集", value: coreGameplay.creatureCollection ? coreGameplay.creatureCount : "—", color: "bg-emerald-400" },
+    { icon: Puzzle, label: "获得方式", value: coreGameplay.captureSystem || "—", color: "bg-amber-400" },
+    { icon: Sparkle, label: "进化系统", value: coreGameplay.evolutionSystem || "—", color: "bg-violet-400" },
+    { icon: ListChecks, label: "队伍构建", value: coreGameplay.teamBuilding || "—", color: "bg-cyan-400" },
   ];
 
   return (
@@ -48,35 +93,32 @@ export function CoreGameplayView({ coreGameplay, className }: CoreGameplayViewPr
         </div>
       )}
 
-      {/* 整体描述 */}
-      <p className="text-sm text-white/60 leading-relaxed mb-6">
-        {coreGameplay.description}
-      </p>
+      {/* 整体描述 - 使用智能段落渲染 */}
+      {coreGameplay.description && (
+        <ContentBlock variant="highlight" padding="relaxed" className="mb-5">
+          <RichText text={coreGameplay.description} />
+        </ContentBlock>
+      )}
 
-      {/* 系统网格 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-        {systems.map((sys, i) => {
-          const Icon = sys.icon;
-          return (
-            <div key={i} className="p-4 rounded-2xl bg-white/[0.03]">
-              <div className="flex items-center gap-2 mb-3">
-                <div className={cn("w-2 h-2 rounded-full", sys.bg)} />
-                <span className="text-xs text-white/40">{sys.label}</span>
-              </div>
-              <p className="text-sm text-white/80">{sys.value || "—"}</p>
-            </div>
-          );
-        })}
+      {/* 系统网格 - 改为可折叠的展开区块 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+        {systems.map((sys, i) => (
+          <SystemBlock key={i} {...sys} />
+        ))}
       </div>
 
       {/* 玩家体验 */}
-      <div className="flex items-start gap-3 p-4 rounded-2xl bg-white/[0.03]">
-        <Clock className="w-4 h-4 text-white/30 shrink-0 mt-0.5" />
-        <div>
-          <span className="text-xs text-white/30">玩家体验</span>
-          <p className="text-sm text-white/60 mt-1">{coreGameplay.playerExperience}</p>
+      <ContentBlock variant="default" padding="relaxed">
+        <div className="flex items-start gap-3">
+          <Clock className="w-4 h-4 text-white/30 shrink-0 mt-1" />
+          <div className="flex-1">
+            <span className="text-xs text-white/40 uppercase tracking-wider">玩家体验</span>
+            <div className="mt-3">
+              <RichText text={coreGameplay.playerExperience} />
+            </div>
+          </div>
         </div>
-      </div>
+      </ContentBlock>
     </div>
   );
 }

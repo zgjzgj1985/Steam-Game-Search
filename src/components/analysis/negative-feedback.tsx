@@ -3,6 +3,8 @@
 import { AlertTriangle, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { NegativeFeedbackResult } from "@/types/game";
 import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
+import { RichText } from "@/components/ui/rich-text";
+import { ContentBlock } from "@/components/ui/expandable-section";
 import { cn } from "@/lib/utils";
 
 interface NegativeFeedbackViewProps {
@@ -11,10 +13,6 @@ interface NegativeFeedbackViewProps {
   className?: string;
 }
 
-/**
- * 差评分析展示
- * 极简警示风格
- */
 export function NegativeFeedbackView({
   negativeFeedback,
   pool,
@@ -33,9 +31,13 @@ export function NegativeFeedbackView({
           </div>
           <h3 className="text-lg font-semibold text-white">差评分析</h3>
         </div>
-        <div className="p-6 rounded-2xl bg-white/[0.03] text-center">
-          <p className="text-sm text-white/40">暂无明显差评问题</p>
-        </div>
+        <ContentBlock variant="success" padding="relaxed">
+          <div className="text-center">
+            <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
+            <p className="text-sm text-white/60">暂无明显差评问题</p>
+            <p className="text-xs text-white/40 mt-1">该游戏整体评价良好</p>
+          </div>
+        </ContentBlock>
       </div>
     );
   }
@@ -76,54 +78,72 @@ export function NegativeFeedbackView({
 
       {/* C池特别提示 */}
       {pool === "C" && (
-        <div className="p-4 rounded-2xl bg-rose-500/5 mb-5">
+        <ContentBlock variant="warning" className="mb-5">
           <div className="flex items-start gap-3">
             <ShieldAlert className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-            <p className="text-sm text-rose-200/70">
-              这是一款宝可梦Like但评价中等的游戏。分析玩家抱怨点，帮你避开同类设计陷阱。
-            </p>
+            <div>
+              <p className="text-xs text-rose-400 font-medium mb-1">避坑指南</p>
+              <p className="text-sm text-rose-200/70">
+                这是一款宝可梦Like但评价中等的游戏。分析玩家抱怨点，帮你避开同类设计陷阱。
+              </p>
+            </div>
           </div>
-        </div>
+        </ContentBlock>
       )}
 
-      {/* 差评概述 */}
-      <p className="text-sm text-white/50 mb-5 leading-relaxed">
-        {negativeFeedback.summary}
-      </p>
+      {/* 差评概述 - 使用智能段落渲染 */}
+      {negativeFeedback.summary && (
+        <ContentBlock variant="default" className="mb-5">
+          <div className="flex items-center gap-2 mb-3">
+            <AlertTriangle className="w-4 h-4 text-white/40" />
+            <span className="text-xs text-white/40 uppercase tracking-wider">差评概述</span>
+          </div>
+          <RichText text={negativeFeedback.summary} />
+        </ContentBlock>
+      )}
 
-      {/* 主要抱怨点 */}
+      {/* 主要抱怨点 - 改为编号列表，更清晰 */}
       {negativeFeedback.topComplaints.length > 0 && (
-        <div className="mb-5">
-          <span className="text-xs text-white/30 mb-3 block">玩家主要抱怨</span>
-          <ul className="space-y-2">
+        <ContentBlock variant="default" className="mb-5">
+          <div className="flex items-center gap-2 mb-4">
+            <AlertTriangle className="w-4 h-4 text-rose-400" />
+            <span className="text-xs text-white/40 uppercase tracking-wider">玩家主要抱怨</span>
+            <span className="ml-auto text-xs text-rose-400/60">共 {negativeFeedback.topComplaints.length} 项</span>
+          </div>
+          <div className="space-y-6">
             {negativeFeedback.topComplaints.map((complaint, index) => (
-              <li key={index} className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.02]">
-                <span className="w-5 h-5 rounded-full bg-rose-500/10 text-rose-400 text-xs flex items-center justify-center shrink-0">
+              <div key={index} className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.02]">
+                <span className="w-6 h-6 rounded-full bg-rose-500/10 text-rose-400 text-xs font-medium flex items-center justify-center shrink-0">
                   {index + 1}
                 </span>
-                <span className="text-sm text-white/70">{complaint}</span>
-              </li>
+                <div className="flex-1">
+                  <RichText text={complaint} />
+                </div>
+              </div>
             ))}
-          </ul>
-        </div>
+          </div>
+        </ContentBlock>
       )}
 
       {/* 设计缺陷警示 */}
       {negativeFeedback.designPitfalls.length > 0 && (
-        <div className="p-4 rounded-2xl bg-rose-500/5">
-          <div className="flex items-center gap-2 mb-3">
+        <ContentBlock variant="warning" padding="normal">
+          <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="w-4 h-4 text-rose-400" />
-            <span className="text-sm text-rose-300">设计缺陷警示</span>
+            <span className="text-sm text-rose-300 font-medium">设计缺陷警示</span>
+            <span className="ml-auto text-xs text-rose-400/60">共 {negativeFeedback.designPitfalls.length} 项</span>
           </div>
-          <ul className="space-y-2">
+          <div className="space-y-6">
             {negativeFeedback.designPitfalls.map((pitfall, index) => (
-              <li key={index} className="flex items-start gap-2 text-sm text-rose-200/70">
-                <span className="text-rose-400 mt-1">•</span>
-                {pitfall}
-              </li>
+              <div key={index} className="flex items-start gap-3 text-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0 mt-2" />
+                <div className="flex-1">
+                  <RichText text={pitfall} />
+                </div>
+              </div>
             ))}
-          </ul>
-        </div>
+          </div>
+        </ContentBlock>
       )}
     </div>
   );

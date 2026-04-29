@@ -233,6 +233,7 @@ export function ModularAnalysis({ game, initialAnalysis }: ModularAnalysisProps)
 
               {/* 模块选择 - 横向排列 */}
               <div className="flex items-center gap-3 overflow-x-auto pb-4 mb-8 scrollbar-hide">
+                <span className="shrink-0 text-sm text-white/40">选择模块生成分析</span>
                 {ANALYSIS_MODULES.map(mod => {
                   const meta = MODULE_META[mod.type];
                   const Icon = meta.icon;

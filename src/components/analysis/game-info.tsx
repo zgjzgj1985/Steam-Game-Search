@@ -33,10 +33,12 @@ export function GameInfo({ game, className }: GameInfoProps) {
       ? `¥${(game.price / 100).toFixed(0)}`
       : "未知";
 
-  // 游玩方式
-  const playModes = game.categories || [];
-  const isMultiplayer = playModes.some(c => c.includes("Multi") || c.includes("Co-op"));
-  const isCardGame = game.genres.some(g => g.includes("卡牌") || g.includes("Card"));
+  // 游玩方式（确保是数组）
+  const playModes = Array.isArray(game.categories) ? game.categories : [];
+  const isMultiplayer = playModes.some(c => typeof c === "string" && (c.includes("Multi") || c.includes("Co-op")));
+  // 类型检查：genres 也可能不是数组
+  const genres = Array.isArray(game.genres) ? game.genres : [];
+  const isCardGame = genres.some(g => typeof g === "string" && (g.includes("卡牌") || g.includes("Card")));
 
   return (
     <div className={className}>

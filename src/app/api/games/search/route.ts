@@ -243,6 +243,10 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
   const totalReviews = raw.positive + raw.negative;
   const reviewScore = totalReviews > 0 ? Math.round((raw.positive / totalReviews) * 100) : 0;
   const normalizedTags = normalizeTags(raw.tags);
+  // 确保 categories 是字符串数组
+  const categories: string[] = Array.isArray(raw.categories)
+    ? raw.categories.map((c: unknown) => String(c ?? ""))
+    : [];
 
   return {
     id: appId,
@@ -253,7 +257,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     developers: raw.developers || [],
     publishers: raw.publishers || [],
     genres: raw.genres || [],
-    categories: raw.categories || [],
+    categories,
     tags: normalizedTags,
     releaseDate: raw.release_date || null,
     isFree: raw.price === 0,

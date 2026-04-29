@@ -247,6 +247,14 @@ function transformGame(appId: string, raw: IndexGameData): GameInfo {
   const reviewScore = totalReviews > 0 ? Math.round((raw.positive / totalReviews) * 100) : 0;
   const normalizedTags = normalizeTags(raw.tags);
 
+  // 确保 categories 和 genres 是字符串数组
+  const categories: string[] = Array.isArray(raw.categories)
+    ? raw.categories.map((c: unknown) => String(c ?? ""))
+    : [];
+  const genres: string[] = Array.isArray(raw.genres)
+    ? raw.genres.map((g: unknown) => String(g ?? ""))
+    : [];
+
   return {
     id: appId,
     steamAppId: appId,
@@ -255,8 +263,8 @@ function transformGame(appId: string, raw: IndexGameData): GameInfo {
     shortDescription: raw.short_description || "",
     developers: raw.developers || [],
     publishers: raw.publishers || [],
-    genres: raw.genres || [],
-    categories: raw.categories || [],
+    genres,
+    categories,
     tags: normalizedTags,
     releaseDate: raw.release_date || null,
     isFree: raw.price === 0,

@@ -1475,16 +1475,19 @@ function filterGames(
             const llmM = (g.llmMechanics || []) as string[];
             const llmRawM = (g.llmRawMechanics || []) as string[];
             // 展开保留标签对应的所有废弃同义词，一并匹配
-            const synonymsToCheck = [featureTag.tag];
+            const synonymsToCheck = [featureTag.tag.toLowerCase()];
             for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
-              if (kept === featureTag.tag) {
-                synonymsToCheck.push(discarded);
+              if (kept.toLowerCase() === featureTag.tag.toLowerCase()) {
+                synonymsToCheck.push(discarded.toLowerCase());
               }
             }
+            // 统一转为小写比较，避免大小写不匹配
+            const llmMLower = llmM.map((m: string) => m.toLowerCase());
+            const llmRawMLower = llmRawM.map((m: string) => m.toLowerCase());
             // 模糊匹配：检查标签是否是任意 mechanics 的子串
             const hasTag = synonymsToCheck.some(tag =>
-              llmM.some(mech => mech.includes(tag) || mech === tag) ||
-              llmRawM.some(mech => mech.includes(tag) || mech === tag)
+              llmMLower.some(mech => mech.includes(tag) || mech === tag) ||
+              llmRawMLower.some(mech => mech.includes(tag) || mech === tag)
             );
             if (!hasTag) return false; // 只要有一个标签不匹配就过滤掉
           }
@@ -1733,16 +1736,19 @@ function getPoolCounts(
         if (featureTag) {
           const llmM = (game.llmMechanics || []) as string[];
           const llmRawM = (game.llmRawMechanics || []) as string[];
-          const synonymsToCheck = [featureTag.tag];
+          const synonymsToCheck = [featureTag.tag.toLowerCase()];
           for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
-            if (kept === featureTag.tag) {
-              synonymsToCheck.push(discarded);
+            if (kept.toLowerCase() === featureTag.tag.toLowerCase()) {
+              synonymsToCheck.push(discarded.toLowerCase());
             }
           }
+          // 统一转为小写比较，避免大小写不匹配
+          const llmMLower = llmM.map((m: string) => m.toLowerCase());
+          const llmRawMLower = llmRawM.map((m: string) => m.toLowerCase());
           // 模糊匹配：检查标签是否是任意 mechanics 的子串
           const hasTag = synonymsToCheck.some(tag =>
-            llmM.some(mech => mech.includes(tag) || mech === tag) ||
-            llmRawM.some(mech => mech.includes(tag) || mech === tag)
+            llmMLower.some(mech => mech.includes(tag) || mech === tag) ||
+            llmRawMLower.some(mech => mech.includes(tag) || mech === tag)
           );
           if (!hasTag) {
             hasAllTags = false;

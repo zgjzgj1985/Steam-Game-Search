@@ -696,8 +696,8 @@ def calculate_feature_tag_options(games):
         except Exception as e:
             log(f'Warning: 加载 combinedMechanics.json 失败: {e}')
 
-    # 建立游戏名称到池子的映射
-    game_pool_map: dict = {}  # game_name_lower -> pool
+    # 建立游戏 appid 到池子的映射（使用 appid 而不是名称，避免名称不匹配问题）
+    game_pool_map: dict = {}  # appid -> pool
 
     for game in games:
         if game.get('isTestVersion'):
@@ -738,69 +738,51 @@ def calculate_feature_tag_options(games):
                     pool = 'C'
 
         if pool:
-            game_pool_map[game.get('name', '').lower()] = pool
+            game_pool_map[game.get('id', '')] = pool
 
-    # 第一步：对原始统计应用同义词合并和黑名单过滤
-    merged_tag_counts: dict = {}
-    for tag, count in raw_tag_stats.items():
-        if count <= 0:
+    log(f'Pool map size: {len(game_pool_map)}')
+
+    # 直接从实际游戏 mechanics 统计标签（不用 rawTagStats）
+    tag_counts: dict = {}
+    tag_pools: dict = {}  # tag -> {A: count, B: count, C: count}
+
+    for appid_str, game_data in mechanics_games.items():
+        pool = game_pool_map.get(appid_str)
+        if not pool:
             continue
-        # 黑名单过滤
-        if is_blacklisted([tag]):
-            continue
-        # 同义词合并
-        merged = SYNONYM_MERGE.get(tag, tag)
-        merged_tag_counts[merged] = merged_tag_counts.get(merged, 0) + count
+
+        raw_mechanics = game_data.get('rawMechanics', [])
+        merged_mechanics = game_data.get('mechanics', [])
+        all_mechanics = raw_mechanics + merged_mechanics
+
+        for tag in all_mechanics:
+            if is_blacklisted([tag]):
+                continue
+            # 同义词合并
+            merged = SYNONYM_MERGE.get(tag, tag)
+            tag_counts[merged] = tag_counts.get(merged, 0) + 1
+
+            if merged not in tag_pools:
+                tag_pools[merged] = {'A': 0, 'B': 0, 'C': 0}
+            tag_pools[merged][pool] = tag_pools[merged].get(pool, 0) + 1
 
     # 按 count 降序排列
-    sorted_tags = sorted(merged_tag_counts.items(), key=lambda x: x[1], reverse=True)
+    sorted_tags = sorted(tag_counts.items(), key=lambda x: x[1], reverse=True)
 
     feature_tag_options = []
 
     for raw_tag, tag_count in sorted_tags:
-        # 计算池子分布
-        pool_a_count = 0
-        pool_b_count = 0
-        pool_c_count = 0
-        total_wilson = 0
-        matched_games = 0
-        
-        # 遍历 combinedMechanics 中的游戏，检查是否有该标签
-        for game_name_lower, game_data in mechanics_games.items():
-            raw_mechanics = game_data.get('rawMechanics', [])
-            merged_mechanics = game_data.get('mechanics', [])
-            all_mechanics = raw_mechanics + merged_mechanics
-            
-            if raw_tag not in all_mechanics:
-                continue
-            
-            matched_games += 1
-            
-            # 检查该游戏在 games-cache 中的池子归属
-            pool = game_pool_map.get(game_name_lower)
-            if pool == 'A':
-                pool_a_count += 1
-            elif pool == 'B':
-                pool_b_count += 1
-            elif pool == 'C':
-                pool_c_count += 1
-
-        avg_wilson = 0
+        pool_dist = tag_pools.get(raw_tag, {'A': 0, 'B': 0, 'C': 0})
         key = raw_tag.lower().replace(' ', '_').replace('/', '_')
-
         feature_tag_options.append({
             'key': key,
             'label': raw_tag,
             'tag': raw_tag,
-            'count': tag_count,  # 直接使用 rawTagStats 中的统计（标签出现次数）
-            'gameCount': matched_games,  # 匹配到的游戏数
+            'count': tag_count,
+            'gameCount': tag_count,
             'coverage': 0,
-            'avgWilson': avg_wilson,
-            'poolDistribution': {
-                'A': pool_a_count,
-                'B': pool_b_count,
-                'C': pool_c_count,
-            },
+            'avgWilson': 0,
+            'poolDistribution': pool_dist,
         })
 
     log(f'计算了 {len(feature_tag_options)} 个特色标签（从 rawTagStats 动态生成）')

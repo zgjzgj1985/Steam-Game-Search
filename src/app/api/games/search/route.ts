@@ -470,8 +470,12 @@ function matchesGenreFilter(game: GameRecord, filter: string): boolean {
   const keywords = GENRE_TAG_MAP[filter];
   if (!keywords) return false;
 
-  const tagsLower = game.tags.map((t) => t.toLowerCase());
-  const genresLower = game.genres.map((g) => g.toLowerCase());
+  const tags = game.tags ?? [];
+  const genres = game.genres ?? [];
+  if (!Array.isArray(tags) || !Array.isArray(genres)) return false;
+
+  const tagsLower = tags.map((t) => String(t ?? '').toLowerCase());
+  const genresLower = genres.map((g) => String(g ?? '').toLowerCase());
 
   return keywords.some((kw) => {
     const kwLower = kw.toLowerCase();
@@ -560,18 +564,22 @@ function searchGames(
   if (query.trim()) {
     const q = query.trim().toLowerCase();
     results = results.filter((g) => {
-      const nameLower = g.name.toLowerCase();
-      const descLower = g.description.slice(0, 500).toLowerCase();
-      const shortDescLower = g.shortDescription.toLowerCase();
+      const nameLower = String(g.name ?? '').toLowerCase();
+      const descLower = String(g.description ?? '').slice(0, 500).toLowerCase();
+      const shortDescLower = String(g.shortDescription ?? '').toLowerCase();
+      const tags = g.tags ?? [];
+      const genres = g.genres ?? [];
+      const developers = g.developers ?? [];
+      const publishers = g.publishers ?? [];
 
       return (
         nameLower.includes(q) ||
         descLower.includes(q) ||
         shortDescLower.includes(q) ||
-        g.tags.some((t) => t.toLowerCase().includes(q)) ||
-        g.genres.some((g2) => g2.toLowerCase().includes(q)) ||
-        g.developers.some((d) => d.toLowerCase().includes(q)) ||
-        g.publishers.some((d) => d.toLowerCase().includes(q))
+        tags.some((t) => String(t ?? '').toLowerCase().includes(q)) ||
+        genres.some((g2) => String(g2 ?? '').toLowerCase().includes(q)) ||
+        developers.some((d) => String(d ?? '').toLowerCase().includes(q)) ||
+        publishers.some((d) => String(d ?? '').toLowerCase().includes(q))
       );
     });
   }

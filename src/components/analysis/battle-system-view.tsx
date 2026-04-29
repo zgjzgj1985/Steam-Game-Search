@@ -2,6 +2,7 @@
 
 import { Sword, Zap, Target, Clock } from "lucide-react";
 import { BattleSystemResult } from "@/types/game";
+import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
 import { cn } from "@/lib/utils";
 
 interface BattleSystemViewProps {
@@ -29,6 +30,23 @@ export function BattleSystemView({ battleSystem, className }: BattleSystemViewPr
         <h3 className="text-lg font-semibold text-white">战斗系统</h3>
         <div className="flex-1 h-px bg-gradient-to-r from-purple-400/40 to-transparent ml-2" />
       </div>
+
+      {/* 元数据 */}
+      {battleSystem.metadata && (
+        <div className="mb-4 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+          <AnalysisMetadataBadge metadata={battleSystem.metadata} />
+          {battleSystem.metadata.sourceOfTruth.length > 0 && (
+            <div className="mt-2">
+              <SourceOfTruthBadge sources={battleSystem.metadata.sourceOfTruth} />
+            </div>
+          )}
+          {battleSystem.metadata.keyInsights.length > 0 && (
+            <div className="mt-2">
+              <KeyInsightsBadge insights={battleSystem.metadata.keyInsights} />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 数据网格 */}
       <div className="grid grid-cols-2 gap-3 mb-5">

@@ -179,6 +179,13 @@ function buildGameInfo(game: Game): string {
     parts.push(
       `Steam评价：${reviewScore}% (${reviewScoreDescription})，${totalPositive.toLocaleString()}好评 / ${totalNegative.toLocaleString()}差评，总计${totalReviews.toLocaleString()}条评价`
     );
+    if (totalReviews >= 1000) {
+      parts.push(`【数据质量提示】该游戏有 ${totalReviews.toLocaleString()} 条评价，数据充足，分析置信度可设为 high`);
+    } else if (totalReviews >= 100) {
+      parts.push(`【数据质量提示】该游戏有 ${totalReviews.toLocaleString()} 条评价，数据量中等，分析置信度可设为 medium`);
+    } else {
+      parts.push(`【数据质量提示】该游戏仅有 ${totalReviews.toLocaleString()} 条评价，数据有限，分析置信度建议设为 low`);
+    }
   }
 
   if (game.price === 0) {

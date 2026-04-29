@@ -9,6 +9,7 @@ import { DifferentiationView } from "@/components/analysis/differentiation-view"
 import { NegativeFeedbackView } from "@/components/analysis/negative-feedback";
 import { DesignSuggestionsView } from "@/components/analysis/design-suggestions";
 import { ScreenshotGallery } from "@/components/media/gallery";
+import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
 import { cn } from "@/lib/utils";
 import { Target, AlertTriangle, Gamepad2, Sword, Images, Sparkles, Loader2 } from "lucide-react";
 
@@ -118,6 +119,23 @@ export function ModularAnalysis({ game, initialAnalysis }: ModularAnalysisProps)
               <div className="flex-1 p-4 rounded-2xl bg-white/[0.02]">
                 <p className="text-xs text-[#66c0f4] mb-1">LLM 结论</p>
                 <p className="text-sm text-white leading-relaxed">{(analysis.verdict as VerdictResult).verdict}</p>
+                {"metadata" in analysis.verdict && (
+                  <div className="mt-3 pt-3 border-t border-white/5">
+                    <AnalysisMetadataBadge
+                      metadata={(analysis.verdict as VerdictResult & { metadata: unknown }).metadata as any}
+                    />
+                    {"sourceOfTruth" in (analysis.verdict as any) && (
+                      <div className="mt-2">
+                        <SourceOfTruthBadge sources={((analysis.verdict as any).metadata as any)?.sourceOfTruth || []} />
+                      </div>
+                    )}
+                    {"keyInsights" in (analysis.verdict as any) && (
+                      <div className="mt-2">
+                        <KeyInsightsBadge insights={((analysis.verdict as any).metadata as any)?.keyInsights || []} />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 

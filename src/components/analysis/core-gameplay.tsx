@@ -2,6 +2,7 @@
 
 import { Gamepad2, Sparkles, Puzzle, ListChecks, Clock } from "lucide-react";
 import { CoreGameplayResult } from "@/types/game";
+import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
 import { cn } from "@/lib/utils";
 
 interface CoreGameplayViewProps {
@@ -29,6 +30,23 @@ export function CoreGameplayView({ coreGameplay, className }: CoreGameplayViewPr
         <h3 className="text-lg font-semibold text-white">核心玩法</h3>
         <div className="flex-1 h-px bg-gradient-to-r from-cyan-400/40 to-transparent ml-2" />
       </div>
+
+      {/* 元数据 */}
+      {coreGameplay.metadata && (
+        <div className="mb-4 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+          <AnalysisMetadataBadge metadata={coreGameplay.metadata} />
+          {coreGameplay.metadata.sourceOfTruth.length > 0 && (
+            <div className="mt-2">
+              <SourceOfTruthBadge sources={coreGameplay.metadata.sourceOfTruth} />
+            </div>
+          )}
+          {coreGameplay.metadata.keyInsights.length > 0 && (
+            <div className="mt-2">
+              <KeyInsightsBadge insights={coreGameplay.metadata.keyInsights} />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 整体描述 */}
       <p className="text-sm text-white/60 leading-relaxed mb-6">

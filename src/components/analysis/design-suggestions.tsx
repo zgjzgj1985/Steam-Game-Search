@@ -2,6 +2,7 @@
 
 import { Lightbulb, Shield, Gauge, CheckCircle2, XCircle } from "lucide-react";
 import { DesignSuggestionsResult } from "@/types/game";
+import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
 import { cn } from "@/lib/utils";
 
 interface DesignSuggestionsViewProps {
@@ -23,6 +24,23 @@ export function DesignSuggestionsView({ designSuggestions, className }: DesignSu
         </div>
         <h3 className="text-lg font-semibold text-white">设计建议</h3>
       </div>
+
+      {/* 元数据 */}
+      {designSuggestions.metadata && (
+        <div className="mb-4 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+          <AnalysisMetadataBadge metadata={designSuggestions.metadata} />
+          {designSuggestions.metadata.sourceOfTruth.length > 0 && (
+            <div className="mt-2">
+              <SourceOfTruthBadge sources={designSuggestions.metadata.sourceOfTruth} />
+            </div>
+          )}
+          {designSuggestions.metadata.keyInsights.length > 0 && (
+            <div className="mt-2">
+              <KeyInsightsBadge insights={designSuggestions.metadata.keyInsights} />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 优点 & 坑 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">

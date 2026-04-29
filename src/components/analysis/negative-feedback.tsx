@@ -2,6 +2,7 @@
 
 import { AlertTriangle, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { NegativeFeedbackResult } from "@/types/game";
+import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
 import { cn } from "@/lib/utils";
 
 interface NegativeFeedbackViewProps {
@@ -55,6 +56,23 @@ export function NegativeFeedbackView({
           </span>
         )}
       </div>
+
+      {/* 元数据 */}
+      {negativeFeedback.metadata && (
+        <div className="mb-4 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+          <AnalysisMetadataBadge metadata={negativeFeedback.metadata} />
+          {negativeFeedback.metadata.sourceOfTruth.length > 0 && (
+            <div className="mt-2">
+              <SourceOfTruthBadge sources={negativeFeedback.metadata.sourceOfTruth} />
+            </div>
+          )}
+          {negativeFeedback.metadata.keyInsights.length > 0 && (
+            <div className="mt-2">
+              <KeyInsightsBadge insights={negativeFeedback.metadata.keyInsights} />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* C池特别提示 */}
       {pool === "C" && (

@@ -129,13 +129,21 @@ export async function chat(messages: LLMMessage[]): Promise<LLMResponse> {
  */
 const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> = {
   verdict: {
-    system: `你是宝可梦Like游戏专项分析师。请根据游戏数据生成一句话总结。
+    system: `你是宝可梦Like游戏专项分析师。请根据游戏数据生成一句话总结和元数据。
 
 【要求】
 - 一句话概括游戏的定位和核心特点
 - 30-80字，简洁有力
 - 重点说明游戏适合什么类型的开发者参考
-- 输出必须是合法JSON: {"verdict": "你的总结"}`,
+
+【元数据要求 - 必须输出】
+- sourceOfTruth: 列出本次分析主要依据的数据源（最多3个）
+- confidence: high/medium/low，基于数据充足程度判断
+- basedOnReviews: 精确数字，估算基于多少条评价
+- keyInsights: 3-5个关键词，用逗号分隔
+- dataQuality: excellent/good/limited，数据是否充足
+
+- 输出必须是合法JSON: {"verdict": "你的总结", "metadata": {"sourceOfTruth": ["数据源1", "数据源2"], "confidence": "high", "basedOnReviews": 2847, "analysisDate": "YYYY-MM-DD", "wordCount": 45, "keyInsights": ["洞察1", "洞察2"], "dataQuality": "good"}}`,
     userTemplate: `请为以下游戏生成一句话总结：
 
 游戏信息：
@@ -155,6 +163,13 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
 5. 队伍构建与策略：队伍构建的策略深度，词条/性格/技能搭配等
 6. 玩家体验曲线：前期、中期、后期体验差异，肝度和氪金点
 
+【元数据要求 - 必须输出】
+- sourceOfTruth: 列出本次分析主要依据的数据源（最多3个）
+- confidence: high/medium/low，基于数据充足程度判断
+- basedOnReviews: 精确数字，估算基于多少条评价
+- keyInsights: 3-5个关键词，用逗号分隔
+- dataQuality: excellent/good/limited，数据是否充足
+
 【输出格式 - 每个描述字段不得少于300字】
 必须输出合法JSON:
 {
@@ -164,7 +179,8 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
   "captureSystem": "捕捉/获得方式详细描述（300-400字）",
   "evolutionSystem": "进化系统设计分析（300-400字）",
   "teamBuilding": "队伍构建策略深度分析（300-400字）",
-  "playerExperience": "玩家体验曲线与节奏分析（300-400字）"
+  "playerExperience": "玩家体验曲线与节奏分析（300-400字）",
+  "metadata": {"sourceOfTruth": ["数据源1", "数据源2"], "confidence": "high", "basedOnReviews": 2847, "analysisDate": "YYYY-MM-DD", "wordCount": 2100, "keyInsights": ["洞察1", "洞察2"], "dataQuality": "good"}
 }
 
 【重要提示】
@@ -192,6 +208,13 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
 5. 战斗节奏与时长：快节奏/慢节奏定位，一场战斗平均时长
 6. PVP与PVE差异：两者在战斗设计上有什么区别
 
+【元数据要求 - 必须输出】
+- sourceOfTruth: 列出本次分析主要依据的数据源（最多3个）
+- confidence: high/medium/low，基于数据充足程度判断
+- basedOnReviews: 精确数字，估算基于多少条评价
+- keyInsights: 3-5个关键词，用逗号分隔
+- dataQuality: excellent/good/limited，数据是否充足
+
 【输出格式 - 每个描述字段不得少于300字】
 必须输出合法JSON:
 {
@@ -200,7 +223,7 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
   "moveSystem": "技能/招式系统设计分析（300-400字）",
   "uniqueMechanics": ["独特战斗机制1详细描述（200字以上）", "独特战斗机制2详细描述（200字以上）"],
   "battlePace": "战斗节奏与时长分析（300-400字）",
-  "pvpPveDifference": "PVP与PVE战斗差异分析（200-300字）"
+  "metadata": {"sourceOfTruth": ["数据源1", "数据源2"], "confidence": "high", "basedOnReviews": 2847, "analysisDate": "YYYY-MM-DD", "wordCount": 1800, "keyInsights": ["洞察1", "洞察2"], "dataQuality": "good"}
 }
 
 【重要提示】
@@ -228,6 +251,13 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
 5. 市场定位分析：在同类游戏中处于什么位置，目标用户画像
 6. 可复制的要素：哪些差异化设计可以被其他开发者学习借鉴
 
+【元数据要求 - 必须输出】
+- sourceOfTruth: 列出本次分析主要依据的数据源（最多3个）
+- confidence: high/medium/low，基于数据充足程度判断
+- basedOnReviews: 精确数字，估算基于多少条评价
+- keyInsights: 3-5个关键词，用逗号分隔
+- dataQuality: excellent/good/limited，数据是否充足
+
 【输出格式 - 每个描述字段不得少于300字】
 必须输出合法JSON:
 {
@@ -236,7 +266,7 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
   "combinedMechanics": ["融合的玩法1详细分析（300字以上）", "融合的玩法2详细分析（300字以上）"],
   "whySuccessful": "游戏成功原因深度剖析（400-500字）",
   "marketPosition": "市场定位与目标用户分析（300-400字）",
-  "replicableElements": "可复制的差异化设计要素（300-400字）"
+  "metadata": {"sourceOfTruth": ["数据源1", "数据源2"], "confidence": "high", "basedOnReviews": 2847, "analysisDate": "YYYY-MM-DD", "wordCount": 2200, "keyInsights": ["洞察1", "洞察2"], "dataQuality": "good"}
 }
 
 【重要提示】
@@ -264,6 +294,13 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
 5. 玩家预期与实际落差：玩家期望什么但实际体验如何，这种落差如何产生
 6. 问题严重程度评估：这些问题对游戏口碑和留存的影响程度
 
+【元数据要求 - 必须输出】
+- sourceOfTruth: 列出本次分析主要依据的数据源（最多3个）
+- confidence: high/medium/low，基于数据充足程度判断
+- basedOnReviews: 精确数字，估算基于多少条评价
+- keyInsights: 3-5个关键词，用逗号分隔
+- dataQuality: excellent/good/limited，数据是否充足
+
 【输出格式 - 每个描述字段不得少于300字】
 必须输出合法JSON:
 {
@@ -272,7 +309,7 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
   "complaintKeywords": ["关键词1出现场景与原因分析", "关键词2出现场景与原因分析", "关键词3出现场景与原因分析"],
   "designPitfalls": ["设计缺陷1详细剖析（300字以上）", "设计缺陷2详细剖析（300字以上）"],
   "playerExpectations": "玩家预期与实际体验落差分析（400-500字）",
-  "severityAssessment": "问题严重程度与影响评估（300-400字）"
+  "metadata": {"sourceOfTruth": ["数据源1", "数据源2"], "confidence": "high", "basedOnReviews": 2847, "analysisDate": "YYYY-MM-DD", "wordCount": 2400, "keyInsights": ["洞察1", "洞察2"], "dataQuality": "good"}
 }
 
 【重要提示】
@@ -300,6 +337,13 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
 5. 氪金点分析：游戏的付费设计是否合理，有哪些可以学习或避免的地方
 6. 综合设计建议：对宝可梦Like游戏开发者的全面建议
 
+【元数据要求 - 必须输出】
+- sourceOfTruth: 列出本次分析主要依据的数据源（最多3个）
+- confidence: high/medium/low，基于数据充足程度判断
+- basedOnReviews: 精确数字，估算基于多少条评价
+- keyInsights: 3-5个关键词，用逗号分隔
+- dataQuality: excellent/good/limited，数据是否充足
+
 【输出格式 - 每个描述字段不得少于300字】
 必须输出合法JSON:
 {
@@ -307,8 +351,8 @@ const MODULE_PROMPTS: Record<string, { system: string; userTemplate: string }> =
   "pitfallsToAvoid": ["需要避开的坑1详细分析（300字以上）", "需要避开的坑2详细分析（300字以上）", "需要避开的坑3详细分析（300字以上）"],
   "difficultyBalance": "难度与肝度平衡详细分析（400-500字）",
   "grindAnalysis": "肝度深度分析（400-500字）",
-  "monetizationAnalysis": "氪金点与付费设计分析（300-400字）",
-  "recommendation": "对开发者的综合设计建议（500-600字）"
+  "recommendation": "对开发者的综合设计建议（500-600字）",
+  "metadata": {"sourceOfTruth": ["数据源1", "数据源2"], "confidence": "high", "basedOnReviews": 2847, "analysisDate": "YYYY-MM-DD", "wordCount": 3000, "keyInsights": ["洞察1", "洞察2"], "dataQuality": "good"}
 }
 
 【重要提示】
@@ -375,7 +419,17 @@ export function parseModuleAnalysis(
     .trim();
 
   try {
-    return JSON.parse(cleaned);
+    const parsed = JSON.parse(cleaned);
+    if (parsed.metadata) {
+      parsed.metadata.analysisDate = new Date().toISOString().split("T")[0];
+      if (!parsed.metadata.wordCount) {
+        parsed.metadata.wordCount = content.length;
+      }
+      if (!parsed.metadata.basedOnReviews || typeof parsed.metadata.basedOnReviews !== "number") {
+        parsed.metadata.basedOnReviews = 0;
+      }
+    }
+    return parsed;
   } catch {
     throw new Error(`LLM 返回的不是有效 JSON:\n${cleaned.slice(0, 500)}`);
   }

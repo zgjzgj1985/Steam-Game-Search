@@ -2,6 +2,7 @@
 
 import { Star, TrendingUp } from "lucide-react";
 import { DifferentiationResult } from "@/types/game";
+import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
 
 interface DifferentiationViewProps {
   differentiation: DifferentiationResult;
@@ -21,6 +22,23 @@ export function DifferentiationView({ differentiation, className }: Differentiat
         <h3 className="text-lg font-semibold text-white">差异化创新</h3>
         <div className="flex-1 h-px bg-gradient-to-r from-amber-400/40 to-transparent ml-2" />
       </div>
+
+      {/* 元数据 */}
+      {differentiation.metadata && (
+        <div className="mb-4 p-3 rounded-xl bg-white/[0.02] border border-white/5">
+          <AnalysisMetadataBadge metadata={differentiation.metadata} />
+          {differentiation.metadata.sourceOfTruth.length > 0 && (
+            <div className="mt-2">
+              <SourceOfTruthBadge sources={differentiation.metadata.sourceOfTruth} />
+            </div>
+          )}
+          {differentiation.metadata.keyInsights.length > 0 && (
+            <div className="mt-2">
+              <KeyInsightsBadge insights={differentiation.metadata.keyInsights} />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 核心标签 */}
       <div className="p-4 rounded-2xl bg-amber-500/5 mb-5">

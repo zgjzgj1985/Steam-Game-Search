@@ -78,9 +78,20 @@ export interface AnalysisModuleState {
 /**
  * 单个模块的分析结果
  */
+export interface AnalysisMetadata {
+  sourceOfTruth: string[];
+  confidence: "high" | "medium" | "low";
+  basedOnReviews: number;
+  analysisDate: string;
+  wordCount: number;
+  keyInsights: string[];
+  dataQuality: "excellent" | "good" | "limited";
+}
+
 export interface VerdictResult {
   type: "verdict";
   verdict: string;
+  metadata: AnalysisMetadata;
 }
 
 export interface CoreGameplayResult {
@@ -92,6 +103,7 @@ export interface CoreGameplayResult {
   evolutionSystem: string;
   teamBuilding: string;
   playerExperience: string;
+  metadata: AnalysisMetadata;
 }
 
 export interface BattleSystemResult {
@@ -101,6 +113,7 @@ export interface BattleSystemResult {
   moveSystem: string;
   uniqueMechanics: string[];
   battlePace: string;
+  metadata: AnalysisMetadata;
 }
 
 export interface DifferentiationResult {
@@ -110,6 +123,7 @@ export interface DifferentiationResult {
   combinedMechanics: string[];
   whySuccessful: string;
   marketPosition: string;
+  metadata: AnalysisMetadata;
 }
 
 export interface NegativeFeedbackResult {
@@ -119,6 +133,7 @@ export interface NegativeFeedbackResult {
   complaintKeywords: string[];
   designPitfalls: string[];
   playerExpectations: string;
+  metadata: AnalysisMetadata;
 }
 
 export interface DesignSuggestionsResult {
@@ -128,6 +143,7 @@ export interface DesignSuggestionsResult {
   difficultyBalance: string;
   grindAnalysis: string;
   recommendation: string;
+  metadata: AnalysisMetadata;
 }
 
 /**

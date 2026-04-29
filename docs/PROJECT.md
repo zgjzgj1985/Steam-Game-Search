@@ -1,9 +1,10 @@
 # Steam 全域游戏搜索
 
-> **版本**: v1.20.0
+> **版本**: v1.21.0
 > **更新日期**: 2026-04-29
 
 > **版本历史**:
+> - v1.21.0: **分析模块元数据增强**：为详细分析页面的6个分析模块增加信息来源标识、置信度标识及其他有价值信息。包括：更新 `Result` 接口添加 `AnalysisMetadata` 字段（sourceOfTruth、confidence、basedOnReviews、analysisDate、wordCount、keyInsights、dataQuality）；更新 LLM 提示词要求每个模块输出元数据；API层增加数据质量提示（根据评价数量自动判断置信度）；创建共享元数据展示组件 `analysis-metadata-badge.tsx`；升级6个展示组件（verdict、coreGameplay、battleSystem、differentiation、negativeFeedback、designSuggestions），增加置信度徽章、评价数量、数据质量标签。涉及文件：`src/types/game.ts`、`src/lib/llm.ts`、`src/app/api/analysis/module/route.ts`、`src/components/analysis/analysis-metadata-badge.tsx`（新增）、`src/components/analysis/modular-analysis.tsx`、`src/components/analysis/core-gameplay.tsx`、`src/components/analysis/battle-system-view.tsx`、`src/components/analysis/differentiation-view.tsx`、`src/components/analysis/negative-feedback.tsx`、`src/components/analysis/design-suggestions.tsx`。
 > - v1.20.0: **文档全面审核与修复**：系统性审核 PROJECT.md，发现并修复大量陈旧内容。包括：API接口文档新增 `/api/games` 兼容层和 `/api/analysis/module` POST接口；修正 mode2/filter 默认值（poolA/B minRating=40）；补充缺失参数（poolA_minYear、priceMin/Max、modernTagFilter、featureTagFilter、tagSortBy、statsOnly）；更新 Game 类型定义（修正必填/可选、补充预计算字段、补充 cnReviews/overseasReviews）；更新项目结构目录树（补充缺失文件、补全 scripts/ 目录、补全组件列表）。涉及文件：`docs/PROJECT.md`。
 > - v1.19.0: **筛选机制重构 + 池子条件放宽**：预计算脚本改用威尔逊得分替代好评率作为池子排序基准，解决样本量过少导致的好评率失真问题。API路由同步放宽池子参数默认值（A池>=40%、B池>=40%），确保筛选结果有足够样本支撑。涉及文件：`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。
 > - v1.18.0: **LLM标签全量采集完成 + 质量复审通过**：A池633款+B池94款全部完成，零失败。模式2标签质量复审综合评分8/10。详见《池子创新标签质量审核报告 v2.0.0》。同时修复批量采集脚本日志输出 UnicodeEncodeError 崩溃问题。

@@ -1239,6 +1239,114 @@ export default function Mode2Page() {
       </div>
 
       <div className="container mx-auto w-full min-w-0 px-4 py-8">
+        {/* ========== 测试版过滤 + 价格筛选（紧凑横向布局） ========== */}
+        <div className="bg-card rounded-xl border p-3 mb-6">
+          <div className="flex flex-wrap items-center gap-4">
+            {/* 过滤测试版开关 */}
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-md bg-purple-500/10 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-3.5 h-3.5 text-purple-500" />
+              </div>
+              <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">过滤测试版</span>
+              <button
+                onClick={() => setExcludeTestVersions(!excludeTestVersions)}
+                className={cn(
+                  "relative w-10 h-5 rounded-full transition-colors text-[10px] font-medium",
+                  excludeTestVersions ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                )}
+              >
+                {excludeTestVersions ? "开" : "关"}
+              </button>
+            </div>
+
+            {/* 分隔线 */}
+            <div className="w-px h-5 bg-border" />
+
+            {/* 价格筛选 */}
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-md bg-green-500/10 flex items-center justify-center shrink-0">
+                <span className="text-green-600 font-bold text-xs">$</span>
+              </div>
+              <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">价格</span>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => { setPriceMin(undefined); setPriceMax(undefined); }}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-xs font-medium transition-colors",
+                    priceMin === undefined && priceMax === undefined
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted/50 hover:bg-muted text-muted-foreground"
+                  )}
+                >
+                  全部
+                </button>
+                <button
+                  onClick={() => { setPriceMin(0); setPriceMax(0); }}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-xs font-medium transition-colors",
+                    priceMin === 0 && priceMax === 0
+                      ? "bg-green-600 text-white"
+                      : "bg-muted/50 hover:bg-muted text-muted-foreground"
+                  )}
+                >
+                  免费
+                </button>
+                <button
+                  onClick={() => { setPriceMin(undefined); setPriceMax(10); }}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-xs font-medium transition-colors",
+                    priceMin === undefined && priceMax === 10
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted/50 hover:bg-muted text-muted-foreground"
+                  )}
+                >
+                  $10以下
+                </button>
+                <button
+                  onClick={() => { setPriceMin(10); setPriceMax(30); }}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-xs font-medium transition-colors",
+                    priceMin === 10 && priceMax === 30
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted/50 hover:bg-muted text-muted-foreground"
+                  )}
+                >
+                  $10-30
+                </button>
+                <button
+                  onClick={() => { setPriceMin(30); setPriceMax(undefined); }}
+                  className={cn(
+                    "px-2 py-1 rounded-md text-xs font-medium transition-colors",
+                    priceMin === 30 && priceMax === undefined
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted/50 hover:bg-muted text-muted-foreground"
+                  )}
+                >
+                  $30以上
+                </button>
+              </div>
+              {/* 价格区间显示 */}
+              {(priceMin !== undefined || priceMax !== undefined) && (
+                <span className="text-[10px] text-primary">
+                  {priceMin !== undefined ? `$${priceMin}` : "$0"} - {priceMax !== undefined ? `$${priceMax}` : "不限"}
+                </span>
+              )}
+            </div>
+
+            {/* 价格统计信息（如果有） */}
+            {priceStats && (
+              <>
+                <div className="w-px h-5 bg-border" />
+                <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                  <span>均价 <span className="font-medium text-foreground">${priceStats.avg.toFixed(2)}</span></span>
+                  <span>中位 <span className="font-medium text-foreground">${priceStats.median.toFixed(2)}</span></span>
+                  <span>区间 <span className="font-medium text-foreground">${priceStats.min.toFixed(2)}-${priceStats.max.toFixed(2)}</span></span>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
         {/* ========== 三池配置区域 ========== */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* A池 */}
@@ -1425,194 +1533,6 @@ export default function Mode2Page() {
           )}
         </div>
 
-        {/* ========== 测试版过滤 ========== */}
-        <div className="bg-card rounded-xl border p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                <AlertTriangle className="w-4 h-4 text-purple-500" />
-              </div>
-              <div>
-                <h3 className="font-medium text-sm">过滤测试版/预发布版</h3>
-                <p className="text-xs text-muted-foreground">默认过滤Beta、Early Access等未正式发布的版本</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setExcludeTestVersions(!excludeTestVersions)}
-              className={cn(
-                "relative w-12 h-6 rounded-full transition-colors",
-                excludeTestVersions ? "bg-primary" : "bg-muted"
-              )}
-            >
-              <span
-                className={cn(
-                  "absolute top-1 w-4 h-4 rounded-full bg-white transition-transform shadow",
-                  excludeTestVersions ? "left-7" : "left-1"
-                )}
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* ========== 价格筛选 ========== */}
-        <div className="bg-card rounded-xl border p-4 mb-6">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="w-9 h-9 rounded-lg bg-green-500/10 flex items-center justify-center">
-              <span className="text-green-600 font-bold text-sm">$</span>
-            </div>
-            <span className="text-sm font-medium text-muted-foreground">价格筛选</span>
-
-            {/* 快捷价格区间 */}
-            <div className="flex flex-wrap gap-1.5">
-              <button
-                onClick={() => {
-                  setPriceMin(undefined);
-                  setPriceMax(undefined);
-                }}
-                className={cn(
-                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-                  priceMin === undefined && priceMax === undefined
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
-                )}
-              >
-                全部
-              </button>
-              <button
-                onClick={() => {
-                  setPriceMin(0);
-                  setPriceMax(0);
-                }}
-                className={cn(
-                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-                  priceMin === 0 && priceMax === 0
-                    ? "bg-green-600 text-white shadow-md"
-                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
-                )}
-              >
-                免费
-              </button>
-              <button
-                onClick={() => {
-                  setPriceMin(undefined);
-                  setPriceMax(10);
-                }}
-                className={cn(
-                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-                  priceMin === undefined && priceMax === 10
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
-                )}
-              >
-                $10以下
-              </button>
-              <button
-                onClick={() => {
-                  setPriceMin(10);
-                  setPriceMax(30);
-                }}
-                className={cn(
-                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-                  priceMin === 10 && priceMax === 30
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
-                )}
-              >
-                $10-30
-              </button>
-              <button
-                onClick={() => {
-                  setPriceMin(30);
-                  setPriceMax(undefined);
-                }}
-                className={cn(
-                  "px-2.5 py-1 rounded-md text-xs font-medium transition-colors",
-                  priceMin === 30 && priceMax === undefined
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
-                )}
-              >
-                $30以上
-              </button>
-            </div>
-
-            {/* 价格区间显示 */}
-            {(priceMin !== undefined || priceMax !== undefined) && (
-              <span className="text-xs text-primary">
-                {priceMin !== undefined ? `$${priceMin}` : "$0"} - {priceMax !== undefined ? `$${priceMax}` : "不限"}
-              </span>
-            )}
-          </div>
-
-          {/* 价格统计信息 */}
-          {priceStats && !isLoadingResults && (
-            <div className="mt-3 pt-3 border-t border-border/50">
-              <div className="flex items-center gap-4 text-xs text-muted-foreground mb-2">
-                <span>均价: <span className="font-medium text-foreground">${priceStats.avg.toFixed(2)}</span></span>
-                <span>中位价: <span className="font-medium text-foreground">${priceStats.median.toFixed(2)}</span></span>
-                <span>区间: <span className="font-medium text-foreground">${priceStats.min.toFixed(2)} - ${priceStats.max.toFixed(2)}</span></span>
-              </div>
-              {/* 价格分布条形图 */}
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-muted-foreground w-8">分布:</span>
-                <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden flex">
-                  {priceStats.distribution.free > 0 && (
-                    <div
-                      className="h-full bg-green-500 flex items-center justify-center"
-                      style={{ width: `${(priceStats.distribution.free / priceStats.total) * 100}%` }}
-                      title={`免费: ${priceStats.distribution.free}`}
-                    />
-                  )}
-                  {priceStats.distribution.under10 > 0 && (
-                    <div
-                      className="h-full bg-emerald-400"
-                      style={{ width: `${(priceStats.distribution.under10 / priceStats.total) * 100}%` }}
-                      title={`<$10: ${priceStats.distribution.under10}`}
-                    />
-                  )}
-                  {priceStats.distribution.under20 > 0 && (
-                    <div
-                      className="h-full bg-blue-400"
-                      style={{ width: `${(priceStats.distribution.under20 / priceStats.total) * 100}%` }}
-                      title={`$10-20: ${priceStats.distribution.under20}`}
-                    />
-                  )}
-                  {priceStats.distribution.under30 > 0 && (
-                    <div
-                      className="h-full bg-purple-400"
-                      style={{ width: `${(priceStats.distribution.under30 / priceStats.total) * 100}%` }}
-                      title={`$20-30: ${priceStats.distribution.under30}`}
-                    />
-                  )}
-                  {priceStats.distribution.under50 > 0 && (
-                    <div
-                      className="h-full bg-amber-400"
-                      style={{ width: `${(priceStats.distribution.under50 / priceStats.total) * 100}%` }}
-                      title={`$30-50: ${priceStats.distribution.under50}`}
-                    />
-                  )}
-                  {priceStats.distribution.over50 > 0 && (
-                    <div
-                      className="h-full bg-red-400"
-                      style={{ width: `${(priceStats.distribution.over50 / priceStats.total) * 100}%` }}
-                      title={`$50+: ${priceStats.distribution.over50}`}
-                    />
-                  )}
-                </div>
-              </div>
-              {/* 图例 */}
-              <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1.5 text-[10px] text-muted-foreground">
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500"></span>免费({priceStats.distribution.free})</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400"></span>&lt;$10({priceStats.distribution.under10})</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400"></span>$10-20({priceStats.distribution.under20})</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-purple-400"></span>$20-30({priceStats.distribution.under30})</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400"></span>$30-50({priceStats.distribution.under50})</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-400"></span>$50+({priceStats.distribution.over50})</span>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* ========== 特色标签筛选（分组展示 + 搜索）========== */}
         <div className="bg-card rounded-xl border p-4 mb-6">
           <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -1770,7 +1690,7 @@ export default function Mode2Page() {
           </div>
 
           {/* 标签分组展示 */}
-          <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
+          <div className="space-y-3 max-h-[640px] overflow-y-auto pr-2">
             {(() => {
               // 标签分组定义
               const TAG_GROUPS = [

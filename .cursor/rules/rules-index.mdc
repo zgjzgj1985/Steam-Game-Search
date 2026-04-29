@@ -1,15 +1,15 @@
 ---
 description: 规则文档索引和优先级说明
 alwaysApply: true
-version: v1.1.0
-lastUpdated: 2026-04-28
+version: v1.3.0
+lastUpdated: 2026-04-29
 ---
 
 # 规则文档索引
 
 ## 概述
 
-本项目规则文档分为 **4个核心文件**，涵盖语言规范、安全要求、开发流程等方面。
+本项目规则文档分为 **4个核心文件**，涵盖语言规范、安全要求、开发流程和编程行为等方面。
 
 ---
 
@@ -20,7 +20,7 @@ lastUpdated: 2026-04-28
 | 优先级 | 规则文件 | 说明 |
 |--------|----------|------|
 | 1 | `git-safety.mdc` | Git 操作安全（最高优先级） |
-| 2 | `dev-rules.mdc` | 语言、数据安全、临时脚本、开发规范 |
+| 2 | `dev-rules.mdc` | 语言、数据安全、临时脚本、任务管理、开发规范 |
 | 3 | `path-reminder.mdc` | 路径提醒 |
 | 4 | `karpathy-guidelines.mdc` | 编程行为指南 |
 
@@ -30,13 +30,13 @@ lastUpdated: 2026-04-28
 
 ### 1. dev-rules.mdc（核心规范）
 
-**内容**：语言要求、文档版本同步、数据保护、**临时脚本管理**、任务状态持久化、变更检查清单
+**内容**：语言要求、文档版本同步、数据保护、临时脚本管理、任务状态持久化、变更检查清单
 
 **关键规则**：
 - 语言一致性（最高优先级）：所有输出必须使用简体中文
 - 数据安全：修改数据代码前必须先备份
-- 临时脚本：统一放到 `scripts/temp/` 目录
-- 任务状态持久化：使用 `.cursor/tasks/current-task.md` 追踪任务
+- 临时文件：统一放到项目根目录 `temp/` 目录
+- 任务状态持久化：使用 `temp/TASK_PROGRESS.md` 记录任务进度
 
 ### 2. git-safety.mdc（安全规范）
 
@@ -55,7 +55,7 @@ lastUpdated: 2026-04-28
 
 ### 4. karpathy-guidelines.mdc（编程指南）
 
-**内容**：编程行为指南（中英双语）
+**内容**：编程行为指南（改编自 Andrej Karpathy）
 
 **关键规则**：
 - 编码前先思考（不要假设，展示权衡）
@@ -80,3 +80,5 @@ lastUpdated: 2026-04-28
 |------|------|----------|
 | v1.0.0 | 2026-04-28 | 初始版本，整合规则文档 |
 | v1.1.0 | 2026-04-28 | 合并 temp-scripts.mdc 到 dev-rules.mdc，规则文件从5个精简为4个 |
+| v1.2.0 | 2026-04-29 | 新增 task-progress.mdc 规则文件，注册任务计划与进度记录规范 |
+| v1.3.0 | 2026-04-29 | 合并 task-progress.mdc 到 dev-rules.mdc，统一临时文件位置为 temp/ 和任务状态文件为 TASK_PROGRESS.md，修复 dev-rules.mdc 序号错误，精简 karpathy-guidelines.mdc 删除英文原文附录 |

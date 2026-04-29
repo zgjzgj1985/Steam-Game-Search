@@ -14,8 +14,62 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { Game, AnalysisModuleResult } from "@/types/game";
+import { Game, GameAnalysis, AnalysisModuleResult, AnalysisModuleType } from "@/types/game";
 import { chatModuleAnalysis, parseModuleAnalysis } from "@/lib/llm";
+
+// ============ 分析结果持久化 ============
+
+const ANALYSES_FILE = path.join(process.cwd(), "public", "data", "analyses.json");
+
+interface AnalysesStore {
+  [gameId: string]: GameAnalysis;
+}
+
+function loadAnalyses(): AnalysesStore {
+  try {
+    if (!fs.existsSync(ANALYSES_FILE)) {
+      return {};
+    }
+    const raw = fs.readFileSync(ANALYSES_FILE, "utf-8");
+    return JSON.parse(raw) as AnalysesStore;
+  } catch {
+    return {};
+  }
+}
+
+function saveAnalysis(analysis: GameAnalysis): void {
+  try {
+    const store = loadAnalyses();
+    if (!store[analysis.gameId]) {
+      store[analysis.gameId] = {
+        id: analysis.id,
+        gameId: analysis.gameId,
+        gameName: analysis.gameName,
+        pool: analysis.pool,
+        generatedAt: analysis.generatedAt,
+        analyzedModules: [],
+      };
+    }
+    const existing = store[analysis.gameId];
+    existing.generatedAt = analysis.generatedAt;
+    for (const modType of analysis.analyzedModules) {
+      if (!existing.analyzedModules.includes(modType)) {
+        existing.analyzedModules.push(modType);
+      }
+      if (analysis[modType]) {
+        (existing as any)[modType] = analysis[modType];
+      }
+    }
+    fs.writeFileSync(ANALYSES_FILE, JSON.stringify(store, null, 2), "utf-8");
+  } catch (e) {
+    console.error("[analysis] 保存分析结果失败:", e);
+  }
+}
+
+function getSavedAnalysis(gameId: string): GameAnalysis | null {
+  const store = loadAnalyses();
+  return store[gameId] || null;
+}
 
 // ============ 数据库加载（模块级缓存）============
 
@@ -274,12 +328,30 @@ export async function POST(request: NextRequest) {
     const content = await chatModuleAnalysis(gameInfo, module, game.pool);
     const result = parseModuleAnalysis(content, module);
 
+    const generatedAt = new Date().toISOString();
+    const analysisModuleType = module as AnalysisModuleType;
+
+    const analysis: GameAnalysis = {
+      id: `analysis-${gameId}-${Date.now()}`,
+      gameId: gameId,
+      gameName: game.name,
+      pool: game.pool || null,
+      generatedAt,
+      analyzedModules: [analysisModuleType],
+      [analysisModuleType]: { ...result, isAnalyzed: true, isAnalyzing: false, error: null } as any,
+    };
+
+    saveAnalysis(analysis);
+
+    const savedAnalysis = getSavedAnalysis(gameId);
+
     return NextResponse.json(
       {
         gameId,
         module,
         result,
-        generatedAt: new Date().toISOString(),
+        generatedAt,
+        savedModules: savedAnalysis?.analyzedModules || [module],
       },
       {
         headers: {

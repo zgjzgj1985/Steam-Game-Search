@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Game, AnalysisModuleType, ANALYSIS_MODULES, GameAnalysis, VerdictResult } from "@/types/game";
 import { GameInfo } from "@/components/analysis/game-info";
 import { CoreGameplayView } from "@/components/analysis/core-gameplay";
@@ -49,8 +49,40 @@ export function ModularAnalysis({ game, initialAnalysis }: ModularAnalysisProps)
   const [activeTab, setActiveTab] = useState<"analysis" | "gallery">("analysis");
   const [analyzingModules, setAnalyzingModules] = useState<Set<AnalysisModuleType>>(new Set());
   const [error, setError] = useState<string | null>(null);
+  const [loadedFromCache, setLoadedFromCache] = useState(false);
 
   const poolConfig = analysis.pool ? POOL_CONFIG[analysis.pool] : null;
+
+  useEffect(() => {
+    async function loadSavedAnalysis() {
+      try {
+        const res = await fetch(`/api/analysis/${encodeURIComponent(game.id)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.exists && data.analysis) {
+            const saved = data.analysis;
+            setAnalysis(prev => ({
+              ...prev,
+              id: saved.id || prev.id,
+              generatedAt: saved.generatedAt,
+              analyzedModules: saved.analyzedModules || [],
+              referenceValue: saved.referenceValue,
+              verdict: saved.verdict,
+              coreGameplay: saved.coreGameplay,
+              battleSystem: saved.battleSystem,
+              differentiation: saved.differentiation,
+              negativeFeedback: saved.negativeFeedback,
+              designSuggestions: saved.designSuggestions,
+            }));
+            setLoadedFromCache(true);
+          }
+        }
+      } catch {
+        // 静默降级
+      }
+    }
+    loadSavedAnalysis();
+  }, [game.id]);
 
   const analyzeModule = useCallback(async (moduleType: AnalysisModuleType) => {
     setAnalyzingModules(prev => new Set(prev).add(moduleType));
@@ -114,6 +146,13 @@ export function ModularAnalysis({ game, initialAnalysis }: ModularAnalysisProps)
               </div>
             )}
 
+            {loadedFromCache && (
+              <div className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span className="text-xs text-emerald-400">已加载历史分析</span>
+              </div>
+            )}
+
             {/* 一句话结论 */}
             {isAnalyzed("verdict") && analysis.verdict && (
               <div className="flex-1 p-4 rounded-2xl bg-white/[0.02]">
@@ -148,7 +187,7 @@ export function ModularAnalysis({ game, initialAnalysis }: ModularAnalysisProps)
               >
                 {analyzingModules.size > 0 && <Loader2 className="w-4 h-4 animate-spin" />}
                 <Sparkles className="w-4 h-4" />
-                一键分析
+                {analysis.analyzedModules.length === ANALYSIS_MODULES.length && !analyzingModules.size ? "分析完成" : loadedFromCache ? "继续分析" : "一键分析"}
               </button>
             </div>
           </div>

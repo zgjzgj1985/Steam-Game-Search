@@ -1,21 +1,19 @@
 ---
-description: 编程行为指南（中英双语版）
+description: 编程行为指南
 alwaysApply: true
-version: v1.0.0
-lastUpdated: 2026-04-28
+version: v1.1.0
+lastUpdated: 2026-04-29
 ---
 
-# 编程行为指南 / Karpathy Behavioral Guidelines
+# 编程行为指南
 
-减少常见 LLM 编程错误的行为指南。需与项目特定指令结合使用。
-
-> 本文件提供中英双语版本。规则内容以英文原文为准，中文翻译仅供参考。
-
-**权衡原则**：这些指南偏向谨慎而非速度。对于简单任务，请自行判断。
+> 本指南改编自 Andrej Karpathy 的 Behavioral Guidelines，旨在减少常见 LLM 编程错误。
+>
+> **权衡原则**：这些指南偏向谨慎而非速度。对于简单任务，请自行判断。
 
 ---
 
-## 1. Coding First / 编码前先思考
+## 1. 编码前先思考
 
 **不要假设。不要隐藏困惑。展示权衡。**
 
@@ -27,7 +25,7 @@ lastUpdated: 2026-04-28
 
 ---
 
-## 2. Simplicity First / 简洁优先
+## 2. 简洁优先
 
 **用最少代码解决问题。不要投机取巧。**
 
@@ -41,7 +39,7 @@ lastUpdated: 2026-04-28
 
 ---
 
-## 3. Surgical Changes / 精准改动
+## 3. 精准改动
 
 **只触碰必须改动的。清理自己造成的混乱。**
 
@@ -59,7 +57,7 @@ lastUpdated: 2026-04-28
 
 ---
 
-## 4. Goal-Driven Execution / 目标驱动执行
+## 4. 目标驱动执行
 
 **定义成功标准。循环验证直到完成。**
 
@@ -80,65 +78,3 @@ lastUpdated: 2026-04-28
 ---
 
 **检验这些指南是否有效**：diff 中不必要的改动减少，由于过度复杂而重写的情况减少，在错误发生后提问变为在错误发生前提问。
-
----
-
-## 附：英文原文参考
-
-原文内容保持不变，供需要时参考：
-
-```
-## 1. Think Before Coding
-
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
-
-## 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-## 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-```

@@ -47,10 +47,12 @@ export function AnalysisMetadataBadge({ metadata, className }: AnalysisMetadataB
   return (
     <div className={cn("flex flex-wrap items-center gap-3 text-xs", className)}>
       {/* 置信度 */}
-      <div className={cn("flex items-center gap-1.5 px-2.5 py-1 rounded-full border", confConfig.bg, confConfig.border)}>
-        <ConfIcon className={cn("w-3 h-3", confConfig.color)} />
-        <span className={confConfig.color}>{confConfig.label}</span>
-      </div>
+      {confConfig && (
+        <div className={cn("flex items-center gap-1.5 px-2.5 py-1 rounded-full border", confConfig.bg, confConfig.border)}>
+          <ConfIcon className={cn("w-3 h-3", confConfig.color)} />
+          <span className={confConfig.color}>{confConfig.label}</span>
+        </div>
+      )}
 
       {/* 评价数量 */}
       {metadata.basedOnReviews > 0 && (
@@ -69,10 +71,12 @@ export function AnalysisMetadataBadge({ metadata, className }: AnalysisMetadataB
       )}
 
       {/* 数据质量 */}
-      <div className={cn("flex items-center gap-1.5", qualityConfig.color)}>
-        <Star className="w-3 h-3" />
-        <span>{qualityConfig.label}</span>
-      </div>
+      {qualityConfig && (
+        <div className={cn("flex items-center gap-1.5", qualityConfig.color)}>
+          <Star className="w-3 h-3" />
+          <span>{qualityConfig.label}</span>
+        </div>
+      )}
     </div>
   );
 }

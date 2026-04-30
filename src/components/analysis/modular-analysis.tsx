@@ -33,9 +33,10 @@ const MODULE_META: Record<AnalysisModuleType, { icon: React.ElementType; accent:
 interface ModularAnalysisProps {
   game: Game;
   initialAnalysis?: Partial<GameAnalysis>;
+  onMarkRead?: (gameId: string) => void;
 }
 
-export function ModularAnalysis({ game, initialAnalysis }: ModularAnalysisProps) {
+export function ModularAnalysis({ game, initialAnalysis, onMarkRead }: ModularAnalysisProps) {
   const [analysis, setAnalysis] = useState<GameAnalysis>({
     id: initialAnalysis?.id || `analysis-${game.id}-${Date.now()}`,
     gameId: game.id,
@@ -285,7 +286,7 @@ export function ModularAnalysis({ game, initialAnalysis }: ModularAnalysisProps)
                     <NegativeFeedbackView negativeFeedback={analysis.negativeFeedback as any} pool={analysis.pool} />
                   )}
                   {isAnalyzed("designSuggestions") && analysis.designSuggestions && (
-                    <DesignSuggestionsView designSuggestions={analysis.designSuggestions as any} />
+                    <DesignSuggestionsView designSuggestions={analysis.designSuggestions as any} gameId={game.id} onMarkRead={onMarkRead} />
                   )}
                 </div>
               )}

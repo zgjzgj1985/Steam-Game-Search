@@ -104,7 +104,7 @@ export function AnalysisDetail({ game, analysis }: AnalysisDetailProps) {
               </div>
               <DifferentiationView differentiation={analysis.differentiation} />
               <NegativeFeedbackView negativeFeedback={analysis.negativeFeedback} pool={analysis.pool} />
-              <DesignSuggestionsView designSuggestions={analysis.designSuggestions} />
+              <DesignSuggestionsView designSuggestions={analysis.designSuggestions} gameId={game.id} />
             </div>
           )}
           {activeTab === "gameplay" && <CoreGameplayView coreGameplay={analysis.coreGameplay} />}

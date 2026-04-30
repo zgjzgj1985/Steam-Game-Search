@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   Search,
   ChevronLeft,
@@ -26,6 +26,7 @@ import {
   Globe,
   ChevronDown,
   ChevronUp,
+  CheckCircle,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -271,7 +272,7 @@ function getPositiveRateBySource(reviews: GameRecord["steamReviews"], source: Re
 
 // ============ 游戏卡片 ============
 
-function GameCard({ game, reviewSource }: { game: GameRecord; reviewSource?: ReviewSource }) {
+function GameCard({ game, reviewSource, isRead }: { game: GameRecord; reviewSource?: ReviewSource; isRead?: boolean }) {
   // 根据评价来源获取好评率
   const positiveRate = (() => {
     if (reviewSource === "cn" && game.cnReviews) {
@@ -582,9 +583,17 @@ function GameCard({ game, reviewSource }: { game: GameRecord; reviewSource?: Rev
             </div>
           )}
 
-          <div className="mt-auto flex items-center text-sm text-primary font-medium pt-3 border-t border-border/40">
-            <span>LLM分析</span>
-            <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+          <div className="mt-auto flex items-center justify-between text-sm text-primary font-medium pt-3 border-t border-border/40">
+            <div className="flex items-center">
+              <span>LLM分析</span>
+              <ChevronRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+            </div>
+            {isRead && (
+              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-medium">
+                <CheckCircle className="w-3 h-3 fill-emerald-500/30" />
+                <span>已读</span>
+              </div>
+            )}
           </div>
         </div>
       </Link>
@@ -939,6 +948,20 @@ export default function Mode2Page() {
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<"wilson" | "rating" | "reviews" | "date">("wilson");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
+  // 已读状态管理
+  const [readGameIds, setReadGameIds] = useState<Set<string>>(new Set());
+
+  // 加载已读状态
+  useEffect(() => {
+    const loaded = new Set<string>();
+    for (const game of results) {
+      if (localStorage.getItem(`read-${game.id}`) === "true") {
+        loaded.add(game.id);
+      }
+    }
+    setReadGameIds(loaded);
+  }, [results]);
 
   // 时间过滤 - 支持"近N年"快速筛选和自定义日期范围
   const [yearsFilter, setYearsFilter] = useState<number>(0); // 0 表示不过滤
@@ -2097,7 +2120,7 @@ export default function Mode2Page() {
         {!isLoadingResults && results.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {results.map((game) => (
-              <GameCard key={game.id} game={game} reviewSource={reviewSource} />
+              <GameCard key={game.id} game={game} reviewSource={reviewSource} isRead={readGameIds.has(game.id)} />
             ))}
           </div>
         )}

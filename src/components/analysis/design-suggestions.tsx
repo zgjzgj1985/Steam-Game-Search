@@ -1,16 +1,18 @@
 "use client";
 
-import { Lightbulb, Shield, Gauge, CheckCircle2, XCircle, ChevronDown, Clock, Zap } from "lucide-react";
+import { Lightbulb, Shield, Gauge, CheckCircle2, XCircle, ChevronDown, Clock, Zap, CheckCircle } from "lucide-react";
 import { DesignSuggestionsResult } from "@/types/game";
 import { AnalysisMetadataBadge, SourceOfTruthBadge, KeyInsightsBadge } from "@/components/analysis/analysis-metadata-badge";
 import { RichText } from "@/components/ui/rich-text";
 import { ContentBlock } from "@/components/ui/expandable-section";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DesignSuggestionsViewProps {
   designSuggestions: DesignSuggestionsResult;
+  gameId: string;
   className?: string;
+  onMarkRead?: (gameId: string) => void;
 }
 
 interface CollapsibleItemProps {
@@ -57,7 +59,20 @@ function CollapsibleItem({ icon: Icon, label, value, color }: CollapsibleItemPro
   );
 }
 
-export function DesignSuggestionsView({ designSuggestions, className }: DesignSuggestionsViewProps) {
+export function DesignSuggestionsView({ designSuggestions, gameId, className, onMarkRead }: DesignSuggestionsViewProps) {
+  const storageKey = `read-${gameId}`;
+  const [isRead, setIsRead] = useState(false);
+
+  useEffect(() => {
+    setIsRead(localStorage.getItem(storageKey) === "true");
+  }, [storageKey]);
+
+  const handleMarkRead = () => {
+    setIsRead(true);
+    localStorage.setItem(storageKey, "true");
+    onMarkRead?.(gameId);
+  };
+
   const hasStrengths = designSuggestions.strengthsToLearn.length > 0;
   const hasPitfalls = designSuggestions.pitfallsToAvoid.length > 0;
 
@@ -156,9 +171,25 @@ export function DesignSuggestionsView({ designSuggestions, className }: DesignSu
 
       {/* 综合建议 */}
       <ContentBlock variant="highlight" padding="relaxed">
-        <div className="flex items-center gap-2 mb-3">
-          <Lightbulb className="w-4 h-4 text-[#66c0f4]" />
-          <span className="text-xs text-[#66c0f4]/70 uppercase tracking-wider">综合建议</span>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Lightbulb className="w-4 h-4 text-[#66c0f4]" />
+            <span className="text-xs text-[#66c0f4]/70 uppercase tracking-wider">综合建议</span>
+          </div>
+          {isRead ? (
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs font-medium shadow-inner">
+              <CheckCircle className="w-3.5 h-3.5 fill-emerald-400/30" />
+              <span>已阅读</span>
+            </div>
+          ) : (
+            <button
+              onClick={handleMarkRead}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-all hover:scale-105 active:scale-95"
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              <span>完成阅读</span>
+            </button>
+          )}
         </div>
         <RichText text={designSuggestions.recommendation} />
       </ContentBlock>

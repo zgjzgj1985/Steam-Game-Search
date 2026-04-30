@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { ModularAnalysis } from "@/components/analysis/modular-analysis";
 import { Game } from "@/types/game";
 import { Button } from "@/components/ui/button";
+import { ClientAnalysisWrapper } from "@/components/analysis/client-analysis-wrapper";
 
 function getRequestBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_BASE_URL) {
@@ -61,7 +62,7 @@ export default async function AnalysisPage({ params }: PageProps) {
         </Link>
       </div>
 
-      <ModularAnalysis game={game} />
+      <ClientAnalysisWrapper game={game} />
     </div>
   );
 }

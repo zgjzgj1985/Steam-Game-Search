@@ -497,12 +497,10 @@ function isTurnBased(tags: string[], genres: string[]): boolean {
 
 const dbCache: {
   games: GameRecord[];
-  featureTagOptions: FeatureTagOption[];
   loadedAt: number | null;
   loadError: string | null;
 } = {
   games: [],
-  featureTagOptions: [],
   loadedAt: null,
   loadError: null,
 };
@@ -839,7 +837,6 @@ interface CacheData {
     poolC: number;
   };
   games: GameRecord[];
-  featureTagOptions?: FeatureTagOption[];
 }
 
 // API 响应类型
@@ -1065,75 +1062,7 @@ function buildDedupKey(game: GameRecord): string {
   return `${devKey}|||${nameKey}`;
 }
 
-function loadFeatureTagOptionsFromJson(): FeatureTagOption[] {
-  try {
-    if (fs.existsSync(CACHE_FILE) && fs.statSync(CACHE_FILE).size > 0) {
-      const raw = fs.readFileSync(CACHE_FILE, "utf-8");
-      const cache = JSON.parse(raw) as CacheData;
-      if (cache.featureTagOptions && cache.featureTagOptions.length > 0) {
-        return cache.featureTagOptions;
-      }
-    }
-  } catch (e) {
-    console.warn(`[Mode2] 读取 JSON 缓存中的动态标签失败: ${e instanceof Error ? e.message : String(e)}`);
-  }
-
-  // 回退：从 combinedMechanics.json 动态计算 featureTagOptions
-  return computeFeatureTagOptionsFromMechanics();
-}
-
-// 从 combinedMechanics.json 动态计算特色标签选项
-// 从 rawTagStats 中读取全部标签，对废弃标签应用同义词合并后，按 count 降序排列
-function computeFeatureTagOptionsFromMechanics(): FeatureTagOption[] {
-  try {
-    if (!fs.existsSync(COMBINED_MECHANICS_FILE)) {
-      console.warn("[Mode2] combinedMechanics.json 不存在，无法计算动态标签");
-      return [];
-    }
-    const raw = fs.readFileSync(COMBINED_MECHANICS_FILE, "utf-8");
-    const mechanicsData = JSON.parse(raw) as any;
-
-    // 使用 rawTagStats（来自 rawMechanics 字段的原始标签统计，共207个）
-    // 这是 LLM 从 B池游戏中提取的所有创新融合标签
-    const rawTagStats = mechanicsData.rawTagStats || mechanicsData.tagStats || {};
-
-    // 第一步：对原始统计应用同义词合并（废弃标签 → 保留标签，累加 count）
-    const mergedTagStats: Record<string, number> = {};
-    for (const [tag, count] of Object.entries(rawTagStats)) {
-      if ((count as number) <= 0) continue;
-      // 排除黑名单标签
-      if (TAG_BLACKLIST[tag]) continue;
-      const merged = TAG_SYNONYM_MERGE[tag] || tag;
-      mergedTagStats[merged] = (mergedTagStats[merged] || 0) + (count as number);
-    }
-
-    // 第二步：从合并后的统计构建标签选项
-    const options: FeatureTagOption[] = [];
-    for (const [tag, count] of Object.entries(mergedTagStats)) {
-      const key = tag.toLowerCase().replace(/\s+/g, "_");
-      options.push({
-        key,
-        label: tag,
-        tag,
-        count: count as number,
-        gameCount: count as number,
-        coverage: 0,
-        avgWilson: 0,
-      });
-    }
-
-    // 按 count 降序排列
-    options.sort((a, b) => b.count - a.count);
-
-    console.log(`[Mode2] 从 combinedMechanics.json 加载 ${options.length} 个特色标签（含同义词合并）`);
-    return options;
-  } catch (e) {
-    console.warn(`[Mode2] 从 combinedMechanics.json 计算动态标签失败: ${e instanceof Error ? e.message : String(e)}`);
-    return [];
-  }
-}
-
-function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOption[] } {
+function loadDatabase(): { games: GameRecord[] } {
   const now = Date.now();
   const isProduction = process.env.NODE_ENV === "production";
 
@@ -1145,7 +1074,7 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
 
   if (cacheValid) {
     console.log(`[Mode2] 使用内存缓存的 ${dbCache.games.length} 个游戏 (距上次加载 ${Math.round((now - dbCache.loadedAt!) / 1000)}s 前)`);
-    return { games: dbCache.games, featureTagOptions: dbCache.featureTagOptions };
+    return { games: dbCache.games };
   }
 
   // ============ 优先: SQLite 直接查询 ============
@@ -1198,12 +1127,10 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
       mergeLlMechancics(games);
       // 合并区域评价数据
       mergeRegionalReviews(games);
-      dbCache.featureTagOptions = loadFeatureTagOptionsFromJson();
       dbCache.loadedAt = now;
       dbCache.loadError = null;
       console.log(`[Mode2] 从 SQLite 加载 ${games.length} 个游戏，耗时 ${Date.now() - loadStart}ms`);
-      console.log(`[Mode2] 动态标签: ${dbCache.featureTagOptions.length} 个`);
-      return { games, featureTagOptions: dbCache.featureTagOptions };
+      return { games };
     } catch (e) {
       console.warn(`[Mode2] SQLite 查询失败，降级到 JSON: ${e instanceof Error ? e.message : String(e)}`);
     }
@@ -1216,24 +1143,28 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
       const raw = fs.readFileSync(CACHE_FILE, "utf-8");
       const cache = JSON.parse(raw) as CacheData;
       dbCache.games = cache.games;
+      // 初始化所有游戏的 LLM 字段（cache.games 中的原始对象可能缺少这些字段）
+      for (const game of cache.games) {
+        if (!game.llmMechanics) game.llmMechanics = [];
+        if (!game.llmRawMechanics) game.llmRawMechanics = [];
+        if (game.innovationTags === undefined) game.innovationTags = [];
+      }
       // 从 combinedMechanics.json 合并 LLM 玩法分析数据到每个游戏
       mergeLlMechancics(cache.games);
       // 合并区域评价数据
       mergeRegionalReviews(cache.games);
-      dbCache.featureTagOptions = loadFeatureTagOptionsFromJson();
       dbCache.loadedAt = now;
       dbCache.loadError = null;
       console.log(`[Mode2] 从 JSON 缓存加载 ${cache.games.length} 个游戏，耗时 ${Date.now() - loadStart}ms`);
-      console.log(`[Mode2] 动态标签: ${dbCache.featureTagOptions.length} 个`);
       console.log(`[Mode2] 缓存信息: 去重后 ${cache.meta.totalAfterDedup} 个 | 回合制 ${cache.meta.totalTurnBased} | A池 ${cache.meta.poolA} | B池 ${cache.meta.poolB} | C池 ${cache.meta.poolC}`);
-      return { games: dbCache.games, featureTagOptions: dbCache.featureTagOptions };
+      return { games: dbCache.games };
     }
 
     console.warn("[Mode2] 预计算缓存不存在或为空，降级使用原始 JSON");
     if (!fs.existsSync(DB_FILE)) {
       dbCache.loadError = `数据库文件不存在: ${DB_FILE}`;
       console.error("[Mode2] 文件不存在:", DB_FILE);
-      return { games: [], featureTagOptions: [] };
+      return { games: [] };
     }
 
     const loadStart = Date.now();
@@ -1258,17 +1189,16 @@ function loadDatabase(): { games: GameRecord[]; featureTagOptions: FeatureTagOpt
     mergeLlMechancics(deduped);
     // 合并区域评价数据
     mergeRegionalReviews(deduped);
-    dbCache.featureTagOptions = loadFeatureTagOptionsFromJson();
     dbCache.loadedAt = now;
     dbCache.loadError = null;
     console.log(`[Mode2] 数据转换完成，耗时 ${Date.now() - transformStart}ms`);
 
-    return { games: deduped, featureTagOptions: dbCache.featureTagOptions };
+    return { games: deduped };
   } catch (e) {
     const msg = `加载数据库失败: ${e instanceof Error ? e.message : String(e)}`;
     console.error("[Mode2]", msg);
     dbCache.loadError = msg;
-    return { games: [], featureTagOptions: [] };
+    return { games: [] };
   }
 }
 
@@ -1838,69 +1768,58 @@ function calculateFeatureTagCounts(
     return pools.includes(g.pool);
   });
 
-  // 从缓存中获取预计算的标签选项
-  const presetOptions = dbCache.featureTagOptions.length > 0 ? dbCache.featureTagOptions : [];
+  if (filteredByPool.length === 0) return [];
 
-  if (presetOptions.length === 0) return [];
+  // ============ 从游戏动态收集所有唯一标签 ============
+  // 遍历所有游戏，收集 llmMechanics 和 llmRawMechanics 中的标签
+  // 应用同义词合并和黑名单过滤
+  const tagCountMap: Record<string, { total: number; poolA: number; poolB: number; poolC: number }> = {};
 
-  // 计算每个标签在各池子中的分布
-  const poolADist = gamesWithPools.filter((g) => g.pool === "A");
-  const poolBDist = gamesWithPools.filter((g) => g.pool === "B");
-  const poolCDist = gamesWithPools.filter((g) => g.pool === "C");
+  for (const game of filteredByPool) {
+    // 收集该游戏的所有标签（含去重）
+    const seen = new Set<string>();
+    const allMechs = [...(game.llmMechanics || []), ...(game.llmRawMechanics || [])];
+    for (const m of allMechs) {
+      if (seen.has(m)) continue;
+      seen.add(m);
 
-  // 动态计算每个标签在用户勾选的池子中的总数量
-  // 使用模糊匹配：标签是 mechanics 的子串则匹配
-  const result: FeatureTagOption[] = presetOptions.map((option) => {
-    const tagLower = option.tag.toLowerCase();
+      const merged = TAG_SYNONYM_MERGE[m] || m;
+      if (TAG_BLACKLIST[merged]) continue;
 
-    // 检查游戏是否有该标签（使用模糊匹配：标签是 mechanics 的子串则匹配）
-    const hasTag = (g: GameRecord) => {
-      const llmM = (g.llmMechanics || []).map((m: string) => m.toLowerCase());
-      const llmRawM = (g.llmRawMechanics || []).map((m: string) => m.toLowerCase());
-      // 模糊匹配：检查标签是否是任意 mechanics 的子串
-      return llmM.some(mech => mech.includes(tagLower) || mech === tagLower) ||
-             llmRawM.some(mech => mech.includes(tagLower) || mech === tagLower);
-    };
-
-    const matchedGames = filteredByPool.filter(hasTag);
-    const totalCount = matchedGames.length;
-    const poolACount = poolADist.filter(hasTag).length;
-    const poolBCount = poolBDist.filter(hasTag).length;
-    const poolCCount = poolCDist.filter(hasTag).length;
-
-    // 计算好评率统计
-    let totalPositive = 0;
-    let totalNegative = 0;
-    for (const game of matchedGames) {
-      totalPositive += game.steamReviews?.totalPositive ?? 0;
-      totalNegative += game.steamReviews?.totalNegative ?? 0;
+      if (!tagCountMap[merged]) {
+        tagCountMap[merged] = { total: 0, poolA: 0, poolB: 0, poolC: 0 };
+      }
+      tagCountMap[merged].total++;
+      if (game.pool === "A") tagCountMap[merged].poolA++;
+      else if (game.pool === "B") tagCountMap[merged].poolB++;
+      else if (game.pool === "C") tagCountMap[merged].poolC++;
     }
-    const totalReviews = totalPositive + totalNegative;
-    const positiveRate = totalReviews > 0 ? Math.round((totalPositive / totalReviews) * 100) : 0;
+  }
 
-    // 计算创新指数 = 好评率 × 小众系数
-    // 覆盖率越低，小众系数越高
-    const coverage = filteredByPool.length > 0 ? Math.round((totalCount / filteredByPool.length) * 100) : 0;
-    const rarity = 1 / Math.log(coverage + 2);  // 覆盖率越低，小众系数越高
-    const innovationScore = (positiveRate / 100) * rarity * 100;
-
-    return {
-      ...option,
-      gameCount: totalCount,
-      count: totalCount,
-      coverage,
-      poolDistribution: {
-        A: poolACount,
-        B: poolBCount,
-        C: poolCCount,
-      },
-      // 小众创新标签新增字段
-      positiveRate,
-      totalPositive,
-      totalNegative,
-      innovationScore: Math.round(innovationScore * 100) / 100,
-    };
-  });
+  // 构建结果：按 count 降序
+  const result: FeatureTagOption[] = Object.entries(tagCountMap)
+    .map(([tag, counts]) => {
+      const key = tag.toLowerCase().replace(/\s+/g, "_").replace(/\//g, "_");
+      return {
+        key,
+        label: tag,
+        tag,
+        count: counts.total,
+        gameCount: counts.total,
+        coverage: 0,
+        avgWilson: 0,
+        poolDistribution: {
+          A: counts.poolA,
+          B: counts.poolB,
+          C: counts.poolC,
+        },
+        positiveRate: 0,
+        totalPositive: 0,
+        totalNegative: 0,
+        innovationScore: 0,
+      };
+    })
+    .sort((a, b) => b.count - a.count);
 
   return result;
 }
@@ -2017,7 +1936,7 @@ export async function GET(request: NextRequest) {
   const statsOnly = searchParams.get("statsOnly") === "true";
 
   console.log("[Mode2] 开始加载数据库");
-  const { games: allGames, featureTagOptions } = loadDatabase();
+  const { games: allGames } = loadDatabase();
   console.log(`[Mode2] 数据库加载完成，共 ${allGames.length} 个游戏`);
 
   if (dbCache.loadError) {

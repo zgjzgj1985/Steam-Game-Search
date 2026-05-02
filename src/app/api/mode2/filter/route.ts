@@ -402,12 +402,63 @@ const TURN_BASED_TAGS = [
   "回合",
 ];
 
+// 回合制类型genres（genres中有这些也视为回合制RPG）
+const TURN_BASED_GENRES = [
+  "RPG",
+  "JRPG",
+  "策略",
+  "Strategy",
+  "Role-Playing",
+];
+
 // 宝可梦Like核心标签
 const POKEMON_LIKE_TAGS = [
   "Creature Collector",
   "Monster Catching",
   "Monster Taming",
   "Creature Collection",
+  // 扩展：常见的生物收集/养成类标签
+  "Pokemon",
+  "养宠",
+  "养成",
+  "宠物养成",
+  "怪物养成",
+  "生物收集",
+  "怪物收集",
+];
+
+// 宝可梦Like描述关键词（当标签不可靠时，用描述兜底检测）
+const POKEMON_LIKE_DESC_KEYWORDS = [
+  "monster collector",
+  "creature collector",
+  "monster catching",
+  "monster taming",
+  "pokemon-like",
+  "pokemon like",
+  "怪物捕捉",
+  "怪物收集",
+  "怪物养成",
+  "生物收集",
+  "宠物养成",
+  "僵尸进化",
+  "creature evolution",
+  "evolve monster",
+  "pocket monster",
+  // 补充：怪兽驯服（上古世纪/Steam常用词，对应 Monster Taming）
+  "怪兽驯服",
+];
+
+// 回合制描述关键词（当标签不可靠时，用描述兜底检测）
+const TURN_BASED_DESC_KEYWORDS = [
+  "turn-based",
+  "回合制",
+  "回合策略",
+  "回合战斗",
+  "tactical rpg",
+  "srpg",
+  "jrpg",
+  "策略rpg",
+  "战棋",
 ];
 
 // 黑名单标签(这些类型的游戏不值得参考)
@@ -480,17 +531,34 @@ function isTestVersionByTag(tags: string[], categories: string[]): boolean {
 }
 
 // 检查是否是回合制游戏
-function isTurnBased(tags: string[], genres: string[]): boolean {
+// 策略：先检查标签 → 再检查 genres（兜底） → 再检查描述关键词（额外兜底）
+function isTurnBased(tags: string[], genres: string[], shortDescription?: string): boolean {
   const normalizedTags = tags.map((t) => t.toLowerCase());
   const normalizedGenres = genres.map((g) => g.toLowerCase());
 
-  return TURN_BASED_TAGS.some((tb) => {
+  // 策略1：检查标签
+  const hasTurnBasedTag = TURN_BASED_TAGS.some((tb) => {
     const tbLower = tb.toLowerCase();
-    return (
-      normalizedTags.some((t) => t.includes(tbLower)) ||
-      normalizedGenres.some((g) => g.includes(tbLower))
-    );
+    return normalizedTags.some((t) => t.includes(tbLower));
   });
+  if (hasTurnBasedTag) return true;
+
+  // 策略2：genres 兜底（RPG/JRPG/策略类型本身暗示回合制特征）
+  const hasGenreFallback = TURN_BASED_GENRES.some((g) =>
+    normalizedGenres.some((ng) => ng.includes(g.toLowerCase()))
+  );
+  if (hasGenreFallback) return true;
+
+  // 策略3：描述关键词兜底（Steam 标签为空/乱填时补救）
+  if (shortDescription) {
+    const descLower = shortDescription.toLowerCase();
+    const hasDescFallback = TURN_BASED_DESC_KEYWORDS.some((kw) =>
+      descLower.includes(kw.toLowerCase())
+    );
+    if (hasDescFallback) return true;
+  }
+
+  return false;
 }
 
 // ============ 数据库加载 ============
@@ -642,13 +710,23 @@ function rowToGameRecord(row: any): GameRecord {
     headerImage: row.header_image || null,
     screenshots: row.screenshots ? JSON.parse(row.screenshots) : [],
     steamUrl: `https://store.steampowered.com/app/${row.appid}/`,
-    isPokemonLike: row.is_pokemon_like === 1,
+    isPokemonLike: row.is_pokemon_like === 1
+      || checkPokemonLike(
+          row.tags ? JSON.parse(row.tags) : [],
+          [],
+          row.short_description || ""
+        ).isPokemonLike,
     pokemonLikeTags: row.pokemon_like_tags ? JSON.parse(row.pokemon_like_tags) : [],
     wilsonScore: row.wilson_score,
     cnWilsonScore: row.cn_wilson_score,
     overseasWilsonScore: row.overseas_wilson_score,
     pool: row.pool === "A" || row.pool === "B" || row.pool === "C" ? row.pool as "A" | "B" | "C" : null,
-    isTurnBased: row.is_turn_based === 1,
+    isTurnBased: row.is_turn_based === 1
+      || isTurnBased(
+          row.tags ? JSON.parse(row.tags) : [],
+          row.genres ? JSON.parse(row.genres) : [],
+          row.short_description || ""
+        ),
     // SQLite 没有 _is_test_version 字段，通过名称和标签自动检测
     isTestVersion: detectTestVersionByName(row.name || "") || isTestVersionByTag(
       typeof row.tags === "string" ? JSON.parse(row.tags) : (row.tags || []),
@@ -891,13 +969,25 @@ function getReviewScoreDesc(score: number): string {
   return "Very Negative";
 }
 
-function checkPokemonLike(tags: string[], genres: string[]): { isPokemonLike: boolean; matchingTags: string[] } {
+function checkPokemonLike(tags: string[], genres: string[], shortDescription?: string): { isPokemonLike: boolean; matchingTags: string[] } {
   const normalizedTags = tags.map((t) => t.toLowerCase());
   const matchingTags: string[] = [];
 
+  // 策略1：检查标签
   for (const tag of POKEMON_LIKE_TAGS) {
     if (normalizedTags.some((t) => t.includes(tag.toLowerCase()))) {
       matchingTags.push(tag);
+    }
+  }
+
+  // 策略2：描述关键词兜底（Steam 标签不可靠时补救）
+  // 典型场景：Steam 标签被成人/自动化等无关内容污染，如 Aethermancer 的情况
+  if (shortDescription && matchingTags.length === 0) {
+    const descLower = shortDescription.toLowerCase();
+    for (const keyword of POKEMON_LIKE_DESC_KEYWORDS) {
+      if (descLower.includes(keyword.toLowerCase())) {
+        matchingTags.push(keyword);
+      }
     }
   }
 
@@ -920,9 +1010,9 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
   // games-index.json 的 categories 是数字数组（如 [2, 22, 29]），转换为字符串
   const categories = (raw.categories || []).map((c: unknown) => String(c));
 
-  const pokemonCheck = checkPokemonLike(tags, raw.genres || []);
+  const pokemonCheck = checkPokemonLike(tags, raw.genres || [], raw.short_description);
   const blacklisted = isBlacklisted(tags, raw.genres || []);
-  const turnBased = isTurnBased(tags, raw.genres || []);
+  const turnBased = isTurnBased(tags, raw.genres || [], raw.short_description);
 
   // 测试版检测：数据源标记 > 名称检测 > 标签检测
   const isTestByData = raw._is_test_version === true || raw._is_playtest === true;
@@ -1148,6 +1238,16 @@ function loadDatabase(): { games: GameRecord[] } {
         if (!game.llmMechanics) game.llmMechanics = [];
         if (!game.llmRawMechanics) game.llmRawMechanics = [];
         if (game.innovationTags === undefined) game.innovationTags = [];
+        // 运行时兜底：如果预计算的 isPokemonLike 为 false，用描述关键词重新检测
+        // 解决预计算时关键词列表不完整导致漏判的问题（如 Aethermancer 的"怪物收集"）
+        if (!game.isPokemonLike) {
+          const tags = normalizeTags(game.tags);
+          const pokemonCheck = checkPokemonLike(tags, [], game.shortDescription || "");
+          if (pokemonCheck.isPokemonLike) {
+            game.isPokemonLike = true;
+            game.pokemonLikeTags = pokemonCheck.matchingTags;
+          }
+        }
       }
       // 从 combinedMechanics.json 合并 LLM 玩法分析数据到每个游戏
       mergeLlMechancics(cache.games);
@@ -1250,7 +1350,7 @@ function calculatePool(
     return null;
   }
 
-  // A池: 2024年之后上线 + 非宝可梦Like + 好评率>=85% + 评论数>1000
+  // A池: 非宝可梦Like + 好评率>=配置值 + 评论数>=配置值 + 上线年份>=配置值
   if (!game.isPokemonLike && reviewScore >= config.poolA.minRating && totalReviews >= config.poolA.minReviews) {
     if (game.releaseDate) {
       const year = new Date(game.releaseDate).getFullYear();
@@ -1955,7 +2055,12 @@ export async function GET(request: NextRequest) {
 
   // 池子配置
   const poolConfig: PoolConfig = {
-    poolA: { minRating: poolA_minRating, minReviews: poolA_minReviews, excludePokemonLike: true, minYear: poolA_minYear },
+    poolA: {
+      minRating: poolA_minRating,
+      minReviews: poolA_minReviews,
+      excludePokemonLike: true,
+      minYear: poolA_minYear,
+    },
     poolB: { minRating: poolB_minRating, minReviews: poolB_minReviews, requirePokemonLike: true },
     poolC: { minRating: poolC_minRating, maxRating: poolC_maxRating, minReviews: poolC_minReviews, requirePokemonLike: true },
   };
@@ -2044,7 +2149,7 @@ export async function GET(request: NextRequest) {
     const stats = getPoolCounts(
       allGames, poolConfig, pools.length > 0 ? pools : undefined,
       yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions,
-      featureTagFilters, featureTagOptions, reviewSource
+      featureTagFilters, dynamicFeatureTagOptions, reviewSource
     );
     return NextResponse.json({
       stats,

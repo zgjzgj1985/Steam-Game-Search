@@ -1,9 +1,11 @@
 # Steam 全域游戏搜索
 
-> **版本**: v1.22.0
-> **更新日期**: 2026-04-29
+> **版本**: v1.23.1
+> **更新日期**: 2026-05-02
 
 > **版本历史**:
+> - v1.23.1: **修复 Aethermancer 被错误分到 A 池的问题**：根本原因：Aethermancer 描述为"怪兽驯服遇上Roguelite！"，但 `POKEMON_LIKE_DESC_KEYWORDS` 缺少"怪兽驯服"关键词。修复方案：① 描述关键词列表增加"怪兽驯服"；② JSON 缓存加载路径增加基于描述关键词的运行时兜底检测（解决预计算时关键词列表不完整的问题）。涉及文件：`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。
+> - v1.23.0: **A池筛选新增好评率 90% 档位和评论数 1500、2000 档位**：前端模式2页面 A 池好评率下拉新增 90% 选项，评论数下拉新增 1500、2000 选项。涉及文件：`src/app/mode2/page.tsx`。
 > - v1.22.0: **分析结果持久化**：新增分析结果持久化存储功能。创建 `public/data/analyses.json` 作为分析结果存储文件；修改 `/api/analysis/module` POST 接口，分析完成后自动保存结果到 `analyses.json`；新增 `/api/analysis/:gameId` GET 接口，查询指定游戏的已保存分析结果；修改 `ModularAnalysis` 组件，进入分析页面时自动加载已保存的分析结果，并显示"已加载历史分析"标识；按钮文案根据状态动态变化（"一键分析"/"继续分析"/"分析完成"）。涉及文件：`public/data/analyses.json`（新增）、`src/app/api/analysis/module/route.ts`、`src/app/api/analysis/[gameId]/route.ts`（新增）、`src/components/analysis/modular-analysis.tsx`。
 > - v1.21.0: **分析模块元数据增强**：为详细分析页面的6个分析模块增加信息来源标识、置信度标识及其他有价值信息。包括：更新 `Result` 接口添加 `AnalysisMetadata` 字段（sourceOfTruth、confidence、basedOnReviews、analysisDate、wordCount、keyInsights、dataQuality）；更新 LLM 提示词要求每个模块输出元数据；API层增加数据质量提示（根据评价数量自动判断置信度）；创建共享元数据展示组件 `analysis-metadata-badge.tsx`；升级6个展示组件（verdict、coreGameplay、battleSystem、differentiation、negativeFeedback、designSuggestions），增加置信度徽章、评价数量、数据质量标签。涉及文件：`src/types/game.ts`、`src/lib/llm.ts`、`src/app/api/analysis/module/route.ts`、`src/components/analysis/analysis-metadata-badge.tsx`（新增）、`src/components/analysis/modular-analysis.tsx`、`src/components/analysis/core-gameplay.tsx`、`src/components/analysis/battle-system-view.tsx`、`src/components/analysis/differentiation-view.tsx`、`src/components/analysis/negative-feedback.tsx`、`src/components/analysis/design-suggestions.tsx`。
 > - v1.20.0: **文档全面审核与修复**：系统性审核 PROJECT.md，发现并修复大量陈旧内容。包括：API接口文档新增 `/api/games` 兼容层和 `/api/analysis/module` POST接口；修正 mode2/filter 默认值（poolA/B minRating=40）；补充缺失参数（poolA_minYear、priceMin/Max、modernTagFilter、featureTagFilter、tagSortBy、statsOnly）；更新 Game 类型定义（修正必填/可选、补充预计算字段、补充 cnReviews/overseasReviews）；更新项目结构目录树（补充缺失文件、补全 scripts/ 目录、补全组件列表）。涉及文件：`docs/PROJECT.md`。

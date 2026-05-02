@@ -49,8 +49,35 @@ TURN_BASED_TAGS = [
     "Tactical RPG", "回合制", "回合",
 ]
 
+# 回合制类型genres（genres中有这些也视为回合制RPG）
+TURN_BASED_GENRES = [
+    "RPG",
+    "JRPG",
+    "策略",
+    "Strategy",
+    "Role-Playing",
+]
+
 POKEMON_LIKE_TAGS = [
     "Creature Collector", "Monster Catching", "Monster Taming", "Creature Collection",
+    # 扩展：常见的生物收集/养成类标签
+    "Pokemon", "养宠", "养成", "宠物养成", "怪物养成", "生物收集", "怪物收集",
+]
+
+# 宝可梦Like描述关键词（当标签不可靠时，用描述兜底检测）
+POKEMON_LIKE_DESC_KEYWORDS = [
+    "monster collector", "creature collector", "monster catching", "monster taming",
+    "pokemon-like", "pokemon like",
+    "怪物捕捉", "怪物收集", "怪物养成", "生物收集", "宠物养成",
+    "僵尸进化", "creature evolution", "evolve monster", "pocket monster",
+    # 补充：怪兽驯服（上古世纪/Steam常用词，对应 Monster Taming）
+    "怪兽驯服",
+]
+
+# 回合制描述关键词（当标签不可靠时，用描述兜底检测）
+TURN_BASED_DESC_KEYWORDS = [
+    "turn-based", "回合制", "回合策略", "回合战斗",
+    "tactical rpg", "srpg", "jrpg", "策略rpg", "战棋",
 ]
 
 # 品类标配黑名单
@@ -146,7 +173,7 @@ TEST_VERSION_KEYWORDS = [
 ]
 
 POOL_CONFIG = {
-    # 新配置（放宽条件，扩大池子规模）
+    # A池配置（放宽条件，扩大池子规模）
     'poolA': {'minRating': 40, 'minReviews': 50, 'minYear': 2024},
     'poolB': {'minRating': 40, 'minReviews': 50},
     'poolC': {'minRating': 40, 'maxRating': 74, 'minReviews': 50},
@@ -339,22 +366,51 @@ def get_review_score_desc(score):
         return "Mostly Negative"
     return "Very Negative"
 
-def check_pokemon_like(tags):
+def check_pokemon_like(tags, short_description=None):
+    """检测游戏是否为宝可梦Like
+    策略1: 标签匹配（Creature Collector 等核心标签）
+    策略2: 描述关键词匹配（Steam 标签被污染时兜底）
+    """
     normalized = [t.lower() for t in tags]
-    return [tag for tag in POKEMON_LIKE_TAGS if any(tag.lower() in t for t in normalized)]
+    matching = [tag for tag in POKEMON_LIKE_TAGS if any(tag.lower() in t for t in normalized)]
+
+    # 策略2：描述关键词兜底（Steam 标签不可靠时补救）
+    if short_description and not matching:
+        desc_lower = short_description.lower()
+        for keyword in POKEMON_LIKE_DESC_KEYWORDS:
+            if keyword.lower() in desc_lower:
+                matching.append(keyword)
+
+    return matching
 
 def is_blacklisted(tags):
     """检查标签是否在黑名单中（精确匹配 tag-config.json 的 blacklist）"""
     normalized = [t.lower() for t in tags]
     return any(t in TAG_BLACKLIST for t in normalized)
 
-def is_turn_based(tags, genres):
+def is_turn_based(tags, genres, short_description=None):
     normalized_tags = [t.lower() for t in tags]
     normalized_genres = [g.lower() for g in genres]
+
+    # 策略1：检查标签
     for tb in TURN_BASED_TAGS:
         tb_lower = tb.lower()
-        if any(tb_lower in t for t in normalized_tags) or any(tb_lower in g for g in normalized_genres):
+        if any(tb_lower in t for t in normalized_tags):
             return True
+
+    # 策略2：genres 兜底（RPG/JRPG/策略类型暗示回合制特征）
+    for g in TURN_BASED_GENRES:
+        g_lower = g.lower()
+        if any(g_lower in ng for ng in normalized_genres):
+            return True
+
+    # 策略3：描述关键词兜底（Steam 标签为空/乱填时补救）
+    if short_description:
+        desc_lower = short_description.lower()
+        for kw in TURN_BASED_DESC_KEYWORDS:
+            if kw.lower() in desc_lower:
+                return True
+
     return False
 
 def detect_test_version_by_name(name):
@@ -472,9 +528,9 @@ def transform_game(row, llm_mechanics=None, cluster_map=None):
     categories = safe_json_parse(row.get('categories'), [])
     genres = safe_json_parse(row.get('genres'), [])
 
-    pokemon_like_tags = check_pokemon_like(tags)
+    pokemon_like_tags = check_pokemon_like(tags, row.get('short_description'))
     is_pokemon_like = len(pokemon_like_tags) > 0
-    turn_based = is_turn_based(tags, genres)
+    turn_based = is_turn_based(tags, genres, row.get('short_description'))
 
     is_test_by_data = row.get('_is_test_version') == 1
     is_test_by_name = detect_test_version_by_name(row.get('name') or '')
@@ -794,9 +850,10 @@ def log(msg):
     print(msg, flush=True)
 
 def main():
-    DB_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games.db')
-    INDEX_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-index.json')
-    CACHE_FILE = Path(r'D:\Steam全域游戏搜索\public\data\games-cache.json')
+    PROJECT_ROOT = Path(__file__).parent.parent.resolve()
+    DB_FILE = PROJECT_ROOT / 'public' / 'data' / 'games.db'
+    INDEX_FILE = PROJECT_ROOT / 'public' / 'data' / 'games-index.json'
+    CACHE_FILE = PROJECT_ROOT / 'public' / 'data' / 'games-cache.json'
     
     log('=' * 60)
     log('Precompute Cache Generator')

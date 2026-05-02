@@ -30,7 +30,7 @@ export function GameInfo({ game, className }: GameInfoProps) {
   const priceDisplay = game.isFree
     ? "免费"
     : game.price > 0
-      ? `¥${(game.price / 100).toFixed(0)}`
+      ? `¥${(game.price * 7).toFixed(0)}`
       : "未知";
 
   // 游玩方式（确保是数组）

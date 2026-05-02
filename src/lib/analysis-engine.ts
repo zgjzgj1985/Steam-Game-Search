@@ -75,7 +75,7 @@ function buildGameInfo(game: Game): string {
   if (game.price === 0) {
     parts.push("价格：免费");
   } else if (game.price) {
-    parts.push(`价格：$${(game.price / 100).toFixed(2)}`);
+    parts.push(`价格：$${game.price.toFixed(2)}`);
   }
 
   if (game.shortDescription) {

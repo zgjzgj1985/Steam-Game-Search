@@ -195,7 +195,7 @@ const POOL_CONFIG = {
     borderColor: "border-amber-500/30",
     textColor: "text-amber-500",
     hoverBg: "hover:bg-amber-500/5",
-    description: "2024年后上线 · 好评率≥85% · 评论数>1000",
+    description: "2024年后上线 · 好评率≥90% · 评论数>2000",
   },
   B: {
     label: "B池",
@@ -927,12 +927,12 @@ export default function Mode2Page() {
   const [activePools, setActivePools] = useState<("A" | "B" | "C")[]>(["A", "B", "C"]);
 
   // 各池子的筛选条件（与 route.ts 中的默认值保持一致）
-  // A池：好评率>=85%，评论数>=1000，年份>=2024
-  // B池：好评率>=75%，评论数>=200
-  // C池：好评率40-74%，评论数>=100
-  const [poolAConditions, setPoolAConditions] = useState<PoolConditions>({ minRating: 85, minReviews: 1000 });
-  const [poolBConditions, setPoolBConditions] = useState<PoolConditions>({ minRating: 75, minReviews: 200 });
-  const [poolCConditions, setPoolCConditions] = useState<PoolConditions>({ minRating: 40, maxRating: 74, minReviews: 100 });
+  // A池：好评率>=90%，评论数>=2000，年份>=2024
+  // B池：好评率>=85%，评论数>=500
+  // C池：好评率40-74%，评论数>=500
+  const [poolAConditions, setPoolAConditions] = useState<PoolConditions>({ minRating: 90, minReviews: 2000 });
+  const [poolBConditions, setPoolBConditions] = useState<PoolConditions>({ minRating: 85, minReviews: 500 });
+  const [poolCConditions, setPoolCConditions] = useState<PoolConditions>({ minRating: 40, maxRating: 74, minReviews: 500 });
 
   // 统计信息
   const [stats, setStats] = useState<PoolStats | null>(null);
@@ -1049,9 +1049,9 @@ export default function Mode2Page() {
 
   // 重置条件（与 route.ts 中的默认值保持一致）
   const resetConditions = () => {
-    setPoolAConditions({ minRating: 85, minReviews: 1000 });
-    setPoolBConditions({ minRating: 75, minReviews: 200 });
-    setPoolCConditions({ minRating: 40, maxRating: 74, minReviews: 100 });
+    setPoolAConditions({ minRating: 90, minReviews: 2000 });
+    setPoolBConditions({ minRating: 85, minReviews: 500 });
+    setPoolCConditions({ minRating: 40, maxRating: 74, minReviews: 500 });
     setActivePools(["A", "B", "C"]);
     setYearsFilter(0);
     setMinReleaseDate(undefined);
@@ -2171,7 +2171,7 @@ export default function Mode2Page() {
                 <h3 className="font-medium text-amber-500">A池 - 神作参考池</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                2024年后上线的高分回合制游戏，好评率≥85%，评论数&gt;1000。调整好评率和评价数门槛来控制结果范围。
+                2024年后上线的高分回合制游戏，好评率≥90%，评论数&gt;2000。调整好评率和评价数门槛来控制结果范围。
               </p>
             </div>
             <div>

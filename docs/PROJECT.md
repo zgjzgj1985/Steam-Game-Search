@@ -1,10 +1,11 @@
 # Steam 全域游戏搜索
 
-> **版本**: v1.23.1
+> **版本**: v1.25.0
 > **更新日期**: 2026-05-02
 
 > **版本历史**:
-> - v1.23.1: **修复 Aethermancer 被错误分到 A 池的问题**：根本原因：Aethermancer 描述为"怪兽驯服遇上Roguelite！"，但 `POKEMON_LIKE_DESC_KEYWORDS` 缺少"怪兽驯服"关键词。修复方案：① 描述关键词列表增加"怪兽驯服"；② JSON 缓存加载路径增加基于描述关键词的运行时兜底检测（解决预计算时关键词列表不完整的问题）。涉及文件：`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。
+> - v1.25.0: **补充 NSFW 描述黑名单 + 回合制运行时兜底**：① 新增 `BLACKLIST_DESC_KEYWORDS`（16个NSFW成人内容描述关键词），`isBlacklisted()` 函数增加描述兜底检测，解决 Steam 标签不准确时仍有133个A池游戏含NSFW内容的问题。② JSON 缓存加载路径增加 `isTurnBased` 运行时兜底检测，解决预计算时描述关键词覆盖不足导致回合制游戏漏判的问题。涉及文件：`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`、`docs/PROJECT.md`、`docs/模式2.md`。
+> - v1.24.0: **全面审核 A/B/C 池筛选规则，补充宝可梦Like描述关键词**：基于 B 池游戏描述分析，新增 6 个描述关键词：`creature collection`、`monster training`、`monster trainer`、`creature collecting`、`培养怪物`、`驯养`。涉及文件：`scripts/precompute.py`、`src/app/api/mode2/filter/route.ts`。
 > - v1.23.0: **A池筛选新增好评率 90% 档位和评论数 1500、2000 档位**：前端模式2页面 A 池好评率下拉新增 90% 选项，评论数下拉新增 1500、2000 选项。涉及文件：`src/app/mode2/page.tsx`。
 > - v1.22.0: **分析结果持久化**：新增分析结果持久化存储功能。创建 `public/data/analyses.json` 作为分析结果存储文件；修改 `/api/analysis/module` POST 接口，分析完成后自动保存结果到 `analyses.json`；新增 `/api/analysis/:gameId` GET 接口，查询指定游戏的已保存分析结果；修改 `ModularAnalysis` 组件，进入分析页面时自动加载已保存的分析结果，并显示"已加载历史分析"标识；按钮文案根据状态动态变化（"一键分析"/"继续分析"/"分析完成"）。涉及文件：`public/data/analyses.json`（新增）、`src/app/api/analysis/module/route.ts`、`src/app/api/analysis/[gameId]/route.ts`（新增）、`src/components/analysis/modular-analysis.tsx`。
 > - v1.21.0: **分析模块元数据增强**：为详细分析页面的6个分析模块增加信息来源标识、置信度标识及其他有价值信息。包括：更新 `Result` 接口添加 `AnalysisMetadata` 字段（sourceOfTruth、confidence、basedOnReviews、analysisDate、wordCount、keyInsights、dataQuality）；更新 LLM 提示词要求每个模块输出元数据；API层增加数据质量提示（根据评价数量自动判断置信度）；创建共享元数据展示组件 `analysis-metadata-badge.tsx`；升级6个展示组件（verdict、coreGameplay、battleSystem、differentiation、negativeFeedback、designSuggestions），增加置信度徽章、评价数量、数据质量标签。涉及文件：`src/types/game.ts`、`src/lib/llm.ts`、`src/app/api/analysis/module/route.ts`、`src/components/analysis/analysis-metadata-badge.tsx`（新增）、`src/components/analysis/modular-analysis.tsx`、`src/components/analysis/core-gameplay.tsx`、`src/components/analysis/battle-system-view.tsx`、`src/components/analysis/differentiation-view.tsx`、`src/components/analysis/negative-feedback.tsx`、`src/components/analysis/design-suggestions.tsx`。

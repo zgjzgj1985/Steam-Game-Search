@@ -428,24 +428,40 @@ const POKEMON_LIKE_TAGS = [
 ];
 
 // 宝可梦Like描述关键词（当标签不可靠时，用描述兜底检测）
+// 策略：使用多词模式（降低误判），单字词/通用词通过"标签匹配"兜底
 const POKEMON_LIKE_DESC_KEYWORDS = [
+  // 核心模式（与标签列表对应）
   "monster collector",
   "creature collector",
   "monster catching",
   "monster taming",
   "pokemon-like",
   "pokemon like",
+  // 中文核心词
   "怪物捕捉",
   "怪物收集",
   "怪物养成",
   "生物收集",
   "宠物养成",
   "僵尸进化",
+  // 英文扩展模式（从 B 池游戏描述中提取）
   "creature evolution",
   "evolve monster",
   "pocket monster",
-  // 补充：怪兽驯服（上古世纪/Steam常用词，对应 Monster Taming）
+  // 补充：怪兽驯服（上古世纪/Steam常用词）
   "怪兽驯服",
+  // 补充：creature collection（Ooblets, Yaoling 等）
+  "creature collection",
+  // 补充：monster training（Monster Rancher, After The End 等）
+  "monster training",
+  // 补充：monster trainer（Void Monsters 等）
+  "monster trainer",
+  // 补充：creature collecting（Creature Clicker 等）
+  "creature collecting",
+  // 补充：中文"培养怪物"（刷一刷 PlayAgain 等）
+  "培养怪物",
+  // 补充：驯养（Planet Centauri 等英文"capture and tame"的翻译）
+  "驯养",
 ];
 
 // 回合制描述关键词（当标签不可靠时，用描述兜底检测）
@@ -467,6 +483,29 @@ const BLACKLIST_TAGS = [
   "NSFW",
   "Hentai",
   "Sexual Content",
+];
+
+// 黑名单描述关键词（NSFW 成人内容兜底检测）
+// 用于检测 Steam 标签不准确/缺失，但描述中暴露了成人内容的情况
+// 使用精确词组模式避免误判（如 "adult education" 是正经教育游戏）
+const BLACKLIST_DESC_KEYWORDS = [
+  "adult visual novel",
+  "adult game",
+  "adult rpg",
+  "adult sim",
+  "erotic",
+  "erotica",
+  "nsfw",
+  "hentai",
+  "porn",
+  "xxx",
+  "steamy visual",
+  "erotic visual",
+  "sexy visual",
+  "spicy erotic",
+  "hot girls",
+  "sultry teacher",
+  "intimate encounter",
 ];
 
 // 测试版/预发布版游戏关键词（名称匹配，不区分大小写）
@@ -997,9 +1036,21 @@ function checkPokemonLike(tags: string[], genres: string[], shortDescription?: s
   };
 }
 
-function isBlacklisted(tags: string[], genres: string[]): boolean {
+function isBlacklisted(tags: string[], genres: string[], shortDescription?: string): boolean {
   const normalizedTags = tags.map((t) => t.toLowerCase());
-  return BLACKLIST_TAGS.some((bl) => normalizedTags.some((t) => t.includes(bl.toLowerCase())));
+  // 策略1：标签黑名单
+  if (BLACKLIST_TAGS.some((bl) => normalizedTags.some((t) => t.includes(bl.toLowerCase())))) {
+    return true;
+  }
+  // 策略2：描述黑名单兜底（Steam 标签不准确/缺失时补救）
+  // 133个A池游戏描述含NSFW词但标签未检测到
+  if (shortDescription) {
+    const descLower = shortDescription.toLowerCase();
+    if (BLACKLIST_DESC_KEYWORDS.some((bl) => descLower.includes(bl.toLowerCase()))) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function transformGame(appId: string, raw: RawGameData): GameRecord {
@@ -1011,7 +1062,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
   const categories = (raw.categories || []).map((c: unknown) => String(c));
 
   const pokemonCheck = checkPokemonLike(tags, raw.genres || [], raw.short_description);
-  const blacklisted = isBlacklisted(tags, raw.genres || []);
+  const blacklisted = isBlacklisted(tags, raw.genres || [], raw.short_description);
   const turnBased = isTurnBased(tags, raw.genres || [], raw.short_description);
 
   // 测试版检测：数据源标记 > 名称检测 > 标签检测
@@ -1248,6 +1299,15 @@ function loadDatabase(): { games: GameRecord[] } {
             game.pokemonLikeTags = pokemonCheck.matchingTags;
           }
         }
+        // 运行时兜底：如果预计算的 isTurnBased 为 false，用描述关键词重新检测
+        // 解决预计算时描述关键词覆盖不足导致回合制游戏漏判的问题
+        if (!game.isTurnBased) {
+          const tags = normalizeTags(game.tags);
+          const genres = game.genres || [];
+          if (isTurnBased(tags, genres, game.shortDescription || "")) {
+            game.isTurnBased = true;
+          }
+        }
       }
       // 从 combinedMechanics.json 合并 LLM 玩法分析数据到每个游戏
       mergeLlMechancics(cache.games);
@@ -1343,7 +1403,7 @@ function calculatePool(
   }
 
   const { reviewScore, totalReviews } = steamReviews;
-  const blacklisted = isBlacklisted(game.tags, game.genres || []);
+  const blacklisted = isBlacklisted(game.tags, game.genres || [], game.shortDescription);
 
   // 黑名单游戏不进入任何池子
   if (blacklisted) {

@@ -65,13 +65,29 @@ POKEMON_LIKE_TAGS = [
 ]
 
 # 宝可梦Like描述关键词（当标签不可靠时，用描述兜底检测）
+# 策略：使用多词模式（降低误判），单字词/通用词通过"标签匹配"兜底
 POKEMON_LIKE_DESC_KEYWORDS = [
+    # 核心模式（与标签列表对应）
     "monster collector", "creature collector", "monster catching", "monster taming",
     "pokemon-like", "pokemon like",
-    "怪物捕捉", "怪物收集", "怪物养成", "生物收集", "宠物养成",
-    "僵尸进化", "creature evolution", "evolve monster", "pocket monster",
-    # 补充：怪兽驯服（上古世纪/Steam常用词，对应 Monster Taming）
+    # 中文核心词
+    "怪物捕捉", "怪物收集", "怪物养成", "生物收集", "宠物养成", "僵尸进化",
+    # 英文扩展模式（从 B 池游戏描述中提取）
+    "creature evolution", "evolve monster", "pocket monster",
+    # 补充：怪兽驯服（上古世纪/Steam常用词）
     "怪兽驯服",
+    # 补充：creature collection（Ooblets, Yaoling 等）
+    "creature collection",
+    # 补充：monster training（Monster Rancher, After The End 等）
+    "monster training",
+    # 补充：monster trainer（Void Monsters 等）
+    "monster trainer",
+    # 补充：creature collecting（Creature Clicker 等）
+    "creature collecting",
+    # 补充：中文"培养怪物"（刷一刷 PlayAgain 等）
+    "培养怪物",
+    # 补充：驯养（Planet Centauri 等英文"capture and tame"的翻译）
+    "驯养",
 ]
 
 # 回合制描述关键词（当标签不可靠时，用描述兜底检测）
@@ -383,10 +399,30 @@ def check_pokemon_like(tags, short_description=None):
 
     return matching
 
-def is_blacklisted(tags):
-    """检查标签是否在黑名单中（精确匹配 tag-config.json 的 blacklist）"""
+BLACKLIST_DESC_KEYWORDS = [
+    # NSFW 成人内容描述关键词（精确词组模式，避免误判）
+    "adult visual novel", "adult game", "adult rpg", "adult sim",
+    "erotic", "erotica", "nsfw", "hentai", "porn", "xxx",
+    "steamy visual", "erotic visual", "sexy visual", "spicy erotic",
+    "hot girls", "sultry teacher", "intimate encounter",
+]
+
+def is_blacklisted(tags, short_description=None):
+    """
+    检查是否在黑名单中
+    - 标签黑名单：精确匹配 tag-config.json 的 blacklist
+    - 描述黑名单：NSFW 成人内容兜底检测（Steam 标签不准确/缺失时补救）
+    """
     normalized = [t.lower() for t in tags]
-    return any(t in TAG_BLACKLIST for t in normalized)
+    # 策略1：标签黑名单
+    if any(t in TAG_BLACKLIST for t in normalized):
+        return True
+    # 策略2：描述黑名单兜底
+    if short_description:
+        desc_lower = short_description.lower()
+        if any(kw.lower() in desc_lower for kw in BLACKLIST_DESC_KEYWORDS):
+            return True
+    return False
 
 def is_turn_based(tags, genres, short_description=None):
     normalized_tags = [t.lower() for t in tags]

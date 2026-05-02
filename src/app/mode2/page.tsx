@@ -890,7 +890,7 @@ function PoolCard({
                 min={0}
                 max={100}
                 formatValue={(v) => `${v}%`}
-                presets={[40, 50, 60, 70, 75, 80, 85]}
+                presets={[40, 50, 60, 70, 75, 80, 85, 90]}
               />
               <NumberSlider
                 label="最低评价数 ≥"
@@ -900,7 +900,7 @@ function PoolCard({
                 max={10000}
                 step={10}
                 formatValue={formatWan}
-                presets={[50, 100, 200, 500, 1000]}
+                presets={[50, 100, 200, 500, 1000, 1500, 2000]}
               />
             </>
           )}

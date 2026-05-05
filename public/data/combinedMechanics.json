@@ -1,7 +1,7 @@
 {
-  "lastUpdated": "2026-04-28 18:38:26",
+  "lastUpdated": "2026-05-03 00:19:51",
   "totalGames": 1846,
-  "processedGames": 742,
+  "processedGames": 872,
   "totalTokens": 0,
   "games": {
     "10": {
@@ -42616,6 +42616,6827 @@
         },
         {
           "name": "全局兵法法术干预",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2592160": {
+      "name": "Dispatch",
+      "mechanics": [
+        "超英危机动态调度",
+        "职场人际关系博弈",
+        "蝴蝶效应网状叙事"
+      ],
+      "rawMechanics": [
+        "超英危机动态调度",
+        "职场人际关系博弈",
+        "蝴蝶效应网状叙事"
+      ],
+      "summary": "将超级英雄题材与职场模拟巧妙结合，通过资源调度与人际关系博弈驱动多分支叙事。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Full controller support",
+        "Steam Trading Cards",
+        "Adjustable Text Size",
+        "Color Alternatives",
+        "Custom Volume Controls",
+        "Adjustable Difficulty",
+        "Mouse Only Option",
+        "Playable without Timed Input",
+        "Subtitle Options",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:06.714617",
+      "tagsWithScores": [
+        {
+          "name": "超英危机动态调度",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "职场人际关系博弈",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "蝴蝶效应网状叙事",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "1771300": {
+      "name": "Kingdom Come: Deliverance II",
+      "mechanics": [
+        "拟真冷兵器方向连击",
+        "动态沉浸式中世纪社会",
+        "历史考究级生活模拟"
+      ],
+      "rawMechanics": [
+        "拟真冷兵器方向连击",
+        "动态沉浸式中世纪社会",
+        "历史考究级生活模拟"
+      ],
+      "summary": "Warhorse标志性的硬核中世纪模拟器，以极具深度的拟真剑术和高反馈的动态世界构建极致沉浸感。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Medieval",
+        "Open World",
+        "Singleplayer",
+        "Realistic",
+        "First-Person",
+        "Story Rich",
+        "Adventure",
+        "Action",
+        "Combat",
+        "Historical",
+        "Swordplay",
+        "Political",
+        "Immersive",
+        "Choices Matter",
+        "Atmospheric",
+        "Alternate History",
+        "LGBTQ+",
+        "Action-Adventure",
+        "3D"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:06.714617",
+      "tagsWithScores": [
+        {
+          "name": "拟真冷兵器方向连击",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "动态沉浸式中世纪社会",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "历史考究级生活模拟",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1621690": {
+      "name": "Core Keeper",
+      "mechanics": [
+        "动态地下生态挖掘拓展",
+        "多人协作基地自动化构筑",
+        "像素沙盒Boss狩猎"
+      ],
+      "rawMechanics": [
+        "动态地下生态挖掘拓展",
+        "多人协作基地自动化构筑",
+        "像素沙盒Boss狩猎"
+      ],
+      "summary": "将泰拉瑞亚式的沙盒挖掘与星露谷式的种田建设相融合，打造出极具心流体验的地下生存共斗循环。",
+      "status": "generated",
+      "steamTags": [
+        "Pixel Graphics",
+        "Open World Survival Craft",
+        "Online Co-Op",
+        "Sandbox",
+        "Survival",
+        "Adventure",
+        "Crafting",
+        "Exploration",
+        "2D",
+        "Building",
+        "Mining",
+        "Dungeon Crawler",
+        "Procedural Generation",
+        "Farming Sim",
+        "Relaxing",
+        "Cooking",
+        "Simulation",
+        "Atmospheric",
+        "Mystery",
+        "Casual"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:06.714617",
+      "tagsWithScores": [
+        {
+          "name": "动态地下生态挖掘拓展",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "多人协作基地自动化构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "像素沙盒Boss狩猎",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "2593370": {
+      "name": "The Hungry Lamb: Traveling in the Late Ming Dynasty",
+      "mechanics": [
+        "黑暗历史题材分支叙事",
+        "残酷道德困境多结局抉择",
+        "Live2D国风视觉演出"
+      ],
+      "rawMechanics": [
+        "黑暗历史题材分支叙事",
+        "残酷道德困境多结局抉择",
+        "Live2D国风视觉演出"
+      ],
+      "summary": "以明末乱世为背景，通过极致压抑的生存抉择与高质量的国风动态演出，带来直击人心的文字冒险体验。",
+      "status": "generated",
+      "steamTags": [
+        "Visual Novel",
+        "Historical",
+        "Multiple Endings",
+        "Cooking",
+        "Interactive Fiction",
+        "Story Rich",
+        "Dating Sim",
+        "Dark",
+        "Adventure",
+        "Anime",
+        "Cute",
+        "Word Game",
+        "Drama",
+        "Romance",
+        "RPG",
+        "Psychological Horror",
+        "Singleplayer",
+        "Mystery",
+        "Casual",
+        "Medieval"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:06.714617",
+      "tagsWithScores": [
+        {
+          "name": "黑暗历史题材分支叙事",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "残酷道德困境多结局抉择",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "Live2D国风视觉演出",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "881020": {
+      "name": "Granblue Fantasy: Relink",
+      "mechanics": [
+        "华丽连携共斗动作系统",
+        "海量二次元角色Build构筑",
+        "高速爽快打桩狩猎"
+      ],
+      "rawMechanics": [
+        "华丽连携共斗动作系统",
+        "海量二次元角色Build构筑",
+        "高速爽快打桩狩猎"
+      ],
+      "summary": "Cygames美术力与动作设计的集大成者，将单机JRPG的叙事与多人共斗的深度Build构筑完美结合。",
+      "status": "generated",
+      "steamTags": [
+        "Anime",
+        "JRPG",
+        "Action RPG",
+        "Action",
+        "Online Co-Op",
+        "Multiplayer",
+        "Fantasy",
+        "RPG",
+        "Singleplayer",
+        "Female Protagonist",
+        "Third Person",
+        "Spectacle fighter",
+        "Hack and Slash",
+        "3D",
+        "Controller",
+        "Magic",
+        "Swordplay",
+        "PvE",
+        "Dragons",
+        "Tutorial"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:06.714617",
+      "tagsWithScores": [
+        {
+          "name": "华丽连携共斗动作系统",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "海量二次元角色Build构筑",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "高速爽快打桩狩猎",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2218750": {
+      "name": "Halls of Torment",
+      "mechanics": [
+        "怀旧暗黑风群怪割草",
+        "局外装备库Build构筑",
+        "多英雄流派局内成长"
+      ],
+      "rawMechanics": [
+        "怀旧暗黑风群怪割草",
+        "局外装备库Build构筑",
+        "多英雄流派局内成长"
+      ],
+      "summary": "巧妙融合了《暗黑破坏神》复古美学与类吸血鬼割草机制，通过硬核的装备提取与流派构筑驱动长线体验的生存Roguelite。",
+      "status": "generated",
+      "steamTags": [
+        "Action Roguelike",
+        "Rogue-lite",
+        "Bullet Hell",
+        "Pixel Graphics",
+        "Action RPG",
+        "Dark Fantasy",
+        "Rogue-like",
+        "Action",
+        "RPG",
+        "Arcade",
+        "Hack and Slash",
+        "Top-Down",
+        "2D",
+        "Singleplayer",
+        "Dark",
+        "Atmospheric",
+        "Demons",
+        "Gothic",
+        "Fantasy",
+        "Medieval"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:46.015038",
+      "tagsWithScores": [
+        {
+          "name": "怀旧暗黑风群怪割草",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "局外装备库Build构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "多英雄流派局内成长",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1062520": {
+      "name": "Dinkum",
+      "mechanics": [
+        "动森式网状生活模拟",
+        "澳洲特有生态沙盒",
+        "荒野小镇招募与扩张"
+      ],
+      "rawMechanics": [
+        "动森式网状生活模拟",
+        "澳洲特有生态沙盒",
+        "荒野小镇招募与扩张"
+      ],
+      "summary": "将《动物森友会》的悠闲社交与长线收集机制，无缝嫁接到硬核澳洲荒野沙盒生存中的复合型小镇建造模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "Open World Survival Craft",
+        "Agriculture",
+        "Farming Sim",
+        "Life Sim",
+        "Relaxing",
+        "Co-op",
+        "Farming",
+        "Crafting",
+        "Simulation",
+        "Sandbox",
+        "RPG",
+        "Indie",
+        "Casual",
+        "Building",
+        "Online Co-Op",
+        "Exploration",
+        "Adventure",
+        "Singleplayer",
+        "Fishing",
+        "Hunting"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:46.015038",
+      "tagsWithScores": [
+        {
+          "name": "动森式网状生活模拟",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "澳洲特有生态沙盒",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "荒野小镇招募与扩张",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3314790": {
+      "name": "四叶草深渊 CLOVERPIT",
+      "mechanics": [
+        "老虎机Rogue概率构筑",
+        "滚雪球式高压债务生存",
+        "赌徒心理风险博弈"
+      ],
+      "rawMechanics": [
+        "老虎机Rogue概率构筑",
+        "滚雪球式高压债务生存",
+        "赌徒心理风险博弈"
+      ],
+      "summary": "以老虎机机制为核心包装Rogue卡池构筑，通过不断膨胀的债务目标逼迫玩家进行高风险博弈的异类生存游戏。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "完全支持控制器",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:46.015038",
+      "tagsWithScores": [
+        {
+          "name": "老虎机Rogue概率构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "滚雪球式高压债务生存",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "赌徒心理风险博弈",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "784150": {
+      "name": "Workers & Resources: Soviet Republic",
+      "mechanics": [
+        "闭环产业链深度模拟",
+        "计划经济宏观调控",
+        "公民全生命周期管理"
+      ],
+      "rawMechanics": [
+        "闭环产业链深度模拟",
+        "计划经济宏观调控",
+        "公民全生命周期管理"
+      ],
+      "summary": "拥有极度硬核的微观资源生产链与真实的全球经济系统，要求玩家进行极致统筹规划的苏维埃建设模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "Strategy",
+        "Simulation",
+        "City Builder",
+        "Base-Building",
+        "Management",
+        "Building",
+        "Sandbox",
+        "Grand Strategy",
+        "Survival",
+        "Open World",
+        "Colony Sim",
+        "Resource Management",
+        "Historical",
+        "Singleplayer",
+        "4X",
+        "Economy",
+        "Moddable",
+        "RTS",
+        "Replay Value",
+        "Real-Time with Pause"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:46.015038",
+      "tagsWithScores": [
+        {
+          "name": "闭环产业链深度模拟",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "计划经济宏观调控",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "公民全生命周期管理",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2384580": {
+      "name": "DYNASTY WARRIORS: ORIGINS",
+      "mechanics": [
+        "无名主角多线叙事",
+        "军团级战术指挥协同",
+        "动态战场无双破局"
+      ],
+      "rawMechanics": [
+        "无名主角多线叙事",
+        "军团级战术指挥协同",
+        "动态战场无双破局"
+      ],
+      "summary": "打破传统武将视角，引入原创无名主角与更深度的军团战术指挥系统，重塑三国沉浸式战场体验的动作革新之作。",
+      "status": "generated",
+      "steamTags": [
+        "Hack and Slash",
+        "Spectacle fighter",
+        "Wargame",
+        "Martial Arts",
+        "Action RPG",
+        "RPG",
+        "Strategy",
+        "Historical",
+        "Dating Sim",
+        "Musou",
+        "Third Person",
+        "3D",
+        "Swordplay",
+        "Controller",
+        "Action",
+        "Multiple Endings",
+        "Story Rich",
+        "Singleplayer",
+        "Tactical",
+        "War"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:03:46.015038",
+      "tagsWithScores": [
+        {
+          "name": "无名主角多线叙事",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "军团级战术指挥协同",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "动态战场无双破局",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "1984270": {
+      "name": "Digimon Story Time Stranger",
+      "mechanics": [
+        "网状分支退化与进化构筑",
+        "双平行世界穿梭解谜",
+        "多世代数码兽小队协同"
+      ],
+      "rawMechanics": [
+        "网状分支退化与进化构筑",
+        "双平行世界穿梭解谜",
+        "多世代数码兽小队协同"
+      ],
+      "summary": "穿梭于现实与数码双世界的经典RPG，主打深度的网状分支进化与退化怪物养成系统。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Full controller support",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:16.797033",
+      "tagsWithScores": [
+        {
+          "name": "网状分支退化与进化构筑",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "双平行世界穿梭解谜",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "多世代数码兽小队协同",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "3557620": {
+      "name": "Blue Archive",
+      "mechanics": [
+        "掩体地形自适应小队战术",
+        "EX技能Cost时机管控",
+        "MomoTalk虚拟通讯羁绊"
+      ],
+      "rawMechanics": [
+        "掩体地形自适应小队战术",
+        "EX技能Cost时机管控",
+        "MomoTalk虚拟通讯羁绊"
+      ],
+      "summary": "结合掩体地形克制机制与EX技能精准释放的二次元战术RPG，辅以极具沉浸感的虚拟手机通讯羁绊叙事。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "In-App Purchases",
+        "Custom Volume Controls",
+        "Mouse Only Option",
+        "Stereo Sound",
+        "Subtitle Options"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:16.798035",
+      "tagsWithScores": [
+        {
+          "name": "掩体地形自适应小队战术",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "EX技能Cost时机管控",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "MomoTalk虚拟通讯羁绊",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1746030": {
+      "name": "Murders on the Yangtze River",
+      "mechanics": [
+        "逆转式连轴交叉盘问",
+        "多维逻辑线索网状拼图",
+        "民国风貌实地沉浸取证"
+      ],
+      "rawMechanics": [
+        "逆转式连轴交叉盘问",
+        "多维逻辑线索网状拼图",
+        "民国风貌实地沉浸取证"
+      ],
+      "summary": "融合清末民初历史考据的本格推理AVG，核心玩法聚焦于搜集线索与嫌疑人进行逆转裁判式的激烈交叉辩论。",
+      "status": "generated",
+      "steamTags": [
+        "Detective",
+        "Adventure",
+        "Puzzle",
+        "Story Rich",
+        "Indie",
+        "Exploration",
+        "Mystery",
+        "Drama",
+        "Puzzle-Platformer",
+        "Investigation",
+        "Logic",
+        "Historical",
+        "Lore-Rich",
+        "RPG",
+        "Singleplayer",
+        "Text-Based",
+        "Old School",
+        "2D",
+        "First-Person",
+        "Colorful"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:16.798035",
+      "tagsWithScores": [
+        {
+          "name": "逆转式连轴交叉盘问",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "多维逻辑线索网状拼图",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "民国风貌实地沉浸取证",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "2680010": {
+      "name": "The First Berserker: Khazan",
+      "mechanics": [
+        "类魂系高压弹反博弈",
+        "狂战士嗜血快节奏连段",
+        "DNF宇宙暗黑史诗叙事"
+      ],
+      "rawMechanics": [
+        "类魂系高压弹反博弈",
+        "狂战士嗜血快节奏连段",
+        "DNF宇宙暗黑史诗叙事"
+      ],
+      "summary": "基于《地下城与勇士》世界观设定的硬核ARPG，将类魂系的高压弹反与狂战士极具侵略性的动作连段完美结合。",
+      "status": "generated",
+      "steamTags": [
+        "Souls-like",
+        "Difficult",
+        "Hack and Slash",
+        "Action RPG",
+        "Anime",
+        "Action-Adventure",
+        "Third Person",
+        "RPG",
+        "Action",
+        "3D",
+        "Dark Fantasy",
+        "Cartoony",
+        "Atmospheric",
+        "Adventure",
+        "Dark",
+        "Cartoon",
+        "Destruction",
+        "Combat",
+        "Linear",
+        "Singleplayer"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:16.798035",
+      "tagsWithScores": [
+        {
+          "name": "类魂系高压弹反博弈",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "狂战士嗜血快节奏连段",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "DNF宇宙暗黑史诗叙事",
+          "attraction": 5,
+          "learnability": 2,
+          "clarity": 5
+        }
+      ]
+    },
+    "1934680": {
+      "name": "Age of Mythology: Retold",
+      "mechanics": [
+        "全局神力技能主动干预",
+        "专属信仰恩惠资源运营",
+        "神话巨兽与凡人混合微操"
+      ],
+      "rawMechanics": [
+        "全局神力技能主动干预",
+        "专属信仰恩惠资源运营",
+        "神话巨兽与凡人混合微操"
+      ],
+      "summary": "在经典RTS基地建设基础上，引入独特的“信仰”资源系统与能瞬间改变战局的全局神力技能的重制版神话战略游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Strategy",
+        "3D",
+        "RTS",
+        "Story Rich",
+        "Lore-Rich",
+        "Base-Building",
+        "Resource Management",
+        "Mythology",
+        "Fantasy",
+        "Singleplayer",
+        "Top-Down",
+        "PvE",
+        "Level Editor",
+        "Moddable",
+        "Action RTS",
+        "Multiplayer",
+        "PvP",
+        "Co-op",
+        "Online Co-Op",
+        "Tutorial"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:16.798035",
+      "tagsWithScores": [
+        {
+          "name": "全局神力技能主动干预",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "专属信仰恩惠资源运营",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "神话巨兽与凡人混合微操",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "463530": {
+      "name": "Empires of the Undergrowth",
+      "mechanics": [
+        "地下蚁巢生态建造",
+        "信息素机制RTS指挥",
+        "蚁群基因演化构筑"
+      ],
+      "rawMechanics": [
+        "地下蚁巢生态建造",
+        "信息素机制RTS指挥",
+        "蚁群基因演化构筑"
+      ],
+      "summary": "结合硬核地下巢穴建造与地表信息素RTS微操的真实蚁群生态模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "Strategy",
+        "Simulation",
+        "City Builder",
+        "Colony Sim",
+        "Base-Building",
+        "Sandbox",
+        "Building",
+        "Management",
+        "Resource Management",
+        "4X",
+        "Grand Strategy",
+        "Open World",
+        "Moddable",
+        "Survival",
+        "Singleplayer",
+        "Historical",
+        "RTS",
+        "Replay Value",
+        "Real-Time with Pause",
+        "Economy"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:56.023172",
+      "tagsWithScores": [
+        {
+          "name": "地下蚁巢生态建造",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "信息素机制RTS指挥",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "蚁群基因演化构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2666510": {
+      "name": "Rusty's Retirement",
+      "mechanics": [
+        "屏幕边缘伴生放置",
+        "微缩农场自动化生产",
+        "非侵入式摸鱼陪伴"
+      ],
+      "rawMechanics": [
+        "屏幕边缘伴生放置",
+        "微缩农场自动化生产",
+        "非侵入式摸鱼陪伴"
+      ],
+      "summary": "创新性地利用屏幕底部空间，实现多任务并行与非侵入式陪伴的桌面自动化农场。",
+      "status": "generated",
+      "steamTags": [
+        "Idler",
+        "Farming Sim",
+        "Automation",
+        "Pixel Graphics",
+        "Simulation",
+        "Management",
+        "Relaxing",
+        "Farming",
+        "Building",
+        "Nature",
+        "2D",
+        "Strategy",
+        "Economy",
+        "Resource Management",
+        "Cute",
+        "Post-apocalyptic",
+        "Base-Building",
+        "Casual",
+        "Capitalism",
+        "Indie"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:56.024055",
+      "tagsWithScores": [
+        {
+          "name": "屏幕边缘伴生放置",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "微缩农场自动化生产",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "非侵入式摸鱼陪伴",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "3107330": {
+      "name": "Nodebuster",
+      "mechanics": [
+        "抽象节点破坏Clicker",
+        "现实崩坏增量数值",
+        "极简黑客视觉反馈"
+      ],
+      "rawMechanics": [
+        "抽象节点破坏Clicker",
+        "现实崩坏增量数值",
+        "极简黑客视觉反馈"
+      ],
+      "summary": "将极简黑客视觉与“破坏现实”的元游戏叙事相融合的实验性增量点击游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Casual",
+        "Clicker",
+        "Strategy",
+        "Idler",
+        "Simulation",
+        "Arcade",
+        "Management",
+        "2D",
+        "Experimental",
+        "Relaxing",
+        "Abstract",
+        "Minimalist",
+        "Colorful",
+        "Hacking",
+        "Retro",
+        "Pixel Graphics",
+        "Indie",
+        "Artificial Intelligence",
+        "Singleplayer",
+        "Futuristic"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:56.024055",
+      "tagsWithScores": [
+        {
+          "name": "抽象节点破坏Clicker",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "现实崩坏增量数值",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 3
+        },
+        {
+          "name": "极简黑客视觉反馈",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2799860": {
+      "name": "INAZUMA ELEVEN: Victory Road",
+      "mechanics": [
+        "超次元足球策略RPG",
+        "海量球员Build构筑",
+        "体育竞技王道叙事"
+      ],
+      "rawMechanics": [
+        "超次元足球策略RPG",
+        "海量球员Build构筑",
+        "体育竞技王道叙事"
+      ],
+      "summary": "融合了5400+海量角色收集构筑与超次元必杀技演出的标志性体育策略RPG。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Multi-player",
+        "PvP",
+        "Online PvP",
+        "Cross-Platform Multiplayer",
+        "Steam Achievements",
+        "Full controller support",
+        "Steam Trading Cards",
+        "Steam Cloud",
+        "HDR available",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:56.024055",
+      "tagsWithScores": [
+        {
+          "name": "超次元足球策略RPG",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "海量球员Build构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "体育竞技王道叙事",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "3024040": {
+      "name": "Stronghold Crusader: Definitive Edition",
+      "mechanics": [
+        "拟真城堡城防建造",
+        "大场面攻城RTS战役",
+        "军民双线经济管理"
+      ],
+      "rawMechanics": [
+        "拟真城堡城防建造",
+        "大场面攻城RTS战役",
+        "军民双线经济管理"
+      ],
+      "summary": "专注于硬核中世纪城堡防御建造、军需经济链与宏大攻城战役的经典RTS标杆。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Multi-player",
+        "PvP",
+        "Online PvP",
+        "Co-op",
+        "Online Co-op",
+        "Steam Achievements",
+        "Steam Trading Cards",
+        "Steam Workshop",
+        "Custom Volume Controls",
+        "Adjustable Difficulty",
+        "Mouse Only Option",
+        "Playable without Timed Input",
+        "Save Anytime",
+        "Steam Cloud",
+        "Steam Leaderboards",
+        "Includes level editor",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:04:56.024055",
+      "tagsWithScores": [
+        {
+          "name": "拟真城堡城防建造",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "大场面攻城RTS战役",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "军民双线经济管理",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2795000": {
+      "name": "The WereCleaner",
+      "mechanics": [
+        "反直觉潜行清洁",
+        "杀戮冲动抑制管理",
+        "黑色幽默职场生存"
+      ],
+      "rawMechanics": [
+        "反直觉潜行清洁",
+        "杀戮冲动抑制管理",
+        "黑色幽默职场生存"
+      ],
+      "summary": "巧妙将潜行机制与日常清洁工作结合，玩家需在打扫卫生的同时极力压抑狼人本能，体验反直觉的喜剧潜行玩法。",
+      "status": "generated",
+      "steamTags": [
+        "Stealth",
+        "Casual",
+        "Cartoony",
+        "Dark Humor",
+        "Strategy",
+        "Cute",
+        "Arcade",
+        "Singleplayer",
+        "Tactical",
+        "Free to Play",
+        "Retro",
+        "Action-Adventure",
+        "Colorful",
+        "Werewolves",
+        "3D",
+        "Comedy",
+        "Top-Down",
+        "Indie",
+        "Action",
+        "Controller"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:05:33.887685",
+      "tagsWithScores": [
+        {
+          "name": "反直觉潜行清洁",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "杀戮冲动抑制管理",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "黑色幽默职场生存",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "2229850": {
+      "name": "Command & Conquer Red Alert™ 2 and Yuri’s Revenge™",
+      "mechanics": [
+        "极速RTS爆兵博弈",
+        "极致非对称阵营设计",
+        "心智控制单位夺取"
+      ],
+      "rawMechanics": [
+        "极速RTS爆兵博弈",
+        "极致非对称阵营设计",
+        "心智控制单位夺取"
+      ],
+      "summary": "RTS黄金时代的丰碑，以脑洞大开的非对称科技树（如尤里的心智控制）和极具爽快感的快节奏战争机器碰撞闻名。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:05:33.887685",
+      "tagsWithScores": [
+        {
+          "name": "极速RTS爆兵博弈",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "极致非对称阵营设计",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "心智控制单位夺取",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        }
+      ]
+    },
+    "2958130": {
+      "name": "侏罗纪世界：进化 3",
+      "mechanics": [
+        "恐龙世代繁衍模拟",
+        "拟真生态栖息地定制",
+        "全球连锁公园统筹"
+      ],
+      "rawMechanics": [
+        "恐龙世代繁衍模拟",
+        "拟真生态栖息地定制",
+        "全球连锁公园统筹"
+      ],
+      "summary": "在Frontier成熟的主题公园建造框架下，首次引入幼年恐龙与世代繁衍机制的终极史前大亨模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "完全支持控制器",
+        "Steam 集换式卡牌",
+        "视角舒适度",
+        "可选颜色",
+        "自定义音量控制",
+        "无需应对快速反应事件",
+        "随时保存",
+        "立体声",
+        "字幕选项",
+        "环绕声",
+        "Steam 云",
+        "可用 HDR",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:05:33.887685",
+      "tagsWithScores": [
+        {
+          "name": "恐龙世代繁衍模拟",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "拟真生态栖息地定制",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "全球连锁公园统筹",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3191030": {
+      "name": "Nubby's Number Factory",
+      "mechanics": [
+        "Plinko弹珠台Roguelike",
+        "死亡配额压力驱动",
+        "滚雪球式指数级Build"
+      ],
+      "rawMechanics": [
+        "Plinko弹珠台Roguelike",
+        "死亡配额压力驱动",
+        "滚雪球式指数级Build"
+      ],
+      "summary": "披着休闲弹珠台外衣的数值驱动型Roguelike，用严苛的KPI配额系统和心理恐怖元素重塑打弹珠体验。",
+      "status": "generated",
+      "steamTags": [
+        "Strategy",
+        "Rogue-like",
+        "Arcade",
+        "Surreal",
+        "Singleplayer",
+        "Stylized",
+        "Deckbuilding",
+        "Psychological Horror",
+        "2D",
+        "Indie",
+        "Satire",
+        "Retro",
+        "Addictive",
+        "Gambling",
+        "Rogue-lite",
+        "Casual",
+        "Mouse only",
+        "Horror",
+        "Puzzle",
+        "LGBTQ+"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:05:33.887685",
+      "tagsWithScores": [
+        {
+          "name": "Plinko弹珠台Roguelike",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "死亡配额压力驱动",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "滚雪球式指数级Build",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2132850": {
+      "name": "Rabbit and Steel",
+      "mechanics": [
+        "MMO高难团本机制提纯",
+        "走位驱动弹幕Raid",
+        "多职业协同Roguelike构筑"
+      ],
+      "rawMechanics": [
+        "MMO高难团本机制提纯",
+        "走位驱动弹幕Raid",
+        "多职业协同Roguelike构筑"
+      ],
+      "summary": "巧妙剥离传统MMO的冗长养成，将硬核的Raid副本走位机制与弹幕肉鸽完美融合的快节奏合作游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Co-op",
+        "Bullet Hell",
+        "Action Roguelike",
+        "Cute",
+        "Anime",
+        "Rogue-like",
+        "2D",
+        "Difficult",
+        "Class-Based",
+        "Fantasy",
+        "Action",
+        "Loot",
+        "Adventure",
+        "Colorful",
+        "Magic",
+        "Combat",
+        "PvE",
+        "Local Co-Op",
+        "RPG",
+        "Cartoony"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:05:33.887685",
+      "tagsWithScores": [
+        {
+          "name": "MMO高难团本机制提纯",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "走位驱动弹幕Raid",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "多职业协同Roguelike构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2458860": {
+      "name": "Summer Clover",
+      "mechanics": [
+        "同居生活日程管理",
+        "多女主好感度多线养成",
+        "轻量级资源分配与属性Build"
+      ],
+      "rawMechanics": [
+        "同居生活日程管理",
+        "多女主好感度多线养成",
+        "轻量级资源分配与属性Build"
+      ],
+      "summary": "结合日程管理、资源分配与多线好感度攻略的同居生活模拟恋爱养成游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Steam Trading Cards",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:07.990743",
+      "tagsWithScores": [
+        {
+          "name": "同居生活日程管理",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "多女主好感度多线养成",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "轻量级资源分配与属性Build",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3108510": {
+      "name": "FlyKnight",
+      "mechanics": [
+        "复古第一人称地牢探索",
+        "多人Co-op硬核开荒",
+        "第一人称Souls-like战斗",
+        "核心向网格背包资源管理"
+      ],
+      "rawMechanics": [
+        "复古第一人称地牢探索",
+        "多人Co-op硬核开荒",
+        "第一人称Souls-like战斗",
+        "核心向网格背包资源管理"
+      ],
+      "summary": "融合了Souls-like战斗机制、多人Co-op与硬核背包管理的复古第一人称地牢探索RPG。",
+      "status": "generated",
+      "steamTags": [
+        "Dungeon Crawler",
+        "First-Person",
+        "Souls-like",
+        "Online Co-Op",
+        "Old School",
+        "Fishing",
+        "Fantasy",
+        "Action RPG",
+        "Inventory Management",
+        "Exploration",
+        "Action",
+        "Adventure",
+        "Combat",
+        "Singleplayer",
+        "Co-op",
+        "RPG",
+        "Loot",
+        "Multiplayer",
+        "Retro",
+        "3D"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:07.990743",
+      "tagsWithScores": [
+        {
+          "name": "复古第一人称地牢探索",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "多人Co-op硬核开荒",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "第一人称Souls-like战斗",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "核心向网格背包资源管理",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2220360": {
+      "name": "Paper Lily - Chapter 1",
+      "mechanics": [
+        "多解法开放式解谜",
+        "RPG Maker微恐怖心理叙事",
+        "多分支蝴蝶效应剧情"
+      ],
+      "rawMechanics": [
+        "多解法开放式解谜",
+        "RPG Maker微恐怖心理叙事",
+        "多分支蝴蝶效应剧情"
+      ],
+      "summary": "强调多解法涌现式解谜与多分支剧情驱动的RPG微恐怖叙事体验。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Full controller support",
+        "Steam Cloud",
+        "Remote Play on TV"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:07.990743",
+      "tagsWithScores": [
+        {
+          "name": "多解法开放式解谜",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "RPG Maker微恐怖心理叙事",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        },
+        {
+          "name": "多分支蝴蝶效应剧情",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "537180": {
+      "name": "Digimon Masters Online",
+      "mechanics": [
+        "经典IP多线进化树构筑",
+        "宠物协同即时MMO战斗",
+        "大世界Creature Collector捉宠"
+      ],
+      "rawMechanics": [
+        "经典IP多线进化树构筑",
+        "宠物协同即时MMO战斗",
+        "大世界Creature Collector捉宠"
+      ],
+      "summary": "围绕数码兽收集、多线进化树构建与宠物协同作战的经典MMORPG。",
+      "status": "generated",
+      "steamTags": [
+        "Free to Play",
+        "Anime",
+        "MMORPG",
+        "Massively Multiplayer",
+        "Adventure",
+        "RPG",
+        "Action",
+        "Open World",
+        "Casual",
+        "Multiplayer",
+        "Fantasy",
+        "Action-Adventure",
+        "Co-op",
+        "Action RPG",
+        "Arcade",
+        "Creature Collector",
+        "Online Co-Op",
+        "Singleplayer",
+        "Survival",
+        "FPS"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:07.990743",
+      "tagsWithScores": [
+        {
+          "name": "经典IP多线进化树构筑",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "宠物协同即时MMO战斗",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        },
+        {
+          "name": "大世界Creature Collector捉宠",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3372980": {
+      "name": "Tower Wizard",
+      "mechanics": [
+        "放置类增量数值循环",
+        "魔法塔设施规划与升级",
+        "自动化召唤物资源采集",
+        "魔法科技树多线解锁"
+      ],
+      "rawMechanics": [
+        "放置类增量数值循环",
+        "魔法塔设施规划与升级",
+        "自动化召唤物资源采集",
+        "魔法科技树多线解锁"
+      ],
+      "summary": "结合设施规划、科技树解锁与自动化资源采集的魔法塔主题增量放置游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Adjustable Text Size",
+        "Color Alternatives",
+        "Custom Volume Controls",
+        "Mouse Only Option",
+        "Playable without Timed Input",
+        "Save Anytime",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:07.990743",
+      "tagsWithScores": [
+        {
+          "name": "放置类增量数值循环",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "魔法塔设施规划与升级",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "自动化召唤物资源采集",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "魔法科技树多线解锁",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1535560": {
+      "name": "Farmer Against Potatoes Idle",
+      "mechanics": [
+        "多职业天赋Build构筑",
+        "装备驱动Idle循环",
+        "无限数值膨胀养成"
+      ],
+      "rawMechanics": [
+        "多职业天赋Build构筑",
+        "装备驱动Idle循环",
+        "无限数值膨胀养成"
+      ],
+      "summary": "以装备驱动和多职业天赋树为核心，提供深度数值验证的无限膨胀Idle游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "In-App Purchases"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:40.208641",
+      "tagsWithScores": [
+        {
+          "name": "多职业天赋Build构筑",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "装备驱动Idle循环",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "无限数值膨胀养成",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2905170": {
+      "name": "Magic Archery",
+      "mechanics": [
+        "魔法箭矢Build附魔",
+        "任务驱动Incremental循环",
+        "极简数值增量养成"
+      ],
+      "rawMechanics": [
+        "魔法箭矢Build附魔",
+        "任务驱动Incremental循环",
+        "极简数值增量养成"
+      ],
+      "summary": "结合任务经济系统与魔法箭矢词缀附魔的短流程Incremental增量游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Steam Cloud"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:40.208641",
+      "tagsWithScores": [
+        {
+          "name": "魔法箭矢Build附魔",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "任务驱动Incremental循环",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "极简数值增量养成",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2993780": {
+      "name": "FANTASY LIFE i: The Girl Who Steals Time",
+      "mechanics": [
+        "多职业Life系统无缝切换",
+        "战斗与生活互哺循环",
+        "慢节奏沙盒岛屿改造"
+      ],
+      "rawMechanics": [
+        "多职业Life系统无缝切换",
+        "战斗与生活互哺循环",
+        "慢节奏沙盒岛屿改造"
+      ],
+      "summary": "以14种生活/战斗职业无缝切换和资源互哺循环为核心的慢节奏沙盒RPG。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Action",
+        "Casual",
+        "JRPG",
+        "Action-Adventure",
+        "City Builder",
+        "Exploration",
+        "Party-Based RPG",
+        "3D",
+        "Cute",
+        "Third Person",
+        "Fantasy",
+        "Character Customization",
+        "PvE",
+        "Open World",
+        "Online Co-Op",
+        "Singleplayer",
+        "Multiplayer",
+        "Crafting",
+        "Co-op"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:40.208641",
+      "tagsWithScores": [
+        {
+          "name": "多职业Life系统无缝切换",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "战斗与生活互哺循环",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "慢节奏沙盒岛屿改造",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2067920": {
+      "name": "Rogue: Genesia",
+      "mechanics": [
+        "破局级超模Build构筑",
+        "极限同屏尸海割草",
+        "双摇杆Rogue-lite动作循环"
+      ],
+      "rawMechanics": [
+        "破局级超模Build构筑",
+        "极限同屏尸海割草",
+        "双摇杆Rogue-lite动作循环"
+      ],
+      "summary": "强调打破数值平衡的超模Build构筑与极限同屏割草快感的Rogue-lite生存游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Action Roguelike",
+        "Bullet Hell",
+        "Rogue-lite",
+        "Twin Stick Shooter",
+        "Arcade",
+        "PvE",
+        "Choices Matter",
+        "2.5D",
+        "Action",
+        "Rogue-like",
+        "2D",
+        "Strategy",
+        "Top-Down",
+        "3D",
+        "Procedural Generation",
+        "Controller",
+        "RPG",
+        "Casual",
+        "Pixel Graphics",
+        "Fantasy"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:40.208641",
+      "tagsWithScores": [
+        {
+          "name": "破局级超模Build构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "极限同屏尸海割草",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "双摇杆Rogue-lite动作循环",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1955830": {
+      "name": "Touhou Hero of Ice Fairy",
+      "mechanics": [
+        "高机动横版弹幕动作",
+        "符卡机制Build定制",
+        "Boss-Rush式Rogue-lite循环"
+      ],
+      "rawMechanics": [
+        "高机动横版弹幕动作",
+        "符卡机制Build定制",
+        "Boss-Rush式Rogue-lite循环"
+      ],
+      "summary": "融合东方Project符卡构筑与高机动擦弹机制的横版弹幕Boss-Rush游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Bullet Hell",
+        "Anime",
+        "Female Protagonist",
+        "Side Scroller",
+        "Rogue-lite",
+        "Platformer",
+        "Cute",
+        "JRPG",
+        "Replay Value",
+        "Indie",
+        "Story Rich",
+        "2D",
+        "Singleplayer",
+        "RPG",
+        "Action",
+        "Adventure",
+        "Shooter",
+        "Action-Adventure",
+        "Combat",
+        "Drama"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:06:40.208641",
+      "tagsWithScores": [
+        {
+          "name": "高机动横版弹幕动作",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "符卡机制Build定制",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "Boss-Rush式Rogue-lite循环",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1585180": {
+      "name": "Drova - Forsaken Kin",
+      "mechanics": [
+        "2D像素Souls-like战斗体验",
+        "CRPG多阵营动态抉择",
+        "凯尔特神话暗黑世界构筑"
+      ],
+      "rawMechanics": [
+        "2D像素Souls-like战斗体验",
+        "CRPG多阵营动态抉择",
+        "凯尔特神话暗黑世界构筑"
+      ],
+      "summary": "融合了CRPG深度的阵营抉择与Souls-like硬核动作系统的2D暗黑凯尔特神话RPG。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Exploration",
+        "Action RPG",
+        "2D",
+        "Character Customization",
+        "Pixel Graphics",
+        "CRPG",
+        "Choices Matter",
+        "Souls-like",
+        "Open World",
+        "Action",
+        "Dark Fantasy",
+        "Story Rich",
+        "Dynamic Narration",
+        "Fantasy",
+        "Magic",
+        "Singleplayer",
+        "Mystery",
+        "Adventure",
+        "Atmospheric"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:10.585418",
+      "tagsWithScores": [
+        {
+          "name": "2D像素Souls-like战斗体验",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "CRPG多阵营动态抉择",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "凯尔特神话暗黑世界构筑",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3061810": {
+      "name": "Like a Dragon: Pirate Yakuza in Hawaii",
+      "mechanics": [
+        "极道风格夸张Hack and Slash",
+        "现代海盗Naval Combat系统",
+        "如龙式反差幽默剧情演绎"
+      ],
+      "rawMechanics": [
+        "极道风格夸张Hack and Slash",
+        "现代海盗Naval Combat系统",
+        "如龙式反差幽默剧情演绎"
+      ],
+      "summary": "将如龙工作室标志性的夸张极道动作与现代海盗海战系统完美结合的无厘头黑道冒险。",
+      "status": "generated",
+      "steamTags": [
+        "Action",
+        "Adventure",
+        "RPG",
+        "Pirates",
+        "Naval Combat",
+        "Hack and Slash",
+        "Funny",
+        "Action RPG",
+        "Third Person",
+        "JRPG",
+        "Character Customization",
+        "Action-Adventure",
+        "Fantasy",
+        "Drama",
+        "Exploration",
+        "3D",
+        "Cinematic",
+        "Naval",
+        "Sailing",
+        "Swordplay"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:10.585418",
+      "tagsWithScores": [
+        {
+          "name": "极道风格夸张Hack and Slash",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "现代海盗Naval Combat系统",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "如龙式反差幽默剧情演绎",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "3631290": {
+      "name": "命运转轮 | Slots & Daggers",
+      "mechanics": [
+        "老虎机机制Roguelike构筑",
+        "轮盘概率驱动战斗策略"
+      ],
+      "rawMechanics": [
+        "老虎机机制Roguelike构筑",
+        "轮盘概率驱动战斗策略"
+      ],
+      "summary": "以老虎机轮盘旋转为核心驱动力的复古微型Roguelike策略战斗游戏。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:10.585418",
+      "tagsWithScores": [
+        {
+          "name": "老虎机机制Roguelike构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "轮盘概率驱动战斗策略",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2873080": {
+      "name": "The NOexistenceN of you AND me",
+      "mechanics": [
+        "Meta机制打破第四面墙叙事",
+        "心理恐怖Visual Novel多分支演绎",
+        "超现实碎片化真相探索"
+      ],
+      "rawMechanics": [
+        "Meta机制打破第四面墙叙事",
+        "心理恐怖Visual Novel多分支演绎",
+        "超现实碎片化真相探索"
+      ],
+      "summary": "利用Meta游戏机制打破第四面墙，在心理恐怖氛围中探索超现实世界真相的视觉小说。",
+      "status": "generated",
+      "steamTags": [
+        "Visual Novel",
+        "Psychological Horror",
+        "Multiple Endings",
+        "Interactive Fiction",
+        "Anime",
+        "Story Rich",
+        "Cute",
+        "Psychological",
+        "Surreal",
+        "Singleplayer",
+        "Adventure",
+        "Drama",
+        "Indie",
+        "Stylized",
+        "Fantasy",
+        "Dating Sim",
+        "2D",
+        "Choose Your Own Adventure",
+        "RPG",
+        "Psychedelic"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:10.585418",
+      "tagsWithScores": [
+        {
+          "name": "Meta机制打破第四面墙叙事",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "心理恐怖Visual Novel多分支演绎",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "超现实碎片化真相探索",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2796340": {
+      "name": "Illusion Carnival",
+      "mechanics": [
+        "暗黑童话立体书场景交互",
+        "诡异游乐园箱庭关卡挑战",
+        "精神侵蚀动态状态管理"
+      ],
+      "rawMechanics": [
+        "暗黑童话立体书场景交互",
+        "诡异游乐园箱庭关卡挑战",
+        "精神侵蚀动态状态管理"
+      ],
+      "summary": "采用独特暗黑立体书美术风格，融合游乐园箱庭闯关与精神侵蚀生存机制的怪诞冒险。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Partial Controller Support",
+        "Steam Cloud"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:10.585418",
+      "tagsWithScores": [
+        {
+          "name": "暗黑童话立体书场景交互",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "诡异游乐园箱庭关卡挑战",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "精神侵蚀动态状态管理",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2704110": {
+      "name": "Aliya: Timelink",
+      "mechanics": [
+        "真实时间同步通讯",
+        "跨次元第四面墙互动",
+        "文本驱动Perma Death"
+      ],
+      "rawMechanics": [
+        "真实时间同步通讯",
+        "跨次元第四面墙互动",
+        "文本驱动Perma Death"
+      ],
+      "summary": "通过真实时间流逝与跨时空对话机制，打造打破次元壁的沉浸式文字生存体验。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Interactive Fiction",
+        "Visual Novel",
+        "Word Game",
+        "Multiple Endings",
+        "Space",
+        "Sci-fi",
+        "Text-Based",
+        "Perma Death",
+        "2D",
+        "Minimalist",
+        "Emotional",
+        "Story Rich",
+        "Choices Matter",
+        "Singleplayer",
+        "Time Management",
+        "Indie",
+        "Dating Sim"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:44.895129",
+      "tagsWithScores": [
+        {
+          "name": "真实时间同步通讯",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "跨次元第四面墙互动",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        },
+        {
+          "name": "文本驱动Perma Death",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 5
+        }
+      ]
+    },
+    "1147860": {
+      "name": "UFO 50",
+      "mechanics": [
+        "50合1复古游戏矩阵",
+        "8-bit美学现代重构",
+        "跨品类机制微缩实验"
+      ],
+      "rawMechanics": [
+        "50合1复古游戏矩阵",
+        "8-bit美学现代重构",
+        "跨品类机制微缩实验"
+      ],
+      "summary": "用现代游戏设计理念重新解构并制作50款虚构主机的8-bit复古游戏，堪称玩法设计的百科全书。",
+      "status": "generated",
+      "steamTags": [
+        "Indie",
+        "Pixel Graphics",
+        "Action",
+        "Retro",
+        "Strategy",
+        "RPG",
+        "2D",
+        "Adventure",
+        "Arcade",
+        "Difficult",
+        "Casual",
+        "1980s",
+        "Local Multiplayer",
+        "Minigames",
+        "Rogue-like",
+        "2D Platformer",
+        "Puzzle",
+        "Platformer",
+        "Great Soundtrack",
+        "Sports"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:44.895129",
+      "tagsWithScores": [
+        {
+          "name": "50合1复古游戏矩阵",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "8-bit美学现代重构",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "跨品类机制微缩实验",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "3755860": {
+      "name": "BLACK SOULS",
+      "mechanics": [
+        "2D回合制魂系体验",
+        "暗黑童话解构叙事",
+        "碎片化世界观构建"
+      ],
+      "rawMechanics": [
+        "2D回合制魂系体验",
+        "暗黑童话解构叙事",
+        "碎片化世界观构建"
+      ],
+      "summary": "在RPG Maker引擎下完美复刻魂系的高难受苦与碎片化叙事，并深度解构经典童话的暗黑神作。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:44.895129",
+      "tagsWithScores": [
+        {
+          "name": "2D回合制魂系体验",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "暗黑童话解构叙事",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "碎片化世界观构建",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "1634860": {
+      "name": "Minishoot' Adventures",
+      "mechanics": [
+        "双摇杆弹幕Metroidvania",
+        "俯视角非线性探索",
+        "飞船能力解锁解谜"
+      ],
+      "rawMechanics": [
+        "双摇杆弹幕Metroidvania",
+        "俯视角非线性探索",
+        "飞船能力解锁解谜"
+      ],
+      "summary": "巧妙地将双摇杆弹幕射击的爽快操作感与银河恶魔城的非线性地图探索完美融合。",
+      "status": "generated",
+      "steamTags": [
+        "Twin Stick Shooter",
+        "Bullet Hell",
+        "Metroidvania",
+        "Exploration",
+        "Top-Down",
+        "Adventure",
+        "RPG",
+        "Cute",
+        "Casual",
+        "2D",
+        "Nonlinear",
+        "Top-Down Shooter",
+        "Colorful",
+        "Open World",
+        "Shooter",
+        "Minimalist",
+        "Action",
+        "Retro",
+        "Shoot 'Em Up",
+        "Fantasy"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:44.895129",
+      "tagsWithScores": [
+        {
+          "name": "双摇杆弹幕Metroidvania",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "俯视角非线性探索",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "飞船能力解锁解谜",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2185060": {
+      "name": "Two Point Museum",
+      "mechanics": [
+        "遗物探索与展馆经营",
+        "游客动线与空间布局",
+        "无厘头情境模拟经营"
+      ],
+      "rawMechanics": [
+        "遗物探索与展馆经营",
+        "游客动线与空间布局",
+        "无厘头情境模拟经营"
+      ],
+      "summary": "延续双点工作室标志性的英式无厘头幽默，将文物发掘与博物馆空间动线管理相结合的模拟经营。",
+      "status": "generated",
+      "steamTags": [
+        "Simulation",
+        "Casual",
+        "Strategy",
+        "Building",
+        "City Builder",
+        "Life Sim",
+        "Sandbox",
+        "Exploration",
+        "Cartoony",
+        "Cute",
+        "Isometric",
+        "Economy",
+        "Comedy",
+        "Management",
+        "Family Friendly",
+        "Funny",
+        "Nature",
+        "Relaxing",
+        "Sci-fi",
+        "Singleplayer"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:07:44.895129",
+      "tagsWithScores": [
+        {
+          "name": "遗物探索与展馆经营",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "游客动线与空间布局",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "无厘头情境模拟经营",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1477070": {
+      "name": "Depersonalization",
+      "mechanics": [
+        "TRPG跑团骰子检定",
+        "调查员卡牌Build构筑",
+        "单元剧式时空穿梭叙事"
+      ],
+      "rawMechanics": [
+        "TRPG跑团骰子检定",
+        "调查员卡牌Build构筑",
+        "单元剧式时空穿梭叙事"
+      ],
+      "summary": "将克苏鲁跑团规则电子化，融合卡牌构筑与单元剧叙事的多分支RPG。",
+      "status": "generated",
+      "steamTags": [
+        "Lovecraftian",
+        "Pixel Graphics",
+        "Investigation",
+        "RPG",
+        "Strategy RPG",
+        "Anime",
+        "Story Rich",
+        "Card Battler",
+        "Board Game",
+        "Third Person",
+        "Strategy",
+        "Immersive Sim",
+        "Casual",
+        "Puzzle",
+        "Time Travel",
+        "Mystery",
+        "Card Game",
+        "Rogue-like",
+        "Mythology",
+        "Adventure"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:08:28.033176",
+      "tagsWithScores": [
+        {
+          "name": "TRPG跑团骰子检定",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "调查员卡牌Build构筑",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "单元剧式时空穿梭叙事",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3115220": {
+      "name": "自在城镇",
+      "mechanics": [
+        "无网格自由放置建造",
+        "微缩景观动态演化",
+        "沉浸式城镇细节自定义"
+      ],
+      "rawMechanics": [
+        "无网格自由放置建造",
+        "微缩景观动态演化",
+        "沉浸式城镇细节自定义"
+      ],
+      "summary": "主打无网格自由布局与治愈系微缩景观美学的情绪价值向城镇建造游戏。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "可调整文字大小",
+        "视角舒适度",
+        "自定义音量控制",
+        "无需应对快速反应事件",
+        "随时保存",
+        "立体声",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:08:28.034244",
+      "tagsWithScores": [
+        {
+          "name": "无网格自由放置建造",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "微缩景观动态演化",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "沉浸式城镇细节自定义",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1004640": {
+      "name": "FINAL FANTASY TACTICS - The Ivalice Chronicles",
+      "mechanics": [
+        "CT时间轴行动排序",
+        "高低差地形战棋博弈",
+        "跨职业技能组合构筑"
+      ],
+      "rawMechanics": [
+        "CT时间轴行动排序",
+        "高低差地形战棋博弈",
+        "跨职业技能组合构筑"
+      ],
+      "summary": "奠定SRPG标杆的经典神作，以半即时CT系统与严谨的地形高低差策略闻名。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "完全支持控制器",
+        "Steam 集换式卡牌",
+        "自定义音量控制",
+        "可调整难度",
+        "可以仅用键盘",
+        "无需应对快速反应事件",
+        "随时保存",
+        "立体声",
+        "Steam 云",
+        "在手机上远程畅玩",
+        "在平板上远程畅玩",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:08:28.034244",
+      "tagsWithScores": [
+        {
+          "name": "CT时间轴行动排序",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "高低差地形战棋博弈",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "跨职业技能组合构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        }
+      ]
+    },
+    "3831120": {
+      "name": "江山北望",
+      "mechanics": [
+        "动态谥号评价生成",
+        "内忧外患国策抉择",
+        "网状历史分支推演"
+      ],
+      "rawMechanics": [
+        "动态谥号评价生成",
+        "内忧外患国策抉择",
+        "网状历史分支推演"
+      ],
+      "summary": "围绕资源平衡与君王评价展开，以独特“谥号系统”驱动的多分支历史模拟RPG。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:08:28.034244",
+      "tagsWithScores": [
+        {
+          "name": "动态谥号评价生成",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "内忧外患国策抉择",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "网状历史分支推演",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2495100": {
+      "name": "Hello Kitty Island Adventure",
+      "mechanics": [
+        "NPC好感度驱动探索",
+        "开放世界岛屿生态复兴",
+        "轻度箱庭解谜探索"
+      ],
+      "rawMechanics": [
+        "NPC好感度驱动探索",
+        "开放世界岛屿生态复兴",
+        "轻度箱庭解谜探索"
+      ],
+      "summary": "将IP角色羁绊养成与塞尔达式轻度解谜相融合的治愈系开放世界生活模拟。",
+      "status": "generated",
+      "steamTags": [
+        "Cozy",
+        "Open World",
+        "Adventure",
+        "Simulation",
+        "Life Sim",
+        "Exploration",
+        "Casual",
+        "Colorful",
+        "Cute",
+        "Immersive Sim",
+        "Cooking",
+        "Crafting",
+        "Family Friendly",
+        "Relaxing",
+        "Story Rich",
+        "Action",
+        "Puzzle",
+        "3D",
+        "Horror",
+        "Isometric"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:08:28.034244",
+      "tagsWithScores": [
+        {
+          "name": "NPC好感度驱动探索",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "开放世界岛屿生态复兴",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "轻度箱庭解谜探索",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2732960": {
+      "name": "Command & Conquer™ Generals Zero Hour",
+      "mechanics": [
+        "非对称RTS阵营博弈",
+        "指挥官专属技能树Build",
+        "高烈度现代战争微操"
+      ],
+      "rawMechanics": [
+        "非对称RTS阵营博弈",
+        "指挥官专属技能树Build",
+        "高烈度现代战争微操"
+      ],
+      "summary": "经典的现代战争RTS里程碑，通过极具差异化的将军系统和专属技能树，为非对称竞技提供了深度的战术构筑空间。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Workshop",
+        "Steam Cloud",
+        "Includes level editor",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:02.947318",
+      "tagsWithScores": [
+        {
+          "name": "非对称RTS阵营博弈",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "指挥官专属技能树Build",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "高烈度现代战争微操",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2961880": {
+      "name": "Grocery Store Simulator",
+      "mechanics": [
+        "第一人称进销存循环",
+        "多人Co-op动线分工",
+        "动态定价与店铺扩张"
+      ],
+      "rawMechanics": [
+        "第一人称进销存循环",
+        "多人Co-op动线分工",
+        "动态定价与店铺扩张"
+      ],
+      "summary": "主打第一人称视角的超市模拟器，其核心乐趣在于联机状态下的任务分工与从零开始的商业版图扩张。",
+      "status": "generated",
+      "steamTags": [
+        "Online Co-Op",
+        "Multiplayer",
+        "Indie",
+        "First-Person",
+        "Simulation",
+        "Co-op",
+        "Inventory Management",
+        "Resource Management",
+        "Management",
+        "Economy",
+        "Singleplayer",
+        "Sandbox",
+        "Casual",
+        "Relaxing",
+        "Immersive Sim",
+        "Strategy",
+        "3D",
+        "Family Friendly",
+        "Choices Matter",
+        "Retro"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:02.947318",
+      "tagsWithScores": [
+        {
+          "name": "第一人称进销存循环",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "多人Co-op动线分工",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "动态定价与店铺扩张",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2678990": {
+      "name": "Minami Lane",
+      "mechanics": [
+        "微缩箱庭街道规划",
+        "村民满意度驱动经营",
+        "治愈系店铺自定义"
+      ],
+      "rawMechanics": [
+        "微缩箱庭街道规划",
+        "村民满意度驱动经营",
+        "治愈系店铺自定义"
+      ],
+      "summary": "小而美的治愈系微缩街道建造游戏，摒弃了重度策略，聚焦于轻度数值管理与温馨的箱庭视觉反馈。",
+      "status": "generated",
+      "steamTags": [
+        "Cute",
+        "Casual",
+        "Life Sim",
+        "Relaxing",
+        "Management",
+        "Colorful",
+        "Simulation",
+        "Cozy",
+        "Indie",
+        "City Builder",
+        "Strategy",
+        "Resource Management",
+        "Stylized",
+        "Isometric",
+        "Hand-drawn",
+        "Singleplayer",
+        "Cats",
+        "Building",
+        "2D",
+        "Hidden Object"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:02.947318",
+      "tagsWithScores": [
+        {
+          "name": "微缩箱庭街道规划",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "村民满意度驱动经营",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "治愈系店铺自定义",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "2897760": {
+      "name": "Romantic Escapades",
+      "mechanics": [
+        "古风恋爱羁绊养成",
+        "动态好感度分支攻略"
+      ],
+      "rawMechanics": [
+        "古风恋爱羁绊养成",
+        "动态好感度分支攻略"
+      ],
+      "summary": "以中国古风世界观为包装的恋爱模拟RPG，核心在于通过剧情抉择攻略多名角色并建立深层羁绊。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Camera Comfort",
+        "Custom Volume Controls",
+        "Mouse Only Option",
+        "Stereo Sound",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:02.947318",
+      "tagsWithScores": [
+        {
+          "name": "古风恋爱羁绊养成",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "动态好感度分支攻略",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2501600": {
+      "name": "DICEOMANCER",
+      "mechanics": [
+        "万物皆可骰的数值篡改",
+        "Roguelike卡牌Build构筑",
+        "第一人称手绘视觉演出"
+      ],
+      "rawMechanics": [
+        "万物皆可骰的数值篡改",
+        "Roguelike卡牌Build构筑",
+        "第一人称手绘视觉演出"
+      ],
+      "summary": "极具机制创意的Roguelike卡牌构筑游戏，最大卖点在于赋予玩家用骰子直接篡改游戏底层规则与UI数值的破局能力。",
+      "status": "generated",
+      "steamTags": [
+        "Strategy",
+        "Card Game",
+        "Card Battler",
+        "Roguelike Deckbuilder",
+        "Colorful",
+        "Rogue-like",
+        "Deckbuilding",
+        "First-Person",
+        "Singleplayer",
+        "Indie",
+        "Casual",
+        "Dice",
+        "Rogue-lite",
+        "Hand-drawn"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:02.947318",
+      "tagsWithScores": [
+        {
+          "name": "万物皆可骰的数值篡改",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "Roguelike卡牌Build构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "第一人称手绘视觉演出",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "2059790": {
+      "name": "再刷一把 PlayAgain",
+      "mechanics": [
+        "暗黑式Loot刷宝驱动",
+        "抽卡肉鸽爬塔构筑",
+        "符文之语装备构筑"
+      ],
+      "rawMechanics": [
+        "暗黑式Loot刷宝驱动",
+        "抽卡肉鸽爬塔构筑",
+        "符文之语装备构筑"
+      ],
+      "summary": "融合暗黑刷宝、抽卡肉鸽、宠物养成与经典符文之语的极度缝合杀时间利器。",
+      "status": "generated",
+      "steamTags": [
+        "Turn-Based Combat",
+        "Adventure",
+        "RPG",
+        "Pixel Graphics",
+        "Loot",
+        "Strategy",
+        "Party-Based RPG",
+        "JRPG",
+        "Turn-Based Strategy",
+        "Turn-Based Tactics",
+        "Idler",
+        "Strategy RPG",
+        "2D",
+        "Colorful",
+        "Fantasy",
+        "Singleplayer",
+        "Alternate History",
+        "Magic",
+        "Indie",
+        "RPGMaker"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:30.976523",
+      "tagsWithScores": [
+        {
+          "name": "暗黑式Loot刷宝驱动",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "抽卡肉鸽爬塔构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "符文之语装备构筑",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        }
+      ]
+    },
+    "2167960": {
+      "name": "Buy a Croquette!",
+      "mechanics": [
+        "极简目标驱动叙事",
+        "反差感日常心理恐怖",
+        "微观箱庭街道解谜"
+      ],
+      "rawMechanics": [
+        "极简目标驱动叙事",
+        "反差感日常心理恐怖",
+        "微观箱庭街道解谜"
+      ],
+      "summary": "以“凑钱买可乐饼”为极简日常目标，实则暗藏心理恐怖与复杂解谜的反差感微观RPG。",
+      "status": "generated",
+      "steamTags": [
+        "RPGMaker",
+        "Mystery",
+        "Sci-fi",
+        "Puzzle",
+        "Psychological Horror",
+        "Funny",
+        "Multiple Endings",
+        "Female Protagonist",
+        "Exploration",
+        "Strategy",
+        "JRPG",
+        "Interactive Fiction",
+        "Pixel Graphics",
+        "Strategy RPG",
+        "Casual",
+        "Drama",
+        "RPG",
+        "Adventure",
+        "Visual Novel",
+        "Anime"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:30.977302",
+      "tagsWithScores": [
+        {
+          "name": "极简目标驱动叙事",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "反差感日常心理恐怖",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "微观箱庭街道解谜",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "436780": {
+      "name": "Tavern Keeper 🍻",
+      "mechanics": [
+        "动态混沌酒馆经营",
+        "高自由度沙盒装修",
+        "互动故事书RPG叙事"
+      ],
+      "rawMechanics": [
+        "动态混沌酒馆经营",
+        "高自由度沙盒装修",
+        "互动故事书RPG叙事"
+      ],
+      "summary": "《Game Dev Tycoon》开发商新作，融合高自由度装修与故事书叙事的混沌经营模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Camera Comfort",
+        "Color Alternatives",
+        "Custom Volume Controls",
+        "Adjustable Difficulty",
+        "Playable without Timed Input",
+        "Save Anytime",
+        "Stereo Sound",
+        "Subtitle Options",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:30.977302",
+      "tagsWithScores": [
+        {
+          "name": "动态混沌酒馆经营",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "高自由度沙盒装修",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "互动故事书RPG叙事",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2739590": {
+      "name": "Mad Island",
+      "mechanics": [
+        "敌对生物捕捉与拷问",
+        "多分支开放式逃生叙事",
+        "荒岛沙盒多维生存"
+      ],
+      "rawMechanics": [
+        "敌对生物捕捉与拷问",
+        "多分支开放式逃生叙事",
+        "荒岛沙盒多维生存"
+      ],
+      "summary": "包含建造、种田、抓宠甚至独特拷问机制的高自由度多分支荒岛生存沙盒。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:30.977302",
+      "tagsWithScores": [
+        {
+          "name": "敌对生物捕捉与拷问",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "多分支开放式逃生叙事",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "荒岛沙盒多维生存",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "2750780": {
+      "name": "月华辉映之刻",
+      "mechanics": [
+        "阴阳表里世界切换",
+        "中式悬疑探案叙事",
+        "双面视角群像塑造"
+      ],
+      "rawMechanics": [
+        "阴阳表里世界切换",
+        "中式悬疑探案叙事",
+        "双面视角群像塑造"
+      ],
+      "summary": "基于阴阳表里世界设定，揭露繁华古都背后残酷真相的中式古风悬疑叙事RPG。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:09:30.977302",
+      "tagsWithScores": [
+        {
+          "name": "阴阳表里世界切换",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "中式悬疑探案叙事",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "双面视角群像塑造",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3092660": {
+      "name": "Reverse: 1999",
+      "mechanics": [
+        "阶级合成卡牌战斗",
+        "跨时代复古美学叙事",
+        "神秘学沉浸式包装"
+      ],
+      "rawMechanics": [
+        "阶级合成卡牌战斗",
+        "跨时代复古美学叙事",
+        "神秘学沉浸式包装"
+      ],
+      "summary": "以极其出色的英伦复古视听包装，结合指令卡合成升阶机制的跨时代神秘学RPG。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Captions available",
+        "In-App Purchases"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:00.789666",
+      "tagsWithScores": [
+        {
+          "name": "阶级合成卡牌战斗",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "跨时代复古美学叙事",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "神秘学沉浸式包装",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2421410": {
+      "name": "Cyber Manhunt 2: New World - The Hacking Simulator",
+      "mechanics": [
+        "拟真社会工程学解密",
+        "AI视角隐私数据挖掘",
+        "蝴蝶效应网状叙事"
+      ],
+      "rawMechanics": [
+        "拟真社会工程学解密",
+        "AI视角隐私数据挖掘",
+        "蝴蝶效应网状叙事"
+      ],
+      "summary": "让玩家扮演AI助手，使用真实黑客社工手段挖掘隐私并操纵剧情走向的赛博解密模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "Hacking",
+        "Story Rich",
+        "Dark Humor",
+        "Dystopian ",
+        "Choices Matter",
+        "Mystery",
+        "Point & Click",
+        "Simulation",
+        "Clicker",
+        "RPG",
+        "Strategy",
+        "Drama",
+        "2D",
+        "Detective",
+        "Casual",
+        "Word Game",
+        "Singleplayer",
+        "Puzzle",
+        "Immersive Sim",
+        "Indie"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:00.789666",
+      "tagsWithScores": [
+        {
+          "name": "拟真社会工程学解密",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "AI视角隐私数据挖掘",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "蝴蝶效应网状叙事",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3602290": {
+      "name": "FEMBOY FUTA HOUSE",
+      "mechanics": [
+        "小众XP角色攻略养成",
+        "魔法学院日常模拟",
+        "宿舍群像关系网构建"
+      ],
+      "rawMechanics": [
+        "小众XP角色攻略养成",
+        "魔法学院日常模拟",
+        "宿舍群像关系网构建"
+      ],
+      "summary": "精准定位特定亚文化受众，将魔法校园生活与密闭宿舍空间内的角色互动深度结合的恋爱模拟游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Steam Trading Cards",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:00.789666",
+      "tagsWithScores": [
+        {
+          "name": "小众XP角色攻略养成",
+          "attraction": 3,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "魔法学院日常模拟",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "宿舍群像关系网构建",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1574240": {
+      "name": "Dread Delusion",
+      "mechanics": [
+        "浮空岛立体世界探索",
+        "PS1复古低模视觉探索",
+        "黑暗奇幻阵营抉择"
+      ],
+      "rawMechanics": [
+        "浮空岛立体世界探索",
+        "PS1复古低模视觉探索",
+        "黑暗奇幻阵营抉择"
+      ],
+      "summary": "采用90年代PS1复古低模画风，在充满克苏鲁元素的破碎浮空岛屿中进行自由探索与抉择的CRPG。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Open World",
+        "Adventure",
+        "Exploration",
+        "Dark Fantasy",
+        "First-Person",
+        "Story Rich",
+        "Magic",
+        "3D",
+        "Character Customization",
+        "Medieval",
+        "Pixel Graphics",
+        "Stylized",
+        "1990's",
+        "Metroidvania",
+        "Souls-like",
+        "Fantasy",
+        "Action-Adventure",
+        "Action RPG",
+        "Post-apocalyptic"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:00.789666",
+      "tagsWithScores": [
+        {
+          "name": "浮空岛立体世界探索",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "PS1复古低模视觉探索",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        },
+        {
+          "name": "黑暗奇幻阵营抉择",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3545990": {
+      "name": "美女，请别影响我成仙",
+      "mechanics": [
+        "第一人称FMV互动恋爱",
+        "修仙与红尘抉择机制",
+        "多女主好感度分支管理"
+      ],
+      "rawMechanics": [
+        "第一人称FMV互动恋爱",
+        "修仙与红尘抉择机制",
+        "多女主好感度分支管理"
+      ],
+      "summary": "将修仙网文套路与真人互动影视（FMV）结合，通过选项博弈决定修行或坠入情网的沉浸式恋爱喜剧。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:00.789666",
+      "tagsWithScores": [
+        {
+          "name": "第一人称FMV互动恋爱",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "修仙与红尘抉择机制",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "多女主好感度分支管理",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "2743080": {
+      "name": "100 Capitalist Cats",
+      "mechanics": [
+        "手绘场景寻物收集",
+        "极简目标搜寻机制"
+      ],
+      "rawMechanics": [
+        "手绘场景寻物收集",
+        "极简目标搜寻机制"
+      ],
+      "summary": "以华尔街为背景的纯手绘极简寻物收集游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "In-App Purchases"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:34.146782",
+      "tagsWithScores": [
+        {
+          "name": "手绘场景寻物收集",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "极简目标搜寻机制",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1547890": {
+      "name": "Let's Build a Zoo",
+      "mechanics": [
+        "跨物种DNA缝合合成",
+        "沙盒化园区建造经营",
+        "动态经济链管理"
+      ],
+      "rawMechanics": [
+        "跨物种DNA缝合合成",
+        "沙盒化园区建造经营",
+        "动态经济链管理"
+      ],
+      "summary": "结合了传统模拟经营与脑洞大开的跨物种DNA缝合机制的动物园建造游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Simulation",
+        "Pixel Graphics",
+        "City Builder",
+        "Management",
+        "Strategy",
+        "Sandbox",
+        "Building",
+        "Creature Collector",
+        "Cute",
+        "Resource Management",
+        "Colorful",
+        "Economy",
+        "Singleplayer",
+        "Relaxing",
+        "Open World",
+        "Indie",
+        "Dinosaurs"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:34.146782",
+      "tagsWithScores": [
+        {
+          "name": "跨物种DNA缝合合成",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "沙盒化园区建造经营",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "动态经济链管理",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1422440": {
+      "name": "Cataclismo",
+      "mechanics": [
+        "逐砖模块化堡垒搭建",
+        "RTS围城防守机制",
+        "立体防御阵地构筑"
+      ],
+      "rawMechanics": [
+        "逐砖模块化堡垒搭建",
+        "RTS围城防守机制",
+        "立体防御阵地构筑"
+      ],
+      "summary": "融合逐砖模块化自由建造与RTS资源管理的暗黑围城防守游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Strategy",
+        "Base-Building",
+        "Simulation",
+        "RTS",
+        "City Builder",
+        "Building",
+        "Grand Strategy",
+        "Tactical",
+        "Sandbox",
+        "Management",
+        "Moddable",
+        "Historical",
+        "Open World",
+        "4X",
+        "Singleplayer",
+        "War",
+        "Resource Management",
+        "Economy",
+        "Replay Value",
+        "Real-Time with Pause"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:34.146782",
+      "tagsWithScores": [
+        {
+          "name": "逐砖模块化堡垒搭建",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "RTS围城防守机制",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "立体防御阵地构筑",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "3846120": {
+      "name": "MineMogul",
+      "mechanics": [
+        "物理驱动自动化流水线",
+        "地下空间挖掘沙盒",
+        "混沌机械网络规划"
+      ],
+      "rawMechanics": [
+        "物理驱动自动化流水线",
+        "地下空间挖掘沙盒",
+        "混沌机械网络规划"
+      ],
+      "summary": "基于物理引擎驱动的地下自动化采矿与流水线工厂建造沙盒。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Playable without Timed Input",
+        "Stereo Sound",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:34.146782",
+      "tagsWithScores": [
+        {
+          "name": "物理驱动自动化流水线",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "地下空间挖掘沙盒",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "混沌机械网络规划",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1610440": {
+      "name": "Minds Beneath Us",
+      "mechanics": [
+        "2.5D电影化沉浸叙事",
+        "蝴蝶效应式网状抉择",
+        "人体算力剥削世界观设定"
+      ],
+      "rawMechanics": [
+        "2.5D电影化沉浸叙事",
+        "蝴蝶效应式网状抉择",
+        "人体算力剥削世界观设定"
+      ],
+      "summary": "设定在人类被当作AI算力容器的反乌托邦社会中的2.5D电影化叙事游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Cinematic",
+        "Atmospheric",
+        "Choices Matter",
+        "Story Rich",
+        "Cyberpunk",
+        "Visual Novel",
+        "Choose Your Own Adventure",
+        "RPG",
+        "2D",
+        "2.5D",
+        "Dystopian ",
+        "Singleplayer",
+        "Multiple Endings",
+        "Adventure",
+        "Hand-drawn",
+        "Puzzle",
+        "Philosophical",
+        "Point & Click",
+        "Sci-fi",
+        "LGBTQ+"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:10:34.146782",
+      "tagsWithScores": [
+        {
+          "name": "2.5D电影化沉浸叙事",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "蝴蝶效应式网状抉择",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "人体算力剥削世界观设定",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "600480": {
+      "name": "Megaquarium",
+      "mechanics": [
+        "鱼群生态需求矩阵匹配",
+        "水质管线与过滤系统布局",
+        "游客动线与观赏值转化"
+      ],
+      "rawMechanics": [
+        "鱼群生态需求矩阵匹配",
+        "水质管线与过滤系统布局",
+        "游客动线与观赏值转化"
+      ],
+      "summary": "硬核且注重生物生态需求与幕后设施管线布局的水族馆经营模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "Casual",
+        "Simulation",
+        "Building",
+        "Sandbox",
+        "Management",
+        "Underwater",
+        "Creature Collector",
+        "Cute",
+        "Relaxing",
+        "Resource Management",
+        "Indie",
+        "Moddable",
+        "Economy",
+        "Family Friendly",
+        "Fishing",
+        "Strategy",
+        "Capitalism",
+        "Singleplayer",
+        "Isometric",
+        "3D"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:11:12.975168",
+      "tagsWithScores": [
+        {
+          "name": "鱼群生态需求矩阵匹配",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "水质管线与过滤系统布局",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "游客动线与观赏值转化",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1689500": {
+      "name": "Dune: Imperium",
+      "mechanics": [
+        "Deckbuilding驱动工人放置",
+        "战区兵力暗拍与阴谋结算",
+        "多阵营声望轨道竞速"
+      ],
+      "rawMechanics": [
+        "Deckbuilding驱动工人放置",
+        "战区兵力暗拍与阴谋结算",
+        "多阵营声望轨道竞速"
+      ],
+      "summary": "完美融合卡牌构筑与工人放置机制的顶级桌游电子化策略博弈。",
+      "status": "generated",
+      "steamTags": [
+        "Board Game",
+        "Strategy",
+        "Deckbuilding",
+        "Sci-fi",
+        "Card Game",
+        "Simulation",
+        "Grand Strategy",
+        "Tabletop",
+        "Space Sim",
+        "Top-Down",
+        "Dystopian ",
+        "Economy",
+        "Fantasy",
+        "Futuristic",
+        "Lore-Rich",
+        "Military",
+        "Political",
+        "Space",
+        "Choices Matter",
+        "Combat"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:11:12.975168",
+      "tagsWithScores": [
+        {
+          "name": "Deckbuilding驱动工人放置",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "战区兵力暗拍与阴谋结算",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "多阵营声望轨道竞速",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2878450": {
+      "name": "Master of Command",
+      "mechanics": [
+        "RTT老兵战损与留存管理",
+        "动态补给线与后勤分配",
+        "时代兵团装备自定义构筑"
+      ],
+      "rawMechanics": [
+        "RTT老兵战损与留存管理",
+        "动态补给线与后勤分配",
+        "时代兵团装备自定义构筑"
+      ],
+      "summary": "将核心博弈点从单局胜负转移到后勤补给与老兵战损管理的18世纪RTT战役模拟。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:11:12.975168",
+      "tagsWithScores": [
+        {
+          "name": "RTT老兵战损与留存管理",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "动态补给线与后勤分配",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "时代兵团装备自定义构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2073250": {
+      "name": "Rift of the NecroDancer",
+      "mechanics": [
+        "下落式音游怪物受击判定",
+        "音轨解析动态关卡生成",
+        "叙事驱动的节奏Minigames"
+      ],
+      "rawMechanics": [
+        "下落式音游怪物受击判定",
+        "音轨解析动态关卡生成",
+        "叙事驱动的节奏Minigames"
+      ],
+      "summary": "将传统音符转化为怪物战斗判定，结合动态音轨生成的创新衍生节奏游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Rhythm",
+        "Minigames",
+        "Female Protagonist",
+        "Difficult",
+        "Music",
+        "Anime",
+        "Music-Based Procedural Generation",
+        "Level Editor",
+        "Indie",
+        "Soundtrack",
+        "Visual Novel",
+        "Cute",
+        "Cartoon",
+        "Combat",
+        "Arcade",
+        "Cinematic",
+        "Hand-drawn",
+        "2D",
+        "Action",
+        "Colorful"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:11:12.975168",
+      "tagsWithScores": [
+        {
+          "name": "下落式音游怪物受击判定",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "音轨解析动态关卡生成",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "叙事驱动的节奏Minigames",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1750770": {
+      "name": "Starcom: Unknown Space",
+      "mechanics": [
+        "模块化星舰拼装构筑",
+        "俯视角太空ARPG弹幕射击",
+        "异星文明交涉与异常探测"
+      ],
+      "rawMechanics": [
+        "模块化星舰拼装构筑",
+        "俯视角太空ARPG弹幕射击",
+        "异星文明交涉与异常探测"
+      ],
+      "summary": "以自由度极高的模块化飞船建造为核心驱动力的俯视角太空探索与射击ARPG。",
+      "status": "generated",
+      "steamTags": [
+        "Space",
+        "Exploration",
+        "Open World",
+        "Space Sim",
+        "Action RPG",
+        "Story Rich",
+        "Indie",
+        "Sci-fi",
+        "Top-Down Shooter",
+        "RPG",
+        "Action",
+        "Combat",
+        "Building",
+        "Action-Adventure",
+        "Lore-Rich",
+        "Singleplayer",
+        "Aliens",
+        "Adventure",
+        "Atmospheric",
+        "2D"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:11:12.975168",
+      "tagsWithScores": [
+        {
+          "name": "模块化星舰拼装构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "俯视角太空ARPG弹幕射击",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "异星文明交涉与异常探测",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "2715650": {
+      "name": "Humans are not that against Lizardwomen",
+      "mechanics": [
+        "网络迷因恶搞演绎",
+        "擦边向角色攻略",
+        "荒诞情境模拟反馈"
+      ],
+      "rawMechanics": [
+        "网络迷因恶搞演绎",
+        "擦边向角色攻略",
+        "荒诞情境模拟反馈"
+      ],
+      "summary": "基于俄罗斯网络迷因“古罗斯人对抗蜥蜴人”衍生出的荒诞擦边模拟游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Steam Trading Cards",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:13:52.495016",
+      "tagsWithScores": [
+        {
+          "name": "网络迷因恶搞演绎",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        },
+        {
+          "name": "擦边向角色攻略",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "荒诞情境模拟反馈",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1808680": {
+      "name": "Snufkin: Melody of Moominvalley",
+      "mechanics": [
+        "乐器驱动环境解谜",
+        "无暴力潜行对抗",
+        "绘本风治愈探索"
+      ],
+      "rawMechanics": [
+        "乐器驱动环境解谜",
+        "无暴力潜行对抗",
+        "绘本风治愈探索"
+      ],
+      "summary": "通过音乐解谜与轻度潜行守护姆明谷的绘本风治愈冒险游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Colorful",
+        "Puzzle",
+        "Funny",
+        "RPG",
+        "Stylized",
+        "2D",
+        "Open World",
+        "Atmospheric",
+        "Cute",
+        "Indie",
+        "Adventure",
+        "Exploration",
+        "Wholesome",
+        "Singleplayer",
+        "Family Friendly",
+        "Cozy",
+        "Stealth",
+        "Mystery",
+        "Cartoony",
+        "Hidden Object"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:13:52.495521",
+      "tagsWithScores": [
+        {
+          "name": "乐器驱动环境解谜",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "无暴力潜行对抗",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "绘本风治愈探索",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3053950": {
+      "name": "Dungeon Rampage",
+      "mechanics": [
+        "多人Co-op割草闯关",
+        "差异化英雄Build构筑",
+        "快节奏地牢刷宝"
+      ],
+      "rawMechanics": [
+        "多人Co-op割草闯关",
+        "差异化英雄Build构筑",
+        "快节奏地牢刷宝"
+      ],
+      "summary": "主打1-4人爽快割草、英雄构筑与战利品收集的合作地牢动作游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Multi-player",
+        "Co-op",
+        "Online Co-op",
+        "Partial Controller Support",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:13:52.495521",
+      "tagsWithScores": [
+        {
+          "name": "多人Co-op割草闯关",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "差异化英雄Build构筑",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "快节奏地牢刷宝",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2159210": {
+      "name": "Just a To the Moon Series Beach Episode",
+      "mechanics": [
+        "违和感悬疑叙事",
+        "IP群像彩蛋互动",
+        "电影化像素演出"
+      ],
+      "rawMechanics": [
+        "违和感悬疑叙事",
+        "IP群像彩蛋互动",
+        "电影化像素演出"
+      ],
+      "summary": "披着轻松海滩日常外衣、实则暗藏心理惊悚与悬疑反转的《去月球》系列粉丝向佳作。",
+      "status": "generated",
+      "steamTags": [
+        "Story Rich",
+        "Adventure",
+        "Emotional",
+        "RPG",
+        "Atmospheric",
+        "Pixel Graphics",
+        "JRPG",
+        "Sci-fi",
+        "Narration",
+        "Top-Down",
+        "Funny",
+        "Singleplayer",
+        "Indie",
+        "Narrative",
+        "Cinematic",
+        "Point & Click",
+        "2D",
+        "Linear",
+        "RPGMaker",
+        "Dating Sim"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:13:52.495521",
+      "tagsWithScores": [
+        {
+          "name": "违和感悬疑叙事",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "IP群像彩蛋互动",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "电影化像素演出",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2533960": {
+      "name": "SUMMERHOUSE",
+      "mechanics": [
+        "无目标沙盒拼搭",
+        "生活气息细节营造",
+        "极简像素造景表达"
+      ],
+      "rawMechanics": [
+        "无目标沙盒拼搭",
+        "生活气息细节营造",
+        "极简像素造景表达"
+      ],
+      "summary": "摒弃资源管理与规则限制，纯粹专注于房屋造景与生活感表达的治愈系模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "Sandbox",
+        "Relaxing",
+        "Singleplayer",
+        "Casual",
+        "City Builder",
+        "Building",
+        "Pixel Graphics",
+        "Colorful",
+        "Atmospheric",
+        "Indie",
+        "Simulation",
+        "3D",
+        "Stylized",
+        "Strategy",
+        "Cozy",
+        "Design & Illustration",
+        "Cute"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:13:52.495521",
+      "tagsWithScores": [
+        {
+          "name": "无目标沙盒拼搭",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "生活气息细节营造",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "极简像素造景表达",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "3503440": {
+      "name": "咖啡星矿工 Astro Prospector",
+      "mechanics": [
+        "极简单手弹幕射击",
+        "增量式数值成长循环"
+      ],
+      "rawMechanics": [
+        "极简单手弹幕射击",
+        "增量式数值成长循环"
+      ],
+      "summary": "结合了极简低门槛操作与令人欲罢不能的增量数值成长的魔性弹幕割草游戏。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "完全支持控制器",
+        "视角舒适度",
+        "自定义音量控制",
+        "可以仅用鼠标",
+        "无需应对快速反应事件",
+        "Steam 云",
+        "统计数据",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:14:20.863001",
+      "tagsWithScores": [
+        {
+          "name": "极简单手弹幕射击",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "增量式数值成长循环",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        }
+      ]
+    },
+    "2608270": {
+      "name": "Intravenous 2",
+      "mechanics": [
+        "Top-Down硬核战术潜行",
+        "Immersive Sim多路线解法",
+        "拟真枪械战术改装"
+      ],
+      "rawMechanics": [
+        "Top-Down硬核战术潜行",
+        "Immersive Sim多路线解法",
+        "拟真枪械战术改装"
+      ],
+      "summary": "融合硬核战术枪战与Immersive Sim自由度的俯视角潜行暗杀游戏，允许玩家在潜行与突击间动态切换。",
+      "status": "generated",
+      "steamTags": [
+        "Tactical",
+        "Shooter",
+        "Stealth",
+        "Realistic",
+        "Singleplayer",
+        "Action",
+        "Gun Customization",
+        "Violent",
+        "Combat",
+        "Crime",
+        "Top-Down Shooter",
+        "2D",
+        "Gore",
+        "Difficult",
+        "Action-Adventure",
+        "Top-Down",
+        "Story Rich",
+        "Immersive Sim",
+        "Pixel Graphics",
+        "Simulation"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:14:20.863001",
+      "tagsWithScores": [
+        {
+          "name": "Top-Down硬核战术潜行",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "Immersive Sim多路线解法",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "拟真枪械战术改装",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1671210": {
+      "name": "DELTARUNE",
+      "mechanics": [
+        "回合制弹幕微操闪避",
+        "宽恕与战斗道德分支",
+        "标志性Meta幽默叙事"
+      ],
+      "rawMechanics": [
+        "回合制弹幕微操闪避",
+        "宽恕与战斗道德分支",
+        "标志性Meta幽默叙事"
+      ],
+      "summary": "延续tobyfox标志性设计，将弹幕微操融入传统JRPG战斗，并以宽恕/战斗机制驱动剧情的Meta神作。",
+      "status": "generated",
+      "steamTags": [
+        "Story Rich",
+        "Great Soundtrack",
+        "Pixel Graphics",
+        "Funny",
+        "RPG",
+        "Singleplayer",
+        "Bullet Hell",
+        "2D",
+        "Emotional",
+        "Comedy",
+        "Fantasy",
+        "Music",
+        "Soundtrack",
+        "Action RPG",
+        "Mystery",
+        "Dark",
+        "Episodic",
+        "Retro",
+        "JRPG",
+        "Surreal"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:14:20.863001",
+      "tagsWithScores": [
+        {
+          "name": "回合制弹幕微操闪避",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "宽恕与战斗道德分支",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "标志性Meta幽默叙事",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "1376200": {
+      "name": "KARMA: The Dark World",
+      "mechanics": [
+        "电影化心理惊悚叙事",
+        "反乌托邦视觉奇观构建",
+        "潜意识超现实探索"
+      ],
+      "rawMechanics": [
+        "电影化心理惊悚叙事",
+        "反乌托邦视觉奇观构建",
+        "潜意识超现实探索"
+      ],
+      "summary": "设定在1984东德背景下，通过极具视觉冲击力的超现实场景探索潜意识的步行模拟惊悚游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Walking Simulator",
+        "Psychological Horror",
+        "First-Person",
+        "Horror",
+        "Atmospheric",
+        "Sci-fi",
+        "Singleplayer",
+        "Adventure",
+        "Philosophical",
+        "Dystopian ",
+        "Psychological",
+        "Story Rich",
+        "Interactive Fiction",
+        "Experimental",
+        "Psychedelic",
+        "Indie",
+        "Exploration",
+        "Emotional",
+        "Cinematic",
+        "Realistic"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:14:20.863001",
+      "tagsWithScores": [
+        {
+          "name": "电影化心理惊悚叙事",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "反乌托邦视觉奇观构建",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        },
+        {
+          "name": "潜意识超现实探索",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2489330": {
+      "name": "鼠宝小镇 Whiskerwood",
+      "mechanics": [
+        "阶级压迫式聚落管理",
+        "深度工业生产链构筑",
+        "拟人化猫鼠阵营博弈"
+      ],
+      "rawMechanics": [
+        "阶级压迫式聚落管理",
+        "深度工业生产链构筑",
+        "拟人化猫鼠阵营博弈"
+      ],
+      "summary": "披着萌系猫鼠外衣，实则包含硬核生产链与阶级压迫机制的深度城市建造模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "Steam 集换式卡牌",
+        "Steam 创意工坊",
+        "可调整文字大小",
+        "视角舒适度",
+        "自定义音量控制",
+        "可调整难度",
+        "可以仅用鼠标",
+        "无需应对快速反应事件",
+        "随时保存",
+        "立体声",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:14:20.863001",
+      "tagsWithScores": [
+        {
+          "name": "阶级压迫式聚落管理",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "深度工业生产链构筑",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "拟人化猫鼠阵营博弈",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2850190": {
+      "name": "灾厄黑龙与谎言公主",
+      "mechanics": [
+        "跨物种好感度养成",
+        "生存驱动型多分支叙事",
+        "反差萌日常事件交互"
+      ],
+      "rawMechanics": [
+        "跨物种好感度养成",
+        "生存驱动型多分支叙事",
+        "反差萌日常事件交互"
+      ],
+      "summary": "以生存压力为暗线驱动，通过日常事件交互建立跨种族情感羁绊的视觉小说。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Visual Novel",
+        "Dating Sim",
+        "Otome",
+        "Interactive Fiction",
+        "Female Protagonist",
+        "2D",
+        "Romance",
+        "Funny",
+        "JRPG",
+        "Exploration",
+        "2D Platformer",
+        "Word Game",
+        "Cute",
+        "First-Person",
+        "Adventure",
+        "Lore-Rich",
+        "Story Rich",
+        "Multiple Endings",
+        "Fantasy"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:00.425538",
+      "tagsWithScores": [
+        {
+          "name": "跨物种好感度养成",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "生存驱动型多分支叙事",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "反差萌日常事件交互",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "2305840": {
+      "name": "Cat Quest III",
+      "mechanics": [
+        "无缝海陆双态探索",
+        "极简流派ARPG战斗",
+        "箱庭式开放世界Loot驱动"
+      ],
+      "rawMechanics": [
+        "无缝海陆双态探索",
+        "极简流派ARPG战斗",
+        "箱庭式开放世界Loot驱动"
+      ],
+      "summary": "将极简爽快的ARPG战斗循环完美融入无缝海陆双重探索的萌系Loot驱动游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Action",
+        "Adventure",
+        "Cats",
+        "Action RPG",
+        "Local Co-Op",
+        "Exploration",
+        "Cute",
+        "Pirates",
+        "Character Customization",
+        "2.5D",
+        "Combat",
+        "Open World",
+        "Cartoon",
+        "Colorful",
+        "Singleplayer",
+        "Family Friendly",
+        "Isometric",
+        "Fantasy",
+        "Loot",
+        "Funny"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:00.426255",
+      "tagsWithScores": [
+        {
+          "name": "无缝海陆双态探索",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "极简流派ARPG战斗",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "箱庭式开放世界Loot驱动",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "3259470": {
+      "name": "Papa's Pizzeria Deluxe",
+      "mechanics": [
+        "多工序并发时间管理",
+        "拟真烹饪流水线操作",
+        "动态时令配方收集",
+        "沙盒式餐车自由创作"
+      ],
+      "rawMechanics": [
+        "多工序并发时间管理",
+        "拟真烹饪流水线操作",
+        "动态时令配方收集",
+        "沙盒式餐车自由创作"
+      ],
+      "summary": "以多线程极限时间管理为核心，结合精细化烹饪流水线与客制化收集的经典模拟经营。",
+      "status": "generated",
+      "steamTags": [
+        "Cooking",
+        "Simulation",
+        "Strategy",
+        "Casual",
+        "Time Management",
+        "Character Customization",
+        "Management",
+        "Action",
+        "2D",
+        "Family Friendly",
+        "Indie",
+        "Singleplayer",
+        "Colorful",
+        "Psychological Horror",
+        "Nostalgia",
+        "Souls-like"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:00.426255",
+      "tagsWithScores": [
+        {
+          "name": "多工序并发时间管理",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "拟真烹饪流水线操作",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "动态时令配方收集",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "沙盒式餐车自由创作",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "2735630": {
+      "name": "Frostrain",
+      "mechanics": [
+        "移动基地车厢构筑",
+        "自走棋式Synergy拼图",
+        "动态毒圈生存跑局"
+      ],
+      "rawMechanics": [
+        "移动基地车厢构筑",
+        "自走棋式Synergy拼图",
+        "动态毒圈生存跑局"
+      ],
+      "summary": "巧妙将自走棋的羁绊Synergy机制引入列车车厢拼接，结合毒圈追逐的末世生存构筑游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:00.426255",
+      "tagsWithScores": [
+        {
+          "name": "移动基地车厢构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "自走棋式Synergy拼图",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "动态毒圈生存跑局",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2719750": {
+      "name": "Star Birds",
+      "mechanics": [
+        "球状星体微观建造",
+        "轻量化生产管线布局",
+        "多节点星际物流网络"
+      ],
+      "rawMechanics": [
+        "球状星体微观建造",
+        "轻量化生产管线布局",
+        "多节点星际物流网络"
+      ],
+      "summary": "继承开发商一贯的治愈系解谜基调，在微观小行星上进行轻量化产能管线布局的建造游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:00.426255",
+      "tagsWithScores": [
+        {
+          "name": "球状星体微观建造",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "轻量化生产管线布局",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "多节点星际物流网络",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2776810": {
+      "name": "100 Ninja Cats",
+      "mechanics": [
+        "手绘场景互动寻物",
+        "忍者主题猫咪收集",
+        "密集画幅视觉搜寻"
+      ],
+      "rawMechanics": [
+        "手绘场景互动寻物",
+        "忍者主题猫咪收集",
+        "密集画幅视觉搜寻"
+      ],
+      "summary": "一款采用手绘美术风格，以“寻找隐藏猫咪”为核心机制的忍者主题休闲寻物游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "In-App Purchases"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:48.953404",
+      "tagsWithScores": [
+        {
+          "name": "手绘场景互动寻物",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "忍者主题猫咪收集",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "密集画幅视觉搜寻",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "3628960": {
+      "name": "Miscrits: World of Creatures",
+      "mechanics": [
+        "经典幻兽捕捉收集",
+        "多阶形态进化养成",
+        "跨平台PvP策略博弈"
+      ],
+      "rawMechanics": [
+        "经典幻兽捕捉收集",
+        "多阶形态进化养成",
+        "跨平台PvP策略博弈"
+      ],
+      "summary": "经典页游IP复活，主打类宝可梦的幻兽捕捉、多阶进化养成以及跨平台多人对战的RPG。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "多人",
+        "玩家对战",
+        "线上玩家对战",
+        "跨平台多人",
+        "Steam 成就"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:48.953404",
+      "tagsWithScores": [
+        {
+          "name": "经典幻兽捕捉收集",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "多阶形态进化养成",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "跨平台PvP策略博弈",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3279120": {
+      "name": "Arisen Force: Life Devotee - Initial Ver.",
+      "mechanics": [
+        "高速ACT连段战斗",
+        "西游神话篇章叙事"
+      ],
+      "rawMechanics": [
+        "高速ACT连段战斗",
+        "西游神话篇章叙事"
+      ],
+      "summary": "以《西游记》世界观为背景，主打华丽高速连段与爽快打击感的动作RPG序章体验。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Full controller support",
+        "Steam Cloud"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:48.953404",
+      "tagsWithScores": [
+        {
+          "name": "高速ACT连段战斗",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "西游神话篇章叙事",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "1263240": {
+      "name": "Skate Story",
+      "mechanics": [
+        "滑板特技驱动战斗",
+        "玻璃躯壳硬核受苦",
+        "迷幻冥界超现实视听"
+      ],
+      "rawMechanics": [
+        "滑板特技驱动战斗",
+        "玻璃躯壳硬核受苦",
+        "迷幻冥界超现实视听"
+      ],
+      "summary": "Devolver发行的极具风格化的独立游戏，玩家操控易碎的玻璃恶魔，将滑板特技转化为战斗手段在冥界展开超现实冒险。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Full controller support",
+        "Captions available",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:48.953404",
+      "tagsWithScores": [
+        {
+          "name": "滑板特技驱动战斗",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "玻璃躯壳硬核受苦",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "迷幻冥界超现实视听",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "3378000": {
+      "name": "Nigudin really fought against Furong Wangyuan",
+      "mechanics": [
+        "亚文化热梗抽象叙事",
+        "烟草宇宙玩梗对抗",
+        "荒诞逻辑脑洞RPG"
+      ],
+      "rawMechanics": [
+        "亚文化热梗抽象叙事",
+        "烟草宇宙玩梗对抗",
+        "荒诞逻辑脑洞RPG"
+      ],
+      "summary": "一款基于国内互联网“理塘丁真”、“电子烟”等亚文化热梗深度缝合的抽象恶搞向RPG游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:15:48.953404",
+      "tagsWithScores": [
+        {
+          "name": "亚文化热梗抽象叙事",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        },
+        {
+          "name": "烟草宇宙玩梗对抗",
+          "attraction": 4,
+          "learnability": 2,
+          "clarity": 5
+        },
+        {
+          "name": "荒诞逻辑脑洞RPG",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1578220": {
+      "name": "Mister Furry: Hot Muscles",
+      "mechanics": [
+        "Meme驱动追逐逃生",
+        "Furry亚文化场景交互"
+      ],
+      "rawMechanics": [
+        "Meme驱动追逐逃生",
+        "Furry亚文化场景交互"
+      ],
+      "summary": "一款利用Furry亚文化与Gachi/Meme网络热梗驱动的恶搞向生存恐怖逃生游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Psychological Horror",
+        "Story Rich",
+        "Dark Fantasy",
+        "Horror",
+        "Action",
+        "Memes",
+        "Indie",
+        "Adventure",
+        "Simulation",
+        "Strategy",
+        "Politics",
+        "Family Friendly",
+        "Survival Horror",
+        "Sports",
+        "First-Person",
+        "RPG",
+        "Funny",
+        "LGBTQ+",
+        "Comedy",
+        "Casual"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:16:29.051638",
+      "tagsWithScores": [
+        {
+          "name": "Meme驱动追逐逃生",
+          "attraction": 3,
+          "learnability": 2,
+          "clarity": 5
+        },
+        {
+          "name": "Furry亚文化场景交互",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "2919650": {
+      "name": "Cookard",
+      "mechanics": [
+        "Stacklands式卡牌堆叠合成",
+        "动态卡牌订单流转管理"
+      ],
+      "rawMechanics": [
+        "Stacklands式卡牌堆叠合成",
+        "动态卡牌订单流转管理"
+      ],
+      "summary": "将《Stacklands》的核心堆叠机制巧妙移植到餐厅模拟经营与菜品烹饪中的创意卡牌游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:16:29.051638",
+      "tagsWithScores": [
+        {
+          "name": "Stacklands式卡牌堆叠合成",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "动态卡牌订单流转管理",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "3543040": {
+      "name": "明末：伐定天下",
+      "mechanics": [
+        "真人FMV多分支叙事",
+        "历史网文IP沉浸扮演"
+      ],
+      "rawMechanics": [
+        "真人FMV多分支叙事",
+        "历史网文IP沉浸扮演"
+      ],
+      "summary": "首款将男频历史网文IP与真人FMV互动影游结合，主打沉浸式宏大叙事与角色扮演的作品。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "应用内购买",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:16:29.051638",
+      "tagsWithScores": [
+        {
+          "name": "真人FMV多分支叙事",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "历史网文IP沉浸扮演",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "2288470": {
+      "name": "以太术士 (Aethermancer)",
+      "mechanics": [
+        "Roguelite魔物收集构筑",
+        "跨世轮回局外养成",
+        "回合制战术协同作战"
+      ],
+      "rawMechanics": [
+        "Roguelite魔物收集构筑",
+        "跨世轮回局外养成",
+        "回合制战术协同作战"
+      ],
+      "summary": "融合了Roguelite随机探索与回合制战术，并通过独特的“前世轮回”机制实现魔物跨世代局外成长的创新怪兽驯服游戏。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "完全支持控制器",
+        "视角舒适度",
+        "可选颜色",
+        "自定义音量控制",
+        "可调整难度",
+        "可以仅用键盘",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:16:29.051638",
+      "tagsWithScores": [
+        {
+          "name": "Roguelite魔物收集构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "跨世轮回局外养成",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "回合制战术协同作战",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2999060": {
+      "name": "Sejm The Game",
+      "mechanics": [
+        "现实时事驱动议会模拟",
+        "声望尊严双极资源博弈",
+        "党派势力动态扩张"
+      ],
+      "rawMechanics": [
+        "现实时事驱动议会模拟",
+        "声望尊严双极资源博弈",
+        "党派势力动态扩张"
+      ],
+      "summary": "以现实政治时事为灵感，核心围绕“声望”与“尊严”双资源平衡管理的黑色幽默议会模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "自定义音量控制",
+        "可调整难度",
+        "随时保存",
+        "字幕选项",
+        "部分支持控制器",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:16:29.051638",
+      "tagsWithScores": [
+        {
+          "name": "现实时事驱动议会模拟",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "声望尊严双极资源博弈",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "党派势力动态扩张",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1124180": {
+      "name": "Rail Route",
+      "mechanics": [
+        "真实城市路网Automation",
+        "实时列车调度解谜",
+        "极简UI运力统筹"
+      ],
+      "rawMechanics": [
+        "真实城市路网Automation",
+        "实时列车调度解谜",
+        "极简UI运力统筹"
+      ],
+      "summary": "将真实世界城市地图转化为极简UI下的铁路网络规划，融合了逻辑解谜与深度自动化调度机制。",
+      "status": "generated",
+      "steamTags": [
+        "Building",
+        "Management",
+        "Sandbox",
+        "Economy",
+        "Logic",
+        "Puzzle",
+        "City Builder",
+        "Time Management",
+        "Base-Building",
+        "Trains",
+        "Automation",
+        "Simulation",
+        "Resource Management",
+        "Immersive Sim",
+        "Real Time Tactics",
+        "Strategy",
+        "Transportation",
+        "Relaxing",
+        "Minimalist",
+        "Singleplayer"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:03.387896",
+      "tagsWithScores": [
+        {
+          "name": "真实城市路网Automation",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "实时列车调度解谜",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "极简UI运力统筹",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2377280": {
+      "name": "埃里克斯霍姆：被偷走的梦",
+      "mechanics": [
+        "等距视角Stealth破局",
+        "剥离QTE沉浸式叙事",
+        "箱庭城市动态潜行"
+      ],
+      "rawMechanics": [
+        "等距视角Stealth破局",
+        "剥离QTE沉浸式叙事",
+        "箱庭城市动态潜行"
+      ],
+      "summary": "大胆舍弃潜行游戏常见的QTE机制，通过等距视角的箱庭关卡与纯粹的叙事驱动来强化潜行解谜的沉浸感。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "完全支持控制器",
+        "自定义音量控制",
+        "无需应对快速反应事件",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:03.387896",
+      "tagsWithScores": [
+        {
+          "name": "等距视角Stealth破局",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "剥离QTE沉浸式叙事",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "箱庭城市动态潜行",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3669570": {
+      "name": "炼金工厂",
+      "mechanics": [
+        "炼金设施Automation构筑",
+        "多人Co-op产线规划",
+        "魔法资源闭环生产"
+      ],
+      "rawMechanics": [
+        "炼金设施Automation构筑",
+        "多人Co-op产线规划",
+        "魔法资源闭环生产"
+      ],
+      "summary": "将硬核的自动化流水线玩法包装在魔法炼金题材下，并巧妙利用多人合作模式来降低复杂产线设计的门槛。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "多人",
+        "合作",
+        "在线合作",
+        "局域网合作",
+        "Steam 成就",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:03.387896",
+      "tagsWithScores": [
+        {
+          "name": "炼金设施Automation构筑",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "多人Co-op产线规划",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "魔法资源闭环生产",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2369900": {
+      "name": "Castlevania Dominus Collection",
+      "mechanics": [
+        "魂与刻印Build收集",
+        "双主角即时切换连击",
+        "街机经典现代化重构"
+      ],
+      "rawMechanics": [
+        "魂与刻印Build收集",
+        "双主角即时切换连击",
+        "街机经典现代化重构"
+      ],
+      "summary": "完美保留了NDS时代恶魔城最核心的“御魂/刻印收集构筑”与“双主角实时切换”系统，并对初代街机进行了极具参考价值的现代化机制重构。",
+      "status": "generated",
+      "steamTags": [
+        "Metroidvania",
+        "Action",
+        "Action RPG",
+        "2D Platformer",
+        "Action-Adventure",
+        "RPG",
+        "Exploration",
+        "Vampire",
+        "Dark Fantasy",
+        "Retro",
+        "Pixel Graphics",
+        "Platformer",
+        "Singleplayer",
+        "2D",
+        "Horror",
+        "Demons",
+        "Magic",
+        "Controller",
+        "Violent",
+        "Great Soundtrack"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:03.387896",
+      "tagsWithScores": [
+        {
+          "name": "魂与刻印Build收集",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "双主角即时切换连击",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "街机经典现代化重构",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2678640": {
+      "name": "朝露：境界旅程",
+      "mechanics": [
+        "2D微缩箱庭Exploration",
+        "战斗流派自由Build",
+        "强机制Boss回合制博弈"
+      ],
+      "rawMechanics": [
+        "2D微缩箱庭Exploration",
+        "战斗流派自由Build",
+        "强机制Boss回合制博弈"
+      ],
+      "summary": "在精巧的2D箱庭地图探索中，要求玩家通过高自由度的流派构筑，来应对具有复杂独特机制的Boss进行回合制策略博弈。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "Steam 集换式卡牌",
+        "部分支持控制器",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:03.387896",
+      "tagsWithScores": [
+        {
+          "name": "2D微缩箱庭Exploration",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "战斗流派自由Build",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "强机制Boss回合制博弈",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "3265060": {
+      "name": "Touhou Dystopian",
+      "mechanics": [
+        "东方符卡Build构筑",
+        "弹幕动作Roguelite清关"
+      ],
+      "rawMechanics": [
+        "东方符卡Build构筑",
+        "弹幕动作Roguelite清关"
+      ],
+      "summary": "融合东方Project经典弹幕元素与高速动作随机成长的Roguelite清版游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Adjustable Text Size",
+        "Camera Comfort",
+        "Custom Volume Controls",
+        "Adjustable Difficulty",
+        "Partial Controller Support",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:36.153556",
+      "tagsWithScores": [
+        {
+          "name": "东方符卡Build构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "弹幕动作Roguelite清关",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        }
+      ]
+    },
+    "1202200": {
+      "name": "Paleo Pines",
+      "mechanics": [
+        "恐龙协作农场经营",
+        "坐骑能力场景解谜",
+        "史前生物驯服收集"
+      ],
+      "rawMechanics": [
+        "恐龙协作农场经营",
+        "坐骑能力场景解谜",
+        "史前生物驯服收集"
+      ],
+      "summary": "将恐龙驯服与农耕深度结合，利用恐龙特殊能力替代传统农具并进行探索的种田模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "Dinosaurs",
+        "Farming Sim",
+        "Exploration",
+        "Relaxing",
+        "Indie",
+        "Casual",
+        "Simulation",
+        "Cute",
+        "Singleplayer",
+        "Colorful",
+        "Creature Collector",
+        "Open World",
+        "Life Sim",
+        "3D",
+        "Agriculture",
+        "Family Friendly",
+        "Funny",
+        "Character Customization",
+        "Controller",
+        "Adventure"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:36.153556",
+      "tagsWithScores": [
+        {
+          "name": "恐龙协作农场经营",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "坐骑能力场景解谜",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "史前生物驯服收集",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "2803000": {
+      "name": "100 Dino Cats",
+      "mechanics": [
+        "手绘场景寻物解谜",
+        "高密度视觉寻宝"
+      ],
+      "rawMechanics": [
+        "手绘场景寻物解谜",
+        "高密度视觉寻宝"
+      ],
+      "summary": "在手绘恐龙主题画卷中寻找隐藏猫咪的碎片化休闲点击寻物游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "In-App Purchases"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:36.153556",
+      "tagsWithScores": [
+        {
+          "name": "手绘场景寻物解谜",
+          "attraction": 3,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "高密度视觉寻宝",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2510710": {
+      "name": "Kunitsu-Gami: Path of the Goddess",
+      "mechanics": [
+        "ACT动作与塔防融合",
+        "昼夜交替阵地防御",
+        "村民职业转职调度"
+      ],
+      "rawMechanics": [
+        "ACT动作与塔防融合",
+        "昼夜交替阵地防御",
+        "村民职业转职调度"
+      ],
+      "summary": "卡普空出品的独特创新机制，完美结合了白天策略布阵与夜晚动作砍杀的和风神乐塔防。",
+      "status": "generated",
+      "steamTags": [
+        "Action",
+        "Strategy",
+        "Tower Defense",
+        "3D",
+        "Mythology",
+        "Lore-Rich",
+        "Supernatural",
+        "Singleplayer",
+        "Hack and Slash"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:36.153556",
+      "tagsWithScores": [
+        {
+          "name": "ACT动作与塔防融合",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "昼夜交替阵地防御",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "村民职业转职调度",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "823950": {
+      "name": "Re:Legend",
+      "mechanics": [
+        "幻兽协作战斗与农耕",
+        "多分支幻兽进化养成",
+        "多人Co-op农场经营"
+      ],
+      "rawMechanics": [
+        "幻兽协作战斗与农耕",
+        "多分支幻兽进化养成",
+        "多人Co-op农场经营"
+      ],
+      "summary": "结合了深度怪物收集进化与多人合作种田，并让宠物全面参与生产与战斗的奇幻生活模拟RPG。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Farming Sim",
+        "Adventure",
+        "Simulation",
+        "Wholesome",
+        "Action",
+        "Crafting",
+        "Agriculture",
+        "Multiplayer",
+        "Creature Collector",
+        "Singleplayer",
+        "Fantasy",
+        "Exploration",
+        "Co-op",
+        "Cute",
+        "Anime",
+        "Farming",
+        "JRPG",
+        "Online Co-Op",
+        "Indie"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:17:36.153556",
+      "tagsWithScores": [
+        {
+          "name": "幻兽协作战斗与农耕",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "多分支幻兽进化养成",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "多人Co-op农场经营",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "1580240": {
+      "name": "Rune Factory 4 Special",
+      "mechanics": [
+        "农场经营驱动ARPG循环",
+        "怪物驯服与随从Build构筑",
+        "深度NPC社交与恋爱养成"
+      ],
+      "rawMechanics": [
+        "农场经营驱动ARPG循环",
+        "怪物驯服与随从Build构筑",
+        "深度NPC社交与恋爱养成"
+      ],
+      "summary": "将牧场物语的农场经营与硬核ARPG战斗、怪物养成无缝融合的奇幻生活模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Farming Sim",
+        "Adventure",
+        "Romance",
+        "Fantasy",
+        "Anime",
+        "Creature Collector",
+        "Magic",
+        "Combat",
+        "3D",
+        "Fishing",
+        "Crafting",
+        "Party-Based RPG",
+        "Cute",
+        "Story Rich",
+        "Singleplayer",
+        "Farming",
+        "Dating Sim",
+        "JRPG",
+        "Isometric"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:06.487255",
+      "tagsWithScores": [
+        {
+          "name": "农场经营驱动ARPG循环",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "怪物驯服与随从Build构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "深度NPC社交与恋爱养成",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2870340": {
+      "name": "驯牌师 Decktamer",
+      "mechanics": [
+        "捕获怪物转化为卡牌Build",
+        "击杀与驯服的战利品博弈",
+        "Roguelike卡组动态构筑"
+      ],
+      "rawMechanics": [
+        "捕获怪物转化为卡牌Build",
+        "击杀与驯服的战利品博弈",
+        "Roguelike卡组动态构筑"
+      ],
+      "summary": "通过“击杀获取资源”与“驯服获取卡牌”的抉择博弈，创新Roguelike卡组构筑体验。",
+      "status": "generated",
+      "steamTags": [
+        "单人",
+        "Steam 成就",
+        "部分支持控制器",
+        "Steam 云",
+        "家庭共享"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:06.487255",
+      "tagsWithScores": [
+        {
+          "name": "捕获怪物转化为卡牌Build",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "击杀与驯服的战利品博弈",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "Roguelike卡组动态构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "249330": {
+      "name": "Unholy Heights",
+      "mechanics": [
+        "塔防与公寓经营双循环",
+        "怪物租客Life Sim养成",
+        "租客化身Auto Battler防线"
+      ],
+      "rawMechanics": [
+        "塔防与公寓经营双循环",
+        "怪物租客Life Sim养成",
+        "租客化身Auto Battler防线"
+      ],
+      "summary": "将怪物公寓的生活模拟收租与抵御勇者的自动塔防巧妙结合的暗黑幽默佳作。",
+      "status": "generated",
+      "steamTags": [
+        "Building",
+        "Colony Sim",
+        "Strategy",
+        "Cute",
+        "Management",
+        "City Builder",
+        "2D",
+        "Simulation",
+        "Cartoony",
+        "Singleplayer",
+        "Casual",
+        "Immersive Sim",
+        "Creature Collector",
+        "Auto Battler",
+        "Tower Defense",
+        "Real-Time",
+        "RTS",
+        "Life Sim",
+        "Dark Humor",
+        "Hand-drawn"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:06.487255",
+      "tagsWithScores": [
+        {
+          "name": "塔防与公寓经营双循环",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "怪物租客Life Sim养成",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "租客化身Auto Battler防线",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        }
+      ]
+    },
+    "2585830": {
+      "name": "Promise Mascot Agency",
+      "mechanics": [
+        "怪诞吉祥物招募与机构经营",
+        "开放世界悬疑叙事探索",
+        "灾难救援驱动的Management"
+      ],
+      "rawMechanics": [
+        "怪诞吉祥物招募与机构经营",
+        "开放世界悬疑叙事探索",
+        "灾难救援驱动的Management"
+      ],
+      "summary": "以怪诞的吉祥物收集与救援经营为核心驱动的开放世界悬疑视觉小说。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Adventure",
+        "Open World",
+        "Simulation",
+        "Visual Novel",
+        "Anime",
+        "Crime",
+        "Creature Collector",
+        "Management",
+        "Singleplayer",
+        "Story Rich",
+        "Driving",
+        "LGBTQ+",
+        "Indie",
+        "Funny",
+        "3D",
+        "Lore-Rich",
+        "Mature",
+        "Narrative",
+        "Replay Value"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:06.487255",
+      "tagsWithScores": [
+        {
+          "name": "怪诞吉祥物招募与机构经营",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "开放世界悬疑叙事探索",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 4
+        },
+        {
+          "name": "灾难救援驱动的Management",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "2216130": {
+      "name": "沉默的蟋蟀",
+      "mechanics": [
+        "拟真蟋蟀捕捉与数值鉴定",
+        "蟋蟀战队阵容策略构筑",
+        "电子斗蛐蛐联赛模拟经营"
+      ],
+      "rawMechanics": [
+        "拟真蟋蟀捕捉与数值鉴定",
+        "蟋蟀战队阵容策略构筑",
+        "电子斗蛐蛐联赛模拟经营"
+      ],
+      "summary": "深度挖掘传统斗蛐蛐文化的数值收集、随机盲盒鉴定与战队经营模拟器。",
+      "status": "generated",
+      "steamTags": [
+        "Creature Collector",
+        "Rogue-lite",
+        "1990's",
+        "1980s",
+        "Collectathon",
+        "Nostalgia",
+        "Strategy",
+        "Simulation",
+        "Colorful",
+        "Nature",
+        "Stylized",
+        "Life Sim",
+        "Investigation",
+        "Indie",
+        "Conversation",
+        "Singleplayer",
+        "Adventure",
+        "RPG",
+        "Casual",
+        "Combat"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:06.487255",
+      "tagsWithScores": [
+        {
+          "name": "拟真蟋蟀捕捉与数值鉴定",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "蟋蟀战队阵容策略构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "电子斗蛐蛐联赛模拟经营",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "384570": {
+      "name": "Zanzarah: The Hidden Portal",
+      "mechanics": [
+        "第一人称精灵FPS弹幕战",
+        "宝可梦式3D箱庭探索"
+      ],
+      "rawMechanics": [
+        "第一人称精灵FPS弹幕战",
+        "宝可梦式3D箱庭探索"
+      ],
+      "summary": "将传统的精灵收集养成与快节奏的第一人称射击（FPS）竞技大胆缝合的奇幻冒险先驱。",
+      "status": "generated",
+      "steamTags": [
+        "Adventure",
+        "Action",
+        "RPG",
+        "Fantasy",
+        "Female Protagonist",
+        "Creature Collector",
+        "Singleplayer",
+        "Classic",
+        "Third Person",
+        "FPS",
+        "Great Soundtrack",
+        "Magic"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:40.190819",
+      "tagsWithScores": [
+        {
+          "name": "第一人称精灵FPS弹幕战",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "宝可梦式3D箱庭探索",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "3376990": {
+      "name": "Kabuto Park",
+      "mechanics": [
+        "甲虫小队Deckbuilding构筑",
+        "异色/稀有度图鉴收集",
+        "捕虫装备数值迭代"
+      ],
+      "rawMechanics": [
+        "甲虫小队Deckbuilding构筑",
+        "异色/稀有度图鉴收集",
+        "捕虫装备数值迭代"
+      ],
+      "summary": "巧妙地将夏日捕虫休闲模拟与轻度Deckbuilding卡牌对战机制融合的治愈系收集游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Casual",
+        "Creature Collector",
+        "Nature",
+        "Cozy",
+        "Cute",
+        "Card Battler",
+        "Colorful",
+        "Relaxing",
+        "RPG",
+        "PvE",
+        "Deckbuilding",
+        "Party-Based RPG",
+        "Strategy",
+        "2D",
+        "Hand-drawn",
+        "Simulation",
+        "Cartoony",
+        "Female Protagonist",
+        "Singleplayer",
+        "Family Friendly"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:40.190819",
+      "tagsWithScores": [
+        {
+          "name": "甲虫小队Deckbuilding构筑",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "异色/稀有度图鉴收集",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "捕虫装备数值迭代",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1716120": {
+      "name": "Monster Rancher 1 & 2 DX",
+      "mechanics": [
+        "CD曲库检索生成怪物",
+        "硬核日程表赛程管理",
+        "寿命机制与多代血统融合"
+      ],
+      "rawMechanics": [
+        "CD曲库检索生成怪物",
+        "硬核日程表赛程管理",
+        "寿命机制与多代血统融合"
+      ],
+      "summary": "以极具创意的“音乐数据库生成怪物”为噱头，内核是主打严苛日程管理与寿命繁衍的硬核养成神作。",
+      "status": "generated",
+      "steamTags": [
+        "Simulation",
+        "RPG",
+        "Creature Collector",
+        "Fantasy",
+        "Anime",
+        "Classic",
+        "Singleplayer",
+        "Competitive",
+        "Cute",
+        "Retro",
+        "JRPG"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:40.190819",
+      "tagsWithScores": [
+        {
+          "name": "CD曲库检索生成怪物",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "硬核日程表赛程管理",
+          "attraction": 3,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "寿命机制与多代血统融合",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2393160": {
+      "name": "Nice Day for Fishing",
+      "mechanics": [
+        "QTE判定式钓鱼动作战斗",
+        "魔法技能与钓具Build搭配"
+      ],
+      "rawMechanics": [
+        "QTE判定式钓鱼动作战斗",
+        "魔法技能与钓具Build搭配"
+      ],
+      "summary": "将传统RPG中的“钓鱼小游戏”直接升格为核心动作战斗系统，并融入魔法Build的像素冒险游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Fishing",
+        "Adventure",
+        "RPG",
+        "Action RPG",
+        "Action-Adventure",
+        "Creature Collector",
+        "Side Scroller",
+        "2D",
+        "Pixel Graphics",
+        "Colorful",
+        "Comedy",
+        "Atmospheric",
+        "Crafting",
+        "Funny",
+        "Combat",
+        "Open World",
+        "Singleplayer",
+        "Story Rich"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:40.190819",
+      "tagsWithScores": [
+        {
+          "name": "QTE判定式钓鱼动作战斗",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "魔法技能与钓具Build搭配",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        }
+      ]
+    },
+    "2356560": {
+      "name": "Monster Hunter Stories",
+      "mechanics": [
+        "九宫格基因Bingo遗传构筑",
+        "猜拳博弈式回合制骑战",
+        "生态巢穴摸蛋盲盒收集"
+      ],
+      "rawMechanics": [
+        "九宫格基因Bingo遗传构筑",
+        "猜拳博弈式回合制骑战",
+        "生态巢穴摸蛋盲盒收集"
+      ],
+      "summary": "披着怪物猎人IP外衣，实则拥有极具深度的“基因Bingo”养成与猜拳博弈战斗的优秀JRPG。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "JRPG",
+        "3D",
+        "Fantasy",
+        "PvP",
+        "Singleplayer",
+        "Multiplayer",
+        "Story Rich",
+        "Anime",
+        "Adventure",
+        "Exploration",
+        "Cartoony",
+        "Third Person",
+        "Dragons",
+        "Loot",
+        "Emotional",
+        "Hunting",
+        "PvE",
+        "Character Customization",
+        "Creature Collector"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:18:40.190819",
+      "tagsWithScores": [
+        {
+          "name": "九宫格基因Bingo遗传构筑",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "猜拳博弈式回合制骑战",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "生态巢穴摸蛋盲盒收集",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "3213850": {
+      "name": "gogh: Focus with Your Avatar",
+      "mechanics": [
+        "效率工具游戏化",
+        "多人虚拟陪伴自律",
+        "沉浸式工作台DIY"
+      ],
+      "rawMechanics": [
+        "效率工具游戏化",
+        "多人虚拟陪伴自律",
+        "沉浸式工作台DIY"
+      ],
+      "summary": "将番茄钟与任务管理软件巧妙包装为多人在线的虚拟陪伴自习室，通过Avatar和环境DIY提供情绪价值。",
+      "status": "generated",
+      "steamTags": [
+        "Character Customization",
+        "Cozy",
+        "Cute",
+        "Utilities",
+        "Anime",
+        "Relaxing",
+        "3D",
+        "Time Management",
+        "Creature Collector",
+        "Sandbox",
+        "Simulation",
+        "Casual",
+        "Atmospheric",
+        "Indie",
+        "Singleplayer",
+        "Building",
+        "Comic Book"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:14.116543",
+      "tagsWithScores": [
+        {
+          "name": "效率工具游戏化",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "多人虚拟陪伴自律",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "沉浸式工作台DIY",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1990050": {
+      "name": "Creature Crafter",
+      "mechanics": [
+        "自由拼装生物创造",
+        "部件收集驱动Stats养成",
+        "多人UGC沙盒社交"
+      ],
+      "rawMechanics": [
+        "自由拼装生物创造",
+        "部件收集驱动Stats养成",
+        "多人UGC沙盒社交"
+      ],
+      "summary": "类似《孢子》生物阶段的系统进化版，将高自由度的骨骼部件捏脸与多人在线RPG探索养成深度绑定。",
+      "status": "generated",
+      "steamTags": [
+        "God Game",
+        "Open World",
+        "Sandbox",
+        "Character Customization",
+        "Creature Collector",
+        "Simulation",
+        "Survival",
+        "Multiplayer",
+        "Singleplayer",
+        "Collectathon",
+        "Adventure",
+        "Exploration",
+        "Moddable",
+        "RPG",
+        "Fantasy",
+        "Minigames",
+        "Procedural Generation",
+        "Physics",
+        "Action-Adventure",
+        "Third Person"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:14.116543",
+      "tagsWithScores": [
+        {
+          "name": "自由拼装生物创造",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "部件收集驱动Stats养成",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "多人UGC沙盒社交",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "2243710": {
+      "name": "Rune Factory 3 Special",
+      "mechanics": [
+        "种田经营与ARPG融合",
+        "人怪双形态变身机制",
+        "沉浸式NPC日常与恋爱"
+      ],
+      "rawMechanics": [
+        "种田经营与ARPG融合",
+        "人怪双形态变身机制",
+        "沉浸式NPC日常与恋爱"
+      ],
+      "summary": "完美融合了日式ARPG动作战斗、农场种田经营与小镇NPC恋爱养成的经典之作，双形态主角机制是其最大特色。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Farming Sim",
+        "Romance",
+        "Adventure",
+        "Fantasy",
+        "Action RPG",
+        "Cute",
+        "Magic",
+        "Creature Collector",
+        "Fishing",
+        "Crafting",
+        "Action",
+        "Combat",
+        "3D",
+        "Singleplayer",
+        "JRPG",
+        "Dating Sim",
+        "Simulation",
+        "Story Rich",
+        "Agriculture"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:14.116543",
+      "tagsWithScores": [
+        {
+          "name": "种田经营与ARPG融合",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "人怪双形态变身机制",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "沉浸式NPC日常与恋爱",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1931010": {
+      "name": "Spirittea",
+      "mechanics": [
+        "妖怪汤屋经营管理",
+        "灵体需求差异化排布",
+        "超自然小镇Life Sim"
+      ],
+      "rawMechanics": [
+        "妖怪汤屋经营管理",
+        "灵体需求差异化排布",
+        "超自然小镇Life Sim"
+      ],
+      "summary": "结合了《千与千寻》式妖怪汤屋经营与《星露谷》式小镇生活模拟，核心在于根据不同妖怪的五行喜好排布浴池座位。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Simulation",
+        "Life Sim",
+        "Fantasy",
+        "Pixel Graphics",
+        "Relaxing",
+        "Adventure",
+        "Building",
+        "Colorful",
+        "Singleplayer",
+        "Exploration",
+        "Management",
+        "Story Rich",
+        "Resource Management",
+        "2D",
+        "Cute",
+        "Creature Collector"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:14.116543",
+      "tagsWithScores": [
+        {
+          "name": "妖怪汤屋经营管理",
+          "attraction": 5,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "灵体需求差异化排布",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "超自然小镇Life Sim",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "606710": {
+      "name": "Sphinx and the Cursed Mummy",
+      "mechanics": [
+        "双主角非对称玩法",
+        "利用环境伤害机制解谜",
+        "复古3D箱庭平台跳跃"
+      ],
+      "rawMechanics": [
+        "双主角非对称玩法",
+        "利用环境伤害机制解谜",
+        "复古3D箱庭平台跳跃"
+      ],
+      "summary": "采用动作战斗（狮身人面像）与创意受虐解谜（木乃伊利用陷阱伤害自己来触发机关）双线交替推进的经典3D冒险游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Action-Adventure",
+        "Puzzle-Platformer",
+        "Atmospheric",
+        "Colorful",
+        "3D Platformer",
+        "Puzzle",
+        "Platformer",
+        "RPG",
+        "Creature Collector",
+        "Third Person",
+        "Controller",
+        "Fantasy",
+        "Mythology",
+        "Moddable",
+        "Action",
+        "Adventure",
+        "Singleplayer",
+        "Classic",
+        "Cult Classic",
+        "Great Soundtrack"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:14.116543",
+      "tagsWithScores": [
+        {
+          "name": "双主角非对称玩法",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "利用环境伤害机制解谜",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "复古3D箱庭平台跳跃",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 5
+        }
+      ]
+    },
+    "1361400": {
+      "name": "Moonglow Bay",
+      "mechanics": [
+        "钓鱼驱动社区重建",
+        "渔获烹饪经济循环",
+        "体素风Life Sim叙事"
+      ],
+      "rawMechanics": [
+        "钓鱼驱动社区重建",
+        "渔获烹饪经济循环",
+        "体素风Life Sim叙事"
+      ],
+      "summary": "以钓鱼和烹饪经济为核心驱动力，通过资源积累推进温情叙事与小镇社区重建的体素风生活模拟RPG。",
+      "status": "generated",
+      "steamTags": [
+        "RPG",
+        "Casual",
+        "Adventure",
+        "Fishing",
+        "Voxel",
+        "Family Friendly",
+        "Relaxing",
+        "1980s",
+        "Creature Collector",
+        "Sailing",
+        "Cooking",
+        "Life Sim",
+        "Emotional",
+        "Colorful",
+        "Cute",
+        "LGBTQ+",
+        "Economy",
+        "Nature",
+        "Dog",
+        "3D"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:49.595758",
+      "tagsWithScores": [
+        {
+          "name": "钓鱼驱动社区重建",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "渔获烹饪经济循环",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "体素风Life Sim叙事",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 4
+        }
+      ]
+    },
+    "1070860": {
+      "name": "Serin Fate",
+      "mechanics": [
+        "魔法生物捕捉驯养",
+        "巫术研习与魔法Crafting",
+        "非线性箱庭探索"
+      ],
+      "rawMechanics": [
+        "魔法生物捕捉驯养",
+        "巫术研习与魔法Crafting",
+        "非线性箱庭探索"
+      ],
+      "summary": "将怪物收集、女巫魔法研习与沙盒种田深度结合的非线性奇幻探索RPG。",
+      "status": "generated",
+      "steamTags": [
+        "Open World",
+        "Creature Collector",
+        "Adventure",
+        "Exploration",
+        "Pixel Graphics",
+        "Sandbox",
+        "Farming Sim",
+        "RPG",
+        "Nonlinear",
+        "Fantasy",
+        "Magic",
+        "Crafting",
+        "Replay Value",
+        "Indie",
+        "Singleplayer",
+        "Casual",
+        "Action-Adventure",
+        "Colorful",
+        "Immersive Sim",
+        "Top-Down"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:49.595758",
+      "tagsWithScores": [
+        {
+          "name": "魔法生物捕捉驯养",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 5
+        },
+        {
+          "name": "巫术研习与魔法Crafting",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 4
+        },
+        {
+          "name": "非线性箱庭探索",
+          "attraction": 3,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1942440": {
+      "name": "最后的仙门 The last Practice Sect",
+      "mechanics": [
+        "修仙弟子Auto-battler塔防",
+        "割草式弹幕Rogue构筑",
+        "挂机放置门派经营"
+      ],
+      "rawMechanics": [
+        "修仙弟子Auto-battler塔防",
+        "割草式弹幕Rogue构筑",
+        "挂机放置门派经营"
+      ],
+      "summary": "融合了自走棋机制、弹幕割草爽感与Rogue-lite随机抓取的修仙题材放置塔防游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Idler",
+        "Clicker",
+        "Casual",
+        "Tower Defense",
+        "Shooter",
+        "Strategy RPG",
+        "Auto Battler",
+        "Top-Down Shooter",
+        "Bullet Hell",
+        "Creature Collector",
+        "Rogue-lite",
+        "2D",
+        "Top-Down",
+        "Text-Based",
+        "Stylized",
+        "Foreign",
+        "Swordplay",
+        "Fantasy",
+        "RPG",
+        "Atmospheric"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:49.595758",
+      "tagsWithScores": [
+        {
+          "name": "修仙弟子Auto-battler塔防",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "割草式弹幕Rogue构筑",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "挂机放置门派经营",
+          "attraction": 4,
+          "learnability": 3,
+          "clarity": 5
+        }
+      ]
+    },
+    "1150720": {
+      "name": "Monster Girl Club Bifrost",
+      "mechanics": [
+        "魔物娘夜店模拟经营",
+        "高压还债驱动循环",
+        "员工调教与属性养成"
+      ],
+      "rawMechanics": [
+        "魔物娘夜店模拟经营",
+        "高压还债驱动循环",
+        "员工调教与属性养成"
+      ],
+      "summary": "以死神债务为高压生存驱动力，核心聚焦于魔物娘员工调教与夜店盈利循环的管理模拟游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Single-player",
+        "Steam Achievements",
+        "Steam Trading Cards",
+        "Steam Cloud",
+        "Family Sharing"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:49.595758",
+      "tagsWithScores": [
+        {
+          "name": "魔物娘夜店模拟经营",
+          "attraction": 5,
+          "learnability": 3,
+          "clarity": 5
+        },
+        {
+          "name": "高压还债驱动循环",
+          "attraction": 4,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "员工调教与属性养成",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        }
+      ]
+    },
+    "1363350": {
+      "name": "Monster Harvest",
+      "mechanics": [
+        "农作物变异生物收集",
+        "战斗种田双轨驱动",
+        "多维农场基建Crafting"
+      ],
+      "rawMechanics": [
+        "农作物变异生物收集",
+        "战斗种田双轨驱动",
+        "多维农场基建Crafting"
+      ],
+      "summary": "巧妙地将“种田”与“宝可梦式收集”结合，通过让农作物变异成战斗生物来驱动ARPG探索的创新缝合游戏。",
+      "status": "generated",
+      "steamTags": [
+        "Farming Sim",
+        "Creature Collector",
+        "RPG",
+        "Pixel Graphics",
+        "Exploration",
+        "Agriculture",
+        "Relaxing",
+        "Adventure",
+        "Casual",
+        "Cute",
+        "Crafting",
+        "Building",
+        "Collectathon",
+        "Fishing",
+        "Action-Adventure",
+        "2.5D",
+        "Isometric",
+        "Open World",
+        "Action",
+        "Colorful"
+      ],
+      "tagSource": "reliable",
+      "generatedAt": "2026-05-03T00:19:49.595758",
+      "tagsWithScores": [
+        {
+          "name": "农作物变异生物收集",
+          "attraction": 5,
+          "learnability": 5,
+          "clarity": 5
+        },
+        {
+          "name": "战斗种田双轨驱动",
+          "attraction": 4,
+          "learnability": 4,
+          "clarity": 4
+        },
+        {
+          "name": "多维农场基建Crafting",
           "attraction": 3,
           "learnability": 4,
           "clarity": 4

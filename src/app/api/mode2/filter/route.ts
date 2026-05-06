@@ -316,7 +316,7 @@ interface TagWeight {
   differentiationLabels: string[];
 }
 
-function calculateTagWeight(tags: string[]): TagWeight {
+function calculateTagWeight(tags: string[], isPokemonLike: boolean = false): TagWeight {
   const normalizedTags = tags.map((t) => t.toLowerCase());
   const matchedCoreTags: string[] = [];
   const matchedSecondaryTags: string[] = [];
@@ -371,7 +371,13 @@ function calculateTagWeight(tags: string[]): TagWeight {
   }
 
   // 计算权重分：核心*3 + 次级*2 + 现代*1
-  const tagWeight = matchedCoreTags.length * 3 + matchedSecondaryTags.length * 2 + matchedModernTags.length * 1;
+  let tagWeight = matchedCoreTags.length * 3 + matchedSecondaryTags.length * 2 + matchedModernTags.length * 1;
+
+  // 兜底：Pokemon-like 游戏如果标签太少（<10个），给予最小权重
+  // 避免 Steam 标签采集不完整导致完全没有匹配度
+  if (tagWeight === 0 && isPokemonLike && tags.length < 10) {
+    tagWeight = 1;
+  }
 
   return {
     coreTagCount: matchedCoreTags.length,
@@ -462,6 +468,8 @@ const POKEMON_LIKE_DESC_KEYWORDS = [
   "培养怪物",
   // 补充：驯养（Planet Centauri 等英文"capture and tame"的翻译）
   "驯养",
+  // 补充：驯服（Decktamer 等使用"驯服"而非"驯养"的翻译）
+  "驯服",
 ];
 
 // 回合制描述关键词（当标签不可靠时，用描述兜底检测）
@@ -1079,7 +1087,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     : null;
 
   // 计算标签权重
-  const tagWeight = calculateTagWeight(tags);
+  const tagWeight = calculateTagWeight(tags, pokemonCheck.isPokemonLike);
 
   // 处理国内评价数据
   const cnReviewsRaw = raw.cn_reviews;
@@ -1646,7 +1654,7 @@ function filterGames(
   // 8. 动态计算特色标签（基于当前 MODERN_TAGS 配置）
   // 使用动态加载的标签翻译映射表（translateTag函数内部缓存）
   const pagedWithFeatures = paged.map((game) => {
-    const tagWeight = calculateTagWeight(game.tags);
+    const tagWeight = calculateTagWeight(game.tags, !!game.isPokemonLike);
     // 多选模式下，取第一个选中的标签用于高亮（如果有的话）
     const firstFilterKey = Array.isArray(options.featureTagFilters) ? options.featureTagFilters[0] : options.featureTagFilters;
     const featureTagOption = firstFilterKey ? options.featureTagOptions?.find((f) => f.key === firstFilterKey) : undefined;

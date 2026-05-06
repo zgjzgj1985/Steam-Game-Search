@@ -60,11 +60,23 @@ __pycache__/
 /public/data/*-checkpoint.json
 /public/data/*-checkpoint-*.json
 
+# 运行时数据文件（本地生成，不应提交）
+/public/data/analyses.json
+/public/data/combinedMechanics.json
+/public/data/games-cache.json
+/public/data/games-cache.db
+/public/data/games-cache.db-shm
+/public/data/games-cache.db-wal
+/public/data/games.db
+/public/data/regional-reviews.json
+/public/data/regional-reviews-state.json
+
 # Backup files
 *.backup
 *_backup
 
 # Temporary files
+temp/
 temp_*
 *.tmp
 *.log

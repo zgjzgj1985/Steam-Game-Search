@@ -352,6 +352,10 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+// ============ 性能优化：正则表达式预编译缓存 ============
+// 避免 matchWordBoundary 每次调用都创建新的 RegExp 对象
+const regexCache = new Map<string, RegExp>();
+
 /**
  * 单词边界匹配
  * - 精确匹配：标签完全相等
@@ -362,8 +366,12 @@ function matchWordBoundary(text: string, keyword: string): boolean {
   const lower = text.toLowerCase();
   const kw = keyword.toLowerCase();
   if (lower === kw) return true;
-  const regex = new RegExp(`\\b${escapeRegex(kw)}\\b`, "i");
-  return regex.test(text);
+  
+  // 使用缓存的正则表达式，避免重复创建
+  if (!regexCache.has(kw)) {
+    regexCache.set(kw, new RegExp(`\\b${escapeRegex(kw)}\\b`, "i"));
+  }
+  return regexCache.get(kw)!.test(text);
 }
 
 // 简化翻译函数（复用DIFFERENTIATION_LABELS）
@@ -371,7 +379,8 @@ function translateTag(tag: string): string {
   return DIFFERENTIATION_LABELS[tag] || tag;
 }
 
-// 计算标签权重
+// ============ 性能优化：标签权重计算缓存 ============
+// 避免对相同标签集重复计算权重
 interface TagWeight {
   coreTagCount: number;
   secondaryTagCount: number;
@@ -384,7 +393,20 @@ interface TagWeight {
   differentiationLabels: string[];
 }
 
+// 使用标签数组序列化作为缓存键（标签长度 + 排序后的标签字符串）
+const tagWeightCache = new Map<string, TagWeight>();
+
+function getTagsCacheKey(tags: string[], isPokemonLike: boolean): string {
+  const sorted = [...tags].sort();
+  return `${isPokemonLike ? "1" : "0"}|${sorted.length}|${sorted.join(",")}`;
+}
+
 function calculateTagWeight(tags: string[], isPokemonLike: boolean = false): TagWeight {
+  const cacheKey = getTagsCacheKey(tags, isPokemonLike);
+  if (tagWeightCache.has(cacheKey)) {
+    return tagWeightCache.get(cacheKey)!;
+  }
+
   const normalizedTags = tags.map((t) => t.toLowerCase());
   const matchedCoreTags: string[] = [];
   const matchedSecondaryTags: string[] = [];
@@ -442,7 +464,7 @@ function calculateTagWeight(tags: string[], isPokemonLike: boolean = false): Tag
     tagWeight = 1;
   }
 
-  return {
+  const result: TagWeight = {
     coreTagCount: matchedCoreTags.length,
     secondaryTagCount: matchedSecondaryTags.length,
     modernTagCount: matchedModernTags.length,
@@ -453,6 +475,13 @@ function calculateTagWeight(tags: string[], isPokemonLike: boolean = false): Tag
     uniqueFeatureTags,
     differentiationLabels,
   };
+
+  // 缓存结果（限制缓存大小避免内存泄漏）
+  if (tagWeightCache.size < 10000) {
+    tagWeightCache.set(cacheKey, result);
+  }
+
+  return result;
 }
 
 // ============ 筛选配置 ============
@@ -642,6 +671,33 @@ const dbCache: {
   loadError: null,
 };
 
+// ============ 性能优化：特色标签统计缓存 ============
+// 避免对相同的筛选条件重复计算标签统计
+interface FeatureTagCacheEntry {
+  data: FeatureTagOption[];
+  timestamp: number;
+}
+const FEATURE_TAG_CACHE_TTL = 60 * 1000; // 1分钟缓存
+const featureTagCache = new Map<string, FeatureTagCacheEntry>();
+
+function getFeatureTagCacheKey(params: {
+  pools: string[];
+  yearsFilter?: number;
+  minReleaseDate?: string;
+  maxReleaseDate?: string;
+  excludeTestVersions?: boolean;
+  reviewSource: ReviewSource;
+}): string {
+  return [
+    params.pools.sort().join(","),
+    params.yearsFilter || 0,
+    params.minReleaseDate || "",
+    params.maxReleaseDate || "",
+    params.excludeTestVersions !== false ? "1" : "0",
+    params.reviewSource || "all",
+  ].join("|");
+}
+
 // ============ LRU 查询结果缓存 ============
 // 优化：缓存完整过滤结果，支持快速分页切片（无需重新计算）
 // 缓存键不包含 page，因为完整结果会被缓存用于任意分页切片
@@ -823,6 +879,7 @@ function rowToGameRecord(row: any): GameRecord {
 
 // 从 combinedMechanics.json 加载 LLM 玩法分析数据并合并到游戏记录中
 // 对所有游戏尝试匹配（按 appId 和名称），即使没有匹配到数据也确保字段已初始化
+// 优化：如果没有数据文件或数据为空，跳过整个处理
 function mergeLlMechancics(games: GameRecord[]): void {
   try {
     if (!fs.existsSync(COMBINED_MECHANICS_FILE)) {
@@ -832,6 +889,13 @@ function mergeLlMechancics(games: GameRecord[]): void {
     const raw = fs.readFileSync(COMBINED_MECHANICS_FILE, "utf-8");
     const mechanicsData = JSON.parse(raw) as any;
     const gamesData = mechanicsData.games || {};
+
+    // 优化：如果没有 LLM 数据，直接返回（不遍历所有游戏）
+    const gameKeys = Object.keys(gamesData);
+    if (gameKeys.length === 0) {
+      console.log("[Mode2] LLM 数据为空，跳过合并");
+      return;
+    }
 
     // 建立 appId -> LLM 数据的映射（同时按 ID 和名称索引）
     const mechanicsMap = new Map<string, any>();
@@ -843,9 +907,8 @@ function mergeLlMechancics(games: GameRecord[]): void {
       }
     }
 
-    // 合并到每个游戏（即使没有匹配到也确保字段已初始化为空数组）
+    // 合并到每个游戏（只处理有匹配的游戏）
     let matchedCount = 0;
-    let noMatchCount = 0;
     for (const game of games) {
       const data = mechanicsMap.get(game.id) || mechanicsMap.get(game.name);
       if (data) {
@@ -874,14 +937,9 @@ function mergeLlMechancics(games: GameRecord[]): void {
           game.llmMechanicsSummary = (data as any).summary;
         }
         matchedCount++;
-      } else {
-        // 即使没有匹配到数据，也确保字段已初始化为空数组（避免 undefined）
-        if (!game.llmMechanics.length) game.llmMechanics = [];
-        if (!game.llmRawMechanics.length) game.llmRawMechanics = [];
-        noMatchCount++;
       }
     }
-    console.log(`[Mode2] LLM 数据合并完成: 匹配 ${matchedCount} 个, 无匹配 ${noMatchCount} 个 (共 ${games.length} 个游戏)`);
+    console.log(`[Mode2] LLM 数据合并完成: 匹配 ${matchedCount} 个 (共 ${games.length} 个游戏)`);
   } catch (e) {
     console.warn(`[Mode2] 合并 LLM 玩法数据失败: ${e instanceof Error ? e.message : String(e)}`);
   }
@@ -1744,14 +1802,19 @@ function filterGames(
     return options.sortOrder === "asc" ? -cmp : cmp;
   });
 
-  // 6. 统计各池数量（基于筛选后的结果）
+  // 6. 统计各池数量（基于筛选后的结果）- 优化：单次遍历代替3次遍历
   const stats: PoolStats = {
     total: results.length,
-    totalTurnBased: results.length, // 当前筛选条件下的回合制游戏总数
-    poolA: results.filter((g) => g.pool === "A").length,
-    poolB: results.filter((g) => g.pool === "B").length,
-    poolC: results.filter((g) => g.pool === "C").length,
+    totalTurnBased: results.length,
+    poolA: 0,
+    poolB: 0,
+    poolC: 0,
   };
+  for (const g of results) {
+    if (g.pool === "A") stats.poolA++;
+    else if (g.pool === "B") stats.poolB++;
+    else if (g.pool === "C") stats.poolC++;
+  }
 
   // 7. 计算价格统计
   const priceStats = calculatePriceStats(results);
@@ -1989,6 +2052,7 @@ function getPoolCounts(
 }
 
 // 动态计算每个特色标签在用户勾选的池子中的实际数量
+// 优化：添加缓存机制，避免对相同筛选条件重复计算
 function calculateFeatureTagCounts(
   allGames: GameRecord[],
   poolConfig: PoolConfig,
@@ -2000,6 +2064,14 @@ function calculateFeatureTagCounts(
   reviewSource: ReviewSource = "all"
 ): FeatureTagOption[] {
   const excludeTest = excludeTestVersions !== false;
+
+  // 尝试从缓存获取
+  const cacheKey = getFeatureTagCacheKey({ pools, yearsFilter, minReleaseDate, maxReleaseDate, excludeTestVersions, reviewSource });
+  const cached = featureTagCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < FEATURE_TAG_CACHE_TTL) {
+    console.log(`[Mode2] 特色标签统计命中缓存`);
+    return cached.data;
+  }
 
   // 先筛选出符合条件的回合制游戏
   let filteredGames = allGames.filter((g) => g.isTurnBased);
@@ -2097,14 +2169,22 @@ function calculateFeatureTagCounts(
     })
     .sort((a, b) => b.count - a.count);
 
+  // 缓存结果
+  if (featureTagCache.size < 100) {
+    featureTagCache.set(cacheKey, { data: result, timestamp: Date.now() });
+  }
+
   return result;
 }
 
-// 计算价格统计
+// 计算价格统计 - 优化：单次遍历统计分布
 function calculatePriceStats(games: GameRecord[]): PriceStats {
-  const prices = games
-    .map((g) => g.price)
-    .filter((p) => p >= 0);
+  const prices: number[] = [];
+  for (const g of games) {
+    if (g.price >= 0) {
+      prices.push(g.price);
+    }
+  }
 
   if (prices.length === 0) {
     return {
@@ -2124,14 +2204,16 @@ function calculatePriceStats(games: GameRecord[]): PriceStats {
     ? (sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2
     : sorted[Math.floor(sorted.length / 2)];
 
-  const distribution = {
-    free: prices.filter((p) => p === 0).length,
-    under10: prices.filter((p) => p > 0 && p < 10).length,
-    under20: prices.filter((p) => p >= 10 && p < 20).length,
-    under30: prices.filter((p) => p >= 20 && p < 30).length,
-    under50: prices.filter((p) => p >= 30 && p < 50).length,
-    over50: prices.filter((p) => p >= 50).length,
-  };
+  // 单次遍历统计价格分布
+  const distribution = { free: 0, under10: 0, under20: 0, under30: 0, under50: 0, over50: 0 };
+  for (const p of prices) {
+    if (p === 0) distribution.free++;
+    else if (p < 10) distribution.under10++;
+    else if (p < 20) distribution.under20++;
+    else if (p < 30) distribution.under30++;
+    else if (p < 50) distribution.under50++;
+    else distribution.over50++;
+  }
 
   return {
     min: sorted[0],

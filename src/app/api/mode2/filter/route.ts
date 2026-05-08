@@ -3,10 +3,10 @@
  * ================================
  * 从海量回合制游戏中筛选出有价值的参考对象
  *
- * 三池筛选逻辑（默认条件，可通过参数覆盖）:
- * - A池(神作参考): 普通回合制, 好评率>=75%, 评论数>50
- * - B池(核心竞品): 宝可梦Like, 好评率>=75%, 评论数>50
- * - C池(避坑指南): 宝可梦Like, 好评率40%-74%, 评论数>50
+ * 三池筛选逻辑（可通过参数覆盖）:
+ * - A池(神作参考): 普通回合制, 好评率>=90%, 评论数>=2000, 2024年后上线
+ * - B池(核心竞品): 宝可梦Like, 好评率>=85%, 评论数>=500
+ * - C池(避坑指南): 宝可梦Like, 好评率40%-74%, 评论数>=500
  *
  * 性能优化：优先使用 SQLite 数据库（games-cache.db）直接查询，
  * 避免将 300MB JSON 文件全部加载到内存导致 OOM
@@ -17,6 +17,32 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { SYNONYM_MERGE as TAG_SYNONYM_MERGE, INNOVATION_BLACKLIST as TAG_BLACKLIST } from "@/lib/tag-config";
 import type Database from "better-sqlite3";
+
+// ============ 性能优化：预构建查找表 ============
+// 将 Object 遍历改为 Map/Set 的 O(1) 查找，避免每次筛选都遍历整个对象
+// 同义词合并映射：废弃标签 → 保留标签
+const SYNONYM_MAP = new Map(Object.entries(TAG_SYNONYM_MERGE));
+
+// 黑名单 Set：快速判断标签是否应被过滤
+const BLACKLIST_SET = new Set(Object.keys(TAG_BLACKLIST));
+
+// 反向索引：保留标签 → 所有废弃同义词（用于特色标签筛选时展开）
+const REVERSE_SYNONYM_MAP: Map<string, string[]> = new Map();
+for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
+  if (!REVERSE_SYNONYM_MAP.has(kept)) {
+    REVERSE_SYNONYM_MAP.set(kept, []);
+  }
+  REVERSE_SYNONYM_MAP.get(kept)!.push(discarded);
+}
+
+// ============ 池子默认值配置 ============
+// 这些值是池子筛选的默认条件，所有默认值引用都应使用此常量
+// 前端 page.tsx 的初始状态也应与此保持一致
+export const POOL_DEFAULTS = {
+  A: { minRating: 90, minReviews: 2000, minYear: 2024 },      // 好评率90%, 评论数2000+, 2024年后
+  B: { minRating: 85, minReviews: 500 },                       // 好评率85%, 评论数500+
+  C: { minRating: 40, maxRating: 74, minReviews: 500 },      // 好评率40-74%, 评论数500+
+};
 
 // ============ 评价来源类型 ============
 
@@ -179,15 +205,36 @@ interface PriceStats {
 // ============ 标签权重系统 ============
 
 // 核心标签（最高权重）- 生物收集/怪物养成类游戏必须有
+// 与 pokemonLikeKeywords.json 中的 tags 保持同步
 const CORE_TAGS = [
   "Creature Collector",
   "Monster Catching",
   "Monster Taming",
   "Creature Collection",
+  "Pokemon",
+  "Insect Catching",
+  "Bug Catching",
+  "Fish Collection",
   "养宠",
   "养成",
   "宠物养成",
   "怪物养成",
+  "生物收集",
+  "怪物收集",
+  "精灵养成",
+  "精灵捕捉",
+  "宠物收集",
+  "妖怪养成",
+  "妖怪收集",
+  "昆虫捕捉",
+  "虫子养成",
+  "鱼类收集",
+  "Monster Breeder",
+  "Monster Raising",
+  "Creature Raising",
+  "Monster Ranching",
+  "Summoner",
+  "Summoning",
 ];
 
 // 次级标签（高相关度）- 回合制RPG相关
@@ -298,6 +345,27 @@ const DIFFERENTIATION_LABELS: Record<string, string> = {
   "Real-time mechanics": "即时机制",
 };
 
+// ============ 标签匹配工具函数 ============
+
+// 转义正则表达式特殊字符
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * 单词边界匹配
+ * - 精确匹配：标签完全相等
+ * - 子串匹配：关键词是标签的完整单词（单词边界）
+ * 用于避免 "Monster Hunter" 误匹配 "Monster Catching" 中的 "monster"
+ */
+function matchWordBoundary(text: string, keyword: string): boolean {
+  const lower = text.toLowerCase();
+  const kw = keyword.toLowerCase();
+  if (lower === kw) return true;
+  const regex = new RegExp(`\\b${escapeRegex(kw)}\\b`, "i");
+  return regex.test(text);
+}
+
 // 简化翻译函数（复用DIFFERENTIATION_LABELS）
 function translateTag(tag: string): string {
   return DIFFERENTIATION_LABELS[tag] || tag;
@@ -324,14 +392,9 @@ function calculateTagWeight(tags: string[], isPokemonLike: boolean = false): Tag
   const uniqueFeatureTags: string[] = [];
   const differentiationLabels: string[] = [];
 
-  // 精确匹配：标签必须完整匹配，不接受部分匹配
-  const exactMatch = (normalizedTags: string[], target: string): boolean => {
-    return normalizedTags.some((t) => t.toLowerCase() === target.toLowerCase());
-  };
-
-  // 匹配核心标签
+  // 匹配核心标签：使用单词边界匹配避免误匹配
   for (const tag of CORE_TAGS) {
-    if (normalizedTags.some((t) => t.includes(tag.toLowerCase()))) {
+    if (normalizedTags.some((t) => matchWordBoundary(t, tag))) {
       matchedCoreTags.push(tag);
     }
   }
@@ -339,15 +402,15 @@ function calculateTagWeight(tags: string[], isPokemonLike: boolean = false): Tag
   // 匹配次级标签（不在核心中的才计入）
   const coreSet = new Set(matchedCoreTags.map((t) => t.toLowerCase()));
   for (const tag of SECONDARY_TAGS) {
-    if (normalizedTags.some((t) => t.includes(tag.toLowerCase())) && !coreSet.has(tag.toLowerCase())) {
+    if (normalizedTags.some((t) => matchWordBoundary(t, tag)) && !coreSet.has(tag.toLowerCase())) {
       matchedSecondaryTags.push(tag);
     }
   }
 
   // 匹配现代融合标签（独立计算）
-  // 使用精确匹配避免误匹配（如"Open World RPG"不应匹配"Open World"）
+  // 使用单词边界匹配避免误匹配（如"Open World RPG"不应匹配"Open World"）
   for (const tag of MODERN_TAGS) {
-    if (exactMatch(normalizedTags, tag)) {
+    if (normalizedTags.some((t) => matchWordBoundary(t, tag))) {
       matchedModernTags.push(tag);
       // 添加到特色标签
       if (!uniqueFeatureTags.includes(tag)) {
@@ -417,59 +480,18 @@ const TURN_BASED_GENRES = [
   "Role-Playing",
 ];
 
-// 宝可梦Like核心标签
-const POKEMON_LIKE_TAGS = [
-  "Creature Collector",
-  "Monster Catching",
-  "Monster Taming",
-  "Creature Collection",
-  // 扩展：常见的生物收集/养成类标签
-  "Pokemon",
-  "养宠",
-  "养成",
-  "宠物养成",
-  "怪物养成",
-  "生物收集",
-  "怪物收集",
-];
+// ============ 宝可梦Like关键词配置 ============
+// 统一从 src/config/pokemonLikeKeywords.json 读取
+import pokemonLikeConfig from "@/config/pokemonLikeKeywords.json";
 
-// 宝可梦Like描述关键词（当标签不可靠时，用描述兜底检测）
-// 策略：使用多词模式（降低误判），单字词/通用词通过"标签匹配"兜底
-const POKEMON_LIKE_DESC_KEYWORDS = [
-  // 核心模式（与标签列表对应）
-  "monster collector",
-  "creature collector",
-  "monster catching",
-  "monster taming",
-  "pokemon-like",
-  "pokemon like",
-  // 中文核心词
-  "怪物捕捉",
-  "怪物收集",
-  "怪物养成",
-  "生物收集",
-  "宠物养成",
-  "僵尸进化",
-  // 英文扩展模式（从 B 池游戏描述中提取）
-  "creature evolution",
-  "evolve monster",
-  "pocket monster",
-  // 补充：怪兽驯服（上古世纪/Steam常用词）
-  "怪兽驯服",
-  // 补充：creature collection（Ooblets, Yaoling 等）
-  "creature collection",
-  // 补充：monster training（Monster Rancher, After The End 等）
-  "monster training",
-  // 补充：monster trainer（Void Monsters 等）
-  "monster trainer",
-  // 补充：creature collecting（Creature Clicker 等）
-  "creature collecting",
-  // 补充：中文"培养怪物"（刷一刷 PlayAgain 等）
-  "培养怪物",
-  // 补充：驯养（Planet Centauri 等英文"capture and tame"的翻译）
-  "驯养",
-  // 补充：驯服（Decktamer 等使用"驯服"而非"驯养"的翻译）
-  "驯服",
+const POKEMON_LIKE_TAGS: string[] = pokemonLikeConfig.tags;
+const POKEMON_LIKE_DESC_KEYWORDS: string[] = pokemonLikeConfig.descriptionKeywords;
+
+// 宝可梦Like游戏相关genres（作为标签检测的补充）
+const POKEMON_LIKE_GENRES = [
+  "RPG",
+  "JRPG",
+  "Role-Playing",
 ];
 
 // 回合制描述关键词（当标签不可靠时，用描述兜底检测）
@@ -621,12 +643,14 @@ const dbCache: {
 };
 
 // ============ LRU 查询结果缓存 ============
+// 优化：缓存完整过滤结果，支持快速分页切片（无需重新计算）
+// 缓存键不包含 page，因为完整结果会被缓存用于任意分页切片
 
-const CACHE_VERSION = "v4"; // v4: 添加 reviewSource 到缓存键
-const MAX_QUERY_CACHE_SIZE = 50; // 最多缓存 50 个查询结果（内存友好）
+const CACHE_VERSION = "v5"; // v5: 缓存完整过滤结果，支持分页切片
+const MAX_QUERY_CACHE_SIZE = 30; // 降低数量以节省内存（每个缓存包含完整结果）
 type QueryCacheKey = string;
 interface QueryCacheEntry {
-  results: GameRecord[];
+  allFiltered: GameRecord[];  // 完整过滤结果（用于分页切片）
   total: number;
   stats: PoolStats;
   priceStats: PriceStats | undefined;
@@ -635,14 +659,12 @@ interface QueryCacheEntry {
 
 const queryCache = new Map<QueryCacheKey, QueryCacheEntry>();
 
-function getQueryCacheKey(params: {
+function getBaseCacheKey(params: {
   pools?: string[];
   query?: string;
   sortBy?: string;
   sortOrder?: string;
   tagSortBy?: string;
-  page?: number;
-  pageSize?: number;
   yearsFilter?: number;
   minReleaseDate?: string;
   maxReleaseDate?: string;
@@ -668,8 +690,6 @@ function getQueryCacheKey(params: {
     params.sortBy || "wilson",
     params.sortOrder || "desc",
     params.tagSortBy || "count",
-    params.page || 1,
-    params.pageSize || 20,
     params.yearsFilter || 0,
     params.minReleaseDate || "",
     params.maxReleaseDate || "",
@@ -677,15 +697,15 @@ function getQueryCacheKey(params: {
     params.priceMin?.toFixed(2) || "",
     params.priceMax?.toFixed(2) || "",
     params.modernTagFilter || "",
-    Array.isArray(params.featureTagFilters) ? params.featureTagFilters.join(",") : (params.featureTagFilters || ""),
-    params.poolA_minRating || 85,
-    params.poolA_minReviews || 1000,
-    params.poolA_minYear || 2024,
-    params.poolB_minRating || 75,
-    params.poolB_minReviews || 200,
-    params.poolC_minRating || 40,
-    params.poolC_maxRating || 74,
-    params.poolC_minReviews || 100,
+    Array.isArray(params.featureTagFilters) ? params.featureTagFilters.sort().join(",") : (params.featureTagFilters || ""),
+    params.poolA_minRating || POOL_DEFAULTS.A.minRating,
+    params.poolA_minReviews || POOL_DEFAULTS.A.minReviews,
+    params.poolA_minYear || POOL_DEFAULTS.A.minYear,
+    params.poolB_minRating || POOL_DEFAULTS.B.minRating,
+    params.poolB_minReviews || POOL_DEFAULTS.B.minReviews,
+    params.poolC_minRating || POOL_DEFAULTS.C.minRating,
+    params.poolC_maxRating || POOL_DEFAULTS.C.maxRating,
+    params.poolC_minReviews || POOL_DEFAULTS.C.minReviews,
     params.reviewSource || "all",
   ];
   return parts.join("|");
@@ -1016,24 +1036,44 @@ function getReviewScoreDesc(score: number): string {
   return "Very Negative";
 }
 
-function checkPokemonLike(tags: string[], genres: string[], shortDescription?: string): { isPokemonLike: boolean; matchingTags: string[] } {
+function checkPokemonLike(
+  tags: string[],
+  genres: string[],
+  shortDescription?: string,
+  detailedDescription?: string
+): { isPokemonLike: boolean; matchingTags: string[] } {
   const normalizedTags = tags.map((t) => t.toLowerCase());
+  const normalizedGenres = genres.map((g) => g.toLowerCase());
   const matchingTags: string[] = [];
 
-  // 策略1：检查标签
+  // 策略1：检查标签（使用单词边界匹配避免误匹配）
   for (const tag of POKEMON_LIKE_TAGS) {
-    if (normalizedTags.some((t) => t.includes(tag.toLowerCase()))) {
+    if (normalizedTags.some((t) => matchWordBoundary(t, tag))) {
       matchingTags.push(tag);
     }
   }
 
-  // 策略2：描述关键词兜底（Steam 标签不可靠时补救）
+  // 策略2：genres 补充检测（标签未命中时，检查 genres 是否暗示宝可梦Like特征）
+  if (matchingTags.length === 0 && genres.length > 0) {
+    for (const pg of POKEMON_LIKE_GENRES) {
+      if (normalizedGenres.some((g) => matchWordBoundary(g, pg))) {
+        matchingTags.push(pg);
+        break;
+      }
+    }
+  }
+
+  // 策略3：描述关键词兜底（Steam 标签不可靠时补救）
   // 典型场景：Steam 标签被成人/自动化等无关内容污染，如 Aethermancer 的情况
-  if (shortDescription && matchingTags.length === 0) {
-    const descLower = shortDescription.toLowerCase();
-    for (const keyword of POKEMON_LIKE_DESC_KEYWORDS) {
-      if (descLower.includes(keyword.toLowerCase())) {
-        matchingTags.push(keyword);
+  // 合并 shortDescription 和 detailedDescription 进行检测
+  if (matchingTags.length === 0) {
+    const fullDesc = [shortDescription, detailedDescription].filter(Boolean).join(" ");
+    if (fullDesc) {
+      const descLower = fullDesc.toLowerCase();
+      for (const keyword of POKEMON_LIKE_DESC_KEYWORDS) {
+        if (descLower.includes(keyword.toLowerCase())) {
+          matchingTags.push(keyword);
+        }
       }
     }
   }
@@ -1069,7 +1109,7 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
   // games-index.json 的 categories 是数字数组（如 [2, 22, 29]），转换为字符串
   const categories = (raw.categories || []).map((c: unknown) => String(c));
 
-  const pokemonCheck = checkPokemonLike(tags, raw.genres || [], raw.short_description);
+  const pokemonCheck = checkPokemonLike(tags, raw.genres || [], raw.short_description, raw.detailed_description);
   const blacklisted = isBlacklisted(tags, raw.genres || [], raw.short_description);
   const turnBased = isTurnBased(tags, raw.genres || [], raw.short_description);
 
@@ -1392,6 +1432,35 @@ interface PoolConfig {
   };
 }
 
+// 池子规则接口
+interface PoolRule {
+  name: "A" | "B" | "C";
+  conditions: {
+    isPokemonLike?: boolean;
+    minRating: number;
+    maxRating?: number;
+    minReviews: number;
+    minYear?: number;
+  };
+}
+
+// 池子计算规则配置（已废弃，请使用 POOL_DEFAULTS）
+// 注意：此常量未在代码中使用，仅作参考保留
+const DEFAULT_POOL_RULES: PoolRule[] = [
+  {
+    name: "A",
+    conditions: { isPokemonLike: false, minRating: POOL_DEFAULTS.A.minRating, minReviews: POOL_DEFAULTS.A.minReviews, minYear: POOL_DEFAULTS.A.minYear },
+  },
+  {
+    name: "B",
+    conditions: { isPokemonLike: true, minRating: POOL_DEFAULTS.B.minRating, minReviews: POOL_DEFAULTS.B.minReviews },
+  },
+  {
+    name: "C",
+    conditions: { isPokemonLike: true, minRating: POOL_DEFAULTS.C.minRating, maxRating: POOL_DEFAULTS.C.maxRating, minReviews: POOL_DEFAULTS.C.minReviews },
+  },
+];
+
 function calculatePool(
   game: GameRecord,
   config: PoolConfig,
@@ -1418,28 +1487,74 @@ function calculatePool(
     return null;
   }
 
-  // A池: 非宝可梦Like + 好评率>=配置值 + 评论数>=配置值 + 上线年份>=配置值
-  if (!game.isPokemonLike && reviewScore >= config.poolA.minRating && totalReviews >= config.poolA.minReviews) {
-    if (game.releaseDate) {
-      const year = new Date(game.releaseDate).getFullYear();
-      const minYear = config.poolA.minYear || 0;
-      if (year >= minYear) return "A";
+  // 根据 config 构建动态规则
+  const rules: PoolRule[] = [
+    {
+      name: "A",
+      conditions: {
+        isPokemonLike: config.poolA.excludePokemonLike ? false : undefined,
+        minRating: config.poolA.minRating,
+        minReviews: config.poolA.minReviews,
+        minYear: config.poolA.minYear,
+      },
+    },
+    {
+      name: "B",
+      conditions: {
+        isPokemonLike: config.poolB.requirePokemonLike ? true : undefined,
+        minRating: config.poolB.minRating,
+        minReviews: config.poolB.minReviews,
+      },
+    },
+    {
+      name: "C",
+      conditions: {
+        isPokemonLike: config.poolC.requirePokemonLike ? true : undefined,
+        minRating: config.poolC.minRating,
+        maxRating: config.poolC.maxRating,
+        minReviews: config.poolC.minReviews,
+      },
+    },
+  ];
+
+  // 规则顺序很重要：A -> B -> C
+  for (const rule of rules) {
+    const cond = rule.conditions;
+
+    // 检查 isPokemonLike 条件
+    if (cond.isPokemonLike !== undefined) {
+      if (cond.isPokemonLike !== game.isPokemonLike) {
+        continue;
+      }
     }
-  }
 
-  // B池: 宝可梦Like + 好评率>=75% + 评论数>200
-  if (game.isPokemonLike && reviewScore >= config.poolB.minRating && totalReviews >= config.poolB.minReviews) {
-    return "B";
-  }
+    // 检查好评率下限
+    if (reviewScore < cond.minRating) {
+      continue;
+    }
 
-  // C池: 宝可梦Like + 中等好评率 + 评论数>100
-  if (
-    game.isPokemonLike &&
-    reviewScore >= config.poolC.minRating &&
-    reviewScore <= config.poolC.maxRating &&
-    totalReviews >= config.poolC.minReviews
-  ) {
-    return "C";
+    // 检查好评率上限（仅 C 池需要）
+    if (cond.maxRating !== undefined && reviewScore > cond.maxRating) {
+      continue;
+    }
+
+    // 检查评论数
+    if (totalReviews < cond.minReviews) {
+      continue;
+    }
+
+    // 检查年份（仅 A 池需要）
+    if (cond.minYear !== undefined) {
+      if (!game.releaseDate) {
+        continue;
+      }
+      const year = new Date(game.releaseDate).getFullYear();
+      if (year < cond.minYear) {
+        continue;
+      }
+    }
+
+    return rule.name;
   }
 
   return null;
@@ -1572,13 +1687,9 @@ function filterGames(
           if (featureTag) {
             const llmM = (g.llmMechanics || []) as string[];
             const llmRawM = (g.llmRawMechanics || []) as string[];
-            // 展开保留标签对应的所有废弃同义词，一并匹配
-            const synonymsToCheck = [featureTag.tag.toLowerCase()];
-            for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
-              if (kept.toLowerCase() === featureTag.tag.toLowerCase()) {
-                synonymsToCheck.push(discarded.toLowerCase());
-              }
-            }
+            // 使用预构建的反向索引快速获取废弃同义词
+            const tagLower = featureTag.tag.toLowerCase();
+            const synonymsToCheck = [tagLower, ...(REVERSE_SYNONYM_MAP.get(featureTag.tag) || []).map(s => s.toLowerCase())];
             // 统一转为小写比较，避免大小写不匹配
             const llmMLower = llmM.map((m: string) => m.toLowerCase());
             const llmRawMLower = llmRawM.map((m: string) => m.toLowerCase());
@@ -1834,12 +1945,9 @@ function getPoolCounts(
         if (featureTag) {
           const llmM = (game.llmMechanics || []) as string[];
           const llmRawM = (game.llmRawMechanics || []) as string[];
-          const synonymsToCheck = [featureTag.tag.toLowerCase()];
-          for (const [discarded, kept] of Object.entries(TAG_SYNONYM_MERGE)) {
-            if (kept.toLowerCase() === featureTag.tag.toLowerCase()) {
-              synonymsToCheck.push(discarded.toLowerCase());
-            }
-          }
+          // 使用预构建的反向索引快速获取废弃同义词
+          const tagLower = featureTag.tag.toLowerCase();
+          const synonymsToCheck = [tagLower, ...(REVERSE_SYNONYM_MAP.get(featureTag.tag) || []).map(s => s.toLowerCase())];
           // 统一转为小写比较，避免大小写不匹配
           const llmMLower = llmM.map((m: string) => m.toLowerCase());
           const llmRawMLower = llmRawM.map((m: string) => m.toLowerCase());
@@ -1951,8 +2059,8 @@ function calculateFeatureTagCounts(
       if (seen.has(m)) continue;
       seen.add(m);
 
-      const merged = TAG_SYNONYM_MERGE[m] || m;
-      if (TAG_BLACKLIST[merged]) continue;
+      const merged = SYNONYM_MAP.get(m) || m;
+      if (BLACKLIST_SET.has(merged)) continue;
 
       if (!tagCountMap[merged]) {
         tagCountMap[merged] = { total: 0, poolA: 0, poolB: 0, poolC: 0 };
@@ -2041,22 +2149,23 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   console.log("[Mode2] 开始处理请求");
 
-  // 获取池子参数
+  // 获取池子筛选范围
   const pools = searchParams.getAll("pool").filter((p) => ["A", "B", "C"].includes(p)) as ("A" | "B" | "C")[];
 
-  // A池配置: 上线时间24年之后，非宝可梦Like，评论数>=50，好评率>=40%
-  const poolA_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolA_minRating") || "40", 10) || 40));
-  const poolA_minReviews = Math.max(0, parseInt(searchParams.get("poolA_minReviews") || "50", 10) || 50);
-  const poolA_minYear = Math.max(2020, parseInt(searchParams.get("poolA_minYear") || "2024", 10) || 2024);
+  // 获取池子参数（默认值来自 POOL_DEFAULTS）
+  // A池: 上线时间2024年之后，非宝可梦Like，好评率>=90%, 评论数>=2000
+  const poolA_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolA_minRating") || String(POOL_DEFAULTS.A.minRating), 10)));
+  const poolA_minReviews = Math.max(0, parseInt(searchParams.get("poolA_minReviews") || String(POOL_DEFAULTS.A.minReviews), 10));
+  const poolA_minYear = Math.max(2020, parseInt(searchParams.get("poolA_minYear") || String(POOL_DEFAULTS.A.minYear), 10) || 2024);
 
-  // B池配置: 宝可梦Like，评论数>=50，好评率>=40%
-  const poolB_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolB_minRating") || "40", 10) || 40));
-  const poolB_minReviews = Math.max(0, parseInt(searchParams.get("poolB_minReviews") || "50", 10) || 50);
+  // B池: 宝可梦Like，好评率>=85%, 评论数>=500
+  const poolB_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolB_minRating") || String(POOL_DEFAULTS.B.minRating), 10)));
+  const poolB_minReviews = Math.max(0, parseInt(searchParams.get("poolB_minReviews") || String(POOL_DEFAULTS.B.minReviews), 10));
 
-  // C池配置: 宝可梦Like，好评率40%-74%，评论数>=50
-  const poolC_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolC_minRating") || "40", 10) || 40));
-  const poolC_maxRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolC_maxRating") || "74", 10) || 74));
-  const poolC_minReviews = Math.max(0, parseInt(searchParams.get("poolC_minReviews") || "50", 10) || 50);
+  // C池: 宝可梦Like，好评率40%-74%, 评论数>=500
+  const poolC_minRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolC_minRating") || String(POOL_DEFAULTS.C.minRating), 10)));
+  const poolC_maxRating = Math.max(0, Math.min(100, parseInt(searchParams.get("poolC_maxRating") || String(POOL_DEFAULTS.C.maxRating), 10)));
+  const poolC_minReviews = Math.max(0, parseInt(searchParams.get("poolC_minReviews") || String(POOL_DEFAULTS.C.minReviews), 10));
 
   const query = searchParams.get("q")?.trim().slice(0, 200) || "";
   const rawSortBy = searchParams.get("sortBy") ?? "";
@@ -2157,62 +2266,46 @@ export async function GET(request: NextRequest) {
     dynamicFeatureTagOptions = dynamicFeatureTagOptions.sort((a, b) => b.count - a.count);
   }
 
-  // 生成查询缓存键（第一页才缓存）
-  const cacheKey = getQueryCacheKey({
-    pools: pools.length > 0 ? pools : undefined,
-    query,
-    sortBy,
-    sortOrder,
-    tagSortBy,
-    page,
-    pageSize,
-    yearsFilter,
-    minReleaseDate,
-    maxReleaseDate,
-    excludeTestVersions,
-    priceMin,
-    priceMax,
-    modernTagFilter,
-    featureTagFilters,
-    poolA_minRating,
-    poolA_minReviews,
-    poolA_minYear,
-    poolB_minRating,
-    poolB_minReviews,
-    poolC_minRating,
-    poolC_maxRating,
-    poolC_minReviews,
-    reviewSource,
+  // 构建基础缓存键（不含分页参数）
+  const baseCacheKey = getBaseCacheKey({
+    pools, query, sortBy, sortOrder, tagSortBy,
+    yearsFilter, minReleaseDate, maxReleaseDate,
+    excludeTestVersions, priceMin, priceMax, modernTagFilter,
+    featureTagFilters, poolA_minRating, poolA_minReviews,
+    poolA_minYear, poolB_minRating, poolB_minReviews,
+    poolC_minRating, poolC_maxRating, poolC_minReviews, reviewSource,
   });
 
-  // 尝试从查询缓存获取
-  if (page === 1) {
-    const cached = getFromQueryCache(cacheKey);
-    if (cached) {
-      console.log(`[Mode2] 命中查询缓存，返回 ${cached.results.length} 条结果`);
-      return NextResponse.json({
-        results: cached.results,
-        total: cached.total,
-        page: 1,
-        pageSize,
-        totalPages: Math.max(1, Math.ceil(cached.total / pageSize)),
-        stats: cached.stats,
-        priceStats: cached.priceStats,
-        poolConfig,
-        query,
-        poolFilters: pools.length > 0 ? pools : ["A", "B", "C"],
-        description: {
-          A: "神作参考池 - 2024年后上线 · 好评率≥40% · 评论数≥50",
-          B: "核心竞品池 - 宝可梦Like · 好评率≥40% · 评论数≥50",
-          C: "避坑指南池 - 宝可梦Like争议/失败案例 · 好评率40%-74% · 评论数≥50",
-        },
-        featureTagOptions: dynamicFeatureTagOptions,
-        cached: true,
-      });
-    }
+  // 尝试从查询缓存获取（所有页面都尝试，命中则直接切片）
+  const cached = getFromQueryCache(baseCacheKey);
+  if (cached) {
+    // 缓存命中：从完整结果中切片返回
+    const startIdx = (page - 1) * pageSize;
+    const slicedResults = cached.allFiltered.slice(startIdx, startIdx + pageSize);
+    console.log(`[Mode2] 命中查询缓存，完整结果 ${cached.total} 条，切片返回第 ${page} 页`);
+    return NextResponse.json({
+      results: slicedResults,
+      total: cached.total,
+      page,
+      pageSize,
+      totalPages: Math.max(1, Math.ceil(cached.total / pageSize)),
+      stats: cached.stats,
+      priceStats: cached.priceStats,
+      poolConfig,
+      query,
+      poolFilters: pools.length > 0 ? pools : ["A", "B", "C"],
+      reviewSource,
+      description: {
+        A: `神作参考池 - 2024年后上线 · 好评率≥${POOL_DEFAULTS.A.minRating}% · 评论数≥${POOL_DEFAULTS.A.minReviews}`,
+        B: `核心竞品池 - 宝可梦Like · 好评率≥${POOL_DEFAULTS.B.minRating}% · 评论数≥${POOL_DEFAULTS.B.minReviews}`,
+        C: `避坑指南池 - 宝可梦Like争议/失败案例 · 好评率${POOL_DEFAULTS.C.minRating}%-${POOL_DEFAULTS.C.maxRating}% · 评论数≥${POOL_DEFAULTS.C.minReviews}`,
+      },
+      featureTagOptions: dynamicFeatureTagOptions,
+      cached: true,
+    });
   }
 
-  // 只获取统计信息
+  // 只获取统计信息（不走完整过滤路径）
   if (statsOnly) {
     const stats = getPoolCounts(
       allGames, poolConfig, pools.length > 0 ? pools : undefined,
@@ -2227,14 +2320,15 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  // 执行完整过滤（排序后的完整结果）
   const { results, total, stats, priceStats } = filterGames(allGames, {
     pools: pools.length > 0 ? pools : undefined,
     poolConfig,
     query,
     sortBy,
     sortOrder,
-    page,
-    pageSize,
+    page: 1,  // 始终获取完整结果用于缓存
+    pageSize: 10000,  // 获取足够多的结果用于缓存
     yearsFilter,
     minReleaseDate,
     maxReleaseDate,
@@ -2247,15 +2341,16 @@ export async function GET(request: NextRequest) {
     reviewSource,
   });
 
-  // 缓存第一页的查询结果
-  if (page === 1) {
-    setQueryCache(cacheKey, { results, total, stats, priceStats, timestamp: Date.now() });
-  }
+  // 缓存完整过滤结果（用于后续分页切片）
+  setQueryCache(baseCacheKey, { allFiltered: results, total, stats, priceStats, timestamp: Date.now() });
 
+  // 返回当前页的切片
+  const startIdx = (page - 1) * pageSize;
+  const slicedResults = results.slice(startIdx, startIdx + pageSize);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   return NextResponse.json({
-    results,
+    results: slicedResults,
     total,
     page,
     pageSize,
@@ -2265,11 +2360,11 @@ export async function GET(request: NextRequest) {
     poolConfig,
     query,
     poolFilters: pools.length > 0 ? pools : ["A", "B", "C"],
-    reviewSource, // 当前评价来源
+    reviewSource,
     description: {
-      A: "神作参考池 - 2024年后上线 · 好评率≥40% · 评论数≥50",
-      B: "核心竞品池 - 宝可梦Like · 好评率≥40% · 评论数≥50",
-      C: "避坑指南池 - 宝可梦Like争议/失败案例 · 好评率40%-74% · 评论数≥50",
+      A: `神作参考池 - 2024年后上线 · 好评率≥${POOL_DEFAULTS.A.minRating}% · 评论数≥${POOL_DEFAULTS.A.minReviews}`,
+      B: `核心竞品池 - 宝可梦Like · 好评率≥${POOL_DEFAULTS.B.minRating}% · 评论数≥${POOL_DEFAULTS.B.minReviews}`,
+      C: `避坑指南池 - 宝可梦Like争议/失败案例 · 好评率${POOL_DEFAULTS.C.minRating}%-${POOL_DEFAULTS.C.maxRating}% · 评论数≥${POOL_DEFAULTS.C.minReviews}`,
     },
     featureTagOptions: dynamicFeatureTagOptions,
   }, {

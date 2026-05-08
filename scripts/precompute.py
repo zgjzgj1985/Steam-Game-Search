@@ -58,37 +58,36 @@ TURN_BASED_GENRES = [
     "Role-Playing",
 ]
 
-POKEMON_LIKE_TAGS = [
-    "Creature Collector", "Monster Catching", "Monster Taming", "Creature Collection",
-    # 扩展：常见的生物收集/养成类标签
-    "Pokemon", "养宠", "养成", "宠物养成", "怪物养成", "生物收集", "怪物收集",
-]
+# ============ 宝可梦Like关键词配置 ============
+# 统一从 src/config/pokemonLikeKeywords.json 读取
+POKEMON_LIKE_CONFIG_FILE = Path(__file__).parent.parent / "src" / "config" / "pokemonLikeKeywords.json"
 
-# 宝可梦Like描述关键词（当标签不可靠时，用描述兜底检测）
-# 策略：使用多词模式（降低误判），单字词/通用词通过"标签匹配"兜底
-POKEMON_LIKE_DESC_KEYWORDS = [
-    # 核心模式（与标签列表对应）
-    "monster collector", "creature collector", "monster catching", "monster taming",
-    "pokemon-like", "pokemon like",
-    # 中文核心词
-    "怪物捕捉", "怪物收集", "怪物养成", "生物收集", "宠物养成", "僵尸进化",
-    # 英文扩展模式（从 B 池游戏描述中提取）
-    "creature evolution", "evolve monster", "pocket monster",
-    # 补充：怪兽驯服（上古世纪/Steam常用词）
-    "怪兽驯服",
-    # 补充：creature collection（Ooblets, Yaoling 等）
-    "creature collection",
-    # 补充：monster training（Monster Rancher, After The End 等）
-    "monster training",
-    # 补充：monster trainer（Void Monsters 等）
-    "monster trainer",
-    # 补充：creature collecting（Creature Clicker 等）
-    "creature collecting",
-    # 补充：中文"培养怪物"（刷一刷 PlayAgain 等）
-    "培养怪物",
-    # 补充：驯养（Planet Centauri 等英文"capture and tame"的翻译）
-    "驯养",
-]
+def load_pokemon_like_config():
+    """从 pokemonLikeKeywords.json 加载宝可梦Like关键词配置"""
+    if POKEMON_LIKE_CONFIG_FILE.exists():
+        try:
+            with open(POKEMON_LIKE_CONFIG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return None
+
+POKEMON_LIKE_CONFIG = load_pokemon_like_config()
+
+if POKEMON_LIKE_CONFIG:
+    POKEMON_LIKE_TAGS = POKEMON_LIKE_CONFIG.get("tags", [])
+    POKEMON_LIKE_DESC_KEYWORDS = POKEMON_LIKE_CONFIG.get("descriptionKeywords", [])
+else:
+    # 备用默认值（理论上不应该走到这里）
+    POKEMON_LIKE_TAGS = [
+        "Creature Collector", "Monster Catching", "Monster Taming", "Creature Collection",
+        "Pokemon", "养宠", "养成", "宠物养成", "怪物养成", "生物收集", "怪物收集",
+    ]
+    POKEMON_LIKE_DESC_KEYWORDS = [
+        "monster collector", "creature collector", "monster catching", "monster taming",
+        "pokemon-like", "pokemon like", "怪物捕捉", "怪物收集", "怪物养成",
+        "生物收集", "宠物养成", "僵尸进化",
+    ]
 
 # 回合制描述关键词（当标签不可靠时，用描述兜底检测）
 TURN_BASED_DESC_KEYWORDS = [

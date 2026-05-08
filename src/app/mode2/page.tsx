@@ -1991,11 +1991,7 @@ export default function Mode2Page() {
                 });
 
               // 同义词合并映射（废弃标签 → 保留标签）
-              // 来源: @/lib/tag-config（由 manage_tags.py --export-config 生成）
-              // 已通过 import 导入，直接使用 SYNONYM_MERGE 常量
-              // （不再在此处定义，删除了 ~80 行硬编码副本）
-
-              // ============ 分组 & 同义词合并 ============
+              // 使用 TAG_SYNONYM_MERGE 常量进行合并
               const grouped: Record<string, typeof featureTagOptions> = {};
               const uncategorized: typeof featureTagOptions = [];
 

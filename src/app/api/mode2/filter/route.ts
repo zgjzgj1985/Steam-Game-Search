@@ -727,9 +727,10 @@ function getFeatureTagCacheKey(params: {
   ].join("|");
 }
 
-// ============ LRU 查询结果缓存 ============
-// 优化：缓存完整过滤结果，支持快速分页切片（无需重新计算）
-// 缓存键不包含 page，因为完整结果会被缓存用于任意分页切片
+// ============ LRU 查询结果缓存（独立系统） ============
+// 筛选结果缓存：缓存完整过滤结果，支持快速分页切片
+// 此缓存与 analyze-cache.ts 中的 LLM 分析缓存是独立的两个系统
+// 版本号标识此缓存的格式/逻辑版本，与 analyze-cache 的版本号无关
 
 const CACHE_VERSION = "v5"; // v5: 缓存完整过滤结果，支持分页切片
 const MAX_QUERY_CACHE_SIZE = 30; // 降低数量以节省内存（每个缓存包含完整结果）
@@ -1592,22 +1593,6 @@ interface PoolRule {
   };
 }
 
-// 池子计算规则配置（已废弃，请使用 POOL_DEFAULTS）
-// 注意：此常量未在代码中使用，仅作参考保留
-const DEFAULT_POOL_RULES: PoolRule[] = [
-  {
-    name: "A",
-    conditions: { isPokemonLike: false, minRating: POOL_DEFAULTS.A.minRating, minReviews: POOL_DEFAULTS.A.minReviews, minYear: POOL_DEFAULTS.A.minYear },
-  },
-  {
-    name: "B",
-    conditions: { isPokemonLike: true, minRating: POOL_DEFAULTS.B.minRating, minReviews: POOL_DEFAULTS.B.minReviews },
-  },
-  {
-    name: "C",
-    conditions: { isPokemonLike: true, minRating: POOL_DEFAULTS.C.minRating, maxRating: POOL_DEFAULTS.C.maxRating, minReviews: POOL_DEFAULTS.C.minReviews },
-  },
-];
 
 function calculatePool(
   game: GameRecord,

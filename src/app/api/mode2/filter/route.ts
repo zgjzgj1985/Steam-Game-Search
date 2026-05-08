@@ -18,6 +18,9 @@ import * as path from "node:path";
 import { SYNONYM_MERGE as TAG_SYNONYM_MERGE, INNOVATION_BLACKLIST as TAG_BLACKLIST } from "@/lib/tag-config";
 import type Database from "better-sqlite3";
 
+// 导入LLM分析缓存（用于两阶段判定）
+import { getAnalysisResults } from "@/lib/analyze-cache";
+
 // ============ 性能优化：预构建查找表 ============
 // 将 Object 遍历改为 Map/Set 的 O(1) 查找，避免每次筛选都遍历整个对象
 // 同义词合并映射：废弃标签 → 保留标签
@@ -130,6 +133,9 @@ interface GameRecord {
   // 模式2扩展字段
   isPokemonLike: boolean;
   pokemonLikeTags: string[];
+  // 宝可梦Like判定置信度
+  pokemonLikeConfidence: PokemonLikeConfidence;
+  pokemonLikeMatchedBy: string[];
   wilsonScore: number;
   // 区域威尔逊得分
   cnWilsonScore: number;
@@ -163,6 +169,15 @@ interface GameRecord {
   llmRawMechanics: string[];
   // 过滤后的创新融合标签（排除品类标配标签）
   innovationTags: string[];
+  // LLM 语义分析结果（来自 analyze-cache.json，两阶段判定的第二阶段）
+  llmAnalysis?: {
+    isPokemonLike: boolean;
+    confidence: number;
+    confidenceLevel: "high" | "medium" | "low";
+    matchingFeatures: string[];
+    missingFeatures: string[];
+    reasons: string;
+  };
 }
 
 interface PoolStats {
@@ -513,16 +528,30 @@ const TURN_BASED_GENRES = [
 // 统一从 src/config/pokemonLikeKeywords.json 读取
 import pokemonLikeConfig from "@/config/pokemonLikeKeywords.json";
 
-const POKEMON_LIKE_TAGS: string[] = pokemonLikeConfig.tags;
+// 核心标签（高权重匹配）
+const POKEMON_LIKE_TAGS: string[] = pokemonLikeConfig.coreTags;
+
+// 次级标签（中等权重）
+const POKEMON_LIKE_SECONDARY_TAGS: string[] = pokemonLikeConfig.secondaryTags || [];
+
+// 描述关键词
 const POKEMON_LIKE_DESC_KEYWORDS: string[] = pokemonLikeConfig.descriptionKeywords;
 
-// 宝可梦Like游戏相关genres（作为标签检测的补充）
-const POKEMON_LIKE_GENRES = [
-  "RPG",
-  "JRPG",
-  "Role-Playing",
-];
+// 同义词映射（用于扩展匹配）
+const POKEMON_LIKE_SYNONYMS: Record<string, string[]> = pokemonLikeConfig.synonyms || {};
 
+// ============ 同义词扩展：从配置动态构建扩展标签列表 ============
+// 将同义词配置展开为核心标签列表的补充
+const SYNONYMS_EXTENDED_TAGS: string[] = [];
+for (const [key, values] of Object.entries(POKEMON_LIKE_SYNONYMS)) {
+  // 只有当 key 存在于核心标签中时，才将其同义词加入扩展列表
+  if (POKEMON_LIKE_TAGS.includes(key)) {
+    SYNONYMS_EXTENDED_TAGS.push(...values);
+  }
+}
+
+// 合并后的完整核心标签列表（原有 + 同义词扩展）
+const ALL_CORE_TAGS: string[] = [...POKEMON_LIKE_TAGS, ...SYNONYMS_EXTENDED_TAGS];
 // 回合制描述关键词（当标签不可靠时，用描述兜底检测）
 const TURN_BASED_DESC_KEYWORDS = [
   "turn-based",
@@ -1094,51 +1123,109 @@ function getReviewScoreDesc(score: number): string {
   return "Very Negative";
 }
 
+// ============ 宝可梦Like判定结果类型 ============
+export type PokemonLikeConfidence = "high" | "medium" | "low";
+
+export interface PokemonLikeResult {
+  isPokemonLike: boolean;
+  matchingTags: string[];
+  confidence: PokemonLikeConfidence;
+  matchedBy: string[];  // 记录通过什么匹配（tag/genre/description）
+  coreMatchCount: number;  // 核心标签匹配数量
+  secondaryMatchCount: number;  // 次级标签匹配数量
+  descMatchCount: number;  // 描述关键词匹配数量
+}
+
+/**
+ * 检查游戏是否为宝可梦Like
+ * 使用两层匹配策略：
+ * - 第一层：标签匹配（核心标签 + 同义词扩展）→ 判定 isPokemonLike
+ * - 第二层：描述关键词 → 作为 isPokemonLike 判定补充，降低漏判率
+ */
 function checkPokemonLike(
   tags: string[],
   genres: string[],
   shortDescription?: string,
   detailedDescription?: string
-): { isPokemonLike: boolean; matchingTags: string[] } {
+): PokemonLikeResult {
   const normalizedTags = tags.map((t) => t.toLowerCase());
   const normalizedGenres = genres.map((g) => g.toLowerCase());
   const matchingTags: string[] = [];
+  const matchedBy: string[] = [];
+  let coreMatchCount = 0;
+  let secondaryMatchCount = 0;
+  let descMatchCount = 0;
 
-  // 策略1：检查标签（使用单词边界匹配避免误匹配）
-  for (const tag of POKEMON_LIKE_TAGS) {
+  // 策略1：检查核心标签（含同义词扩展，使用单词边界匹配避免误匹配）
+  // 【核心】必须有核心标签匹配才能判定为宝可梦Like
+  for (const tag of ALL_CORE_TAGS) {
     if (normalizedTags.some((t) => matchWordBoundary(t, tag))) {
       matchingTags.push(tag);
+      matchedBy.push(`tag:${tag}`);
+      coreMatchCount++;
     }
   }
 
-  // 策略2：genres 补充检测（标签未命中时，检查 genres 是否暗示宝可梦Like特征）
-  if (matchingTags.length === 0 && genres.length > 0) {
-    for (const pg of POKEMON_LIKE_GENRES) {
-      if (normalizedGenres.some((g) => matchWordBoundary(g, pg))) {
-        matchingTags.push(pg);
-        break;
+  // 策略2：检查次级标签（仅作为置信度补充，不单独作为判定依据）
+  // 次级标签如 Fishing, Hunting 等太泛化，不应用于 isPokemonLike 判定
+  for (const tag of POKEMON_LIKE_SECONDARY_TAGS) {
+    if (normalizedTags.some((t) => matchWordBoundary(t, tag))) {
+      matchedBy.push(`secondary:${tag}`);
+      secondaryMatchCount++;
+    }
+  }
+
+  // 策略3：描述关键词兜底（参与 isPokemonLike 判定，降低漏判率）
+  // 典型场景：Steam 标签被成人/自动化等无关内容污染，或小众游戏标签不完整
+  const fullDesc = [shortDescription, detailedDescription].filter(Boolean).join(" ");
+  if (fullDesc) {
+    const descLower = fullDesc.toLowerCase();
+    for (const keyword of POKEMON_LIKE_DESC_KEYWORDS) {
+      if (descLower.includes(keyword.toLowerCase())) {
+        matchedBy.push(`desc:${keyword}`);
+        descMatchCount++;
       }
     }
   }
 
-  // 策略3：描述关键词兜底（Steam 标签不可靠时补救）
-  // 典型场景：Steam 标签被成人/自动化等无关内容污染，如 Aethermancer 的情况
-  // 合并 shortDescription 和 detailedDescription 进行检测
-  if (matchingTags.length === 0) {
-    const fullDesc = [shortDescription, detailedDescription].filter(Boolean).join(" ");
-    if (fullDesc) {
-      const descLower = fullDesc.toLowerCase();
-      for (const keyword of POKEMON_LIKE_DESC_KEYWORDS) {
-        if (descLower.includes(keyword.toLowerCase())) {
-          matchingTags.push(keyword);
-        }
-      }
+  // 【改进】isPokemonLike 判定逻辑
+  // 原有：coreMatchCount > 0
+  // 修改为：核心标签匹配 OR 描述关键词丰富（>=2个关键词）
+  // 这样即使标签缺失，只要描述中明确提到宝可梦Like玩法，也能进入候选池
+  const isPokemonLike = coreMatchCount > 0 || descMatchCount >= 2;
+
+  // 计算置信度（基于所有匹配来源）
+  let confidence: PokemonLikeConfidence = "low";
+  if (coreMatchCount >= 3) {
+    confidence = "high";
+  } else if (coreMatchCount >= 2) {
+    confidence = "high";
+  } else if (coreMatchCount === 1) {
+    // 有核心标签：参考次级标签和描述关键词提升置信度
+    if (secondaryMatchCount >= 2 || descMatchCount >= 3) {
+      confidence = "high";
+    } else if (secondaryMatchCount >= 1 || descMatchCount >= 1) {
+      confidence = "medium";
+    } else {
+      confidence = "medium";  // 有核心标签至少是中等置信度
     }
+  } else if (descMatchCount >= 3) {
+    // 无核心标签但描述丰富：中等置信度（由LLM最终判定）
+    confidence = "medium";
+  } else if (descMatchCount >= 2) {
+    // 描述关键词触发 isPokemonLike，置信度为 low（等待LLM分析）
+    confidence = "low";
   }
+  // 注意：没有核心标签且描述不丰富时，isPokemonLike = false，置信度为 low
 
   return {
-    isPokemonLike: matchingTags.length > 0,
+    isPokemonLike,
     matchingTags,
+    confidence,
+    matchedBy,
+    coreMatchCount,
+    secondaryMatchCount,
+    descMatchCount,
   };
 }
 
@@ -1244,6 +1331,8 @@ function transformGame(appId: string, raw: RawGameData): GameRecord {
     steamUrl: `https://store.steampowered.com/app/${appId}`,
     isPokemonLike: pokemonCheck.isPokemonLike,
     pokemonLikeTags: pokemonCheck.matchingTags,
+    pokemonLikeConfidence: pokemonCheck.confidence,
+    pokemonLikeMatchedBy: pokemonCheck.matchedBy,
     wilsonScore: wilson,
     // 区域威尔逊得分
     cnWilsonScore: cnWilson,
@@ -1395,21 +1484,22 @@ function loadDatabase(): { games: GameRecord[] } {
         if (!game.llmMechanics) game.llmMechanics = [];
         if (!game.llmRawMechanics) game.llmRawMechanics = [];
         if (game.innovationTags === undefined) game.innovationTags = [];
-        // 运行时兜底：如果预计算的 isPokemonLike 为 false，用描述关键词重新检测
-        // 解决预计算时关键词列表不完整导致漏判的问题（如 Aethermancer 的"怪物收集"）
-        if (!game.isPokemonLike) {
-          const tags = normalizeTags(game.tags);
-          const pokemonCheck = checkPokemonLike(tags, [], game.shortDescription || "");
-          if (pokemonCheck.isPokemonLike) {
-            game.isPokemonLike = true;
-            game.pokemonLikeTags = pokemonCheck.matchingTags;
-          }
-        }
+
+        // 运行时重新计算宝可梦Like置信度
+        // 原因：预计算时的关键词列表可能不完整，需要用最新的关键词配置重新检测
+        const tags = normalizeTags(game.tags);
+        const genres = game.genres || [];
+        const detailedDesc = (game as Record<string, unknown>).detailed_description as string | undefined;
+        const pokemonCheck = checkPokemonLike(tags, genres, game.shortDescription || "", detailedDesc);
+
+        game.isPokemonLike = pokemonCheck.isPokemonLike;
+        game.pokemonLikeTags = pokemonCheck.matchingTags;
+        game.pokemonLikeConfidence = pokemonCheck.confidence;
+        game.pokemonLikeMatchedBy = pokemonCheck.matchedBy;
+
         // 运行时兜底：如果预计算的 isTurnBased 为 false，用描述关键词重新检测
         // 解决预计算时描述关键词覆盖不足导致回合制游戏漏判的问题
         if (!game.isTurnBased) {
-          const tags = normalizeTags(game.tags);
-          const genres = game.genres || [];
           if (isTurnBased(tags, genres, game.shortDescription || "")) {
             game.isTurnBased = true;
           }
@@ -2362,8 +2452,29 @@ export async function GET(request: NextRequest) {
   const cached = getFromQueryCache(baseCacheKey);
   if (cached) {
     // 缓存命中：从完整结果中切片返回
+    // 先合并 LLM 分析结果（如果缓存中没有的话）
+    const allGameIds = cached.allFiltered.map((g: { id: string }) => g.id);
+    const llmAnalysisResults = getAnalysisResults(allGameIds);
+    const resultsWithLlm = cached.allFiltered.map((game: { id: string }) => {
+      const llmResult = llmAnalysisResults[game.id];
+      if (llmResult && !game.llmAnalysis) {
+        return {
+          ...game,
+          llmAnalysis: {
+            isPokemonLike: llmResult.isPokemonLike,
+            confidence: llmResult.confidence,
+            confidenceLevel: llmResult.confidenceLevel,
+            matchingFeatures: llmResult.matchingFeatures,
+            missingFeatures: llmResult.missingFeatures,
+            reasons: llmResult.reasons,
+          },
+        };
+      }
+      return game;
+    });
+
     const startIdx = (page - 1) * pageSize;
-    const slicedResults = cached.allFiltered.slice(startIdx, startIdx + pageSize);
+    const slicedResults = resultsWithLlm.slice(startIdx, startIdx + pageSize);
     console.log(`[Mode2] 命中查询缓存，完整结果 ${cached.total} 条，切片返回第 ${page} 页`);
     return NextResponse.json({
       results: slicedResults,
@@ -2423,12 +2534,36 @@ export async function GET(request: NextRequest) {
     reviewSource,
   });
 
+  // 两阶段判定：合并 LLM 语义分析结果
+  // 从分析缓存中获取所有游戏的 LLM 分析结果
+  const allGameIds = results.map((g) => g.id);
+  const llmAnalysisResults = getAnalysisResults(allGameIds);
+
+  // 合并 LLM 分析结果到游戏记录
+  const resultsWithLlmAnalysis = results.map((game) => {
+    const llmResult = llmAnalysisResults[game.id];
+    if (llmResult) {
+      return {
+        ...game,
+        llmAnalysis: {
+          isPokemonLike: llmResult.isPokemonLike,
+          confidence: llmResult.confidence,
+          confidenceLevel: llmResult.confidenceLevel,
+          matchingFeatures: llmResult.matchingFeatures,
+          missingFeatures: llmResult.missingFeatures,
+          reasons: llmResult.reasons,
+        },
+      };
+    }
+    return game;
+  });
+
   // 缓存完整过滤结果（用于后续分页切片）
-  setQueryCache(baseCacheKey, { allFiltered: results, total, stats, priceStats, timestamp: Date.now() });
+  setQueryCache(baseCacheKey, { allFiltered: resultsWithLlmAnalysis, total, stats, priceStats, timestamp: Date.now() });
 
   // 返回当前页的切片
   const startIdx = (page - 1) * pageSize;
-  const slicedResults = results.slice(startIdx, startIdx + pageSize);
+  const slicedResults = resultsWithLlmAnalysis.slice(startIdx, startIdx + pageSize);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   return NextResponse.json({

@@ -112,6 +112,15 @@ interface GameRecord {
   llmRawMechanics: string[];
   // 过滤后的创新融合标签（排除品类标配标签）
   innovationTags: string[];
+  // LLM 语义分析结果（两阶段判定的第二阶段）
+  llmAnalysis?: {
+    isPokemonLike: boolean;
+    confidence: number;
+    confidenceLevel: "high" | "medium" | "low";
+    matchingFeatures: string[];
+    missingFeatures: string[];
+    reasons: string;
+  };
 }
 
 interface PoolStats {
@@ -405,6 +414,20 @@ function GameCard({ game, reviewSource, isRead }: { game: GameRecord; reviewSour
                   {translatePokemonLikeTag(game.pokemonLikeTags[0])}
                 </span>
               )}
+              {/* LLM分析置信度徽章 */}
+              {game.llmAnalysis && (
+                <span
+                  className={cn(
+                    "px-1.5 py-0.5 text-[10px] font-bold rounded shadow-sm",
+                    game.llmAnalysis.confidenceLevel === "high" && "bg-emerald-500/90 text-white",
+                    game.llmAnalysis.confidenceLevel === "medium" && "bg-yellow-500/90 text-white",
+                    game.llmAnalysis.confidenceLevel === "low" && "bg-gray-500/90 text-white"
+                  )}
+                  title={game.llmAnalysis.reasons}
+                >
+                  AI {game.llmAnalysis.confidence}%
+                </span>
+              )}
               {/* 标签权重徽章 */}
               {game.coreTagCount > 0 && (
                 <span className="px-1.5 py-0.5 text-[10px] font-bold bg-amber-500/90 text-white rounded shadow-sm">
@@ -419,17 +442,8 @@ function GameCard({ game, reviewSource, isRead }: { game: GameRecord; reviewSour
             </div>
           )}
 
-          {/* 价格 + Steam跳转（并排显示在右上角） */}
-          <div className="absolute top-2 right-2 z-20 flex items-center gap-1.5">
-            {game.price > 0 ? (
-              <div className="px-2 py-0.5 text-xs font-medium bg-background/90 backdrop-blur-sm rounded text-muted-foreground shadow-sm">
-                ${game.price.toFixed(2)}
-              </div>
-            ) : (
-              <div className="px-2 py-0.5 text-xs font-medium bg-green-600/90 text-white rounded shadow-sm">
-                免费
-              </div>
-            )}
+          {/* 价格 + Steam跳转（垂直显示：按钮在上，价格在下） */}
+          <div className="absolute top-2 right-2 z-20 flex flex-col items-center gap-1.5">
             {/* Steam跳转按钮 */}
             <button
               type="button"
@@ -443,6 +457,15 @@ function GameCard({ game, reviewSource, isRead }: { game: GameRecord; reviewSour
               <ExternalLink className="w-3.5 h-3.5" />
               <span>Steam</span>
             </button>
+            {game.price > 0 ? (
+              <div className="px-2 py-0.5 text-xs font-medium bg-background/90 backdrop-blur-sm rounded text-muted-foreground shadow-sm">
+                ${game.price.toFixed(2)}
+              </div>
+            ) : (
+              <div className="px-2 py-0.5 text-xs font-medium bg-green-600/90 text-white rounded shadow-sm">
+                免费
+              </div>
+            )}
           </div>
 
           {/* C池避坑提示徽章 - 点击引导 */}

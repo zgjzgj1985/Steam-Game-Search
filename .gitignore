@@ -70,6 +70,8 @@ __pycache__/
 /public/data/games.db
 /public/data/regional-reviews.json
 /public/data/regional-reviews-state.json
+/public/data/*-cache.json
+/public/data/*-cache-*.json
 
 # Backup files
 *.backup

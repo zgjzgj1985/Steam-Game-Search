@@ -39,6 +39,17 @@ import "react-day-picker/dist/style.css";
 import { format, subYears } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { SYNONYM_MERGE as TAG_SYNONYM_MERGE, INNOVATION_THRESHOLDS } from "@/lib/tag-config";
+import {
+  generateCacheKey,
+  createBaseConditions,
+  getCache,
+  setCache,
+  canUseCache,
+  clientSideFilter,
+  type BaseConditions,
+  type ClientFilterOptions,
+  type FilterResult,
+} from "@/lib/filter-cache";
 
 // ============ 类型定义 ============
 
@@ -190,6 +201,11 @@ interface FilterResponse {
   query: string;
   poolFilters: string[];
   featureTagOptions?: FeatureTagOption[];
+  // 前端缓存支持
+  fullResults?: GameRecord[];
+  allStats?: PoolStats;
+  allPriceStats?: PriceStats;
+  fromCache?: boolean;
 }
 
 // ============ 池子配置 ============
@@ -1006,6 +1022,37 @@ export default function Mode2Page() {
   const [tagSortMode, setTagSortMode] = useState<"count" | "innovation">("count");
   const [featureTagSearch, setFeatureTagSearch] = useState("");
 
+  // 前端缓存相关状态
+  const [currentCacheKey, setCurrentCacheKey] = useState<string>("");
+  const [isUsingCache, setIsUsingCache] = useState(false);
+
+  // 从 sessionStorage 恢复筛选条件（页面导航回来时）
+  useEffect(() => {
+    // 延迟执行，确保 DOM 已准备好
+    const timeout = setTimeout(() => {
+      try {
+        const savedConditions = sessionStorage.getItem("mode2_filter_conditions");
+        if (savedConditions) {
+          const conditions = JSON.parse(savedConditions);
+          if (conditions.activePools) setActivePools(conditions.activePools);
+          if (conditions.poolAConditions) setPoolAConditions(conditions.poolAConditions);
+          if (conditions.poolBConditions) setPoolBConditions(conditions.poolBConditions);
+          if (conditions.poolCConditions) setPoolCConditions(conditions.poolCConditions);
+          if (conditions.sortBy) setSortBy(conditions.sortBy);
+          if (conditions.sortOrder) setSortOrder(conditions.sortOrder);
+          if (conditions.yearsFilter !== undefined) setYearsFilter(conditions.yearsFilter);
+          if (conditions.excludeTestVersions !== undefined) setExcludeTestVersions(conditions.excludeTestVersions);
+          if (conditions.reviewSource) setReviewSource(conditions.reviewSource);
+          console.log("[Mode2] 从 sessionStorage 恢复筛选条件");
+        }
+      } catch (e) {
+        console.warn("[Mode2] 恢复筛选条件失败:", e);
+      }
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   // 切换单个标签的选中状态
   const toggleFeatureTag = (tagKey: string) => {
     setFeatureTagFilters(prev =>
@@ -1038,6 +1085,26 @@ export default function Mode2Page() {
       setMaxReleaseDate(range.isBefore);
     }
   };
+
+  // 保存筛选条件到 sessionStorage（用于页面导航后恢复）
+  useEffect(() => {
+    const conditions = {
+      activePools,
+      poolAConditions,
+      poolBConditions,
+      poolCConditions,
+      sortBy,
+      sortOrder,
+      yearsFilter,
+      excludeTestVersions,
+      reviewSource,
+    };
+    try {
+      sessionStorage.setItem("mode2_filter_conditions", JSON.stringify(conditions));
+    } catch (e) {
+      console.warn("[Mode2] 保存筛选条件失败:", e);
+    }
+  }, [activePools, poolAConditions, poolBConditions, poolCConditions, sortBy, sortOrder, yearsFilter, excludeTestVersions, reviewSource]);
 
   // 清除日期筛选
   const clearDateFilter = () => {
@@ -1157,6 +1224,7 @@ export default function Mode2Page() {
     if (activePools.length === 0) {
       setResults([]);
       setTotal(0);
+      setIsUsingCache(false);
       return;
     }
 
@@ -1164,6 +1232,72 @@ export default function Mode2Page() {
     const ac = new AbortController();
     resultsAbortRef.current = ac;
 
+    // 生成基础条件（用于缓存匹配）
+    const baseConditions: BaseConditions = {
+      pools: [...activePools].sort(),
+      poolA: { minRating: poolAConditions.minRating, minReviews: poolAConditions.minReviews },
+      poolB: { minRating: poolBConditions.minRating, minReviews: poolBConditions.minReviews },
+      poolC: {
+        minRating: poolCConditions.minRating,
+        maxRating: (poolCConditions as { minRating: number; maxRating: number; minReviews: number }).maxRating,
+        minReviews: (poolCConditions as { minRating: number; maxRating: number; minReviews: number }).minReviews,
+      },
+      yearsFilter,
+      excludeTestVersions,
+      reviewSource,
+    };
+
+    const newCacheKey = generateCacheKey(
+      activePools,
+      baseConditions.poolA,
+      baseConditions.poolB,
+      baseConditions.poolC,
+      yearsFilter,
+      excludeTestVersions,
+      reviewSource
+    );
+
+    // 检查是否可以使用客户端缓存
+    const cachedData = getCache(newCacheKey);
+    if (cachedData && canUseCache(baseConditions, cachedData)) {
+      console.log(`[Mode2] 使用客户端缓存筛选，缓存键: ${newCacheKey.slice(0, 20)}...`);
+
+      // 使用客户端筛选
+      const filterOptions: ClientFilterOptions = {
+        sortBy,
+        sortOrder,
+        page,
+        pageSize: 24,
+        query: query.trim() || undefined,
+        priceMin,
+        priceMax,
+        modernTagFilter,
+        featureTagFilters,
+        minReleaseDate,
+        maxReleaseDate,
+        reviewSource,
+      };
+
+      const filteredResult = clientSideFilter(cachedData, filterOptions);
+
+      setResults(filteredResult.results);
+      setTotal(filteredResult.total);
+      setTotalPages(filteredResult.totalPages);
+      setStats(filteredResult.stats);
+      setPriceStats(filteredResult.priceStats || null);
+      setCurrentCacheKey(newCacheKey);
+      setIsUsingCache(true);
+      setIsLoadingResults(false);
+
+      // 如果有新的特色标签选项，更新它
+      if (filteredResult.featureTagOptions.length > 0) {
+        setFeatureTagOptions(filteredResult.featureTagOptions);
+      }
+
+      return;
+    }
+
+    // 缓存不可用，请求后端
     setIsLoadingResults(true);
     try {
       const params = new URLSearchParams();
@@ -1179,6 +1313,8 @@ export default function Mode2Page() {
       params.set("sortOrder", sortOrder);
       params.set("page", String(page));
       params.set("pageSize", "24");
+      // 请求完整结果集用于缓存
+      params.set("fullResults", "true");
       if (query.trim()) params.set("q", query.trim());
       if (yearsFilter > 0) {
         params.set("yearsFilter", String(yearsFilter));
@@ -1208,6 +1344,23 @@ export default function Mode2Page() {
       if (!response.ok) return;
 
       const data: FilterResponse = await response.json();
+
+      // 如果返回了完整结果，存入缓存
+      if (data.fullResults && data.allStats && data.allPriceStats) {
+        console.log(`[Mode2] 存入客户端缓存，共 ${data.fullResults.length} 条数据`);
+        setCache(
+          newCacheKey,
+          data.fullResults,
+          data.allStats,
+          data.allPriceStats,
+          data.featureTagOptions || [],
+          data.poolConfig,
+          baseConditions
+        );
+        setCurrentCacheKey(newCacheKey);
+        setIsUsingCache(false);
+      }
+
       setResults(data.results);
       setTotal(data.total);
       setTotalPages(data.totalPages);
@@ -2136,6 +2289,14 @@ export default function Mode2Page() {
               <span className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
               加载中...
             </span>
+          </div>
+        )}
+
+        {/* ========== 缓存状态指示 ========== */}
+        {!isLoadingResults && isUsingCache && results.length > 0 && (
+          <div className="mb-4 px-3 py-2 bg-primary/10 border border-primary/20 rounded-lg text-sm text-primary flex items-center gap-2">
+            <Sparkles className="w-4 h-4" />
+            使用本地缓存筛选（快速）
           </div>
         )}
 

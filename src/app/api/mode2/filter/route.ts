@@ -2384,6 +2384,9 @@ export async function GET(request: NextRequest) {
   // 是否只获取统计信息
   const statsOnly = searchParams.get("statsOnly") === "true";
 
+  // 是否返回完整结果集（用于前端缓存）
+  const fullResults = searchParams.get("fullResults") === "true";
+
   console.log("[Mode2] 开始加载数据库");
   const { games: allGames } = loadDatabase();
   console.log(`[Mode2] 数据库加载完成，共 ${allGames.length} 个游戏`);
@@ -2495,6 +2498,12 @@ export async function GET(request: NextRequest) {
       },
       featureTagOptions: dynamicFeatureTagOptions,
       cached: true,
+      // 返回完整结果集（用于前端缓存）
+      ...(fullResults ? {
+        fullResults: resultsWithLlm,
+        allStats: cached.stats,
+        allPriceStats: cached.priceStats,
+      } : {}),
     });
   }
 
@@ -2584,6 +2593,12 @@ export async function GET(request: NextRequest) {
       C: `避坑指南池 - 宝可梦Like争议/失败案例 · 好评率${POOL_DEFAULTS.C.minRating}%-${POOL_DEFAULTS.C.maxRating}% · 评论数≥${POOL_DEFAULTS.C.minReviews}`,
     },
     featureTagOptions: dynamicFeatureTagOptions,
+    // 返回完整结果集（用于前端缓存）
+    ...(fullResults ? {
+      fullResults: resultsWithLlmAnalysis,
+      allStats: stats,
+      allPriceStats: priceStats,
+    } : {}),
   }, {
     headers: { "Cache-Control": "public, max-age=300, s-maxage=300" },
   });

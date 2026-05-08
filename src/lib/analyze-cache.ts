@@ -42,6 +42,22 @@ const CACHE_FILE = path.join(process.cwd(), "public", "data", "mode2-analysis-ca
 // 缓存版本号（结构变更时递增）
 const CACHE_VERSION = 1;
 
+// ============ 内存缓存层 ============
+
+// 内存缓存
+let memoryCache: AnalyzeCacheData | null = null;
+let memoryCacheLoadedAt: number = 0;
+
+// 延迟写入配置
+const DEBOUNCE_WRITE_DELAY_MS = 2000; // 2秒延迟写入
+const BATCH_WRITE_THRESHOLD = 100; // 积累100条后写入
+let pendingWrites: AnalyzeResult[] = [];
+let writeTimeout: NodeJS.Timeout | null = null;
+let writePendingCount = 0; // 待写入计数
+
+// 缓存有效期（毫秒）：10分钟
+const MEMORY_CACHE_TTL_MS = 10 * 60 * 1000;
+
 // ============ 工具函数 ============
 
 function ensureDir(dirPath: string): void {
@@ -50,17 +66,29 @@ function ensureDir(dirPath: string): void {
   }
 }
 
+/**
+ * 加载缓存数据（优先使用内存缓存）
+ */
 function loadCacheData(): AnalyzeCacheData {
+  // 检查内存缓存是否有效
+  const now = Date.now();
+  if (memoryCache && now - memoryCacheLoadedAt < MEMORY_CACHE_TTL_MS) {
+    return memoryCache;
+  }
+
   ensureDir(path.dirname(CACHE_FILE));
 
   if (!fs.existsSync(CACHE_FILE)) {
-    const now = new Date().toISOString();
-    return {
+    const newCache = {
       version: CACHE_VERSION,
-      createdAt: now,
-      updatedAt: now,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       results: {},
     };
+    // 更新内存缓存
+    memoryCache = newCache;
+    memoryCacheLoadedAt = now;
+    return newCache;
   }
 
   try {
@@ -70,33 +98,120 @@ function loadCacheData(): AnalyzeCacheData {
     // 版本检查
     if (data.version !== CACHE_VERSION) {
       console.warn("[AnalyzeCache] 缓存版本不匹配，清空旧缓存");
-      const now = new Date().toISOString();
-      return {
+      const newCache = {
         version: CACHE_VERSION,
-        createdAt: now,
-        updatedAt: now,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         results: {},
       };
+      // 更新内存缓存
+      memoryCache = newCache;
+      memoryCacheLoadedAt = now;
+      return newCache;
     }
 
+    // 更新内存缓存
+    memoryCache = data;
+    memoryCacheLoadedAt = now;
     return data;
   } catch (err) {
     console.error("[AnalyzeCache] 加载缓存失败:", err);
-    const now = new Date().toISOString();
+    const newCache = {
+      version: CACHE_VERSION,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      results: {},
+    };
+    // 更新内存缓存
+    memoryCache = newCache;
+    memoryCacheLoadedAt = now;
+    return newCache;
+  }
+}
+
+/**
+ * 延迟写入缓存数据到磁盘
+ */
+function debouncedSaveCacheData(): void {
+  if (writeTimeout) {
+    clearTimeout(writeTimeout);
+  }
+
+  writeTimeout = setTimeout(() => {
+    flushPendingWrites();
+  }, DEBOUNCE_WRITE_DELAY_MS);
+}
+
+/**
+ * 立即刷新待写入的数据到磁盘
+ */
+function flushPendingWrites(): void {
+  if (pendingWrites.length === 0) return;
+
+  const cache = loadCacheDataFromDisk();
+  const now = Date.now();
+
+  for (const result of pendingWrites) {
+    cache.results[result.gameId] = {
+      ...result,
+      timestamp: now,
+    };
+  }
+
+  try {
+    ensureDir(path.dirname(CACHE_FILE));
+    cache.updatedAt = new Date().toISOString();
+    fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2), "utf-8");
+    // 更新内存缓存
+    memoryCache = cache;
+    memoryCacheLoadedAt = now;
+  } catch (err) {
+    console.error("[AnalyzeCache] 保存缓存失败:", err);
+  }
+
+  pendingWrites = [];
+  writeTimeout = null;
+}
+
+/**
+ * 直接从磁盘加载缓存（用于写入时读取最新状态）
+ */
+function loadCacheDataFromDisk(): AnalyzeCacheData {
+  ensureDir(path.dirname(CACHE_FILE));
+
+  if (!fs.existsSync(CACHE_FILE)) {
     return {
       version: CACHE_VERSION,
-      createdAt: now,
-      updatedAt: now,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      results: {},
+    };
+  }
+
+  try {
+    const raw = fs.readFileSync(CACHE_FILE, "utf-8");
+    return JSON.parse(raw) as AnalyzeCacheData;
+  } catch {
+    return {
+      version: CACHE_VERSION,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       results: {},
     };
   }
 }
 
-function saveCacheData(data: AnalyzeCacheData): void {
+/**
+ * 同步保存缓存数据（立即写入）
+ */
+function saveCacheDataSync(data: AnalyzeCacheData): void {
   try {
     ensureDir(path.dirname(CACHE_FILE));
     data.updatedAt = new Date().toISOString();
     fs.writeFileSync(CACHE_FILE, JSON.stringify(data, null, 2), "utf-8");
+    // 更新内存缓存
+    memoryCache = data;
+    memoryCacheLoadedAt = Date.now();
   } catch (err) {
     console.error("[AnalyzeCache] 保存缓存失败:", err);
   }
@@ -105,7 +220,7 @@ function saveCacheData(data: AnalyzeCacheData): void {
 // ============ 公开 API ============
 
 /**
- * 获取单个游戏的分析结果
+ * 获取单个游戏的分析结果（使用内存缓存）
  */
 export function getAnalysisResult(gameId: string): AnalyzeResult | null {
   const cache = loadCacheData();
@@ -128,7 +243,7 @@ export function getAnalysisResult(gameId: string): AnalyzeResult | null {
 }
 
 /**
- * 批量获取分析结果
+ * 批量获取分析结果（使用内存缓存）
  */
 export function getAnalysisResults(gameIds: string[]): Record<string, AnalyzeResult | null> {
   const cache = loadCacheData();
@@ -156,44 +271,74 @@ export function getAnalysisResults(gameIds: string[]): Record<string, AnalyzeRes
 }
 
 /**
- * 保存单个分析结果
+ * 保存单个分析结果（延迟写入）
  */
 export function saveAnalysisResult(result: AnalyzeResult): void {
-  const cache = loadCacheData();
-  cache.results[result.gameId] = {
-    ...result,
-    timestamp: Date.now(),
-  };
-  saveCacheData(cache);
+  pendingWrites.push(result);
+  writePendingCount++;
+
+  // 更新内存缓存
+  if (memoryCache) {
+    memoryCache.results[result.gameId] = {
+      ...result,
+      timestamp: Date.now(),
+    };
+  }
+
+  // 如果积累了一定数量的写入，直接触发写入
+  if (writePendingCount >= BATCH_WRITE_THRESHOLD) {
+    if (writeTimeout) {
+      clearTimeout(writeTimeout);
+      writeTimeout = null;
+    }
+    flushPendingWrites();
+    writePendingCount = 0;
+  } else {
+    debouncedSaveCacheData();
+  }
 }
 
 /**
- * 批量保存分析结果
+ * 批量保存分析结果（延迟写入）
  */
 export function saveAnalysisResults(results: AnalyzeResult[]): void {
   if (results.length === 0) return;
 
-  const cache = loadCacheData();
-  const now = Date.now();
+  pendingWrites.push(...results);
+  writePendingCount += results.length;
 
-  for (const result of results) {
-    cache.results[result.gameId] = {
-      ...result,
-      timestamp: now,
-    };
+  // 更新内存缓存
+  if (memoryCache) {
+    const now = Date.now();
+    for (const result of results) {
+      memoryCache.results[result.gameId] = {
+        ...result,
+        timestamp: now,
+      };
+    }
   }
 
-  saveCacheData(cache);
+  // 如果积累了一定数量的写入，直接触发写入
+  if (writePendingCount >= BATCH_WRITE_THRESHOLD) {
+    if (writeTimeout) {
+      clearTimeout(writeTimeout);
+      writeTimeout = null;
+    }
+    flushPendingWrites();
+    writePendingCount = 0;
+  } else {
+    debouncedSaveCacheData();
+  }
 }
 
 /**
  * 删除单个分析结果
  */
 export function deleteAnalysisResult(gameId: string): void {
-  const cache = loadCacheData();
+  const cache = loadCacheDataFromDisk();
   if (cache.results[gameId]) {
     delete cache.results[gameId];
-    saveCacheData(cache);
+    saveCacheDataSync(cache);
   }
 }
 
@@ -201,6 +346,14 @@ export function deleteAnalysisResult(gameId: string): void {
  * 清空所有分析结果
  */
 export function clearAnalysisCache(): void {
+  // 清除待写入队列
+  pendingWrites = [];
+  if (writeTimeout) {
+    clearTimeout(writeTimeout);
+    writeTimeout = null;
+  }
+  writePendingCount = 0;
+
   const now = new Date().toISOString();
   const emptyCache: AnalyzeCacheData = {
     version: CACHE_VERSION,
@@ -208,19 +361,21 @@ export function clearAnalysisCache(): void {
     updatedAt: now,
     results: {},
   };
-  saveCacheData(emptyCache);
+  saveCacheDataSync(emptyCache);
 }
 
 /**
  * 获取缓存统计信息
  */
-export function getCacheStats(): { total: number; version: number; createdAt: string; updatedAt: string } {
+export function getCacheStats(): { total: number; version: number; createdAt: string; updatedAt: string; memoryCached: boolean; pendingWrites: number } {
   const cache = loadCacheData();
   return {
     total: Object.keys(cache.results).length,
     version: cache.version,
     createdAt: cache.createdAt,
     updatedAt: cache.updatedAt,
+    memoryCached: memoryCache !== null,
+    pendingWrites: pendingWrites.length,
   };
 }
 
@@ -230,4 +385,22 @@ export function getCacheStats(): { total: number; version: number; createdAt: st
 export function getUnanalyzedGameIds(allGameIds: string[]): string[] {
   const cache = loadCacheData();
   return allGameIds.filter((id) => !cache.results[id]);
+}
+
+/**
+ * 预热内存缓存（启动时调用）
+ */
+export function warmupCache(): void {
+  console.log("[AnalyzeCache] 预热缓存中...");
+  loadCacheData();
+  console.log(`[AnalyzeCache] 缓存预热完成，当前 ${Object.keys(memoryCache?.results || {}).length} 条记录`);
+}
+
+/**
+ * 强制刷新缓存到磁盘（用于关闭前调用）
+ */
+export function flushCache(): void {
+  console.log("[AnalyzeCache] 强制刷新缓存到磁盘...");
+  flushPendingWrites();
+  console.log("[AnalyzeCache] 缓存刷新完成");
 }

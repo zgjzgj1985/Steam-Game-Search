@@ -21,7 +21,9 @@
     "db:build": "tsx scripts/build-steam-db.ts",
     "build:meta": "python scripts/build-games-meta.py",
     "precompute": "ts-node --esm scripts/precompute.ts",
-    "update-data": "ts-node --esm scripts/update-data.ts"
+    "update-data": "ts-node --esm scripts/update-data.ts",
+    "doc:sync": "python scripts/doc_sync.py",
+    "doc:check": "python scripts/doc_sync.py --check"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",

@@ -647,7 +647,10 @@ function detectTestVersionByName(name: string): boolean {
 
 // 检查是否是测试版/预发布版游戏（通过Steam标签判断）
 function isTestVersionByTag(tags: string[], categories: string[]): boolean {
-  const allTags = [...tags.map(t => t.toLowerCase()), ...categories.map(c => c.toLowerCase())];
+  const allTags = [
+    ...tags.filter(t => typeof t === "string").map(t => t.toLowerCase()),
+    ...categories.filter(c => typeof c === "string").map(c => c.toLowerCase()),
+  ];
   
   // Early Access 标签
   if (allTags.some(t => t.includes("early access"))) {

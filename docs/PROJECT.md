@@ -315,7 +315,6 @@ Steam全域游戏搜索/
 
 <!-- AUTO_START:components -->
 #### `analysis/`
-- `Analysis Detail` - 分析详情页面（旧版完整分析展示） (150行)
 - `Analysis Metadata Badge` - analysis metadata badge (127行)
 - `Battle System View` - battle system view (142行)
 - `Categories` - categories (39行)
@@ -423,7 +422,7 @@ Steam全域游戏搜索/
 - `/` - 页面 (`src\app\page.tsx`, 92行)
 - `/analysis/[id]` - 页面 (`src\app\analysis\[id]\page.tsx`, 68行)
 - `/compare` - 页面 (`src\app\compare\page.tsx`, 129行)
-- `/mode2` - A池 (`src\app\mode2\page.tsx`, 2387行)
+- `/mode2` - A池 (`src\app\mode2\page.tsx`, 2259行)
 <!-- AUTO_END:pages -->
 
 ---
@@ -435,14 +434,14 @@ Steam全域游戏搜索/
 
 | 类别 | 数量 | 行数/大小 |
 |------|------|--------|
-| 脚本 | 32 | 22571 行 |
+| 脚本 | 32 | 22421 行 |
 | API 路由 | 8 | 4788 行 |
-| 组件 | 26 | 3742 行 |
+| 组件 | 25 | 3592 行 |
 | 核心库 | 9 | 3021 行 |
 | 类型定义 | 1 | 331 行 |
 | 配置文件 | 1 | 173 行 |
-| 页面 | 4 | 2676 行 |
+| 页面 | 4 | 2548 行 |
 | 数据文件 | 24 | 3938.6 MB |
 
-> 生成时间: 2026-05-11 11:15:09
+> 生成时间: 2026-05-11 14:46:00
 <!-- AUTO_END:stats -->

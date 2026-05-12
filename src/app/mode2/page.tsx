@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Search,
   ChevronLeft,
@@ -9,23 +9,19 @@ import {
   Target,
   AlertTriangle,
   Sparkles,
-  TrendingUp,
   Users,
   Star,
   ExternalLink,
   RotateCcw,
-  ThumbsUp,
   BarChart3,
   Eye,
   EyeOff,
   Calendar,
   X,
   Gamepad2,
-  Info,
   Trophy,
   Globe,
   ChevronDown,
-  ChevronUp,
   CheckCircle,
 } from "lucide-react";
 import Link from "next/link";
@@ -36,7 +32,7 @@ import { cn } from "@/lib/utils";
 import * as Popover from "@radix-ui/react-popover";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { format, subYears } from "date-fns";
+import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { SYNONYM_MERGE as TAG_SYNONYM_MERGE, INNOVATION_THRESHOLDS } from "@/lib/tag-config";
 import {
@@ -49,6 +45,11 @@ import {
   type BaseConditions,
   type ClientFilterOptions,
   type FilterResult,
+  type GameRecord,
+  type PoolStats,
+  type PoolConfig,
+  type PriceStats,
+  type FeatureTagOption,
 } from "@/lib/filter-cache";
 
 // ============ 类型定义 ============
@@ -56,139 +57,10 @@ import {
 // 评价来源类型
 type ReviewSource = "all" | "cn" | "overseas";
 
-interface GameRecord {
-  id: string;
-  name: string;
-  shortDescription: string;
-  developers: string[];
-  publishers: string[];
-  genres: string[];
-  tags: string[];
-  categories: string[];
-  releaseDate: string | null;
-  price: number;
-  steamReviews: {
-    totalPositive: number;
-    totalNegative: number;
-    totalReviews: number;
-    reviewScore: number;
-    reviewScoreDescription: string;
-  } | null;
-  // 区域评价数据
-  cnReviews: {
-    totalPositive: number;
-    totalNegative: number;
-    totalReviews: number;
-    reviewScore: number;
-    reviewScoreDescription: string;
-  } | null;
-  overseasReviews: {
-    totalPositive: number;
-    totalNegative: number;
-    totalReviews: number;
-    reviewScore: number;
-    reviewScoreDescription: string;
-  } | null;
-  // 区域威尔逊得分
-  cnWilsonScore: number;
-  overseasWilsonScore: number;
-  headerImage: string | null;
-  steamUrl: string;
-  isPokemonLike: boolean;
-  pokemonLikeTags: string[];
-  wilsonScore: number;
-  pool: "A" | "B" | "C" | null;
-  // 测试版相关字段
-  isTestVersion: boolean;
-  testVersionType: "name" | "tag" | "data" | "none";
-  // 标签权重系统
-  coreTagCount: number;
-  secondaryTagCount: number;
-  modernTagCount: number;
-  tagWeight: number;
-  matchedCoreTags: string[];
-  matchedSecondaryTags: string[];
-  matchedModernTags: string[];
-  uniqueFeatureTags: string[];
-  differentiationLabels: string[];
-  // 当前选中的特色标签筛选（卡片显示用）
-  activeFeatureTagFilter?: string;
-  activeFeatureTagLabel?: string;
-  // 卡片展示用现代标签（已排重）
-  displayModernTags: string[];
-  // LLM 融合玩法分析（来自 combinedMechanics.json）
-  llmMechanics: string[];
-  llmMechanicsSummary: string;
-  // 自由标签（v3 新增，来自 combinedMechanics.json 的 rawMechanics 字段）
-  llmRawMechanics: string[];
-  // 过滤后的创新融合标签（排除品类标配标签）
-  innovationTags: string[];
-  // LLM 语义分析结果（两阶段判定的第二阶段）
-  llmAnalysis?: {
-    isPokemonLike: boolean;
-    confidence: number;
-    confidenceLevel: "high" | "medium" | "low";
-    matchingFeatures: string[];
-    missingFeatures: string[];
-    reasons: string;
-  };
-}
-
-interface PoolStats {
-  total: number;
-  totalTurnBased: number;
-  poolA: number;
-  poolB: number;
-  poolC: number;
-}
-
-interface PoolConfig {
-  poolA: { minRating: number; minReviews: number };
-  poolB: { minRating: number; minReviews: number };
-  poolC: { minRating: number; maxRating: number; minReviews: number };
-}
-
-// 价格统计类型
-interface PriceStats {
-  min: number;
-  max: number;
-  avg: number;
-  median: number;
-  total: number;
-  distribution: {
-    free: number;
-    under10: number;
-    under20: number;
-    under30: number;
-    under50: number;
-    over50: number;
-  };
-}
-
 // 池子条件类型
 type PoolConditions = { minRating: number; minReviews: number } | { minRating: number; maxRating: number; minReviews: number };
 
-// 特色标签选项（动态从API获取）
-interface FeatureTagOption {
-  key: string;
-  label: string;
-  tag: string;
-  count: number;
-  gameCount: number;
-  coverage: number;
-  avgWilson: number;
-  poolDistribution?: {
-    A: number;
-    B: number;
-    C: number;
-  };
-  // 小众创新标签新增字段
-  positiveRate?: number;
-  totalPositive?: number;
-  totalNegative?: number;
-  innovationScore?: number;
-}
-
+// API 响应类型（包含前端缓存支持字段）
 interface FilterResponse {
   results: GameRecord[];
   total: number;
